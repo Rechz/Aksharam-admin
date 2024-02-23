@@ -1,9 +1,20 @@
 <template>
+    
+        <v-text-field
+            label="Search"
+            prepend-inner-icon="mdi-magnify"
+            variant="underlined"
+            class="w-25"
+            style="float: right;"
+          ></v-text-field>
+    
+        
     <v-data-table
       :headers="headers"
       :items="desserts"
       :sort-by="[{ key: 'calories', order: 'asc' }]"
-      style="background-color: #C8E6C9;"
+      style="background-color: #1B5E20; color:white"
+      max-width="100%"
     >
       <template v-slot:top>
         <v-toolbar
@@ -24,7 +35,7 @@
         </v-toolbar>
       </template>
       <template v-slot:item = '{item, index}'>
-        <tr style="background-color: #E8F5E9;">
+        <tr style="background-color: #E8F5E9; color:black; font-weight: bold;">
     <td>{{ index + 1 }}</td>
     <td>{{ item.name }}</td>
     <td>{{ item.calories }}</td>
@@ -231,7 +242,6 @@
 
   <style scoped>
 .v-table{
-    width: 75vw !important;
-
+    width: 76vw !important;
 }
 </style>
