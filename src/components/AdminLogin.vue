@@ -36,11 +36,8 @@
           placeholder="Enter your password"
           :rules="passwordRules"
         ></v-text-field>
-
         <br>
-
         <v-btn
-          
           :loading="loading"
           block
           color="green-darken-4"
