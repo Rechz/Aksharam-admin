@@ -41,7 +41,7 @@
       <v-main style="height: 250px"></v-main>
     </v-layout>
 </div>
-<div class="ms-3">
+<div class="ms-5 mt-5">
   <router-view></router-view>
 </div>
 </div>

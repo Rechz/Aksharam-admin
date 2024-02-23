@@ -3,6 +3,7 @@
       :headers="headers"
       :items="desserts"
       :sort-by="[{ key: 'calories', order: 'asc' }]"
+      
     >
       <template v-slot:top>
         <v-toolbar
@@ -324,3 +325,10 @@
       },
     }
   </script>
+
+  <style scoped>
+.v-table{
+    width: 75vw !important;
+
+}
+</style>
