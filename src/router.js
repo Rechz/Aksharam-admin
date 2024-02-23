@@ -8,8 +8,33 @@ const router = createRouter({
       },
       {
         path : '/dashboard',
-        component : () => import('./components/AdminDash.vue')
+        component : () => import('./components/AdminDash.vue'),
+        children: [
+          {
+            path : '/tickets',
+            alias : '/dashboard',
+            component : () => import('./components/TicketPage.vue')
+          },
+          {
+            path : '/portal',
+            component : () => import('./components/PortalPage.vue')
+          },
+          {
+            path : '/items-page',
+            component : () => import('./components/ItemsPage.vue')
+          },
+          {
+            path : '/dashboard-page',
+            component : () => import('./components/DashPage.vue')
+          },
+          {
+            path : '/employee-page',
+            component : () => import('./components/EmployeePage.vue')
+          }
+
+        ]
       }
+      
     ]
 });
 export default router;
