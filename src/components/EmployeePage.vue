@@ -16,7 +16,16 @@
             inset
             vertical
           ></v-divider>
+          
+          <v-text-field
+            label="Search"
+            prepend-inner-icon="mdi-magnify"
+            variant="underlined"
+            class="w-20"
+            style="float: right;"
+          ></v-text-field>
           <v-spacer></v-spacer>
+
           <v-dialog
             v-model="dialog"
             max-width="500px"
@@ -27,9 +36,9 @@
   dark
   class="mb-2"
   v-bind="props"
-  :class="{ 'hover-green': isHovered }"
-  @mouseover="isHovered = true"
-  @mouseleave="isHovered = false"
+  
+  style="background-color: rgb(25, 103, 25); color: white !important;"
+
 >
   <b> + Add Employee </b>
 </v-btn>
@@ -45,54 +54,57 @@
                   <v-row>
                     <v-col
                       cols="12"
-                      sm="6"
-                      md="4"
+                      sm="12"
+                      md="12"
                     >
                       <v-text-field
                         v-model="editedItem.name"
-                        label="Dessert name"
+                        label="Emp ID"
                       ></v-text-field>
                     </v-col>
                     <v-col
                       cols="12"
-                      sm="6"
-                      md="4"
+                      sm="12"
+                      md="12"
                     >
                       <v-text-field
                         v-model="editedItem.calories"
-                        label="Calories"
+                        label="Name"
                       ></v-text-field>
                     </v-col>
                     <v-col
                       cols="12"
-                      sm="6"
-                      md="4"
+                      sm="12"
+                      md="12"
                     >
                       <v-text-field
                         v-model="editedItem.fat"
-                        label="Fat (g)"
+                        label="Phone No"
                       ></v-text-field>
                     </v-col>
                     <v-col
                       cols="12"
-                      sm="6"
-                      md="4"
+                      sm="12"
+                      md="12"
                     >
                       <v-text-field
                         v-model="editedItem.carbs"
-                        label="Carbs (g)"
+                        label="Email ID"
                       ></v-text-field>
                     </v-col>
                     <v-col
                       cols="12"
-                      sm="6"
-                      md="4"
+                      sm="12"
+                      md="12"
                     >
                       <v-text-field
                         v-model="editedItem.protein"
-                        label="Protein (g)"
+                        label="Address"
                       ></v-text-field>
                     </v-col>
+                    <v-col cols="12">
+              <v-file-input v-model="editedItem.image" label="Upload Image"></v-file-input>
+            </v-col>
                   </v-row>
                 </v-container>
               </v-card-text>
@@ -116,17 +128,21 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <v-dialog v-model="dialogDelete" max-width="500px">
-            <v-card>
-              <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue-darken-1" variant="text" @click="closeDelete">Cancel</v-btn>
-                <v-btn color="blue-darken-1" variant="text" @click="deleteItemConfirm">OK</v-btn>
-                <v-spacer></v-spacer>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
+          <v-dialog v-model="dialogDelete" width="420px" height="300px">
+  <v-card>
+    <v-card-header></v-card-header>
+    <v-icon color="red" size="48"  class="align-self-center">mdi-alert</v-icon>
+    <v-card-title class="text-h6 mt-2">Are you sure you want to delete this item?</v-card-title>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn color="black" variant="text" @click="closeDelete" class="hover-green">Cancel</v-btn>
+      <v-btn color="black" variant="text" @click="deleteItemConfirm" class="hover-red">OK</v-btn>
+      <v-spacer></v-spacer>
+    </v-card-actions>
+  </v-card>
+</v-dialog>
+
+
         </v-toolbar>
       </template>
       <template v-slot:item = '{item,index}'>
@@ -184,6 +200,7 @@
           calories: 0,
           fat: 0,
           carbs: 0,
+          image : null
          
         },
         defaultItem: {
@@ -191,7 +208,7 @@
           calories: 0,
           fat: 0,
           carbs: 0,
-         
+          image : null
         },
       }),
   
@@ -340,8 +357,13 @@
     width : 70vw;
 }
 .hover-green:hover {
-  background-color: rgb(25, 103, 25) ; 
-  color: white !important ; 
-}
+    background-color: green !important;
+    color: white !important;
+  }
+
+  .hover-red:hover {
+    background-color: red !important;
+    color: white !important;
+  }
 
 </style>
