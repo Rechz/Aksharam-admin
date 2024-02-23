@@ -66,7 +66,7 @@
 </script>
 <style scoped>
   .green-background {
-    background-color: #1B5E20;
+    background: linear-gradient(to bottom left,#110b03,#3e7132);
   }
   .heading {
     text-align: right;

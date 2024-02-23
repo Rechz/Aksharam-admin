@@ -3,14 +3,14 @@
       :headers="headers"
       :items="desserts"
       :sort-by="[{ key: 'calories', order: 'asc' }]"
-      
+      style="background-color: #C8E6C9;"
     >
       <template v-slot:top>
         <v-toolbar
           flat
-          
+          style="background-color: white;"
         >
-          <v-toolbar-title>TICKET DETAILS</v-toolbar-title>
+          <v-toolbar-title style="color: green;"><b>TICKET DETAILS</b></v-toolbar-title>
           <v-divider
             class="mx-4"
             inset
@@ -24,7 +24,7 @@
         </v-toolbar>
       </template>
       <template v-slot:item = '{item, index}'>
-        <tr>
+        <tr style="background-color: #E8F5E9;">
     <td>{{ index + 1 }}</td>
     <td>{{ item.name }}</td>
     <td>{{ item.calories }}</td>

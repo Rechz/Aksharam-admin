@@ -3,11 +3,12 @@
       :headers="headers"
       :items="desserts"
       :sort-by="[{ key: 'calories', order: 'asc' }]"
-
+      style="background-color: #1B5E20; color:white"
     >
       <template v-slot:top>
         <v-toolbar
           flat
+          style="background-color: white;"
         >
           <v-toolbar-title style="color: green;"><b>EMPLOYEE DETAILS</b></v-toolbar-title>
           <v-divider
@@ -129,7 +130,7 @@
         </v-toolbar>
       </template>
       <template v-slot:item = '{item,index}'>
-        <tr>
+        <tr style="background-color: #E8F5E9; color:black; font-weight: bold;">
             <td>{{ index + 1 }}</td>
     <td>{{ item.name }}</td>
     <td>{{ item.calories }}</td>

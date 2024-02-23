@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="pa-12 d-flex justify-content-center align-items-center flex-column bg-brown-darken-4" style="height: 100vh;">
+  <v-sheet class="pa-12 d-flex justify-content-center align-items-center flex-column" style="height: 100vh;  background: linear-gradient(to bottom right,#110b03,#3e7132);">
     <div class="d-flex justify-content-center align-items-center ">
       <v-img
       class="mx-auto my-6"
@@ -8,8 +8,8 @@
       src="@/assets/logo.png"
       ></v-img>
       <div class="d-flex flex-column justify-content-lg-center ">
-        <h2 class="lh-1">അക്ഷരം</h2>
-        <p class="lh-1">Museum of letters, literature<br> & culture</p>
+        <h2 class="lh-1 text-white">അക്ഷരം</h2>
+        <p class="lh-1 text-white">Museum of letters, literature<br> & culture</p>
       </div> 
     </div>
     
