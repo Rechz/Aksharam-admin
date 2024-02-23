@@ -1,9 +1,12 @@
 
 <template>
-    <div  class="green-background" >
+  <div  class="green-background" >
     <h1 class="heading">Admin dashboard</h1>
     <hr >
     </div>
+
+<div class="d-flex">
+<div >
     <v-layout>
       <v-navigation-drawer
         v-model="drawer"
@@ -37,7 +40,13 @@
       </v-navigation-drawer>
       <v-main style="height: 250px"></v-main>
     </v-layout>
-    <router-view></router-view>
+</div>
+<div class="ms-3">
+  <router-view></router-view>
+</div>
+</div>
+    
+   
 
 </template>
 <script>
