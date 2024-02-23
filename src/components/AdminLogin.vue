@@ -40,10 +40,10 @@
         <br>
 
         <v-btn
-          :disabled="!form"
+          
           :loading="loading"
           block
-          color="success"
+          color="green-darken-4"
           size="large"
           type="submit"
           variant="elevated"
