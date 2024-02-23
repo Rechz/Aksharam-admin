@@ -21,14 +21,18 @@
             max-width="500px"
           >
             <template v-slot:activator="{ props }">
-              <v-btn
-                color="success"
-                dark
-                class="mb-2"
-                v-bind="props"
-              >
-                <b> + Add Employee </b>
-              </v-btn>
+                <v-btn
+  color="success"
+  dark
+  class="mb-2"
+  v-bind="props"
+  :class="{ 'hover-green': isHovered }"
+  @mouseover="isHovered = true"
+  @mouseleave="isHovered = false"
+>
+  <b> + Add Employee </b>
+</v-btn>
+
             </template>
             <v-card>
               <v-card-title>
@@ -156,6 +160,7 @@
       data: () => ({
         dialog: false,
         dialogDelete: false,
+        isHovered: false,
         headers: [
         { title: 'Sl No.', key: 'serial no' },
           {
@@ -333,6 +338,9 @@
 .v-table{
     width : 70vw;
 }
-
+.hover-green:hover {
+  background-color: rgb(25, 103, 25) ; 
+  color: white !important ; 
+}
 
 </style>
