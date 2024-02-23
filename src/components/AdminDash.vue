@@ -1,8 +1,13 @@
 
 <template>
-  <div  class="green-background" >
-    <h1 class="heading">Admin dashboard</h1>
-    <hr >
+  <div  class="green-background d-flex justify-content-end" >
+    <div class="d-flex mt-1 me-3">
+        <v-img src="@/assets/logo.png" class="image"></v-img>
+        <div class="d-flex flex-column justify-content-lg-center ">
+          <h1 class="logo-h1 mb-0">അക്ഷരം</h1>
+          <p class="logo-p">Museum of letters, literature<br> & culture</p>
+        </div> 
+        </div>
     </div>
 
 <div class="d-flex">
@@ -41,7 +46,7 @@
       <v-main style="height: 250px"></v-main>
     </v-layout>
 </div>
-<div class="ms-5 mt-5">
+<div class="mx-5 mt-5">
   <router-view></router-view>
 </div>
 </div>
@@ -61,9 +66,7 @@
 </script>
 <style scoped>
   .green-background {
-    background-color: green;
-    position: relative;
-    padding-top: 57px;
+    background-color: #1B5E20;
   }
   .heading {
     text-align: right;
@@ -76,16 +79,25 @@
     color: white;
   }
 
-  hr {
-    position: absolute;
-    top: 40px;
-    right: 10px;
-    width: calc(100% - 20px);
-    border: 1px;
-    border-top: 1px solid #120d0d;
-  }
   .v-list-item:hover {
-    background-color: green ;
+    background-color: #1B5E20 ;
     color: white;
   }
+
+  .logo-h1 {
+        font-family: 'Noto Sans Malayalam', sans-serif;
+        color: white;
+        font-size: 20px;
+        font-weight: 900;
+        line-height: 16px;
+    }
+    .logo-p{
+      color: white;
+      font-size: 12px;
+      line-height: 15px;
+    }
+    .image{
+      height: 90px;
+      width: 90px;
+    }
 </style>
