@@ -5,7 +5,7 @@
     <v-data-table
       :headers="headers"
       :items="desserts"
-      :sort-by="[{ key: 'calories', order: 'asc' }]"
+      :sort-by="[{ key: 'ID', order: 'asc' }]"
       style="background-color: #1B5E20; color:white"
       max-width="100%"
     >
@@ -14,7 +14,13 @@
           flat
           style="background-color: white;"
         >
-          <v-toolbar-title style="color: green;"><b>TICKET DETAILS</b></v-toolbar-title>
+        <v-text-field
+            label="Search"
+            prepend-inner-icon="mdi-magnify"
+            variant="underlined"
+            class="w-20 ms-3"
+            elevation="24"
+          ></v-text-field>
           <v-divider
             class="mx-4"
             inset
@@ -23,13 +29,19 @@
       
     
           <v-spacer></v-spacer>
+          <v-select
+      :items="items"
+      density="compact"
+      class="me-3"
+      prepend-inner-icon="mdi-sort-variant"
+      label="Sort by"
+    ></v-select>
           <v-text-field
-            label="Search"
-            prepend-inner-icon="mdi-magnify"
-            variant="underlined"
-            class="w-20"
+            label="Append inner"
+            append-inner-icon="mdi-map-marker"
+            class="me-3"
+            density="comfortable"
           ></v-text-field>
-         
             
          
         </v-toolbar>
@@ -42,7 +54,7 @@
     <td>{{ item.fat }}</td>
     <td>{{ item.carbs }}</td>
     <td>{{ item.protein }}</td>
-    
+    <td>{{ item.details }}</td>
   </tr>
       </template>
     </v-data-table>
@@ -54,18 +66,12 @@
         dialogDelete: false,
         headers: [
         { title: 'Sl No.', key: 'seriel' },  
-        {
-            title: 'Dessert (100g serving)',
-            align: 'start',
-            sortable: false,
-            key: 'name',
-          },
-          { title: 'Calories', key: 'calories' },
-          
-          { title: 'Fat (g)', key: 'fat' },
-          { title: 'Carbs (g)', key: 'carbs' },
-          { title: 'Protein (g)', key: 'protein' },
-         
+        { title: 'Ticket ID', align: 'start', sortable: true,key: 'ID'},
+        { title: 'Booking Date', sortable: true, key: 'bdate' },
+        { title: 'Entry Date', key: 'edate' },
+        { title: 'Category', key: 'category' },
+        { title: 'Price', key: 'price'},
+        { title: 'Details', key: 'details'},
         ],
         desserts: [],
         
@@ -86,6 +92,7 @@
               fat: 6.0,
               carbs: 24,
               protein: 4.0,
+              details : 1
             },
             {
               name: 'Ice cream sandwich',
@@ -93,6 +100,7 @@
               fat: 9.0,
               carbs: 37,
               protein: 4.3,
+              details : 1
             },
             {
               name: 'Eclair',
@@ -100,6 +108,7 @@
               fat: 16.0,
               carbs: 23,
               protein: 6.0,
+              details : 1
             },
             {
               name: 'Cupcake',
@@ -107,6 +116,7 @@
               fat: 3.7,
               carbs: 67,
               protein: 4.3,
+              details : 1
             },
             {
               name: 'Gingerbread',
@@ -114,6 +124,7 @@
               fat: 16.0,
               carbs: 49,
               protein: 3.9,
+              details : 1
             },
             {
               name: 'Jelly bean',
@@ -121,6 +132,7 @@
               fat: 0.0,
               carbs: 94,
               protein: 0.0,
+              details : 1
             },
             {
               name: 'Lollipop',
@@ -128,6 +140,7 @@
               fat: 0.2,
               carbs: 98,
               protein: 0,
+              details : 1
             },
             {
               name: 'Honeycomb',
@@ -135,6 +148,7 @@
               fat: 3.2,
               carbs: 87,
               protein: 6.5,
+              details : 1
             },
             {
               name: 'Donut',
@@ -142,6 +156,7 @@
               fat: 25.0,
               carbs: 51,
               protein: 4.9,
+              details : 1
             },
             {
               name: 'KitKat',
@@ -149,6 +164,7 @@
               fat: 26.0,
               carbs: 65,
               protein: 7,
+              details : 1
             },
             {
               name: 'Eclair',
@@ -156,6 +172,7 @@
               fat: 16.0,
               carbs: 23,
               protein: 6.0,
+              details : 1
             },
             {
               name: 'Cupcake',
@@ -163,6 +180,7 @@
               fat: 3.7,
               carbs: 67,
               protein: 4.3,
+              details : 1
             },
             {
               name: 'Eclair',
@@ -170,6 +188,7 @@
               fat: 16.0,
               carbs: 23,
               protein: 6.0,
+              details : 1
             },
             {
               name: 'Cupcake',
@@ -177,6 +196,7 @@
               fat: 3.7,
               carbs: 67,
               protein: 4.3,
+              details : 1
             },
             {
               name: 'Eclair',
@@ -184,6 +204,7 @@
               fat: 16.0,
               carbs: 23,
               protein: 6.0,
+              details : 1
             },
             {
               name: 'Cupcake',
@@ -191,6 +212,7 @@
               fat: 3.7,
               carbs: 67,
               protein: 4.3,
+              details : 1
             },
           ]
         },
