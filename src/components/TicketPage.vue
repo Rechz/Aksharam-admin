@@ -1,13 +1,6 @@
 <template>
     
-        <v-text-field
-            label="Search"
-            prepend-inner-icon="mdi-magnify"
-            variant="underlined"
-            class="w-25"
-            style="float: right;"
-          ></v-text-field>
-    
+        
         
     <v-data-table
       :headers="headers"
@@ -27,8 +20,15 @@
             inset
             vertical
           ></v-divider>
+      
+    
           <v-spacer></v-spacer>
-          
+          <v-text-field
+            label="Search"
+            prepend-inner-icon="mdi-magnify"
+            variant="underlined"
+            class="w-20"
+          ></v-text-field>
          
             
          

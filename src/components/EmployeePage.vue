@@ -17,15 +17,15 @@
             vertical
           ></v-divider>
           
+         
+          <v-spacer></v-spacer>
           <v-text-field
             label="Search"
             prepend-inner-icon="mdi-magnify"
             variant="underlined"
-            class="w-20"
-            style="float: right;"
+            class="w-20 me-5"
+            
           ></v-text-field>
-          <v-spacer></v-spacer>
-
           <v-dialog
             v-model="dialog"
             max-width="500px"
@@ -129,14 +129,14 @@
             </v-card>
           </v-dialog>
           <v-dialog v-model="dialogDelete" width="420px" height="300px">
-  <v-card>
-    <v-card-header></v-card-header>
-    <v-icon color="red" size="48"  class="align-self-center">mdi-alert</v-icon>
-    <v-card-title class="text-h6 mt-2">Are you sure you want to delete this item?</v-card-title>
+  <v-card style="border-top: 6px solid #B71C1C">
+    <!-- <v-card-title style="background-color: #FFCDD2;" class="mb-2">Delete Employee?</v-card-title> -->
+    <v-icon color="red-darken-4" size="48"  class="align-self-center mt-2">mdi-alert</v-icon>
+    <v-card-title class="text-h6 mt-2">Are you sure you want to delete this employee?</v-card-title>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="black" variant="text" @click="closeDelete" class="hover-green">Cancel</v-btn>
-      <v-btn color="black" variant="text" @click="deleteItemConfirm" class="hover-red">OK</v-btn>
+      <v-btn color="black" class="bg-dark-subtle" density="compact" @click="closeDelete" >Cancel</v-btn>
+      <v-btn color="black" style="background-color: #b71c1c79;"  density="compact" @click="deleteItemConfirm" >OK</v-btn>
       <v-spacer></v-spacer>
     </v-card-actions>
   </v-card>
@@ -356,14 +356,6 @@
 .v-table{
     width : 70vw;
 }
-.hover-green:hover {
-    background-color: green !important;
-    color: white !important;
-  }
 
-  .hover-red:hover {
-    background-color: red !important;
-    color: white !important;
-  }
 
 </style>
