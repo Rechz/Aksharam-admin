@@ -13,7 +13,7 @@ const router = createRouter({
           {
             path : '/tickets',
             alias : '/dashboard',
-            component : () => import('./components/TicketPage.vue')
+            component : () => import('./components/TicketNav.vue'),
           },
           {
             path : '/portal',

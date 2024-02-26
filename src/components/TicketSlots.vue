@@ -14,7 +14,7 @@
           flat
           style="background-color: white;"
         >
-          <v-toolbar-title style="color: green;"><b>TICKET DETAILS</b></v-toolbar-title>
+          <v-toolbar-title style="color: green;"><b>SLOT DETAILS</b></v-toolbar-title>
           <v-divider
             class="mx-4"
             inset
@@ -35,7 +35,7 @@
         </v-toolbar>
       </template>
       <template v-slot:item = '{item, index}'>
-        <tr style="background-color: #F9FBE7; color:black; font-weight: bold;">
+        <tr style="background-color: #E8F5E9; color:black; font-weight: bold;">
     <td>{{ index + 1 }}</td>
     <td>{{ item.name }}</td>
     <td>{{ item.calories }}</td>

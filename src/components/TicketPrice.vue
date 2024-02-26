@@ -14,7 +14,7 @@
           flat
           style="background-color: white;"
         >
-          <v-toolbar-title style="color: green;"><b>TICKET DETAILS</b></v-toolbar-title>
+          <v-toolbar-title style="color: green;"><b>PRICE DETAILS</b></v-toolbar-title>
           <v-divider
             class="mx-4"
             inset
