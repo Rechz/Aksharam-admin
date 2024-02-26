@@ -17,13 +17,13 @@
   
       <v-window v-model="tab" class="mt-4">
         <v-window-item v-for="item in items" :key="item" :value="item">
-        <v-card color="basil" flat v-if="item === 'Details'">
+        <v-card  flat v-if="item === 'Details'">
           <TicketPage/>
         </v-card>
-        <v-card color="basil" flat v-else-if="item === 'Price'">
+        <v-card  flat v-else-if="item === 'Price'">
           <TicketPrice/>
         </v-card>
-        <v-card color="basil" flat v-else-if="item === 'Slots'">
+        <v-card  flat v-else-if="item === 'Slots'">
           <TicketSlots/>
         </v-card>
       </v-window-item>

@@ -38,7 +38,7 @@
         <v-list density="compact" nav>
           <v-list-item prepend-icon="mdi mdi-chart-line" title="Dashboard" value="home"  @click="$router.push('/dashboard-page')"></v-list-item>          
           <v-list-item prepend-icon="mdi mdi-ticket-confirmation-outline" title="Tickets" value="ticket" @click="$router.push('/tickets')"></v-list-item>
-          <v-list-item prepend-icon="mdi-account-group-outline" title="Employee" value="account"  @click="$router.push('/employee-page')" ></v-list-item>
+          <v-list-item prepend-icon="mdi-account-group-outline" title="Employee" value="account"  @click="$router.push('/employee-nav')" ></v-list-item>
           <v-list-item prepend-icon="mdi mdi-collapse-all" title="Items" value="items"  @click="$router.push('/items-page')"></v-list-item>
           <v-list-item prepend-icon="mdi mdi-image-multiple-outline" title="Portal" value="portal"  @click="$router.push('/portal')"></v-list-item>
         </v-list>

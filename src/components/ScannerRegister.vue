@@ -1,4 +1,41 @@
 <template>
+    
+<v-row class="mx-2 d-flex align-items-start bg-white">
+  <v-col cols="11" sm="4">
+
+  
+          <v-text-field
+            label="Select Employee"
+            prepend-inner-icon="mdi-briefcase-account"
+            density="compact"
+          ></v-text-field>
+  </v-col>
+  
+  <v-col cols="11" sm="4">
+    <v-responsive class="mx-auto"  max-width="310">
+   
+          <v-text-field
+            label="Password"
+            prepend-inner-icon="mdi-eye"
+            density="compact"
+          ></v-text-field>
+    </v-responsive>
+    
+  </v-col>
+  
+
+
+  <v-col cols="5" sm="4">
+    
+    <v-btn color="success" dark class="mb-2" v-bind="props" style="background-color: rgb(25, 103, 25); color: white !important;">
+      <b>+ Add a Scanner</b>
+    </v-btn>
+
+  </v-col>
+</v-row>
+<v-divider></v-divider>
+
+
     <v-data-table
       :headers="headers"
       :items="desserts"
@@ -10,12 +47,9 @@
           flat
           style="background-color: white;"
         >
-          <v-toolbar-title style="color: green;"><b>EMPLOYEE DETAILS</b></v-toolbar-title>
-          <v-divider
-            class="mx-4"
-            inset
-            vertical
-          ></v-divider>
+        
+   <v-spacer></v-spacer>
+   <v-spacer></v-spacer>
           
          
           <v-spacer></v-spacer>
@@ -30,24 +64,9 @@
             v-model="dialog"
             max-width="500px"
           >
-            <template v-slot:activator="{ props }">
-                <v-btn
-  color="success"
-  dark
-  class="mb-2"
-  v-bind="props"
-  
-  style="background-color: rgb(25, 103, 25); color: white !important;"
 
->
-  <b> + Add Employee </b>
-</v-btn>
-
-            </template>
             <v-card>
-              <v-card-title>
-                <span class="text-h5">{{ formTitle }}</span>
-              </v-card-title>
+        
   
               <v-card-text>
                 <v-container>
@@ -69,7 +88,7 @@
                     >
                       <v-text-field
                         v-model="editedItem.calories"
-                        label="Name"
+                        label="Image"
                       ></v-text-field>
                     </v-col>
                     <v-col
@@ -79,7 +98,7 @@
                     >
                       <v-text-field
                         v-model="editedItem.fat"
-                        label="Phone No"
+                        label="Name"
                       ></v-text-field>
                     </v-col>
                     <v-col
@@ -89,19 +108,10 @@
                     >
                       <v-text-field
                         v-model="editedItem.carbs"
-                        label="Email ID"
+                        label="Password"
                       ></v-text-field>
                     </v-col>
-                    <v-col
-                      cols="12"
-                      sm="12"
-                      md="12"
-                    >
-                      <v-text-field
-                        v-model="editedItem.protein"
-                        label="Address"
-                      ></v-text-field>
-                    </v-col>
+             
                     <v-col cols="12">
               <v-file-input v-model="editedItem.image" label="Upload Image"></v-file-input>
             </v-col>
@@ -187,9 +197,9 @@
             sortable: false,
             key: 'name',
           },
-          { title: 'Name', key: 'name' },
-          { title: 'Phone No ', key: 'fat' },
-          { title: 'Details', key: 'carbs' },
+          { title: 'Image', key: 'name' },
+          { title: 'Name ', key: 'fat' },
+          { title: 'Password', key: 'carbs' },
          
           { title: 'Edit / Delete', key: 'actions', sortable: false },
         ],
@@ -354,7 +364,7 @@
 
   <style>
 .v-table{
-    width : 70vw;
+    width : 73vw;
 }
 .hover-red:hover {
   background-color: #b71c1c !important; /* Change this to the desired hover color */
