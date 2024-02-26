@@ -28,8 +28,9 @@ const router = createRouter({
             component : () => import('./components/DashPage.vue')
           },
           {
-            path : '/employee-page',
-            component : () => import('./components/EmployeePage.vue')
+            path : '/employee-nav',
+            component : () => import('./components/EmployeeNav.vue'),
+
           }
 
         ]
