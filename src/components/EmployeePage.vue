@@ -129,14 +129,14 @@
             </v-card>
           </v-dialog>
           <v-dialog v-model="dialogDelete" width="420px" height="300px">
-  <v-card style="border-top: 6px solid #B71C1C">
+  <v-card style="border-top: 25px solid #B71C1C">
     <!-- <v-card-title style="background-color: #FFCDD2;" class="mb-2">Delete Employee?</v-card-title> -->
     <v-icon color="red-darken-4" size="48"  class="align-self-center mt-2">mdi-alert</v-icon>
     <v-card-title class="text-h6 mt-2">Are you sure you want to delete this employee?</v-card-title>
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn color="black" class="bg-dark-subtle" density="compact" @click="closeDelete" >Cancel</v-btn>
-      <v-btn color="black" style="background-color: #b71c1c79;"  density="compact" @click="deleteItemConfirm" >OK</v-btn>
+      <v-btn color="black"  density="compact"  class="hover-red bg-dark-subtle" @click="deleteItemConfirm" >OK</v-btn>
       <v-spacer></v-spacer>
     </v-card-actions>
   </v-card>
@@ -356,6 +356,9 @@
 .v-table{
     width : 70vw;
 }
-
+.hover-red:hover {
+  background-color: #b71c1c !important; /* Change this to the desired hover color */
+  color: white !important; /* Change this to the desired text color */
+}
 
 </style>

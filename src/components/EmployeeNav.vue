@@ -1,17 +1,19 @@
 <template>
-    <v-card color="basil">
+  
+    <v-card>
+        
     <v-tabs v-model="tab"   bg-color="green-lighten-5" grow>
         <v-tab v-for="item in items" :key="item" :value="item">
           {{ item }}
         </v-tab>
       </v-tabs>
-  
-      <v-window v-model="tab">
+      
+      <v-window v-model="tab" class="mt-4">
         <v-window-item v-for="item in items" :key="item" :value="item">
-          <v-card color="basil" flat v-if="item === 'Add Employee'">
+          <v-card  flat v-if="item === 'Add Employee'">
             <EmployeePage/>
           </v-card>
-          <v-card color="basil" flat v-else>
+          <v-card flat v-else>
             <!-- ScannerRegister component goes here -->
             <ScannerRegister/>
           </v-card>
