@@ -27,10 +27,17 @@
 
   <v-col cols="5" sm="4">
     
-    <v-btn color="success" dark class="mb-2" v-bind="props" style="background-color: rgb(25, 103, 25); color: white !important;">
-      <b>+ Add a Scanner</b>
-    </v-btn>
+    <v-btn
 
+  dark
+ 
+  v-bind="props"
+  
+  style="background-color: #1B5E20 !important; color: white !important;"
+
+>
+  <b> + Add Scanner </b>
+</v-btn>
   </v-col>
 </v-row>
 <v-divider></v-divider>

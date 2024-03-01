@@ -1,142 +1,95 @@
 <template>
-    <v-data-table
-      :headers="headers"
-      :items="desserts"
-      :sort-by="[{ key: 'calories', order: 'asc' }]"
-      style="background-color: #1B5E20; color:white"
-    >
-      <template v-slot:top>
-        <v-toolbar
-          flat
-          style="background-color: white;"
-        >
-          <v-toolbar-title style="color: green;"><b>EMPLOYEE DETAILS</b></v-toolbar-title>
-          <v-divider
-            class="mx-4"
-            inset
-            vertical
-          ></v-divider>
-          
-         
-          <v-spacer></v-spacer>
-          <v-text-field
-            label="Search"
-            prepend-inner-icon="mdi-magnify"
-            variant="underlined"
-            class="w-20 me-5"
+  <v-data-table
+    :headers="headers"
+    :items="desserts"
+   
+    style="background-color: #1B5E20; color:white"
+  >
+    <template v-slot:top>
+      <v-toolbar flat style="background-color: white;">   
+        <v-text-field
+          label="Search"
+          prepend-inner-icon="mdi-magnify"
+          variant="underlined"
+          class="mx-5 w-20"
+        ></v-text-field>
+        <v-divider class="mx-4" inset vertical></v-divider>
+        <v-spacer></v-spacer>
+        <v-dialog v-model="dialog" max-width="500px">
+          <template v-slot:activator="{ props }">
+            <v-btn
+             color="success"
+             dark
+             class="mb-2"
+             v-bind="props"
+             style="background-color: #1B5E20; color: white !important;"
+            ><b> + Add Employee </b>
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title class="text-center" style="background-color: #1B5E20; color: white !important;"><span class="text-h6">{{formTitle}}</span></v-card-title> 
+            <v-card-text class="mb-0">
+              <v-container class="py-0 d-flex flex-column ">
+                <v-text-field
+                 v-model="editedItem.empId"
+                 prepend-inner-icon="mdi-card-account-details-outline"
+                 label="Emp ID"
+                 density="comfortable"
+                ></v-text-field>
+                <v-text-field
+                  v-model="editedItem.name"
+                  label="Name"
+                  prepend-inner-icon="mdi-account-outline"
+                  density="comfortable"
+                ></v-text-field>
+                <v-text-field
+                  v-model="editedItem.contact"
+                  label="Phone No"
+                  prepend-inner-icon="mdi-phone-outline"
+                  density="comfortable"
+                ></v-text-field>
+                <v-text-field
+                  v-model="editedItem.email"
+                  label="Email ID"
+                  prepend-inner-icon="mdi-email-outline"
+                  density="comfortable"
+                ></v-text-field>
+                <v-text-field
+                  v-model="editedItem.addressTemp"
+                  label="Temporary Address"
+                  prepend-inner-icon="mdi-map-marker-outline"
+                  density="comfortable"
+                ></v-text-field>   
+                <v-text-field
+                  v-model="editedItem.addressPerm"
+                  label="Permanent Address"
+                  prepend-inner-icon="mdi-home-map-marker"
+                  density="comfortable"
+                ></v-text-field> 
+             <v-file-input v-model="editedItem.image" label="Upload Image" density="comfortable" class="mb-0" prepend-inner-icon="mdi-paperclip"></v-file-input>
+             <v-card-actions class="d-flex justify-content-end">
+              <div >
+              <v-btn color="black" class="bg-dark-subtle" @click="close">Cancel</v-btn>
+              <v-btn color="black" class="bg-dark-subtle" @click="save">{{formButton}}</v-btn>
+              </div>
+            </v-card-actions>
+              </v-container>
+            </v-card-text>
             
-          ></v-text-field>
-          <v-dialog
-            v-model="dialog"
-            max-width="500px"
-          >
-            <template v-slot:activator="{ props }">
-                <v-btn
-  color="success"
-  dark
-  class="mb-2"
-  v-bind="props"
-  
-  style="background-color: rgb(25, 103, 25); color: white !important;"
-
->
-  <b> + Add Employee </b>
-</v-btn>
-
-            </template>
-            <v-card>
-              <v-card-title>
-                <span class="text-h5">{{ formTitle }}</span>
-              </v-card-title>
-  
-              <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col
-                      cols="12"
-                      sm="12"
-                      md="12"
-                    >
-                      <v-text-field
-                        v-model="editedItem.name"
-                        label="Emp ID"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="12"
-                      md="12"
-                    >
-                      <v-text-field
-                        v-model="editedItem.calories"
-                        label="Name"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="12"
-                      md="12"
-                    >
-                      <v-text-field
-                        v-model="editedItem.fat"
-                        label="Phone No"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="12"
-                      md="12"
-                    >
-                      <v-text-field
-                        v-model="editedItem.carbs"
-                        label="Email ID"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="12"
-                      md="12"
-                    >
-                      <v-text-field
-                        v-model="editedItem.protein"
-                        label="Address"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-              <v-file-input v-model="editedItem.image" label="Upload Image"></v-file-input>
-            </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
-  
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                  color="blue-darken-1"
-                  variant="text"
-                  @click="close"
-                >
-                  Cancel
-                </v-btn>
-                <v-btn
-                  color="blue-darken-1"
-                  variant="text"
-                  @click="save"
-                >
-                  Save
-                </v-btn>
-              </v-card-actions>
             </v-card>
           </v-dialog>
-          <v-dialog v-model="dialogDelete" width="420px" height="300px">
+
+          <v-dialog v-model="dialogDelete" max-width="420px" height="300px">
   <v-card style="border-top: 25px solid #B71C1C">
     <!-- <v-card-title style="background-color: #FFCDD2;" class="mb-2">Delete Employee?</v-card-title> -->
     <v-icon color="red-darken-4" size="48"  class="align-self-center mt-2">mdi-alert</v-icon>
-    <v-card-title class="text-h6 mt-2">Are you sure you want to delete this employee?</v-card-title>
+    <v-card-text class="text-h6 mt-1 text-center">Are you sure you want to delete this employee?</v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="black" class="bg-dark-subtle" density="compact" @click="closeDelete" >Cancel</v-btn>
-      <v-btn color="black"  density="compact"  class="hover-red bg-dark-subtle" @click="deleteItemConfirm" >OK</v-btn>
+      <div class="d-flex justify-content-center mb-3">
+        <v-btn color="black" class="bg-dark-subtle" density="compact" @click="closeDelete" >Cancel</v-btn>
+        <v-btn color="black"  density="compact"  class="hover-red bg-danger-subtle" @click="deleteItemConfirm" >Delete</v-btn>
+      </div>
       <v-spacer></v-spacer>
     </v-card-actions>
   </v-card>
@@ -147,28 +100,16 @@
       </template>
       <template v-slot:item = '{item,index}'>
         <tr style="background-color: #E8F5E9; color:black; font-weight: bold;">
-            <td>{{ index + 1 }}</td>
-    <td>{{ item.name }}</td>
-    <td>{{ item.calories }}</td>
-    <td>{{ item.fat }}</td>
-    <td>{{ item.carbs }}</td>
-   
-    <td>
-      <v-icon
-        size="small"
-        class="me-2"
-        @click="editItem(item)"
-      >
-        mdi-pencil
-      </v-icon>
-      <v-icon
-        size="small"
-        @click="deleteItem(item)"
-      >
-        mdi-delete
-      </v-icon>
-    </td>
-  </tr>
+          <td class="text-center">{{ index + 1 }}</td>
+          <td class="text-center">{{ item.empId }}</td>
+          <td class="text-center">{{ item.name }}</td>
+          <td class="text-center">{{ item.contact }}</td>
+          <td class="text-center"><v-icon size="small">mdi-eye</v-icon></td>
+          <td class="text-center">
+            <v-icon size="small" class="me-3" @click="editItem(item)">mdi-pencil</v-icon>
+            <v-icon size="small" @click="deleteItem(item)">mdi-delete</v-icon>
+          </td>
+        </tr>
       </template>
     </v-data-table>
   </template>
@@ -179,43 +120,42 @@
         dialogDelete: false,
         isHovered: false,
         headers: [
-        { title: 'Sl No.', key: 'serial no' },
-          {
-
-            title: 'Emp ID',
-            align: 'start',
-            sortable: false,
-            key: 'name',
-          },
-          { title: 'Name', key: 'name' },
-          { title: 'Phone No ', key: 'fat' },
-          { title: 'Details', key: 'carbs' },
-         
-          { title: 'Edit / Delete', key: 'actions', sortable: false },
+          { title: 'SL No.', align: 'center', key: 'serial no', sortable: false },
+          { title: 'EMP ID', align: 'center', key: 'name', sortable: false},
+          { title: 'NAME', align: 'center', key: 'name', sortable: false },
+          { title: 'CONTACT', align: 'center', key: 'fat', sortable: false },
+          { title: 'DETAILS', align: 'center', key: 'carbs', sortable: false },
+          { title: 'EDIT / DELETE', align: 'center', key: 'actions', sortable: false},
         ],
         desserts: [],
         editedIndex: -1,
         editedItem: {
+          empId: '',
           name: '',
-          calories: 0,
-          fat: 0,
-          carbs: 0,
-          image : null
-         
+          contact: null,
+          addressTemp: '',
+          addressPerm: '',
+          email:'',
+          image:null 
         },
         defaultItem: {
+          empId: '',
           name: '',
-          calories: 0,
-          fat: 0,
-          carbs: 0,
-          image : null
+          contact: null,
+          addressTemp: '',
+          addressPerm: '',
+          email:'',
+          image:null 
         },
       }),
   
       computed: {
         formTitle () {
-          return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+          return this.editedIndex === -1 ? 'Add Employee' : 'Edit Employee'
         },
+        formButton () {
+          return this.editedIndex === -1? 'Add' : 'Update'
+        }
       },
   
       watch: {
@@ -235,74 +175,94 @@
         initialize () {
           this.desserts = [
             {
-              name: 'Frozen Yogurt',
-              calories: 159,
-              fat: 6.0,
-              carbs: 24,
-              
+              empId: 'AKSH1001',
+              name: 'Anju',
+              contact: 963895623,
+              addressTemp: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+              addressPerm: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+              email:'anju@gmail.com',
+              image:'' 
             },
             {
-              name: 'Ice cream sandwich',
-              calories: 237,
-              fat: 9.0,
-              carbs: 37,
-            
+              empId: 'AKSH1002',
+              name: 'Akhila',
+              contact: 945895743,
+              addressTemp: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+              addressPerm: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+              email:'anju@gmail.com',
+              image:''
             },
             {
-              name: 'Eclair',
-              calories: 262,
-              fat: 16.0,
-              carbs: 23,
-              
+              empId: 'AKSH1003',
+              name: 'Deva',
+              contact: 963895623,
+              addressTemp: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+              addressPerm: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+              email:'anju@gmail.com',
+              image:''
             },
             {
-              name: 'Cupcake',
-              calories: 305,
-              fat: 3.7,
-              carbs: 67,
-              
+              empId: 'AKSH1004',
+              name: 'Ebin',
+              contact: 963895623,
+              addressTemp: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+              addressPerm: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+              email:'anju@gmail.com',
+              image:''
             },
             {
-              name: 'Gingerbread',
-              calories: 356,
-              fat: 16.0,
-              carbs: 49,
-           
+              empId: 'AKSH1005',
+              name: 'Neethu',
+              contact: 963895623,
+              addressTemp: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+              addressPerm: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+              email:'anju@gmail.com',
+              image:''
             },
             {
-              name: 'Jelly bean',
-              calories: 375,
-              fat: 0.0,
-              carbs: 94,
-           
+              empId: 'AKSH1006',
+              name: 'Stephy',
+              contact: 963895623,
+              addressTemp: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+              addressPerm: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+              email:'anju@gmail.com',
+              image:''
             },
             {
-              name: 'Lollipop',
-              calories: 392,
-              fat: 0.2,
-              carbs: 98,
-             
+              empId: 'AKSH1007',
+              name: 'Sangeetha',
+              contact: 963895623,
+              addressTemp: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+              addressPerm: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+              email:'anju@gmail.com',
+              image:''
             },
             {
-              name: 'Honeycomb',
-              calories: 408,
-              fat: 3.2,
-              carbs: 87,
-             
+              empId: 'AKSH1008',
+              name: 'Aswathy',
+              contact: 963895623,
+              addressTemp: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+              addressPerm: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+              email:'anju@gmail.com',
+              image:''
             },
             {
-              name: 'Donut',
-              calories: 452,
-              fat: 25.0,
-              carbs: 51,
-          
+              empId: 'AKSH1009',
+              name: 'Siya',
+              contact: 963895623,
+              addressTemp: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+              addressPerm: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+              email:'anju@gmail.com',
+              image:''
             },
             {
-              name: 'KitKat',
-              calories: 518,
-              fat: 26.0,
-              carbs: 65,
-           
+              empId: 'AKSH1010',
+              name: 'Reshma',
+              contact: 963895623,
+              addressTemp: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+              addressPerm: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+              email:'anju@gmail.com',
+              image:''
             },
           ]
         },
@@ -360,5 +320,7 @@
   background-color: #b71c1c !important; /* Change this to the desired hover color */
   color: white !important; /* Change this to the desired text color */
 }
-
+.v-input__prepend, .v-input__append {
+    display: none;
+}
 </style>

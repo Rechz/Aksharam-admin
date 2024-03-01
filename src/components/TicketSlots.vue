@@ -31,7 +31,7 @@
   ></v-text-field>
 
       
-      <v-btn color="success" dark class="mb-2 me-2" v-bind="props" style="background-color: rgb(25, 103, 25); color: white !important;">
+      <v-btn color="success" dark class="me-2" v-bind="props" style="background-color:  #1B5E20; color: white !important;">
         <b>+ Add a Scanner</b>
       </v-btn>
   

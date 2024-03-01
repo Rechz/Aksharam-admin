@@ -2,7 +2,7 @@
     <v-card >
       <v-tabs
         v-model="tab"
-        bg-color="lime-lighten-5"
+        bg-color="green-lighten-5"
         color="green-darken-4"
         grow
       >

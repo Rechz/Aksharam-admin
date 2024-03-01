@@ -15,22 +15,13 @@
     <v-layout>
       <v-navigation-drawer
         v-model="drawer"
-        :rail="rail"
         permanent
-        @click="rail = false"
       >
         <v-list-item 
-          prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
+          prepend-icon="mdi-account-circle"
           title="Aksharam"
           nav
         >
-          <template v-slot:append>
-            <v-btn
-              variant="text"
-              icon="mdi-chevron-left"
-              @click.stop="rail = !rail"
-            ></v-btn>
-          </template>
         </v-list-item>
 
         <v-divider></v-divider>
@@ -72,7 +63,6 @@
     position: absolute;
     top: 0;
     right: 0;
-
     color: white;
   }
 
