@@ -1,41 +1,13 @@
 <template>
     
-  <div class="d-flex bg-white">
 
-  
-    
-            <v-text-field
-              label="Select Employee"
-              prepend-inner-icon="mdi-briefcase-account"
-              density="compact"
-              class="me-2"
-            ></v-text-field>
-
-    
-  
-     
-            <v-text-field
-              label="Password"
-              prepend-inner-icon="mdi-eye"
-              density="compact"
-              class="me-2"
-            ></v-text-field>
-  
-  
-    
-  <v-text-field
-    label="Tickets Per Slot"
-    prepend-inner-icon="mdi-ticket-confirmation"
-    density="compact"
-              class="me-2"
-  ></v-text-field>
-
-      
-      <v-btn color="success" dark class="me-2" v-bind="props" style="background-color:  #1B5E20; color: white !important;">
-        <b>+ Add a Scanner</b>
-      </v-btn>
-  
-
+    <div class="d-flex bg-white">
+      <v-text-field v-model="newSlot.in" label="Time IN" prepend-inner-icon="mdi-clock-time-four" density="compact" class="me-2"></v-text-field>
+      <v-text-field v-model="newSlot.out" label="Time OUT" prepend-inner-icon="mdi-clock-time-four" density="compact" class="me-2"></v-text-field>
+      <v-text-field v-model="newSlot.ticketno" label="Tickets Per Slot" prepend-inner-icon="mdi-ticket-confirmation" density="compact" class="me-2"></v-text-field>
+      <v-btn color="rgb(25, 103, 25)" dark class="mb-2 me-2" @click="addSlot">
+  <b>+ Add Slot</b>
+</v-btn>
     </div>
  
   
@@ -75,8 +47,19 @@
                         md="12"
                       >
                         <v-text-field
-                          v-model="editedItem.name"
-                          label="Emp ID"
+                          v-model="editedItem.in"
+                          label="Time IN"
+                        ></v-text-field>
+                      </v-col>
+              
+                      <v-col
+                        cols="12"
+                        sm="12"
+                        md="12"
+                      >
+                        <v-text-field
+                          v-model="editedItem.out"
+                          label="Time OUT"
                         ></v-text-field>
                       </v-col>
                       <v-col
@@ -85,34 +68,11 @@
                         md="12"
                       >
                         <v-text-field
-                          v-model="editedItem.calories"
-                          label="Image"
+                          v-model="editedItem.ticketno"
+                          label="No. of Tickets"
                         ></v-text-field>
                       </v-col>
-                      <v-col
-                        cols="12"
-                        sm="12"
-                        md="12"
-                      >
-                        <v-text-field
-                          v-model="editedItem.fat"
-                          label="Name"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col
-                        cols="12"
-                        sm="12"
-                        md="12"
-                      >
-                        <v-text-field
-                          v-model="editedItem.carbs"
-                          label="Password"
-                        ></v-text-field>
-                      </v-col>
-               
-                      <v-col cols="12">
-                <v-file-input v-model="editedItem.image" label="Upload Image"></v-file-input>
-              </v-col>
+
                     </v-row>
                   </v-container>
                 </v-card-text>
@@ -155,11 +115,11 @@
         </template>
         <template v-slot:item = '{item,index}'>
           <tr style="background-color: #E8F5E9; color:black; font-weight: bold;">
-              <td>{{ index + 1 }}</td>
-      <td>{{ item.name }}</td>
-      <td>{{ item.calories }}</td>
-      <td>{{ item.fat }}</td>
-      <td>{{ item.carbs }}</td>
+            <td>{{ index + 1 }}</td>
+   
+      <td>{{ item.in }}</td>
+      <td>{{ item.out }}</td>
+      <td>{{ item.ticketno }}</td>
      
       <td>
         <v-icon
@@ -183,40 +143,38 @@
     <script>
       export default {
         data: () => ({
+          newSlot: {
+      in: '',
+      out: '',
+      ticketno: '',
+    },
           dialog: false,
           dialogDelete: false,
           isHovered: false,
           headers: [
           { title: 'Sl No.', key: 'serial no' },
-            {
-  
-              title: 'Emp ID',
-              align: 'start',
-              sortable: false,
-              key: 'name',
-            },
-            { title: 'Image', key: 'name' },
-            { title: 'Name ', key: 'fat' },
-            { title: 'Password', key: 'carbs' },
+            { title: 'Time IN', key: 'in' },
+            { title: 'Time OUT', key: 'out' },
+            { title: 'No.of Tickets', key: 'ticketno' },
            
             { title: 'Edit / Delete', key: 'actions', sortable: false },
           ],
           desserts: [],
           editedIndex: -1,
           editedItem: {
-            name: '',
-            calories: 0,
-            fat: 0,
-            carbs: 0,
-            image : null
+         
+            in: 0,
+            out: 0,
+            ticketno: 0,
+          
            
           },
           defaultItem: {
-            name: '',
-            calories: 0,
-            fat: 0,
-            carbs: 0,
-            image : null
+ 
+            in: 0,
+            out: 0,
+            ticketno: 0,
+
           },
         }),
     
@@ -240,78 +198,62 @@
         },
     
         methods: {
+ 
+
+
           initialize () {
             this.desserts = [
               {
-                name: 'Frozen Yogurt',
-                calories: 159,
-                fat: 6.0,
-                carbs: 24,
+       
+                in: 159,
+                out: 6.0,
+                ticketno: 24,
                 
               },
               {
-                name: 'Ice cream sandwich',
-                calories: 237,
-                fat: 9.0,
-                carbs: 37,
+
+                in: 19,
+                out: 6.05,
+                ticketno: 2344,
               
               },
               {
-                name: 'Eclair',
-                calories: 262,
-                fat: 16.0,
-                carbs: 23,
+          
+                in: 179,
+                out: 35,
+                ticketno: 24,
                 
               },
               {
-                name: 'Cupcake',
-                calories: 305,
-                fat: 3.7,
-                carbs: 67,
+             
+                in: 190,
+                out: 65,
+                ticketno: 44,
                 
               },
               {
-                name: 'Gingerbread',
-                calories: 356,
-                fat: 16.0,
-                carbs: 49,
+               
+                in: 79,
+                out: 698,
+                ticketno: 23,
              
               },
               {
-                name: 'Jelly bean',
-                calories: 375,
-                fat: 0.0,
-                carbs: 94,
+           
+                in: 89988,
+                out: 85,
+                ticketno: 4,
              
               },
               {
-                name: 'Lollipop',
-                calories: 392,
-                fat: 0.2,
-                carbs: 98,
+           
+                in: 19,
+                out: 905,
+                ticketno: 2388944,
                
               },
-              {
-                name: 'Honeycomb',
-                calories: 408,
-                fat: 3.2,
-                carbs: 87,
-               
-              },
-              {
-                name: 'Donut',
-                calories: 452,
-                fat: 25.0,
-                carbs: 51,
-            
-              },
-              {
-                name: 'KitKat',
-                calories: 518,
-                fat: 26.0,
-                carbs: 65,
-             
-              },
+
+
             ]
           },
     
@@ -355,9 +297,32 @@
               this.desserts.push(this.editedItem)
             }
             this.close()
-          },
-        },
-      }
+          }, addSlot() {
+    if (!this.newSlot.in || !this.newSlot.out || !this.newSlot.ticketno) {
+      // Show an error message or handle it as needed
+      return;
+    }
+
+    const newSlot = {
+      // You may consider adding a unique key here
+      in: this.newSlot.in,
+      out: this.newSlot.out,
+      ticketno: this.newSlot.ticketno,
+    };
+
+    this.desserts.push(newSlot);
+
+    // Optionally, provide feedback for successful slot addition
+   // this.$toast.success('Slot added successfully'); // Adjust this line based on your notification mechanism
+
+    // Clear the input fields after adding the slot
+    this.newSlot.in = '';
+    this.newSlot.out = '';
+    this.newSlot.ticketno = '';
+  },
+},
+        }
+      
     </script>
   
     <style>

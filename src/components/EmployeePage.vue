@@ -119,6 +119,7 @@
         dialog: false,
         dialogDelete: false,
         isHovered: false,
+        search: '',
         headers: [
           { title: 'SL No.', align: 'center', key: 'serial no', sortable: false },
           { title: 'EMP ID', align: 'center', key: 'name', sortable: false},
@@ -170,6 +171,13 @@
       created () {
         this.initialize()
       },
+
+    filteredDesserts() {
+      return this.desserts.filter((item) =>
+        item.name.toLowerCase().includes(this.search.toLowerCase())
+      );
+    },
+  
   
       methods: {
         initialize () {
