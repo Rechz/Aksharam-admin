@@ -2,7 +2,7 @@
   
     <v-card>
         
-    <v-tabs v-model="tab"   bg-color="green-lighten-5" grow>
+    <v-tabs v-model="tab"   bg-color="#F9FBE7" grow>
         <v-tab v-for="item in items" :key="item" :value="item">
           {{ item }}
         </v-tab>

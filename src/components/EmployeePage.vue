@@ -99,7 +99,7 @@
         </v-toolbar>
       </template>
       <template v-slot:item = '{item,index}'>
-        <tr style="background-color: #E8F5E9; color:black; font-weight: bold;">
+        <tr style="background-color: #F9FBE7; color:black; font-weight: bold;">
           <td class="text-center">{{ index + 1 }}</td>
           <td class="text-center">{{ item.empId }}</td>
           <td class="text-center">{{ item.name }}</td>
