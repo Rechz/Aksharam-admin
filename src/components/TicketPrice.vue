@@ -1,247 +1,106 @@
 <template>
-    
-        
-        
-    <v-data-table
-      :headers="headers"
-      :items="desserts"
-      :sort-by="[{ key: 'calories', order: 'asc' }]"
-      style="background-color: #1B5E20; color:white"
-      max-width="100%"
-    >
-      <template v-slot:top>
-        <v-toolbar
-          flat
-          style="background-color: white;"
-        >
-          <v-toolbar-title style="color: green;"><b>PRICE DETAILS</b></v-toolbar-title>
-          <v-divider
-            class="mx-4"
-            inset
-            vertical
-          ></v-divider>
-      
-    
-          <v-spacer></v-spacer>
-          <v-text-field
-            label="Search"
-            prepend-inner-icon="mdi-magnify"
-            variant="underlined"
-            class="w-20"
-          ></v-text-field>
-         
+  <v-data-table>
+    <!-- Repeat the card structure as needed -->
+    <div v-for="(card, index) in cards" :key="index" class="card mx-4 my-4">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5>{{ card.title }}</h5>
+        <v-btn class="mdi mdi-pencil" @click="enableEdit(index)" v-if="!isEditing[index]">Edit</v-btn>
+        <v-btn class="mdi mdi-check" @click="updateValues(index)" v-if="isEditing[index]">Update</v-btn>
+      </div>
+      <div class="card-body">
+        <div class="row mb-3" v-for="(field, fieldIndex) in card.fields" :key="fieldIndex">
+          <div class="col-md-3">
+            <label :for="field.key">{{ field.label }}     :       </label>
+          </div>
+          <div class="col-md-3">
+            <input
+              type="text"
+              v-model="editedItems[index][field.key]"
+              :disabled="!isEditing[index]"
+              class="form-control "
+              prepend-icon="mdi-currency-inr"
+            />
             
-         
-        </v-toolbar>
-      </template>
-      <template v-slot:item = '{item, index}'>
-        <tr style="background-color: #F9FBE7; color:black; font-weight: bold;">
-    <td>{{ index + 1 }}</td>
-    <td>{{ item.name }}</td>
-    <td>{{ item.calories }}</td>
-    <td>{{ item.fat }}</td>
-    <td>{{ item.carbs }}</td>
-    <td>{{ item.protein }}</td>
-    
-  </tr>
-      </template>
-    </v-data-table>
-  </template>
-  <script>
-    export default {
-      data: () => ({
-        dialog: false,
-        dialogDelete: false,
-        headers: [
-        { title: 'Sl No.', key: 'seriel' },  
+          </div>
+        </div>
+      </div>
+    </div>
+  </v-data-table>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      isEditing: Array.from({ length: 4 }, () => false), // Assuming you have 4 cards, adjust as needed
+      editedItems: [
+        { public: 'yet', adult: 'always', seniorcitizen: 'wjej' }, // Card 1
+        { teacher: 'example', student: 'sample' }, // Card 2
+        { adult: 'example', child: 'sample' },
+        { gst: 'example', entertainmenttax: 'sample' },
+        // Add more objects for each card as needed
+      ],
+      cards: [
         {
-            title: 'Dessert (100g serving)',
-            align: 'start',
-            sortable: false,
-            key: 'name',
-          },
-          { title: 'Calories', key: 'calories' },
-          
-          { title: 'Fat (g)', key: 'fat' },
-          { title: 'Carbs (g)', key: 'carbs' },
-          { title: 'Protein (g)', key: 'protein' },
-         
-        ],
-        desserts: [],
-        
-      }),
+          title: 'Public',
+          fields: [
+            { key: 'public', label: 'Public' },
+            { key: 'adult', label: 'Adult' },
+            { key: 'seniorcitizen', label: 'Senior Citizen' },
+          ],
+        },
+        {
+          title: 'Institution',
+          fields: [
+            { key: 'teacher', label: 'Teacher' },
+            { key: 'student', label: 'Student' },
+       
+          ],
+        },
+        {
+          title: 'Foreign',
+          fields: [
+            { key: 'adult', label: 'Adult' },
+            { key: 'child', label: 'Child' },
   
+          ],
+        },
+        {
+          title: 'Tax',
+          fields: [
+            { key: 'gst', label: 'GST' },
+            { key: 'entertainmenttax', label: 'Entertainment TAX' },
       
-  
-      created () {
-        this.initialize()
-      },
-  
-      methods: {
-        initialize () {
-          this.desserts = [
-            {
-              name: 'Frozen Yogurt',
-              calories: 159,
-              fat: 6.0,
-              carbs: 24,
-              protein: 4.0,
-            },
-            {
-              name: 'Ice cream sandwich',
-              calories: 237,
-              fat: 9.0,
-              carbs: 37,
-              protein: 4.3,
-            },
-            {
-              name: 'Eclair',
-              calories: 262,
-              fat: 16.0,
-              carbs: 23,
-              protein: 6.0,
-            },
-            {
-              name: 'Cupcake',
-              calories: 305,
-              fat: 3.7,
-              carbs: 67,
-              protein: 4.3,
-            },
-            {
-              name: 'Gingerbread',
-              calories: 356,
-              fat: 16.0,
-              carbs: 49,
-              protein: 3.9,
-            },
-            {
-              name: 'Jelly bean',
-              calories: 375,
-              fat: 0.0,
-              carbs: 94,
-              protein: 0.0,
-            },
-            {
-              name: 'Lollipop',
-              calories: 392,
-              fat: 0.2,
-              carbs: 98,
-              protein: 0,
-            },
-            {
-              name: 'Honeycomb',
-              calories: 408,
-              fat: 3.2,
-              carbs: 87,
-              protein: 6.5,
-            },
-            {
-              name: 'Donut',
-              calories: 452,
-              fat: 25.0,
-              carbs: 51,
-              protein: 4.9,
-            },
-            {
-              name: 'KitKat',
-              calories: 518,
-              fat: 26.0,
-              carbs: 65,
-              protein: 7,
-            },
-            {
-              name: 'Eclair',
-              calories: 262,
-              fat: 16.0,
-              carbs: 23,
-              protein: 6.0,
-            },
-            {
-              name: 'Cupcake',
-              calories: 305,
-              fat: 3.7,
-              carbs: 67,
-              protein: 4.3,
-            },
-            {
-              name: 'Eclair',
-              calories: 262,
-              fat: 16.0,
-              carbs: 23,
-              protein: 6.0,
-            },
-            {
-              name: 'Cupcake',
-              calories: 305,
-              fat: 3.7,
-              carbs: 67,
-              protein: 4.3,
-            },
-            {
-              name: 'Eclair',
-              calories: 262,
-              fat: 16.0,
-              carbs: 23,
-              protein: 6.0,
-            },
-            {
-              name: 'Cupcake',
-              calories: 305,
-              fat: 3.7,
-              carbs: 67,
-              protein: 4.3,
-            },
-          ]
+          ],
         },
+        // Add more card configurations as needed
+      ],
+    };
+  },
+
+  methods: {
+    enableEdit(index) {
+      // Disable editing for all cards
+      this.isEditing = Array.from({ length: this.isEditing.length }, () => false);
+
+      // Enable editing for the selected card
+      this.isEditing[index] = true;
+    },
+
+    updateValues(index) {
+      this.isEditing[index] = false;
+      // Optionally, you can perform any validation or additional logic here before updating values
+    },
+  },
+};
+</script>
   
-        editItem (item) {
-          this.editedIndex = this.desserts.indexOf(item)
-          this.editedItem = Object.assign({}, item)
-          this.dialog = true
-        },
-  
-        deleteItem (item) {
-          this.editedIndex = this.desserts.indexOf(item)
-          this.editedItem = Object.assign({}, item)
-          this.dialogDelete = true
-        },
-  
-        deleteItemConfirm () {
-          this.desserts.splice(this.editedIndex, 1)
-          this.closeDelete()
-        },
-  
-        close () {
-          this.dialog = false
-          this.$nextTick(() => {
-            this.editedItem = Object.assign({}, this.defaultItem)
-            this.editedIndex = -1
-          })
-        },
-  
-        closeDelete () {
-          this.dialogDelete = false
-          this.$nextTick(() => {
-            this.editedItem = Object.assign({}, this.defaultItem)
-            this.editedIndex = -1
-          })
-        },
-  
-        save () {
-          if (this.editedIndex > -1) {
-            Object.assign(this.desserts[this.editedIndex], this.editedItem)
-          } else {
-            this.desserts.push(this.editedItem)
-          }
-          this.close()
-        },
-      },
-    }
-  </script>
 
   <style scoped>
-.v-table{
-    width: 76vw !important;
-}
+  .v-table{
+      width : 73vw;
+  }
+  .card{
+    width: 700px;
+  }
 </style>

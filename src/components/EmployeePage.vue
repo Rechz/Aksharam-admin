@@ -7,7 +7,7 @@
     >
       <template v-slot:top>
         <v-toolbar
-          flat
+          flat 
           style="background-color: white;"
         >
           <v-toolbar-title style="color: green;"><b>EMPLOYEE DETAILS</b></v-toolbar-title>
@@ -20,12 +20,12 @@
          
           <v-spacer></v-spacer>
           <v-text-field
-            label="Search"
-            prepend-inner-icon="mdi-magnify"
-            variant="underlined"
-            class="w-20 me-5"
-            
-          ></v-text-field>
+      label="Search"
+      v-model="search"
+      prepend-inner-icon="mdi-magnify"
+      variant="underlined"
+      class="w-20 me-5"
+    ></v-text-field>
           <v-dialog
             v-model="dialog"
             max-width="500px"
@@ -178,6 +178,7 @@
         dialog: false,
         dialogDelete: false,
         isHovered: false,
+        search: '',
         headers: [
         { title: 'Sl No.', key: 'serial no' },
           {
@@ -230,6 +231,13 @@
       created () {
         this.initialize()
       },
+
+    filteredDesserts() {
+      return this.desserts.filter((item) =>
+        item.name.toLowerCase().includes(this.search.toLowerCase())
+      );
+    },
+  
   
       methods: {
         initialize () {
