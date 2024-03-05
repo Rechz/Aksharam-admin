@@ -29,14 +29,14 @@
 </v-btn>
   </v-col>
 </v-row>
-<div class="d-flex justify-content-end">
+<div class="d-flex ">
+
   <v-text-field
           v-model="search"
             label="Search"
             prepend-inner-icon="mdi-magnify"
             variant="underlined"
-            class="search w-25"
-            style="width: 20px;"
+            class="search text-end"
             density="compact"
           ></v-text-field>
 </div>
@@ -49,10 +49,10 @@
     >
    
       <template v-slot:top>
-        <v-toolbar
+        <!-- <v-toolbar
           flat
           style="background-color: white;"
-        >
+        > -->
           
           <v-dialog
             v-model="dialog"
@@ -145,13 +145,13 @@
 </v-dialog>
 
 
-        </v-toolbar>
+        <!-- </v-toolbar> -->
       </template>
       <template v-slot:item = '{item,index}'>
         <tr style="background-color: #f9faf1; color:black; ">
             <td class="text-center">{{ index + 1 }}</td>
     <td class="text-center">{{ item.empId }}</td>
-    <td class="text-center">{{ item.image }}</td>
+    <td class="text-center"><img :src='item.image' alt="employee" style="border-radius: 50%; height: 50px;"/> </td>
     <td class="text-center">{{ item.name }}</td>
     <td class="text-center">{{ item.password }}</td>
    
@@ -346,5 +346,8 @@
 .v-table__wrapper>table>thead{
     background-color: #236726;
     color: white;
+  }
+  .search .v-input__control{
+    max-width: 200px;
   }
 </style>
