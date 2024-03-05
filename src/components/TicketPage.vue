@@ -1,8 +1,8 @@
-<template> 
+<template>    
     <v-data-table
       :headers="headers"
       :items="desserts"
-      :sort-by="[{ key: 'ID', order: 'asc' }]"
+      
       style="background-color: #1B5E20; color:white"
       max-width="100%"
     >
@@ -25,23 +25,24 @@
           ></v-divider>
           <v-spacer></v-spacer>
           <v-select
-      :items="items"
-      density="compact"
-      class="me-3"
-      prepend-inner-icon="mdi-sort-variant"
-      label="Sort by"
-    ></v-select>
+  v-model="sortColumn"
+  :items="headers.filter(header => header.key !== 'serial').map(header => header.title)"
+  dense
+  prepend-inner-icon="mdi-sort-variant"
+  label="Sort by"
+  @change="sortTable"
+></v-select>
       
         </v-toolbar>
       </template>
       <template v-slot:item = '{item, index}'>
         <tr style="background-color: #f9faf1; color:black; font-weight: bold;">
-    <td>{{ index + 1 }}</td>
-    <td>{{ item.name }}</td>
-    <td>{{ item.calories }}</td>
-    <td>{{ item.fat }}</td>
-    <td>{{ item.carbs }}</td>
-    <td>{{ item.protein }}</td>
+    <td>{{ index + 1 }}</td>  
+    <td>{{ item.ID }}</td>
+    <td>{{ item.bdate }}</td>
+    <td>{{ item.edate }}</td>
+    <td>{{ item.category }}</td>
+    <td>{{ item.price }}</td>
     <td>{{ item.details }}</td>
   </tr>
       </template>
@@ -51,151 +52,157 @@
     export default {
       data: () => ({
         dialog: false,
+        sortColumn: null,
+    search: '', // Added search property
+
+  
         dialogDelete: false,
         headers: [
-        { title: 'Sl No.', key: 'seriel' },  
-        { title: 'Ticket ID', align: 'start', sortable: true,key: 'ID'},
-        { title: 'Booking Date', sortable: true, key: 'bdate' },
-        { title: 'Entry Date', key: 'edate' },
-        { title: 'Category', key: 'category' },
-        { title: 'Price', key: 'price'},
-        { title: 'Details', key: 'details'},
+        { title: 'Sl No.', sortable: false, key: 'serial' }, 
+        { title: 'Ticket ID', align: 'start', sortable: false,key: 'ID'},
+        { title: 'Booking Date', sortable: false, key: 'bdate' },
+        { title: 'Entry Date',sortable: false, key: 'edate' },
+        { title: 'Category',sortable: false, key: 'category' },
+        { title: 'Price',sortable: false, key: 'price'},
+        { title: 'Details',sortable: false, key: 'details'},
         ],
         desserts: [],
         
       }),
-      created () {
-        this.initialize()
-      },
+      created() {
+  this.initialize();
+   // or 'category' based on your preference
+},
       methods: {
+
         initialize () {
           this.desserts = [
             {
-              name: 'Frozen Yogurt',
-              calories: 159,
-              fat: 6.0,
-              carbs: 24,
-              protein: 4.0,
+              ID: 12,
+              bdate: 159,
+              edate: 6.0,
+              category: 24,
+              price: 4.0,
               details : 1
             },
             {
-              name: 'Ice cream sandwich',
-              calories: 237,
-              fat: 9.0,
-              carbs: 37,
-              protein: 4.3,
+              ID: 135,
+              bdate: 237,
+              edate: 9.0,
+              category: 37,
+              price: 4.3,
               details : 1
             },
             {
-              name: 'Eclair',
-              calories: 262,
-              fat: 16.0,
-              carbs: 23,
-              protein: 6.0,
+              ID: 14,
+              bdate: 262,
+              edate: 16.0,
+              category: 23,
+              price: 6.0,
               details : 1
             },
             {
-              name: 'Cupcake',
-              calories: 305,
-              fat: 3.7,
-              carbs: 67,
-              protein: 4.3,
+              ID: 160,
+              bdate: 305,
+              edate: 3.7,
+              category: 67,
+              price: 4.3,
               details : 1
             },
             {
-              name: 'Gingerbread',
-              calories: 356,
-              fat: 16.0,
-              carbs: 49,
-              protein: 3.9,
+              ID: 10,
+              bdate: 356,
+              edate: 16.0,
+              category: 49,
+              price: 3.9,
               details : 1
             },
             {
-              name: 'Jelly bean',
-              calories: 375,
-              fat: 0.0,
-              carbs: 94,
-              protein: 0.0,
+              ID: 18,
+              bdate: 37578,
+              edate: 0.0,
+              category: 94,
+              price: 0.0,
               details : 1
             },
             {
-              name: 'Lollipop',
-              calories: 392,
-              fat: 0.2,
-              carbs: 98,
-              protein: 0,
+              ID: 199,
+              bdate: 39002,
+              edate: 0.2,
+              category: 98,
+              price: 0,
               details : 1
             },
             {
-              name: 'Honeycomb',
-              calories: 408,
-              fat: 3.2,
-              carbs: 87,
-              protein: 6.5,
+              ID: 20,
+              bdate: 4108,
+              edate: 3.2,
+              category: 87,
+              price: 6.5,
               details : 1
             },
             {
-              name: 'Donut',
-              calories: 452,
-              fat: 25.0,
-              carbs: 51,
-              protein: 4.9,
+              ID: 21,
+              bdate: 452,
+              edate: 25.0,
+              category: 51,
+              price: 4.9,
               details : 1
             },
             {
-              name: 'KitKat',
-              calories: 518,
-              fat: 26.0,
-              carbs: 65,
+              ID: 22,
+              bdate: 518,
+              edate: 26.0,
+              category: 65,
               protein: 7,
               details : 1
             },
             {
-              name: 'Eclair',
-              calories: 262,
-              fat: 16.0,
-              carbs: 23,
-              protein: 6.0,
+              ID: 23,
+              bdate: 262,
+              edate: 16.0,
+              category: 23,
+              price: 6.0,
               details : 1
             },
             {
-              name: 'Cupcake',
-              calories: 305,
-              fat: 3.7,
-              carbs: 67,
-              protein: 4.3,
+              ID : 24,
+              bdate: 305,
+              edate: 3.7,
+              category: 67,
+              price: 4.3,
               details : 1
             },
             {
-              name: 'Eclair',
-              calories: 262,
-              fat: 16.0,
-              carbs: 23,
-              protein: 6.0,
+              ID: 25,
+              bdate: 262,
+              edate: 16.0,
+              category: 23,
+              price: 6.0,
               details : 1
             },
             {
-              name: 'Cupcake',
-              calories: 305,
-              fat: 3.7,
-              carbs: 67,
-              protein: 4.3,
+              ID: 26,
+              bdate: 305,
+              edate: 3.7,
+              category: 67,
+              price: 4.3,
               details : 1
             },
             {
-              name: 'Eclair',
-              calories: 262,
-              fat: 16.0,
-              carbs: 23,
-              protein: 6.0,
+              ID: 27,
+              bdate: 262,
+              edate: 16.0,
+              category: 23,
+              price: 6.0,
               details : 1
             },
             {
-              name: 'Cupcake',
-              calories: 305,
-              fat: 3.7,
-              carbs: 67,
-              protein: 4.3,
+              ID: 28,
+              bdate: 305,
+              edate: 3.7,
+              category: 67,
+              price: 4.3,
               details : 1
             },
           ]
@@ -242,7 +249,26 @@
           }
           this.close()
         },
+
+
       },
+      computed: {
+    sortedDesserts() {
+      if (this.sortColumn) {
+        const key = this.headers.find(header => header.title === this.sortColumn).key;
+        return this.desserts.slice().sort((a, b) => {
+          return a[key] > b[key] ? 1 : a[key] < b[key] ? -1 : 0;
+        });
+      } else {
+        return this.desserts;
+      }
+    },
+  },
+  watch: {
+  sortColumn() {
+    this.desserts = this.sortedDesserts;
+  },
+},
     }
   </script>
 
