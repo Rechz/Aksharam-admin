@@ -2,42 +2,31 @@
     
 
     <div class="d-flex bg-white">
-      <v-text-field v-model="newSlot.in" label="Time IN" prepend-inner-icon="mdi-clock-time-four" density="compact" class="me-2"></v-text-field>
-      <v-text-field v-model="newSlot.out" label="Time OUT" prepend-inner-icon="mdi-clock-time-four" density="compact" class="me-2"></v-text-field>
-      <v-text-field v-model="newSlot.ticketno" label="Tickets Per Slot" prepend-inner-icon="mdi-ticket-confirmation" density="compact" class="me-2"></v-text-field>
-      <v-btn color="rgb(25, 103, 25)" dark class="mb-2 me-2" @click="addSlot">
-  <b>+ Add Slot</b>
+      <v-text-field v-model="newSlot.in" label="Time In" prepend-inner-icon="mdi-clock-time-four" density="compact" class="me-2" ></v-text-field>
+      <v-text-field v-model="newSlot.out" label="Time Out" prepend-inner-icon="mdi-clock-time-four" density="compact" class="me-2"></v-text-field>
+      <v-text-field v-model="newSlot.ticketno" label="Tickets per slot" prepend-inner-icon="mdi-ticket-confirmation" density="compact" class="me-2"></v-text-field>
+      <v-btn color="#205f23"  class="mb-2 me-2" @click="addSlot" style="text-transform: capitalize;" >
+  <b>+ Add Slots</b>
 </v-btn>
     </div>
- 
-  
-  
       <v-data-table
         :headers="headers"
         :items="desserts"
         :sort-by="[{ key: 'calories', order: 'asc' }]"
-        style="background-color: #1B5E20; color:white"
+        style="background-color:#f9faf1;"
       >
         <template v-slot:top>
           <v-toolbar
             flat
-            style="background-color: white;"
+            style="background-color: white; height: 20px;"
           >
-          
-     <v-spacer></v-spacer>
-     <v-spacer></v-spacer>
-            
-           
-            <v-spacer></v-spacer>
+
 
             <v-dialog
               v-model="dialog"
               max-width="500px"
             >
-  
               <v-card>
-          
-    
                 <v-card-text>
                   <v-container>
                     <v-row>
@@ -114,26 +103,27 @@
           </v-toolbar>
         </template>
         <template v-slot:item = '{item,index}'>
-          <tr style="background-color:#F9FBE7; color:black; font-weight: bold;">
-            <td>{{ index + 1 }}</td>
+          <tr style="background-color:#f9faf1; color:black; ">
+            <td class="text-center">{{ index + 1 }}</td>
    
-      <td>{{ item.in }}</td>
-      <td>{{ item.out }}</td>
-      <td>{{ item.ticketno }}</td>
+      <td class="text-center">{{ item.in }}</td>
+      <td class="text-center">{{ item.out }}</td>
+      <td class="text-center">{{ item.ticketno }}</td>
      
-      <td>
+      <td class="d-flex justify-content-around align-items-center">
         <v-icon
-          size="small"
-          class="me-2"
+          size="large"
+          color="teal-darken-3"
           @click="editItem(item)"
         >
           mdi-pencil
         </v-icon>
         <v-icon
-          size="small"
+          size="large"
+          color="danger"
           @click="deleteItem(item)"
         >
-          mdi-delete
+          mdi-trash-can
         </v-icon>
       </td>
     </tr>
@@ -152,12 +142,12 @@
           dialogDelete: false,
           isHovered: false,
           headers: [
-          { title: 'Sl No.', key: 'serial no' },
-            { title: 'Time IN', key: 'in' },
-            { title: 'Time OUT', key: 'out' },
-            { title: 'No.of Tickets', key: 'ticketno' },
+          { title: 'Slot No', key: 'serial no', sortable: false,align: 'center' },
+            { title: 'Time In', key: 'in', sortable: false,align: 'center' },
+            { title: 'Time Out', key: 'out',sortable: false, align: 'center' },
+            { title: 'No.of Tickets', key: 'ticketno',sortable: false, align: 'center' },
            
-            { title: 'Edit / Delete', key: 'actions', sortable: false },
+            { title: 'Edit / Delete', key: 'actions', sortable: false, align: 'center' },
           ],
           desserts: [],
           editedIndex: -1,
@@ -333,5 +323,15 @@
     background-color: #b71c1c !important; /* Change this to the desired hover color */
     color: white !important; /* Change this to the desired text color */
   }
-  
+  .v-input__control{
+    background-color: #DFE4D7 !important;
+  }
+  /* .v-data-table-footer{
+    background-color: white !important;
+  } */
+  .v-table__wrapper>table>thead{
+    background-color: #236726;
+    color: white;
+  }
   </style>
+  style="background-color: #1B5E20; color:white"

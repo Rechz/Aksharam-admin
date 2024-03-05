@@ -23,8 +23,6 @@
             inset
             vertical
           ></v-divider>
-      
-    
           <v-spacer></v-spacer>
           <v-select
   v-model="sortColumn"
@@ -34,18 +32,11 @@
   label="Sort by"
   @change="sortTable"
 ></v-select>
-          <v-text-field
-            label="Append inner"
-            append-inner-icon="mdi-map-marker"
-            class="me-3"
-            density="comfortable"
-          ></v-text-field>
-            
-         
+      
         </v-toolbar>
       </template>
       <template v-slot:item = '{item, index}'>
-        <tr style="background-color: #F9FBE7; color:black; font-weight: bold;">
+        <tr style="background-color: #f9faf1; color:black; font-weight: bold;">
     <td>{{ index + 1 }}</td>  
     <td>{{ item.ID }}</td>
     <td>{{ item.bdate }}</td>
@@ -78,14 +69,10 @@
         desserts: [],
         
       }),
-  
-      
-  
       created() {
   this.initialize();
    // or 'category' based on your preference
 },
-  
       methods: {
 
         initialize () {
