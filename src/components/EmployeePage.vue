@@ -2,7 +2,6 @@
   <v-data-table
     :headers="headers"
     :items="desserts"
-   
     style="background-color: #1B5E20; color:white"
   >
     <template v-slot:top>
@@ -27,9 +26,11 @@
             </v-btn>
           </template>
           <v-card>
-            <v-card-title class="text-center" style="background-color: #1B5E20; color: white !important;"><span class="text-h6">{{formTitle}}</span></v-card-title> 
+            <v-card-title class="text-center" style="background-color: #1B5E20; color: white !important;">
+              <span class="text-h6">{{formTitle}}</span>
+            </v-card-title> 
             <v-card-text class="mb-0">
-              <v-container class="py-0 d-flex flex-column ">
+              <v-container class="py-0 d-flex flex-column">
                 <v-text-field
                  v-model="editedItem.empId"
                  prepend-inner-icon="mdi-card-account-details-outline"
@@ -66,57 +67,111 @@
                   prepend-inner-icon="mdi-home-map-marker"
                   density="comfortable"
                 ></v-text-field> 
-             <v-file-input v-model="editedItem.image" label="Upload Image" density="comfortable" class="mb-0" prepend-inner-icon="mdi-paperclip"></v-file-input>
-             <v-card-actions class="d-flex justify-content-end">
-              <div >
-              <v-btn color="black" class="bg-dark-subtle" @click="close">Cancel</v-btn>
-              <v-btn color="black" class="bg-dark-subtle" @click="save">{{formButton}}</v-btn>
-              </div>
-            </v-card-actions>
+                <v-file-input v-model="editedItem.image" label="Upload Image" density="comfortable" class="mb-0" prepend-inner-icon="mdi-paperclip"></v-file-input>
+                <v-card-actions class="d-flex justify-content-end">
+                  <div>
+                    <v-btn color="black" class="bg-dark-subtle" @click="close">Cancel</v-btn>
+                    <v-btn color="black" class="bg-dark-subtle" @click="save">{{formButton}}</v-btn>
+                  </div>
+                </v-card-actions>
               </v-container>
             </v-card-text>
-            
-            </v-card>
-          </v-dialog>
+          </v-card>
+        </v-dialog>
 
-          <v-dialog v-model="dialogDelete" max-width="420px" height="300px">
-  <v-card style="border-top: 25px solid #B71C1C">
-    <!-- <v-card-title style="background-color: #FFCDD2;" class="mb-2">Delete Employee?</v-card-title> -->
-    <v-icon color="red-darken-4" size="48"  class="align-self-center mt-2">mdi-alert</v-icon>
-    <v-card-text class="text-h6 mt-1 text-center">Are you sure you want to delete this employee?</v-card-text>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <div class="d-flex justify-content-center mb-3">
-        <v-btn color="black" class="bg-dark-subtle" density="compact" @click="closeDelete" >Cancel</v-btn>
-        <v-btn color="black"  density="compact"  class="hover-red bg-danger-subtle" @click="deleteItemConfirm" >Delete</v-btn>
-      </div>
-      <v-spacer></v-spacer>
-    </v-card-actions>
+        <v-dialog v-model="dialogDelete" max-width="420px" height="300px">
+          <v-card style="border-top: 25px solid #B71C1C">
+            <v-icon color="red-darken-4" size="48"  class="align-self-center mt-2">mdi-alert</v-icon>
+            <v-card-text class="text-h6 mt-1 text-center">Are you sure you want to delete this employee?</v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <div class="d-flex justify-content-center mb-3">
+                <v-btn color="black" class="bg-dark-subtle" density="compact" @click="closeDelete" >Cancel</v-btn>
+                <v-btn color="black"  density="compact"  class="hover-red bg-danger-subtle" @click="deleteItemConfirm" >Delete</v-btn>
+              </div>
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+<!-- Add new dialog for displaying details -->
+<v-dialog v-model="detailsDialog" width="400px">
+  <v-card style="width: 650px; height:310px; border-radius: 15px;">
+    <v-card-title class="text-left" style="background-color: #1B5E20; color: white !important; position: relative;">
+      <span class="text-h6 ms-4 " >Employee Details</span>
+      <v-icon
+        @click="closeDetails"
+        class="close me-4" 
+        style="position: absolute; top: 1; right: 0 ; left:10; cursor: pointer;"
+      >mdi-window-close</v-icon>
+    </v-card-title>
+    <v-card-text class="mb-0  ms-1">
+      <v-container class="py-0 d-flex flex-column">
+        <v-row class="mb-2 mt-2">
+          <div class="col-4">
+            <strong>Emp ID    </strong>   
+          </div>
+          <div class="col-3">
+            : {{ editedItem.empId }}
+          </div>
+         
+        </v-row>
+        <v-row class="mb-2">
+          <div class="col-4">
+            <strong>Name     </strong> 
+          </div>
+          <div class="col-3">
+            : {{ editedItem.name }}
+          </div>
+         
+        </v-row>
+        <v-row class="mb-2">
+          <div class="col-4">
+            <strong>Contact      </strong> 
+          </div>
+
+          <div class="col-4">
+            : {{ editedItem.contact }}
+          </div>
+        </v-row>
+        <v-row class="mb-2">
+          <div class="col-4">
+            <strong>Email      </strong>
+          </div>
+          <div class="col-3">
+            : {{ editedItem.email }}
+          </div>
+        </v-row>
+        <!-- Add other details as needed -->
+      </v-container>
+    </v-card-text>
   </v-card>
 </v-dialog>
 
 
-        </v-toolbar>
-      </template>
-      <template v-slot:item = '{item,index}'>
-        <tr style="background-color: #F9FBE7; color:black; font-weight: bold;">
-          <td class="text-center">{{ index + 1 }}</td>
-          <td class="text-center">{{ item.empId }}</td>
-          <td class="text-center">{{ item.name }}</td>
-          <td class="text-center">{{ item.contact }}</td>
-          <td class="text-center"><v-icon size="small">mdi-eye</v-icon></td>
-          <td class="text-center">
-            <v-icon size="small" class="me-3" @click="editItem(item)">mdi-pencil</v-icon>
-            <v-icon size="small" @click="deleteItem(item)">mdi-delete</v-icon>
-          </td>
-        </tr>
-      </template>
-    </v-data-table>
-  </template>
+      </v-toolbar>
+    </template>
+    
+    <template v-slot:item="{ item, index }">
+      <tr style="background-color: #F9FBE7; color:black; font-weight: bold;">
+        <td class="text-center">{{ index + 1 }}</td>
+        <td class="text-center">{{ item.empId }}</td>
+        <td class="text-center">{{ item.name }}</td>
+        <td class="text-center">{{ item.contact }}</td>
+        <td class="text-center"><v-icon size="small" @click="showDetails(item)">mdi-eye</v-icon></td>
+        <td class="text-center">
+          <v-icon size="small" class="me-3" @click="editItem(item)">mdi-pencil</v-icon>
+          <v-icon size="small" @click="deleteItem(item)">mdi-delete</v-icon>
+        </td>
+      </tr>
+    </template>
+  </v-data-table>
+</template>
+
   <script>
     export default {
       data: () => ({
         dialog: false,
+        detailsDialog: false,
         dialogDelete: false,
         isHovered: false,
         search: '',
@@ -316,6 +371,13 @@
           }
           this.close()
         },
+        showDetails(item) {
+      this.editedItem = Object.assign({}, item);
+      this.detailsDialog = true;
+    },
+    closeDetails() {
+      this.detailsDialog = false;
+    },
       },
     }
   </script>
