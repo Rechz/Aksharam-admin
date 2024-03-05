@@ -12,8 +12,23 @@ const router = createRouter({
         children: [
           {
             path : '/tickets',
-            alias : '/dashboard',
+            alias : '',
             component : () => import('./components/TicketNav.vue'),
+            children: [
+              {
+                path:'/tickets/details',
+                alias: '',
+                component: () => import('./components/TicketPage.vue')
+              },
+              {
+                path:'/tickets/price',
+                component: () => import('./components/TicketPrice.vue')
+              },
+              {
+                path:'/tickets/slots',
+                component: () => import('./components/TicketSlots.vue')
+              },
+            ]
           },
           {
             path : '/portal',
@@ -28,8 +43,19 @@ const router = createRouter({
             component : () => import('./components/DashPage.vue')
           },
           {
-            path : '/employee-nav',
+            path : '/employee',
             component : () => import('./components/EmployeeNav.vue'),
+            children: [
+              {
+                path: '/employee/add',
+                alias: '',
+                component : () => import('./components/EmployeePage.vue'),
+              },
+              {
+                path: '/employee/scanner',
+                component : () => import('./components/ScannerRegister.vue'),
+              }
+            ]
 
           }
 

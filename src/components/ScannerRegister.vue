@@ -50,10 +50,10 @@
       style="background-color: #1B5E20; color:white"
     >
       <template v-slot:top>
-        <v-toolbar
+        <!-- <v-toolbar
           flat
           style="background-color: white;"
-        >
+        > -->
         
    <v-spacer></v-spacer>
    <v-spacer></v-spacer>
@@ -160,10 +160,10 @@
 </v-dialog>
 
 
-        </v-toolbar>
+        <!-- </v-toolbar> -->
       </template>
       <template v-slot:item = '{item,index}'>
-        <tr style="background-color: #F9FBE7; color:black; font-weight: bold;">
+        <tr style="background-color: #f9faf1; color:black; font-weight: bold;">
             <td>{{ index + 1 }}</td>
     <td>{{ item.name }}</td>
     <td>{{ item.calories }}</td>
