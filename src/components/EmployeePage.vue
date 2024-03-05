@@ -2,17 +2,24 @@
   <v-data-table
     :headers="headers"
     :items="desserts"
-   
     style="background-color: #1B5E20; color:white"
   >
     <template v-slot:top>
-      <v-toolbar flat style="background-color: white;"> 
+      <v-toolbar flat style="background-color: white;">   
+        <v-text-field
+          label="Search"
+          prepend-inner-icon="mdi-magnify"
+          variant="underlined"
+          class="mx-5 w-20"
+        ></v-text-field>
+        <v-divider class="mx-4" inset vertical></v-divider>
+        <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ props }">
             <v-btn
              color="success"
              dark
-             class="mb-5"
+             class="mb-2"
              v-bind="props"
              style="background-color: #1B5E20; color: white !important;"
             ><b> + Add Employee </b>
@@ -71,18 +78,6 @@
             </v-card-text>
           </v-card>
         </v-dialog>
-<v-spacer></v-spacer>
-        <v-text-field
-        v-model="search"
-          label="Search"
-          prepend-inner-icon="mdi-magnify"
-          variant="underlined"
-          class="d-flex justify-content-end "
-          
-        ></v-text-field>
-
-     
-        
 
         <v-dialog v-model="dialogDelete" max-width="420px" height="300px">
           <v-card style="border-top: 25px solid #B71C1C">
@@ -153,23 +148,25 @@
 </v-dialog>
 
 
-        </v-toolbar>
-      </template>
-      <template v-slot:item = '{item,index}'>
-        <tr style="background-color: #F9FBE7; color:black; font-weight: bold;">
-          <td class="text-center">{{ index + 1 }}</td>
-          <td class="text-center">{{ item.empId }}</td>
-          <td class="text-center">{{ item.name }}</td>
-          <td class="text-center">{{ item.contact }}</td>
-          <td class="text-center"><v-icon size="small">mdi-eye</v-icon></td>
-          <td class="text-center">
-            <v-icon size="small" class="me-3" @click="editItem(item)">mdi-pencil</v-icon>
-            <v-icon size="small" @click="deleteItem(item)">mdi-delete</v-icon>
-          </td>
-        </tr>
-      </template>
-    </v-data-table>
-  </template>
+      </v-toolbar>
+    </template>
+    
+    <template v-slot:item="{ item, index }">
+      <tr style="background-color: #F9FBE7; color:black; font-weight: bold;">
+        <td class="text-center">{{ index + 1 }}</td>
+        <td class="text-center">{{ item.empId }}</td>
+        <td class="text-center">{{ item.name }}</td>
+        <td class="text-center">{{ item.contact }}</td>
+        <td class="text-center"><v-icon size="small" @click="showDetails(item)">mdi-eye</v-icon></td>
+        <td class="text-center">
+          <v-icon size="small" class="me-3" @click="editItem(item)">mdi-pencil</v-icon>
+          <v-icon size="small" @click="deleteItem(item)">mdi-delete</v-icon>
+        </td>
+      </tr>
+    </template>
+  </v-data-table>
+</template>
+
   <script>
     export default {
       data: () => ({
@@ -179,11 +176,11 @@
         isHovered: false,
         search: '',
         headers: [
-          { title: 'SL No.', align: 'center', key: 'slno', sortable: false },
-          { title: 'EMP ID', align: 'center', key: 'empId', sortable: false},
+          { title: 'SL No.', align: 'center', key: 'serial no', sortable: false },
+          { title: 'EMP ID', align: 'center', key: 'name', sortable: false},
           { title: 'NAME', align: 'center', key: 'name', sortable: false },
-          { title: 'CONTACT', align: 'center', key: 'contact', sortable: false },
-          { title: 'DETAILS', align: 'center', key: 'details', sortable: false },
+          { title: 'CONTACT', align: 'center', key: 'fat', sortable: false },
+          { title: 'DETAILS', align: 'center', key: 'carbs', sortable: false },
           { title: 'EDIT / DELETE', align: 'center', key: 'actions', sortable: false},
         ],
         desserts: [],
@@ -214,12 +211,8 @@
         },
         formButton () {
           return this.editedIndex === -1? 'Add' : 'Update'
-        },
-        filteredDesserts() {
-      return this.desserts.filter((item) =>
-        item.name.toLowerCase().includes(this.search.toLowerCase()) || item.empId.toLowerCase().includes(this.search.toLowerCase())
-      );
-    },},
+        }
+      },
   
       watch: {
         dialog (val) {
@@ -236,7 +229,7 @@
 
     filteredDesserts() {
       return this.desserts.filter((item) =>
-        item.name.toLowerCase().includes(this.search.toLowerCase()) &&  item.empId.toLowerCase().includes(this.search.toLowerCase())
+        item.name.toLowerCase().includes(this.search.toLowerCase())
       );
     },
   
@@ -399,11 +392,5 @@
 }
 .v-input__prepend, .v-input__append {
     display: none;
-}
-.v-toolbar__content{
-height: 100px !important;
-}
-.v-input__control{
-  width:200px;
 }
 </style>
