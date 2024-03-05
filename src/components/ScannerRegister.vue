@@ -22,59 +22,44 @@
     </v-responsive>
     
   </v-col>
-  
-
-
   <v-col cols="5" sm="4">
-    
     <v-btn
-
-  dark
- 
-  v-bind="props"
-  
-  style="background-color: #1B5E20 !important; color: white !important;"
-
->
-  <b> + Add Scanner </b>
+    style="background-color: #1B5E20 !important; color: white !important;">
+    <b> + Add Scanner </b>
 </v-btn>
   </v-col>
 </v-row>
-<v-divider></v-divider>
+<div class="d-flex justify-content-end">
+  <v-text-field
+          v-model="search"
+            label="Search"
+            prepend-inner-icon="mdi-magnify"
+            variant="underlined"
+            class="search w-25"
+            style="width: 20px;"
+            density="compact"
+          ></v-text-field>
+</div>
 
 
     <v-data-table
       :headers="headers"
-      :items="desserts"
-      :sort-by="[{ key: 'calories', order: 'asc' }]"
-      style="background-color: #1B5E20; color:white"
+      :items="scanner"
+      style="background-color: #f9faf1; color:black; "
     >
+   
       <template v-slot:top>
-        <!-- <v-toolbar
+        <v-toolbar
           flat
           style="background-color: white;"
-        > -->
-        
-   <v-spacer></v-spacer>
-   <v-spacer></v-spacer>
+        >
           
-         
-          <v-spacer></v-spacer>
-          <v-text-field
-            label="Search"
-            prepend-inner-icon="mdi-magnify"
-            variant="underlined"
-            class="w-20 me-5"
-            
-          ></v-text-field>
           <v-dialog
             v-model="dialog"
             max-width="500px"
           >
-
             <v-card>
         
-  
               <v-card-text>
                 <v-container>
                   <v-row>
@@ -160,26 +145,27 @@
 </v-dialog>
 
 
-        <!-- </v-toolbar> -->
+        </v-toolbar>
       </template>
       <template v-slot:item = '{item,index}'>
-        <tr style="background-color: #f9faf1; color:black; font-weight: bold;">
-            <td>{{ index + 1 }}</td>
-    <td>{{ item.name }}</td>
-    <td>{{ item.calories }}</td>
-    <td>{{ item.fat }}</td>
-    <td>{{ item.carbs }}</td>
+        <tr style="background-color: #f9faf1; color:black; ">
+            <td class="text-center">{{ index + 1 }}</td>
+    <td class="text-center">{{ item.empId }}</td>
+    <td class="text-center">{{ item.image }}</td>
+    <td class="text-center">{{ item.name }}</td>
+    <td class="text-center">{{ item.password }}</td>
    
-    <td>
+    <td class="text-center">
       <v-icon
-        size="small"
-        class="me-2"
+      size="large"
+          color="teal-darken-3" class="me-4"
         @click="editItem(item)"
       >
         mdi-pencil
       </v-icon>
       <v-icon
-        size="small"
+      size="large"
+          color="danger" class="ms-4" 
         @click="deleteItem(item)"
       >
         mdi-delete
@@ -196,36 +182,26 @@
         dialogDelete: false,
         isHovered: false,
         headers: [
-        { title: 'Sl No.', key: 'serial no' },
-          {
-
-            title: 'Emp ID',
-            align: 'start',
-            sortable: false,
-            key: 'name',
-          },
-          { title: 'Image', key: 'name' },
-          { title: 'Name ', key: 'fat' },
-          { title: 'Password', key: 'carbs' },
-         
-          { title: 'Edit / Delete', key: 'actions', sortable: false },
+        { title: 'Sl No.', key: 'slno',sortable: false,align:'center' },
+        { title: 'Emp ID', sortable: false,align:'center', key: 'empId' },
+        { title: 'Image', key: 'image',sortable: false,align:'center' },
+        { title: 'Name ', key: 'name',sortable: false,align:'center' },
+        { title: 'Password', key: 'password',sortable: false,align:'center' },
+        { title: 'Edit / Delete', key: 'actions',sortable: false,align:'center' },
         ],
-        desserts: [],
+        scanner: [],
         editedIndex: -1,
         editedItem: {
+          empId: '',
+          image: null,
           name: '',
-          calories: 0,
-          fat: 0,
-          carbs: 0,
-          image : null
-         
+          password: null,
         },
         defaultItem: {
+          empId: '',
+          image: null,
           name: '',
-          calories: 0,
-          fat: 0,
-          carbs: 0,
-          image : null
+          password: null,
         },
       }),
   
@@ -250,94 +226,84 @@
   
       methods: {
         initialize () {
-          this.desserts = [
+          this.scanner = [
             {
-              name: 'Frozen Yogurt',
-              calories: 159,
-              fat: 6.0,
-              carbs: 24,
-              
+              empId: 'AME1001',
+              name: 'Deva',
+              image: require('@/assets/pic1.jpg'),
+              password: 'am@123', 
             },
             {
-              name: 'Ice cream sandwich',
-              calories: 237,
-              fat: 9.0,
-              carbs: 37,
-            
+              empId: 'AME1001',
+              name: 'Deva',
+              image: require('@/assets/pic1.jpg'),
+              password: 'am@123', 
             },
             {
-              name: 'Eclair',
-              calories: 262,
-              fat: 16.0,
-              carbs: 23,
-              
+              empId: 'AME1001',
+              name: 'Deva',
+              image: require('@/assets/pic1.jpg'),
+              password: 'am@123', 
             },
             {
-              name: 'Cupcake',
-              calories: 305,
-              fat: 3.7,
-              carbs: 67,
-              
+              empId: 'AME1001',
+              name: 'Deva',
+              image: require('@/assets/pic1.jpg'),
+              password: 'am@123', 
             },
             {
-              name: 'Gingerbread',
-              calories: 356,
-              fat: 16.0,
-              carbs: 49,
-           
+              empId: 'AME1001',
+              name: 'Deva',
+              image: require('@/assets/pic1.jpg'),
+              password: 'am@123', 
             },
             {
-              name: 'Jelly bean',
-              calories: 375,
-              fat: 0.0,
-              carbs: 94,
-           
+              empId: 'AME1001',
+              name: 'Deva',
+              image: require('@/assets/pic1.jpg'),
+              password: 'am@123', 
             },
             {
-              name: 'Lollipop',
-              calories: 392,
-              fat: 0.2,
-              carbs: 98,
-             
+              empId: 'AME1001',
+              name: 'Deva',
+              image: require('@/assets/pic1.jpg'),
+              password: 'am@123', 
             },
             {
-              name: 'Honeycomb',
-              calories: 408,
-              fat: 3.2,
-              carbs: 87,
-             
+              empId: 'AME1001',
+              name: 'Deva',
+              image: require('@/assets/pic1.jpg'),
+              password: 'am@123', 
             },
             {
-              name: 'Donut',
-              calories: 452,
-              fat: 25.0,
-              carbs: 51,
-          
+              empId: 'AME1001',
+              name: 'Deva',
+              image: require('@/assets/pic1.jpg'),
+              password: 'am@123', 
             },
             {
-              name: 'KitKat',
-              calories: 518,
-              fat: 26.0,
-              carbs: 65,
-           
+              empId: 'AME1001',
+              name: 'Deva',
+              image: require('@/assets/pic1.jpg'),
+              password: 'am@123', 
             },
           ]
         },
   
         editItem (item) {
-          this.editedIndex = this.desserts.indexOf(item)
+          this.editedIndex = this.scanner.indexOf(item)
           this.editedItem = Object.assign({}, item)
           this.dialog = true
         },
   
         deleteItem (item) {
-          this.editedIndex = this.desserts.indexOf(item)
+          this.editedIndex = this.scanner.indexOf(item)
           this.editedItem = Object.assign({}, item)
           this.dialogDelete = true
         },
   
         deleteItemConfirm () {
-          this.desserts.splice(this.editedIndex, 1)
+          this.scanner.splice(this.editedIndex, 1)
           this.closeDelete()
         },
   
@@ -359,9 +325,9 @@
   
         save () {
           if (this.editedIndex > -1) {
-            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            Object.assign(this.scanner[this.editedIndex], this.editedItem)
           } else {
-            this.desserts.push(this.editedItem)
+            this.scanner.push(this.editedItem)
           }
           this.close()
         },
@@ -377,5 +343,8 @@
   background-color: #b71c1c !important; /* Change this to the desired hover color */
   color: white !important; /* Change this to the desired text color */
 }
-
+.v-table__wrapper>table>thead{
+    background-color: #236726;
+    color: white;
+  }
 </style>

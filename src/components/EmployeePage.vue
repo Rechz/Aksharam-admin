@@ -2,26 +2,18 @@
   <v-data-table
     :headers="headers"
     :items="desserts"
-    style="background-color: #1B5E20; color:white"
+    
+    style="background-color: #f9faf1;"
   >
     <template v-slot:top>
       <v-toolbar flat style="background-color: white;">   
-        <v-text-field
-          label="Search"
-          prepend-inner-icon="mdi-magnify"
-          variant="underlined"
-          class="mx-5 w-20"
-        ></v-text-field>
-        <v-divider class="mx-4" inset vertical></v-divider>
-        <v-spacer></v-spacer>
+      
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ props }">
             <v-btn
              color="success"
-             dark
-             class="mb-2"
              v-bind="props"
-             style="background-color: #1B5E20; color: white !important;"
+             style="background-color: #1B5E20; color: white !important; margin-bottom: 80px;"
             ><b> + Add Employee </b>
             </v-btn>
           </template>
@@ -78,7 +70,15 @@
             </v-card-text>
           </v-card>
         </v-dialog>
-
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="search"
+            label="Search"
+            prepend-inner-icon="mdi-magnify"
+            variant="underlined"
+            class="search"
+            density="compact"
+          ></v-text-field>
         <v-dialog v-model="dialogDelete" max-width="420px" height="300px">
           <v-card style="border-top: 25px solid #B71C1C">
             <v-icon color="red-darken-4" size="48"  class="align-self-center mt-2">mdi-alert</v-icon>
@@ -152,15 +152,17 @@
     </template>
     
     <template v-slot:item="{ item, index }">
-      <tr style="background-color: #F9FBE7; color:black; font-weight: bold;">
+      <tr style="background-color:#f9faf1; color:black;">
         <td class="text-center">{{ index + 1 }}</td>
         <td class="text-center">{{ item.empId }}</td>
         <td class="text-center">{{ item.name }}</td>
         <td class="text-center">{{ item.contact }}</td>
-        <td class="text-center"><v-icon size="small" @click="showDetails(item)">mdi-eye</v-icon></td>
+        <td class="text-center"><v-icon size="large" color="blue-grey-darken-3" @click="showDetails(item)">mdi-eye</v-icon></td>
         <td class="text-center">
-          <v-icon size="small" class="me-3" @click="editItem(item)">mdi-pencil</v-icon>
-          <v-icon size="small" @click="deleteItem(item)">mdi-delete</v-icon>
+          <v-icon size="large"
+          color="teal-darken-3" class="me-4" @click="editItem(item)">mdi-pencil</v-icon>
+          <v-icon size="large"
+          color="danger" class="ms-4" @click="deleteItem(item)">mdi-trash-can</v-icon>
         </td>
       </tr>
     </template>
@@ -393,4 +395,12 @@
 .v-input__prepend, .v-input__append {
     display: none;
 }
+.v-toolbar__content{
+  height: 150px !important;
+  }
+  .v-table__wrapper>table>thead{
+    background-color: #236726;
+    color: white;
+  }
+
 </style>

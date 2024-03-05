@@ -110,10 +110,11 @@
       <td class="text-center">{{ item.out }}</td>
       <td class="text-center">{{ item.ticketno }}</td>
      
-      <td class="d-flex justify-content-around align-items-center">
+      <td class="text-center">
         <v-icon
           size="large"
           color="teal-darken-3"
+          class="me-4"
           @click="editItem(item)"
         >
           mdi-pencil
@@ -121,6 +122,7 @@
         <v-icon
           size="large"
           color="danger"
+          class="ms-4"
           @click="deleteItem(item)"
         >
           mdi-trash-can
