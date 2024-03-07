@@ -1,145 +1,106 @@
-<template>
-    
-<v-row class="mx-2 d-flex align-items-start bg-white">
+<template>  
+<v-row class=" d-flex align-items-start bg-white">
   <v-col cols="11" sm="4">
-
-  
-          <v-text-field
-            label="Select Employee"
-            prepend-inner-icon="mdi-briefcase-account"
-            density="compact"
-          ></v-text-field>
+    <v-text-field
+      label="Select Employee"
+      prepend-inner-icon="mdi-briefcase-account"
+      density="compact"
+      class="emp"
+    ></v-text-field>
   </v-col>
-  
-  <v-col cols="11" sm="4">
-    <v-responsive class="mx-auto"  max-width="310">
-   
-          <v-text-field
-            label="Password"
-            prepend-inner-icon="mdi-eye"
-            density="compact"
-          ></v-text-field>
-    </v-responsive>
-    
+  <v-col cols="11" sm="4">   
+    <v-text-field
+      label="Password"
+      prepend-inner-icon="mdi-eye"
+      density="compact"
+      class="emp"
+    ></v-text-field>
   </v-col>
   <v-col cols="5" sm="4">
-    <v-btn
-    style="background-color: #1B5E20 !important; color: white !important;">
-    <b> + Add Scanner </b>
-</v-btn>
+    <v-btn style="background-color: #1B5E20 !important; color: white !important; text-transform: capitalize;"><b> + Add Scanner </b></v-btn>
   </v-col>
 </v-row>
-<div class="d-flex ">
-
-  <v-text-field
-          v-model="search"
-            label="Search"
-            prepend-inner-icon="mdi-magnify"
-            variant="underlined"
-            class="search text-end"
-            density="compact"
-          ></v-text-field>
-</div>
-
-
-    <v-data-table
-      :headers="headers"
-      :items="scanner"
-      style="background-color: #f9faf1; color:black; "
-    >
-   
-      <template v-slot:top>
-        <!-- <v-toolbar
-          flat
-          style="background-color: white;"
-        > -->
-          
-          <v-dialog
-            v-model="dialog"
-            max-width="500px"
-          >
-            <v-card>
-        
-              <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col
-                      cols="12"
-                      sm="12"
-                      md="12"
-                    >
-                      <v-text-field
-                        v-model="editedItem.name"
-                        label="Emp ID"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="12"
-                      md="12"
-                    >
-                      <v-text-field
-                        v-model="editedItem.calories"
-                        label="Image"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="12"
-                      md="12"
-                    >
-                      <v-text-field
-                        v-model="editedItem.fat"
-                        label="Name"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="12"
-                      md="12"
-                    >
-                      <v-text-field
-                        v-model="editedItem.carbs"
-                        label="Password"
-                      ></v-text-field>
-                    </v-col>
-             
-                    <v-col cols="12">
-              <v-file-input v-model="editedItem.image" label="Upload Image"></v-file-input>
-            </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
+<v-spacer></v-spacer>
+<v-spacer></v-spacer>
+<div class="d-flex justify-content-end ">
   
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                  color="blue-darken-1"
-                  variant="text"
-                  @click="close"
-                >
-                  Cancel
-                </v-btn>
-                <v-btn
-                  color="blue-darken-1"
-                  variant="text"
-                  @click="save"
-                >
-                  Save
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-          <v-dialog v-model="dialogDelete" width="420px" height="300px">
-  <v-card style="border-top: 25px solid #B71C1C">
-    <!-- <v-card-title style="background-color: #FFCDD2;" class="mb-2">Delete Employee?</v-card-title> -->
-    <v-icon color="red-darken-4" size="48"  class="align-self-center mt-2">mdi-alert</v-icon>
-    <v-card-title class="text-h6 mt-2">Are you sure you want to delete this employee?</v-card-title>
-    <v-card-actions>
+  <v-text-field
+    v-model="search"
+    label="Search"
+    prepend-inner-icon="mdi-magnify"
+    variant="underlined"
+    class="search"
+    density="compact"
+  ></v-text-field>
+</div>
+<v-data-table
+  :headers="headers"
+  :items="scanner"
+  style="background-color: #f9faf1; color:black; "
+  class="mt-3"
+>  
+  <template v-slot:top>
+    <!-- <v-toolbar
+      flat
+      style="background-color: white;"
+    > -->
+    <v-dialog
+      v-model="dialog"
+      max-width="500px"
+    >
+      <v-card>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12" sm="12" md="12">
+                <v-text-field
+                  v-model="editedItem.name"
+                  label="Emp ID"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="12" md="12">
+                <v-text-field
+                  v-model="editedItem.calories"
+                  label="Image"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="12" md="12">
+                <v-text-field
+                  v-model="editedItem.fat"
+                  label="Name"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="12" md="12">
+                <v-text-field
+                  v-model="editedItem.carbs"
+                  label="Password"
+                ></v-text-field>
+              </v-col>
+              <!-- <v-col cols="12">
+                <v-file-input v-model="editedItem.image" label="Upload Image"></v-file-input>
+              </v-col> -->
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+            <v-btn color="blue-darken-1" variant="text" @click="close">Cancel</v-btn>
+            <v-btn color="blue-darken-1" variant="text" @click="save">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogDelete" width="400px">
+      <v-card class="rounded-4 pb-4">
+      <v-card-title class="mb-2 text-white text-center" style="background-color: #BA1A1A;">Delete Employee?</v-card-title>
+    <v-icon color="red-accent-4" size="54"  class="align-self-center mt-2">mdi-trash-can</v-icon>
+    <v-card-text class="text-center">Are you sure you want to delete?</v-card-text>
+    <v-card-actions style="display: block;">
+   
+      <v-btn color="black" block class=" rounded-4 text-white" style="background-color: #BA1A1A; " @click="deleteItemConfirm" >Delete</v-btn>
+      <v-btn color="black" block variant="text rounded-4" @click="closeDelete" >Cancel</v-btn>
       <v-spacer></v-spacer>
-      <v-btn color="black" class="bg-dark-subtle" density="compact" @click="closeDelete" >Cancel</v-btn>
-      <v-btn color="black"  density="compact"  class="hover-red bg-dark-subtle" @click="deleteItemConfirm" >OK</v-btn>
-      <v-spacer></v-spacer>
+     
+      
     </v-card-actions>
   </v-card>
 </v-dialog>
@@ -151,7 +112,7 @@
         <tr style="background-color: #f9faf1; color:black; ">
             <td class="text-center">{{ index + 1 }}</td>
     <td class="text-center">{{ item.empId }}</td>
-    <td class="text-center"><img :src='item.image' alt="employee" style="border-radius: 50%; height: 50px;"/> </td>
+    <!-- <td class="text-center"><img :src='item.image' alt="employee" style="border-radius: 50%; height: 50px;"/> </td> -->
     <td class="text-center">{{ item.name }}</td>
     <td class="text-center">{{ item.password }}</td>
    
@@ -168,7 +129,7 @@
           color="danger" class="ms-4" 
         @click="deleteItem(item)"
       >
-        mdi-delete
+        mdi-trash-can
       </v-icon>
     </td>
   </tr>
@@ -184,7 +145,7 @@
         headers: [
         { title: 'Sl No.', key: 'slno',sortable: false,align:'center' },
         { title: 'Emp ID', sortable: false,align:'center', key: 'empId' },
-        { title: 'Image', key: 'image',sortable: false,align:'center' },
+        // { title: 'Image', key: 'image',sortable: false,align:'center' },
         { title: 'Name ', key: 'name',sortable: false,align:'center' },
         { title: 'Password', key: 'password',sortable: false,align:'center' },
         { title: 'Edit / Delete', key: 'actions',sortable: false,align:'center' },
@@ -229,63 +190,63 @@
           this.scanner = [
             {
               empId: 'AME1001',
-              name: 'Deva',
+              name: 'Anju',
               image: require('@/assets/pic1.jpg'),
-              password: 'am@123', 
+              password: 'am@12', 
             },
             {
-              empId: 'AME1001',
-              name: 'Deva',
+              empId: 'AME1002',
+              name: 'Akhila',
               image: require('@/assets/pic1.jpg'),
-              password: 'am@123', 
+              password: 'am@13', 
             },
             {
-              empId: 'AME1001',
+              empId: 'AME1003',
               name: 'Deva',
               image: require('@/assets/pic1.jpg'),
-              password: 'am@123', 
+              password: 'am@14', 
             },
             {
-              empId: 'AME1001',
-              name: 'Deva',
+              empId: 'AME1004',
+              name: 'Neethu',
               image: require('@/assets/pic1.jpg'),
-              password: 'am@123', 
+              password: 'am@15', 
             },
             {
-              empId: 'AME1001',
-              name: 'Deva',
+              empId: 'AME1005',
+              name: 'Siya',
               image: require('@/assets/pic1.jpg'),
-              password: 'am@123', 
+              password: 'am@16', 
             },
             {
-              empId: 'AME1001',
-              name: 'Deva',
+              empId: 'AME1006',
+              name: 'Stephy',
               image: require('@/assets/pic1.jpg'),
-              password: 'am@123', 
+              password: 'am@17', 
             },
             {
-              empId: 'AME1001',
-              name: 'Deva',
+              empId: 'AME1007',
+              name: 'Sangeetha',
               image: require('@/assets/pic1.jpg'),
-              password: 'am@123', 
+              password: 'am@18', 
             },
             {
-              empId: 'AME1001',
-              name: 'Deva',
+              empId: 'AME1008',
+              name: 'Reshma',
               image: require('@/assets/pic1.jpg'),
-              password: 'am@123', 
+              password: 'am@19', 
             },
             {
-              empId: 'AME1001',
-              name: 'Deva',
+              empId: 'AME1009',
+              name: 'Aswathy',
               image: require('@/assets/pic1.jpg'),
-              password: 'am@123', 
+              password: 'am@20', 
             },
             {
-              empId: 'AME1001',
-              name: 'Deva',
+              empId: 'AME1010',
+              name: 'Sreeja',
               image: require('@/assets/pic1.jpg'),
-              password: 'am@123', 
+              password: 'am@21', 
             },
           ]
         },
@@ -336,18 +297,24 @@
   </script>
 
   <style>
-.v-table{
+/* .v-table{
     width : 73vw;
-}
-.hover-red:hover {
-  background-color: #b71c1c !important; /* Change this to the desired hover color */
-  color: white !important; /* Change this to the desired text color */
-}
+} */
+
 .v-table__wrapper>table>thead{
     background-color: #236726;
     color: white;
   }
-  .search .v-input__control{
-    max-width: 200px;
+  .search.v-input{
+    display: flex;
+    justify-content: end;
   }
+  .search .v-input__control{
+    width: 300px;
+    background-color: #DFE4D7 ;
+  }
+  .emp .v-input__control{
+    background-color: #DFE4D7 ;
+  }
+
 </style>

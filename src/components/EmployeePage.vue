@@ -1,27 +1,22 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="desserts"
-    
-    style="background-color: #f9faf1;"
-  >
-    <template v-slot:top>
-      <v-toolbar flat style="background-color: white;">   
-      
-        <v-dialog v-model="dialog" max-width="500px">
+  <div class="d-flex justify-content-between">
+
+
+<v-dialog v-model="dialog" width="500px">
           <template v-slot:activator="{ props }">
             <v-btn
-             color="success"
+             color="#236726"
              v-bind="props"
-             style="background-color: #1B5E20; color: white !important; margin-bottom: 80px;"
+             style="background-color: #1B5E20; color: white !important; text-transform: capitalize;"
+             class="mb-4"
             ><b> + Add Employee </b>
             </v-btn>
           </template>
-          <v-card>
+          <v-card class="pb-3 ">
             <v-card-title class="text-center" style="background-color: #1B5E20; color: white !important;">
               <span class="text-h6">{{formTitle}}</span>
             </v-card-title> 
-            <v-card-text class="mb-0">
+            <v-card-text class="mb-0 mx-5">
               <v-container class="py-0 d-flex flex-column">
                 <v-text-field
                  v-model="editedItem.empId"
@@ -60,35 +55,46 @@
                   density="comfortable"
                 ></v-text-field> 
                 <v-file-input v-model="editedItem.image" label="Upload Image" density="comfortable" class="mb-0" prepend-inner-icon="mdi-paperclip"></v-file-input>
-                <v-card-actions class="d-flex justify-content-end">
-                  <div>
-                    <v-btn color="black" class="bg-dark-subtle" @click="close">Cancel</v-btn>
-                    <v-btn color="black" class="bg-dark-subtle" @click="save">{{formButton}}</v-btn>
-                  </div>
+                <v-card-actions>
+                 
+                    <!-- <v-btn color="black" class="bg-dark-subtle" @click="close">Cancel</v-btn> -->
+                    <v-btn color="white" block :style= "{ backgroundColor: editedIndex === -1 ? '#1B5E20' : '#546E7A' }" class="rounded-5" elevation="4" @click="save">{{formButton}}</v-btn>
+                  
                 </v-card-actions>
               </v-container>
             </v-card-text>
           </v-card>
         </v-dialog>
-        <v-spacer></v-spacer>
+
+
         <v-text-field
           v-model="search"
             label="Search"
             prepend-inner-icon="mdi-magnify"
-            variant="underlined"
-            class="search"
+            variant="underlined" 
+            class="search mt-4"
             density="compact"
           ></v-text-field>
-        <v-dialog v-model="dialogDelete" max-width="420px" height="300px">
-          <v-card style="border-top: 25px solid #B71C1C">
-            <v-icon color="red-darken-4" size="48"  class="align-self-center mt-2">mdi-alert</v-icon>
-            <v-card-text class="text-h6 mt-1 text-center">Are you sure you want to delete this employee?</v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <div class="d-flex justify-content-center mb-3">
-                <v-btn color="black" class="bg-dark-subtle" density="compact" @click="closeDelete" >Cancel</v-btn>
-                <v-btn color="black"  density="compact"  class="hover-red bg-danger-subtle" @click="deleteItemConfirm" >Delete</v-btn>
-              </div>
+
+        </div>
+  <v-data-table
+    :headers="headers"
+    :items="desserts"
+    class="mt-3"
+    style="background-color: #f9faf1;"
+  >
+    <template v-slot:top>
+    
+        
+        <v-dialog v-model="dialogDelete" width="400px">
+          <v-card class="rounded-4 pb-4">
+            <v-card-title class="mb-2 text-white text-center" style="background-color: #BA1A1A;">Delete Employee?</v-card-title>
+            <v-icon color="red-accent-4" size="54"  class="align-self-center mt-2">mdi-trash-can</v-icon>
+            <v-card-text class="text-h6 mt-1 text-center">Are you sure you want to delete?</v-card-text>
+            <v-card-actions style="display: block;">
+              <v-btn block class=" rounded-4 text-white" style="background-color: #BA1A1A;"  @click="deleteItemConfirm" >Delete</v-btn>
+              <v-btn block variant="text rounded-4" @click="closeDelete" >Cancel</v-btn>
+              
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -141,14 +147,11 @@
             : {{ editedItem.email }}
           </div>
         </v-row>
-        <!-- Add other details as needed -->
+       
       </v-container>
     </v-card-text>
   </v-card>
 </v-dialog>
-
-
-      </v-toolbar>
     </template>
     
     <template v-slot:item="{ item, index }">
@@ -402,5 +405,12 @@
     background-color: #236726;
     color: white;
   }
-
+  .search.v-input{
+    display: flex;
+    justify-content: end;
+  }
+  .search .v-input__control{
+    width: 250px;
+    background-color: #DFE4D7 ;
+  }
 </style>

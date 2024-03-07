@@ -1,6 +1,6 @@
 
 <template>
-  <div  class="green-background d-flex justify-content-end" >
+  <div  class="green-background d-flex justify-content-between" >
     <!-- <div class="d-flex mt-1 me-3">
         <v-img src="@/assets/logo.png" class="image"></v-img>
         <div class="d-flex flex-column justify-content-lg-center ">
@@ -8,6 +8,10 @@
           <p class="logo-p">Museum of letters, literature<br> & culture</p>
         </div> 
         </div> -->
+        
+          <h3 class="text-white" style="margin-left:260px;">Tickets</h3>
+          <h5 class="text-white"><u>Logout</u></h5>
+        
     </div>
 
 <div class="d-flex">
@@ -59,7 +63,7 @@
 </script>
 <style scoped>
   .green-background {
-    padding: 35px;
+    padding: 20px;
     /* background: linear-gradient(to bottom left,#110b03,#3e7132); */
     background-color: #205f23;
   }

@@ -1,31 +1,37 @@
 <template>
-  <v-data-table>
+  <div class="row mx-5">
     <!-- Repeat the card structure as needed -->
-    <div v-for="(card, index) in cards" :key="index" class="card mx-4 my-4">
-      <div class="card-header d-flex justify-content-between align-items-center">
+    <div v-for="(card, index) in cards" :key="index" class="card my-4 rounded-4 p-3 pb-0" style="background-color:#f9faf1;">
+      <div class="ms-5">
+        <div class=" d-flex p-2 w-50 justify-content-between ">
         <h5>{{ card.title }}</h5>
-        <v-btn class="mdi mdi-pencil" @click="enableEdit(index)" v-if="!isEditing[index]">Edit</v-btn>
-        <v-btn class="mdi mdi-check" @click="updateValues(index)" v-if="isEditing[index]">Update</v-btn>
+        <v-btn class="mdi mdi-pencil rounded-5 px-4 border-1 border-black" @click="enableEdit(index)" v-if="!isEditing[index]" elevation="2">Edit</v-btn>
+        <v-btn class="px-4 rounded-5 text-white" style="background-color: #546E7A;" @click="updateValues(index)" v-if="isEditing[index]" elevation="2">Update</v-btn>
       </div>
-      <div class="card-body">
+      <div class="card-body ms-5">
         <div class="row mb-3" v-for="(field, fieldIndex) in card.fields" :key="fieldIndex">
-          <div class="col-md-3">
-            <label :for="field.key">{{ field.label }}     :       </label>
+          <div class="col-md-2 pb-3">
+            <h6 :for="field.key">{{ field.label }}</h6>
           </div>
-          <div class="col-md-3">
-            <input
-              type="text"
+          <div class="col-md-1">:</div>
+          <div class="col-md-2">
+            <div v-if="!isEditing[index]">
+             <h6><v-icon size="small">mdi-currency-inr</v-icon>{{ editedItems[index][field.key] }}</h6>
+            </div>
+            <div v-else>
+              <v-text-field
               v-model="editedItems[index][field.key]"
-              :disabled="!isEditing[index]"
-              class="form-control "
-              prepend-icon="mdi-currency-inr"
-            />
-            
+              density="compact"
+              class="input"
+              hide-details
+              ></v-text-field>
+            </div>
           </div>
         </div>
       </div>
+      </div>
     </div>
-  </v-data-table>
+  </div>
 </template>
 
 <script>
@@ -34,18 +40,18 @@ export default {
     return {
       isEditing: Array.from({ length: 4 }, () => false), // Assuming you have 4 cards, adjust as needed
       editedItems: [
-        { public: 'yet', adult: 'always', seniorcitizen: 'wjej' }, // Card 1
-        { teacher: 'example', student: 'sample' }, // Card 2
-        { adult: 'example', child: 'sample' },
-        { gst: 'example', entertainmenttax: 'sample' },
+        { child: 2, adult: 2, seniorcitizen: 1 }, // Card 1
+        { teacher: 3, student: 90 }, // Card 2
+        { adult: 2, child: 1 },
+        { gst: 18, cess: 2 },
         // Add more objects for each card as needed
       ],
       cards: [
         {
           title: 'Public',
           fields: [
-            { key: 'public', label: 'Public' },
             { key: 'adult', label: 'Adult' },
+            { key: 'child', label: 'Child' },
             { key: 'seniorcitizen', label: 'Senior Citizen' },
           ],
         },
@@ -69,7 +75,7 @@ export default {
           title: 'Tax',
           fields: [
             { key: 'gst', label: 'GST' },
-            { key: 'entertainmenttax', label: 'Entertainment TAX' },
+            { key: 'cess', label: 'CESS' },
       
           ],
         },
@@ -100,7 +106,8 @@ export default {
   .v-table{
       width : 73vw;
   }
-  .card{
+  /* .card{
     width: 700px;
-  }
+  } */
+
 </style>

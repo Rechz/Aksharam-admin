@@ -2,9 +2,9 @@
     
 
     <div class="d-flex bg-white">
-      <v-text-field v-model="newSlot.in" label="Time In" prepend-inner-icon="mdi-clock-time-four" density="compact" class="me-2" ></v-text-field>
-      <v-text-field v-model="newSlot.out" label="Time Out" prepend-inner-icon="mdi-clock-time-four" density="compact" class="me-2"></v-text-field>
-      <v-text-field v-model="newSlot.ticketno" label="Tickets per slot" prepend-inner-icon="mdi-ticket-confirmation" density="compact" class="me-2"></v-text-field>
+      <v-text-field v-model="newSlot.in" label="Time In" prepend-inner-icon="mdi-clock-time-four" density="compact" class="me-2 slot" ></v-text-field>
+      <v-text-field v-model="newSlot.out" label="Time Out" prepend-inner-icon="mdi-clock-time-four" density="compact" class="me-2 slot"></v-text-field>
+      <v-text-field v-model="newSlot.ticketno" label="Tickets per slot" prepend-inner-icon="mdi-ticket-confirmation" density="compact" class="me-2 slot"></v-text-field>
       <v-btn color="#205f23"  class="mb-2 me-2" @click="addSlot" style="text-transform: capitalize;" >
   <b>+ Add Slots</b>
 </v-btn>
@@ -325,7 +325,7 @@
     background-color: #b71c1c !important; /* Change this to the desired hover color */
     color: white !important; /* Change this to the desired text color */
   }
-  .v-input__control{
+  .slot .v-input__control{
     background-color: #DFE4D7 !important;
   }
   /* .v-data-table-footer{

@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-2" style="width: 500px; display:inline-block; background-color:#f9faf1;">
+  <div class="mb-3" style="width: 500px; display:inline-block; background-color:#f9faf1;">
     <v-tabs v-model="tab" color="green-darken-4" grow>
       <v-tab v-for="item in items" :key="item" :value="item" @click="change(item)" style="text-transform: capitalize;">
         {{ item }}
