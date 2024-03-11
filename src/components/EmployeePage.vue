@@ -18,12 +18,12 @@
             </v-card-title> 
             <v-card-text class="mb-0 mx-5">
               <v-container class="py-0 d-flex flex-column">
-                <v-text-field
+                <!-- <v-text-field
                  v-model="editedItem.empId"
                  prepend-inner-icon="mdi-card-account-details-outline"
                  label="Emp ID"
                  density="comfortable"
-                ></v-text-field>
+                ></v-text-field> -->
                 <v-text-field
                   v-model="editedItem.name"
                   label="Name"
@@ -31,7 +31,7 @@
                   density="comfortable"
                 ></v-text-field>
                 <v-text-field
-                  v-model="editedItem.contact"
+                  v-model="editedItem.phoneNo"
                   label="Phone No"
                   prepend-inner-icon="mdi-phone-outline"
                   density="comfortable"
@@ -43,13 +43,13 @@
                   density="comfortable"
                 ></v-text-field>
                 <v-text-field
-                  v-model="editedItem.addressTemp"
+                  v-model="editedItem.tempAddress"
                   label="Temporary Address"
                   prepend-inner-icon="mdi-map-marker-outline"
                   density="comfortable"
                 ></v-text-field>   
                 <v-text-field
-                  v-model="editedItem.addressPerm"
+                  v-model="editedItem.permAddress"
                   label="Permanent Address"
                   prepend-inner-icon="mdi-home-map-marker"
                   density="comfortable"
@@ -101,7 +101,7 @@
         </v-dialog>
 <!-- Add new dialog for displaying details -->
 <v-dialog v-model="detailsDialog" width="400px">
-  <v-card style="width: 650px; height:310px; border-radius: 15px;">
+  <v-card style="width: 620px; height:400px; border-radius: 15px;">
     <v-card-title class="text-left" style="background-color: #1B5E20; color: white !important; position: relative;">
       <span class="text-h6 ms-4 " >Employee Details</span>
       <v-icon
@@ -112,12 +112,14 @@
     </v-card-title>
     <v-card-text class="mb-0  ms-1">
       <v-container class="py-0 d-flex flex-column">
-        <v-row class="mb-2 mt-2">
+        <div class="row">
+          <div class="col-6">
+            <v-row class="mb-2 mt-2">
           <div class="col-4">
             <strong>Emp ID    </strong>   
           </div>
-          <div class="col-3">
-            : {{ editedItem.empId }}
+          <div class="col-8">
+            : {{ editedItem.employeeId }}
           </div>
          
         </v-row>
@@ -125,7 +127,7 @@
           <div class="col-4">
             <strong>Name     </strong> 
           </div>
-          <div class="col-3">
+          <div class="col-8">
             : {{ editedItem.name }}
           </div>
          
@@ -135,31 +137,55 @@
             <strong>Contact      </strong> 
           </div>
 
-          <div class="col-4">
-            : {{ editedItem.contact }}
+          <div class="col-8">
+            : {{ editedItem.phoneNo }}
           </div>
+        </v-row>
+        <v-row class="mb-2 mt-2">
+          <div class="col-4">
+            <strong>Temporary Address   </strong>   
+          </div>
+          <div class="col-8">
+            : {{ editedItem.tempAddress }}
+          </div>
+         
+        </v-row>
+        <v-row class="mb-2 mt-2">
+          <div class="col-4">
+            <strong>Permanent Address    </strong>   
+          </div>
+          <div class="col-8">
+            : {{ editedItem.permAddress }}
+          </div>
+         
         </v-row>
         <v-row class="mb-2">
           <div class="col-4">
             <strong>Email      </strong>
           </div>
-          <div class="col-3">
+          <div class="col-8">
             : {{ editedItem.email }}
           </div>
         </v-row>
-       
+          </div>
+          <div class="col-6">
+            <img :src='editedItem.image' alt="employee" style="height: 250px;"/>
+          </div>
+        </div>
       </v-container>
     </v-card-text>
   </v-card>
 </v-dialog>
     </template>
     
-    <template v-slot:item="{ item, index }">
+    <!-- <template v-slot:item="{ item, index }"> -->
+      <template v-slot:item="{ item}">
       <tr style="background-color:#f9faf1; color:black;">
-        <td class="text-center">{{ index + 1 }}</td>
-        <td class="text-center">{{ item.empId }}</td>
+        <!-- <td class="text-center">{{ index + 1 }}</td> -->
+        <td class="text-center">{{ item.employeeId }}</td>
         <td class="text-center">{{ item.name }}</td>
-        <td class="text-center">{{ item.contact }}</td>
+        <td class="text-center"><img :src='item.image' alt="employee" style="border-radius: 50%; height: 50px;"/></td>
+        <td class="text-center">{{ item.phoneNo }}</td>
         <td class="text-center"><v-icon size="large" color="blue-grey-darken-3" @click="showDetails(item)">mdi-eye</v-icon></td>
         <td class="text-center">
           <v-icon size="large"
@@ -173,6 +199,7 @@
 </template>
 
   <script>
+  import axios from 'axios';
     export default {
       data: () => ({
         dialog: false,
@@ -180,31 +207,124 @@
         dialogDelete: false,
         isHovered: false,
         search: '',
-        headers: [
-          { title: 'SL No.', align: 'center', key: 'serial no', sortable: false },
-          { title: 'EMP ID', align: 'center', key: 'name', sortable: false},
-          { title: 'NAME', align: 'center', key: 'name', sortable: false },
-          { title: 'CONTACT', align: 'center', key: 'fat', sortable: false },
-          { title: 'DETAILS', align: 'center', key: 'carbs', sortable: false },
-          { title: 'EDIT / DELETE', align: 'center', key: 'actions', sortable: false},
+        desserts : [
+        //     {
+        //       employeeId: 'AKSH1001',
+        //       name: 'Anju',
+        //       phoneNo: 963895623,
+        //       tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+        //       permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+        //       email:'anju@gmail.com',
+        //       image:require('@/assets/pic1.jpg') 
+        //     },
+        //     {
+        //       employeeId: 'AKSH1002',
+        //       name: 'Akhila',
+        //       phoneNo: 945895743,
+        //       tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+        //       permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+        //       email:'anju@gmail.com',
+        //       image:require('@/assets/pic1.jpg') 
+        //     },
+        //     {
+        //       employeeId: 'AKSH1003',
+        //       name: 'Deva',
+        //       phoneNo: 963895623,
+        //       tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+        //       permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+        //       email:'anju@gmail.com',
+        //       image:require('@/assets/pic1.jpg') 
+        //     },
+        //     {
+        //       employeeId: 'AKSH1004',
+        //       name: 'Ebin',
+        //       phoneNo: 963895623,
+        //       tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+        //       permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+        //       email:'anju@gmail.com',
+        //       image:require('@/assets/pic1.jpg') 
+        //     },
+        //     {
+        //       employeeId: 'AKSH1005',
+        //       name: 'Neethu',
+        //       phoneNo: 963895623,
+        //       tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+        //       permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+        //       email:'anju@gmail.com',
+        //       image:require('@/assets/pic1.jpg') 
+        //     },
+        //     {
+        //       employeeId: 'AKSH1006',
+        //       name: 'Stephy',
+        //       phoneNo: 963895623,
+        //       tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+        //       permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+        //       email:'anju@gmail.com',
+        //       image:require('@/assets/pic1.jpg') 
+        //     },
+        //     {
+        //       employeeId: 'AKSH1007',
+        //       name: 'Sangeetha',
+        //       phoneNo: 963895623,
+        //       tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+        //       permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+        //       email:'anju@gmail.com',
+        //       image:require('@/assets/pic1.jpg') 
+        //     },
+        //     {
+        //       employeeId: 'AKSH1008',
+        //       name: 'Aswathy',
+        //       phoneNo: 963895623,
+        //       tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+        //       permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+        //       email:'anju@gmail.com',
+        //       image:require('@/assets/pic1.jpg') 
+        //     },
+        //     {
+        //       employeeId: 'AKSH1009',
+        //       name: 'Siya',
+        //       phoneNo: 963895623,
+        //       tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+        //       permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+        //       email:'anju@gmail.com',
+        //       image:require('@/assets/pic1.jpg') 
+        //     },
+        //     {
+        //       employeeId: 'AKSH1010',
+        //       name: 'Reshma',
+        //       phoneNo: 963895623,
+        //       tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+        //       permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+        //       email:'anju@gmail.com',
+        //       image:require('@/assets/pic1.jpg') 
+        //     },
+        //   ],
+        // headers: [
+        //   // { title: 'SL No.', align: 'center', key: 'serial no', sortable: false },
+        //   { title: 'EMP ID', align: 'center', key: 'name', sortable: false},
+        //   { title: 'IMAGE', align: 'center', key: 'image', sortable: false },
+        //   { title: 'NAME', align: 'center', key: 'name', sortable: false },
+        //   { title: 'CONTACT', align: 'center', key: 'fat', sortable: false },
+        //   { title: 'DETAILS', align: 'center', key: 'carbs', sortable: false },
+        //   { title: 'EDIT / DELETE', align: 'center', key: 'actions', sortable: false},
         ],
-        desserts: [],
+        
         editedIndex: -1,
         editedItem: {
-          empId: '',
+          employeeId: '',
           name: '',
-          contact: null,
-          addressTemp: '',
-          addressPerm: '',
+          phoneNo: null,
+          tempAddress: '',
+          permAddress: '',
           email:'',
           image:null 
         },
         defaultItem: {
-          empId: '',
+          employeeId: '',
           name: '',
-          contact: null,
-          addressTemp: '',
-          addressPerm: '',
+          phoneNo: null,
+          tempAddress: '',
+          permAddress: '',
           email:'',
           image:null 
         },
@@ -228,113 +348,41 @@
         },
       },
   
-      created () {
-        this.initialize()
-      },
+      // created () {
+      //   this.initialize()
+      // },
 
     filteredDesserts() {
       return this.desserts.filter((item) =>
         item.name.toLowerCase().includes(this.search.toLowerCase())
       );
     },
-  
+  mounted () {
+this.getDetails();
+  },
   
       methods: {
-        initialize () {
-          this.desserts = [
-            {
-              empId: 'AKSH1001',
-              name: 'Anju',
-              contact: 963895623,
-              addressTemp: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-              addressPerm: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-              email:'anju@gmail.com',
-              image:'' 
-            },
-            {
-              empId: 'AKSH1002',
-              name: 'Akhila',
-              contact: 945895743,
-              addressTemp: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-              addressPerm: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-              email:'anju@gmail.com',
-              image:''
-            },
-            {
-              empId: 'AKSH1003',
-              name: 'Deva',
-              contact: 963895623,
-              addressTemp: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-              addressPerm: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-              email:'anju@gmail.com',
-              image:''
-            },
-            {
-              empId: 'AKSH1004',
-              name: 'Ebin',
-              contact: 963895623,
-              addressTemp: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-              addressPerm: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-              email:'anju@gmail.com',
-              image:''
-            },
-            {
-              empId: 'AKSH1005',
-              name: 'Neethu',
-              contact: 963895623,
-              addressTemp: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-              addressPerm: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-              email:'anju@gmail.com',
-              image:''
-            },
-            {
-              empId: 'AKSH1006',
-              name: 'Stephy',
-              contact: 963895623,
-              addressTemp: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-              addressPerm: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-              email:'anju@gmail.com',
-              image:''
-            },
-            {
-              empId: 'AKSH1007',
-              name: 'Sangeetha',
-              contact: 963895623,
-              addressTemp: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-              addressPerm: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-              email:'anju@gmail.com',
-              image:''
-            },
-            {
-              empId: 'AKSH1008',
-              name: 'Aswathy',
-              contact: 963895623,
-              addressTemp: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-              addressPerm: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-              email:'anju@gmail.com',
-              image:''
-            },
-            {
-              empId: 'AKSH1009',
-              name: 'Siya',
-              contact: 963895623,
-              addressTemp: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-              addressPerm: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-              email:'anju@gmail.com',
-              image:''
-            },
-            {
-              empId: 'AKSH1010',
-              name: 'Reshma',
-              contact: 963895623,
-              addressTemp: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-              addressPerm: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-              email:'anju@gmail.com',
-              image:''
-            },
-          ]
-        },
-  
+        // initialize () {
+          
+        // },
+  async getDetails() {
+   const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcxMDEzMzU3OSwiZXhwIjoxNzEwMTU1MTc5fQ.CT6zbwVpFay7tX5OHazu5fDn-ljpbp5dsL5gFIOIJOg';
+    try{
+      const response = await axios.get('http://localhost:8080/api/admin/employees', {
+          headers: {
+            Authorization: `Bearer ${token}` // Include the JWT token in the Authorization header
+          }
+        });
+      if(response.status === 200){
+        const fetchedDesserts = response.data; 
+      this.desserts = fetchedDesserts;
+      }
+    }
+    catch(error) {
+      console.error(error);
+      alert(error)
+    }
+},
         editItem (item) {
           this.editedIndex = this.desserts.indexOf(item)
           this.editedItem = Object.assign({}, item)

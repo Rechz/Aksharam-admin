@@ -9,7 +9,7 @@
         </div> 
         </div> -->
         
-          <h3 class="text-white" style="margin-left:260px;">Tickets</h3>
+          <h3 class="text-white" style="margin-left:260px;">{{selectedNavItem}}</h3>
           <h5 class="text-white"><u>Logout</u></h5>
         
     </div>
@@ -57,8 +57,31 @@
       return {
         drawer: true,
         rail: true,
+        navItems: [ // Define your navigation items here
+        { text: 'Overview', route: '/dashboard-page' },
+        { text: 'Tickets', route: '/tickets' },
+        { text: 'Employee', route: '/employee' },
+        { text: 'Items', route: '/items-page' },
+        { text: 'Portal', route: '/portal' }
+      ],
+      selectedNavItem: ''
       }
     },
+    computed: {
+    // Extracting the selected navigation item from the route
+    selectedRoute() {
+      return this.$route.path;
+    }
+  },
+  watch: {
+    // Watch for changes in the route to update the selectedNavItem
+    selectedRoute(newRoute) {
+      const selectedItem = this.navItems.find(item => item.route === newRoute);
+      if (selectedItem) {
+        this.selectedNavItem = selectedItem.text;
+      }
+    }
+  }
   }
 </script>
 <style scoped>

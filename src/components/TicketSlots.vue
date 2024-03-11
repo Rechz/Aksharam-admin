@@ -86,14 +86,15 @@
               </v-card>
             </v-dialog>
             <v-dialog v-model="dialogDelete" width="420px" height="300px">
-    <v-card style="border-top: 25px solid #B71C1C">
-      <!-- <v-card-title style="background-color: #FFCDD2;" class="mb-2">Delete Employee?</v-card-title> -->
-      <v-icon color="red-darken-4" size="48"  class="align-self-center mt-2">mdi-alert</v-icon>
-      <v-card-title class="text-h6 mt-2">Are you sure you want to delete this employee?</v-card-title>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="black" class="bg-dark-subtle" density="compact" @click="closeDelete" >Cancel</v-btn>
-        <v-btn color="black"  density="compact"  class="hover-red bg-dark-subtle" @click="deleteItemConfirm" >OK</v-btn>
+    <v-card class="rounded-4 pb-4">
+      <v-card-title style="background-color: #BA1A1A;" class="mb-2 text-white text-center">Delete Slot?</v-card-title>
+      <v-icon color="red-accent-4" size="54"  class="align-self-center mt-2">mdi-trash-can</v-icon>
+      <v-card-text lass="text-center">Are you sure you want to delete this slot?</v-card-text>
+      <v-card-actions style="display: block;">
+   
+   <v-btn color="black" block class=" rounded-4 text-white" style="background-color: #BA1A1A; " @click="deleteItemConfirm" >Delete</v-btn>
+   <v-btn color="black" block variant="text rounded-4" @click="closeDelete" >Cancel</v-btn>
+   <v-spacer></v-spacer>
         <v-spacer></v-spacer>
       </v-card-actions>
     </v-card>
