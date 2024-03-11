@@ -298,15 +298,15 @@
         //       email:'anju@gmail.com',
         //       image:require('@/assets/pic1.jpg') 
         //     },
-        //   ],
-        // headers: [
-        //   // { title: 'SL No.', align: 'center', key: 'serial no', sortable: false },
-        //   { title: 'EMP ID', align: 'center', key: 'name', sortable: false},
-        //   { title: 'IMAGE', align: 'center', key: 'image', sortable: false },
-        //   { title: 'NAME', align: 'center', key: 'name', sortable: false },
-        //   { title: 'CONTACT', align: 'center', key: 'fat', sortable: false },
-        //   { title: 'DETAILS', align: 'center', key: 'carbs', sortable: false },
-        //   { title: 'EDIT / DELETE', align: 'center', key: 'actions', sortable: false},
+           ],
+        headers: [
+      { title: 'SL No.', align: 'center', key: 'serial no', sortable: false },
+   { title: 'EMP ID', align: 'center', key: 'name', sortable: false},
+     { title: 'IMAGE', align: 'center', key: 'image', sortable: false },
+      { title: 'NAME', align: 'center', key: 'name', sortable: false },
+        { title: 'CONTACT', align: 'center', key: 'fat', sortable: false },
+    { title: 'DETAILS', align: 'center', key: 'carbs', sortable: false },
+    { title: 'EDIT / DELETE', align: 'center', key: 'actions', sortable: false},
         ],
         
         editedIndex: -1,
