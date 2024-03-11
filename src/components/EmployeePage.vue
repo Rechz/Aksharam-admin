@@ -300,7 +300,7 @@
         //     },
            ],
         headers: [
-      { title: 'SL No.', align: 'center', key: 'serial no', sortable: false },
+      // { title: 'SL No.', align: 'center', key: 'serial no', sortable: false },
    { title: 'EMP ID', align: 'center', key: 'name', sortable: false},
      { title: 'IMAGE', align: 'center', key: 'image', sortable: false },
       { title: 'NAME', align: 'center', key: 'name', sortable: false },
