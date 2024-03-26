@@ -1,12 +1,13 @@
 <template>  
 <div class="d-flex justify-content-between">
+  
   <v-text-field
     label="Search"
     v-model="search"
     prepend-inner-icon="mdi-magnify"
-    variant="underlined"
     class="search"
     density="compact"
+    @click="search"
   ></v-text-field>
   <v-spacer></v-spacer>
   <v-select
@@ -22,17 +23,17 @@
 </div>  
     <v-data-table
       :headers="headers"
-      :items="tickets"
+      :items="filteredTickets"
       style="background-color: #f9faf1;"
       max-width="100%"
       items-per-page="5"
     >
-    
-      <template v-slot:item = '{item, index}'>
+      <template v-slot:filteredtickets = '{item}'>
         <tr style="background-color:#f9faf1; color:black;" class="text-center">
-          <td>{{ index + 1 }}</td>  
+           <td>{{ index+1 }}</td> 
           <td>{{ item.ID }}</td>
           <td>{{ item.bdate }}</td>
+          
           <td>{{ item.edate }}</td>
           <td>{{ item.category }}</td>
           <td>Rs.{{ item.price }}/-</td>
@@ -60,12 +61,10 @@
         tickets: [],
         
       }),
-      created() {
+  created() {
   this.initialize();
-   // or 'category' based on your preference
 },
       methods: {
-
         initialize () {
           this.tickets = [
             {
@@ -167,7 +166,6 @@
               category: 'STUDENT',
               price: '1120',
             },
-          
           ]
         },
   
@@ -225,8 +223,17 @@
       } else {
         return this.tickets;
       }
+        },
+       filteredTickets() {
+          if (this.search !== '') {
+        return this.tickets.filter((item) =>
+          item.ID.toLowerCase().includes(this.search.toLowerCase()) || item.bdate.toLowerCase().includes(this.search.toLowerCase()) || item.edate.toLowerCase().includes(this.search.toLowerCase()) 
+          || item.category.toLowerCase().includes(this.search.toLowerCase())  
+        );
+      }
+      else { return this.tickets; }
+        } 
     },
-  },
   watch: {
   sortColumn() {
     this.tickets = this.sortedTickets;
@@ -235,6 +242,3 @@
     }
   </script>
 
-  <style>
-
-</style>

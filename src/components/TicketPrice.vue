@@ -1,5 +1,5 @@
 <template>
-  <div class="row mx-5">
+  <div class="row m-5 ms-0 mt-0">
     <!-- Repeat the card structure as needed -->
     <div v-for="(card, index) in cards" :key="index" class="card my-4 rounded-4 p-3 pb-0" style="background-color:#f9faf1;">
       <div class="ms-5">

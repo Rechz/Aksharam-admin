@@ -17,14 +17,31 @@
               <span class="text-h6">{{formTitle}}</span>
             </v-card-title> 
             <v-card-text class="mb-0 mx-5">
-              <v-container class="py-0 d-flex flex-column">
+              <v-container class="py-0 mb-0 d-flex flex-column">
                 <!-- <v-text-field
                  v-model="editedItem.empId"
                  prepend-inner-icon="mdi-card-account-details-outline"
                  label="Emp ID"
                  density="comfortable"
                 ></v-text-field> -->
-                <v-text-field
+                <div>
+    <v-hover v-slot="{ isHovering, props }">
+     
+      <v-img :src="editedIndex !== -1 ? editedItem.image : image" alt="Upload Image" style="height: 200px;" class="mb-3" v-bind="props">
+        <v-overlay
+          :model-value="isHovering"
+          class="align-center justify-center"
+          scrim="#036358"
+          contained
+        >
+          <v-btn variant="flat" style="text-transform: capitalize">{{ editedIndex !== -1 ? 'Change' : 'Add'}}</v-btn>
+        </v-overlay>
+      </v-img>
+     
+    </v-hover>
+  </div>
+                <div>
+                  <v-text-field
                   v-model="editedItem.name"
                   label="Name"
                   prepend-inner-icon="mdi-account-outline"
@@ -54,11 +71,14 @@
                   prepend-inner-icon="mdi-home-map-marker"
                   density="comfortable"
                 ></v-text-field> 
-                <v-file-input v-model="editedItem.image" label="Upload Image" density="comfortable" class="mb-0" prepend-inner-icon="mdi-paperclip"></v-file-input>
+                </div>
+        
+                
+                
                 <v-card-actions>
                  
                     <!-- <v-btn color="black" class="bg-dark-subtle" @click="close">Cancel</v-btn> -->
-                    <v-btn color="white" block :style= "{ backgroundColor: editedIndex === -1 ? '#1B5E20' : '#546E7A' }" class="rounded-5" elevation="4" @click="save">{{formButton}}</v-btn>
+                    <v-btn color="white" block :style= "{ backgroundColor: editedIndex === -1 ? '#1B5E20' : '#546E7A' }" style="text-transform: capitalize" class="rounded-5" elevation="4" @click="save">{{formButton}}</v-btn>
                   
                 </v-card-actions>
               </v-container>
@@ -67,19 +87,19 @@
         </v-dialog>
 
 
-        <v-text-field
-          v-model="search"
-            label="Search"
-            prepend-inner-icon="mdi-magnify"
-            variant="underlined" 
-            class="search mt-4"
-            density="compact"
-          ></v-text-field>
+      <v-text-field
+    label="Search"
+    v-model="search"
+    prepend-inner-icon="mdi-magnify"
+   
+    class="search mt-5"
+    density="compact"
+  ></v-text-field>
 
         </div>
   <v-data-table
     :headers="headers"
-    :items="desserts"
+    :items="filteredEmployees"
     class="mt-3"
     style="background-color: #f9faf1;"
   >
@@ -196,6 +216,9 @@
       </tr>
     </template>
   </v-data-table>
+
+
+
 </template>
 
   <script>
@@ -203,105 +226,108 @@
     export default {
       data: () => ({
         dialog: false,
+        overlay: true,
+        dates: [],
         detailsDialog: false,
         dialogDelete: false,
         isHovered: false,
         search: '',
-        desserts : [
-        //     {
-        //       employeeId: 'AKSH1001',
-        //       name: 'Anju',
-        //       phoneNo: 963895623,
-        //       tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-        //       permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-        //       email:'anju@gmail.com',
-        //       image:require('@/assets/pic1.jpg') 
-        //     },
-        //     {
-        //       employeeId: 'AKSH1002',
-        //       name: 'Akhila',
-        //       phoneNo: 945895743,
-        //       tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-        //       permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-        //       email:'anju@gmail.com',
-        //       image:require('@/assets/pic1.jpg') 
-        //     },
-        //     {
-        //       employeeId: 'AKSH1003',
-        //       name: 'Deva',
-        //       phoneNo: 963895623,
-        //       tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-        //       permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-        //       email:'anju@gmail.com',
-        //       image:require('@/assets/pic1.jpg') 
-        //     },
-        //     {
-        //       employeeId: 'AKSH1004',
-        //       name: 'Ebin',
-        //       phoneNo: 963895623,
-        //       tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-        //       permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-        //       email:'anju@gmail.com',
-        //       image:require('@/assets/pic1.jpg') 
-        //     },
-        //     {
-        //       employeeId: 'AKSH1005',
-        //       name: 'Neethu',
-        //       phoneNo: 963895623,
-        //       tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-        //       permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-        //       email:'anju@gmail.com',
-        //       image:require('@/assets/pic1.jpg') 
-        //     },
-        //     {
-        //       employeeId: 'AKSH1006',
-        //       name: 'Stephy',
-        //       phoneNo: 963895623,
-        //       tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-        //       permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-        //       email:'anju@gmail.com',
-        //       image:require('@/assets/pic1.jpg') 
-        //     },
-        //     {
-        //       employeeId: 'AKSH1007',
-        //       name: 'Sangeetha',
-        //       phoneNo: 963895623,
-        //       tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-        //       permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-        //       email:'anju@gmail.com',
-        //       image:require('@/assets/pic1.jpg') 
-        //     },
-        //     {
-        //       employeeId: 'AKSH1008',
-        //       name: 'Aswathy',
-        //       phoneNo: 963895623,
-        //       tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-        //       permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-        //       email:'anju@gmail.com',
-        //       image:require('@/assets/pic1.jpg') 
-        //     },
-        //     {
-        //       employeeId: 'AKSH1009',
-        //       name: 'Siya',
-        //       phoneNo: 963895623,
-        //       tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-        //       permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-        //       email:'anju@gmail.com',
-        //       image:require('@/assets/pic1.jpg') 
-        //     },
-        //     {
-        //       employeeId: 'AKSH1010',
-        //       name: 'Reshma',
-        //       phoneNo: 963895623,
-        //       tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-        //       permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-        //       email:'anju@gmail.com',
-        //       image:require('@/assets/pic1.jpg') 
-        //     },
+        image: require('@/assets/acc.jpg'), 
+        employees : [
+            {
+              employeeId: 'AKSH1001',
+              name: 'Anju',
+              phoneNo: 963895623,
+              tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+              permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+              email:'anju@gmail.com',
+              image:require('@/assets/pic1.jpg') 
+            },
+            {
+              employeeId: 'AKSH1002',
+              name: 'Akhila',
+              phoneNo: 945895743,
+              tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+              permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+              email:'anju@gmail.com',
+              image:require('@/assets/pic1.jpg') 
+            },
+            {
+              employeeId: 'AKSH1003',
+              name: 'Deva',
+              phoneNo: 963895623,
+              tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+              permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+              email:'anju@gmail.com',
+              image:require('@/assets/pic1.jpg') 
+            },
+            {
+              employeeId: 'AKSH1004',
+              name: 'Ebin',
+              phoneNo: 963895623,
+              tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+              permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+              email:'anju@gmail.com',
+              image:require('@/assets/pic1.jpg') 
+            },
+            {
+              employeeId: 'AKSH1005',
+              name: 'Neethu',
+              phoneNo: 963895623,
+              tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+              permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+              email:'anju@gmail.com',
+              image:require('@/assets/pic1.jpg') 
+            },
+            {
+              employeeId: 'AKSH1006',
+              name: 'Stephy',
+              phoneNo: 963895623,
+              tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+              permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+              email:'anju@gmail.com',
+              image:require('@/assets/pic1.jpg') 
+            },
+            {
+              employeeId: 'AKSH1007',
+              name: 'Sangeetha',
+              phoneNo: 963895623,
+              tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+              permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+              email:'anju@gmail.com',
+              image:require('@/assets/pic1.jpg') 
+            },
+            {
+              employeeId: 'AKSH1008',
+              name: 'Aswathy',
+              phoneNo: 963895623,
+              tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+              permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+              email:'anju@gmail.com',
+              image:require('@/assets/pic1.jpg') 
+            },
+            {
+              employeeId: 'AKSH1009',
+              name: 'Siya',
+              phoneNo: 963895623,
+              tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+              permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+              email:'anju@gmail.com',
+              image:require('@/assets/pic1.jpg') 
+            },
+            {
+              employeeId: 'AKSH1010',
+              name: 'Reshma',
+              phoneNo: 963895623,
+              tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
+              permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
+              email:'anju@gmail.com',
+              image:require('@/assets/pic1.jpg') 
+            },
            ],
         headers: [
       // { title: 'SL No.', align: 'center', key: 'serial no', sortable: false },
-   { title: 'EMP ID', align: 'center', key: 'name', sortable: false},
+   { title: 'EMP ID', align: 'center', key: 'empID', sortable: false},
      { title: 'IMAGE', align: 'center', key: 'image', sortable: false },
       { title: 'NAME', align: 'center', key: 'name', sortable: false },
         { title: 'CONTACT', align: 'center', key: 'fat', sortable: false },
@@ -336,7 +362,17 @@
         },
         formButton () {
           return this.editedIndex === -1? 'Add' : 'Update'
-        }
+        },
+      filteredEmployees() {
+      if (this.search !== '') {
+        return this.employees.filter((item) =>
+          item.name.toLowerCase().includes(this.search.toLowerCase()) || item.employeeId.toLowerCase().includes(this.search.toLowerCase()) 
+        );
+      }
+      else { return this.employees; }
+      
+    },
+       
       },
   
       watch: {
@@ -352,14 +388,10 @@
       //   this.initialize()
       // },
 
-    filteredDesserts() {
-      return this.desserts.filter((item) =>
-        item.name.toLowerCase().includes(this.search.toLowerCase())
-      );
-    },
-  mounted () {
-this.getDetails();
-  },
+
+//   mounted () {
+// this.getDetails();
+//   },
   
       methods: {
         // initialize () {
@@ -374,8 +406,8 @@ this.getDetails();
           }
         });
       if(response.status === 200){
-        const fetchedDesserts = response.data; 
-      this.desserts = fetchedDesserts;
+        const fetchedEmployees = response.data; 
+      this.employees = fetchedEmployees;
       }
     }
     catch(error) {
@@ -384,19 +416,19 @@ this.getDetails();
     }
 },
         editItem (item) {
-          this.editedIndex = this.desserts.indexOf(item)
+          this.editedIndex = this.employees.indexOf(item)
           this.editedItem = Object.assign({}, item)
           this.dialog = true
         },
   
         deleteItem (item) {
-          this.editedIndex = this.desserts.indexOf(item)
+          this.editedIndex = this.employees.indexOf(item)
           this.editedItem = Object.assign({}, item)
           this.dialogDelete = true
         },
   
         deleteItemConfirm () {
-          this.desserts.splice(this.editedIndex, 1)
+          this.employees.splice(this.editedIndex, 1)
           this.closeDelete()
         },
   
@@ -418,9 +450,9 @@ this.getDetails();
   
         save () {
           if (this.editedIndex > -1) {
-            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            Object.assign(this.employees[this.editedIndex], this.editedItem)
           } else {
-            this.desserts.push(this.editedItem)
+            this.employees.push(this.editedItem)
           }
           this.close()
         },

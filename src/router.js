@@ -40,7 +40,7 @@ const router = createRouter({
           },
           {
             path : '/dashboard-page',
-            component : () => import('./components/DashPage.vue')
+            component : () => import('./components/Dashboard/DashPage.vue')
           },
           {
             path : '/employee',

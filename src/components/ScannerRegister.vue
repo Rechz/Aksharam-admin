@@ -28,14 +28,14 @@
     v-model="search"
     label="Search"
     prepend-inner-icon="mdi-magnify"
-    variant="underlined"
+    
     class="search"
-    density="compact"
+   density="compact"
   ></v-text-field>
 </div>
 <v-data-table
   :headers="headers"
-  :items="scanner"
+  :items="filteredScanner"
   style="background-color: #f9faf1; color:black; "
   class="mt-3"
 >  
@@ -54,26 +54,26 @@
             <v-row>
               <v-col cols="12" sm="12" md="12">
                 <v-text-field
-                  v-model="editedItem.name"
-                  label="Emp ID"
+                  v-model="editedItem.nam"
+                  label="Employee ID"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" sm="12" md="12">
                 <v-text-field
                   v-model="editedItem.calories"
-                  label="Image"
+                  label="Employee Name"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" sm="12" md="12">
                 <v-text-field
                   v-model="editedItem.fat"
-                  label="Name"
+                  label="New Password"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" sm="12" md="12">
                 <v-text-field
                   v-model="editedItem.carbs"
-                  label="Password"
+                  label="Confirm Password"
                 ></v-text-field>
               </v-col>
               <!-- <v-col cols="12">
@@ -114,7 +114,7 @@
     <td class="text-center">{{ item.empId }}</td>
     <!-- <td class="text-center"><img :src='item.image' alt="employee" style="border-radius: 50%; height: 50px;"/> </td> -->
     <td class="text-center">{{ item.name }}</td>
-    <td class="text-center">{{ item.password }}</td>
+    <!-- <td class="text-center">{{ item.password }}</td> -->
    
     <td class="text-center">
       <v-icon
@@ -142,12 +142,13 @@
         dialog: false,
         dialogDelete: false,
         isHovered: false,
+        search: '',
         headers: [
         { title: 'Sl No.', key: 'slno',sortable: false,align:'center' },
         { title: 'Emp ID', sortable: false,align:'center', key: 'empId' },
         // { title: 'Image', key: 'image',sortable: false,align:'center' },
         { title: 'Name ', key: 'name',sortable: false,align:'center' },
-        { title: 'Password', key: 'password',sortable: false,align:'center' },
+        // { title: 'Password', key: 'password',sortable: false,align:'center' },
         { title: 'Edit / Delete', key: 'actions',sortable: false,align:'center' },
         ],
         scanner: [],
@@ -170,6 +171,14 @@
         formTitle () {
           return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
         },
+        filteredScanner() {
+          if (this.search !== '') {
+        return this.scanner.filter((item) =>
+          item.name.toLowerCase().includes(this.search.toLowerCase()) || item.empId.toLowerCase().includes(this.search.toLowerCase()) 
+        );
+      }
+      else { return this.scanner; }
+        }
       },
   
       watch: {

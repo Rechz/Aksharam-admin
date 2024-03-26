@@ -9,8 +9,8 @@
         </div> 
         </div> -->
         
-          <h3 class="text-white" style="margin-left:260px;">{{selectedNavItem}}</h3>
-          <h5 class="text-white"><u>Logout</u></h5>
+          <h4 class="text-white" style="margin-left:260px;">{{selectedNavItem}}</h4>
+          <h6 class="text-white"><u>Logout</u></h6>
         
     </div>
 
@@ -31,15 +31,15 @@
      
 
         <v-list density="compact" nav class="mt-0">
-          <router-link to='/dashboard-page' style="text-decoration: none; color:black;"><v-list-item value="home" class="text-center fs-5" style="border-bottom: 1px solid #E0E0E0;"> Overview</v-list-item>   </router-link>       
+          <router-link to='/dashboard-page' style="text-decoration: none; color:black;"><v-list-item value="home" class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;"> Overview</v-list-item>   </router-link>       
         
-          <router-link to='/tickets' style="text-decoration: none; color:black;"><v-list-item   value="ticket" class="text-center fs-5" style="border-bottom: 1px solid #E0E0E0;">Tickets</v-list-item></router-link>
+          <router-link to='/tickets' style="text-decoration: none; color:black;"><v-list-item   value="ticket" class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Tickets</v-list-item></router-link>
   
-          <router-link to='/employee' style="text-decoration: none; color:black;"><v-list-item  value="account" class="text-center fs-5" style="border-bottom: 1px solid #E0E0E0;">Employee</v-list-item></router-link>
+          <router-link to='/employee' style="text-decoration: none; color:black;"><v-list-item  value="account" class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Employee</v-list-item></router-link>
    
-          <router-link to='/items-page' style="text-decoration: none; color:black;"><v-list-item  value="items" class="text-center fs-5" style="border-bottom: 1px solid #E0E0E0;">Items</v-list-item></router-link>
+          <router-link to='/items-page' style="text-decoration: none; color:black;"><v-list-item  value="items" class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Items</v-list-item></router-link>
  
-          <router-link to='/portal' style="text-decoration: none; color:black;"><v-list-item  value="portal" class="text-center fs-5" style="border-bottom: 1px solid #E0E0E0;">Portal</v-list-item></router-link>
+          <router-link to='/portal' style="text-decoration: none; color:black;"><v-list-item  value="portal" class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Portal</v-list-item></router-link>
 
         </v-list>
       </v-navigation-drawer>
@@ -125,5 +125,9 @@
       background-color: #205f23;
       text-decoration: none;
       color: white;
+    }
+    .navlist{
+      padding: 12px 64px;
+
     }
 </style>
