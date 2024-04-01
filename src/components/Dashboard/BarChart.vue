@@ -1,39 +1,49 @@
 <template>
-<div>
-  <canvas id="myChart" style="width:700px"></canvas>
-</div>
+  <div style="height: 370px; width: 700px;">
+    <canvas id="myChart"></canvas>
+  </div>
 </template>
 
 <script>
 
-import { Bar} from 'vue-chartjs';
+import { Bar } from 'vue-chartjs';
 import Chart from 'chart.js/auto';
 export default {
-  
+
   extends: Bar,
   mounted() {
     // Reference the canvas element using $refs
-   const ctx = document.getElementById('myChart');
-    
+    const ctx = document.getElementById('myChart');
+
     // Create the chart using Chart object
     new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
         datasets: [{
           label: '# of Votes',
-          data: [50, 19, 3, 5, 2, 3],
+          data: [50, 19, 43, 15, 20, 3, 50, 19, 33, 75, 22, 3],
+          backgroundColor: [
+            '#216D17'
+          ],
+          borderColor: [
+            '#216D17'
+          ],
           borderWidth: 1
         },
         ]
       },
       options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
+        x: {
+          beginAtZero: true // Adjust the x-axis to start at 0
+        },
+        y: {
+          beginAtZero: true // Adjust the y-axis to start at 0
         }
-      }
+      },
+      responsive: true,
+      maintainAspectRatio: false
+
     });
   }
 };

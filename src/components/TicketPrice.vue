@@ -1,34 +1,33 @@
 <template>
-  <div class="row m-5 ms-0 mt-0">
+  <div class="row m-5 ms-0 mt-0" style="width: 1076px;">
     <!-- Repeat the card structure as needed -->
-    <div v-for="(card, index) in cards" :key="index" class="card my-4 rounded-4 p-3 pb-0" style="background-color:#f9faf1;">
+    <div v-for="(card, index) in cards" :key="index" class="card my-4 rounded-4 p-3 pb-0"
+      style="background-color:#f9faf1;">
       <div class="ms-5">
         <div class=" d-flex p-2 w-50 justify-content-between ">
-        <h5>{{ card.title }}</h5>
-        <v-btn class="mdi mdi-pencil rounded-5 px-4 border-1 border-black" @click="enableEdit(index)" v-if="!isEditing[index]" elevation="2">Edit</v-btn>
-        <v-btn class="px-4 rounded-5 text-white" style="background-color: #546E7A;" @click="updateValues(index)" v-if="isEditing[index]" elevation="2">Update</v-btn>
-      </div>
-      <div class="card-body ms-5">
-        <div class="row mb-3" v-for="(field, fieldIndex) in card.fields" :key="fieldIndex">
-          <div class="col-md-2 pb-3">
-            <h6 :for="field.key">{{ field.label }}</h6>
-          </div>
-          <div class="col-md-1">:</div>
-          <div class="col-md-2">
-            <div v-if="!isEditing[index]">
-             <h6><v-icon size="small">mdi-currency-inr</v-icon>{{ editedItems[index][field.key] }}</h6>
+          <h5>{{ card.title }}</h5>
+          <v-btn class="mdi mdi-pencil rounded-5 px-4 border-1 border-black" @click="enableEdit(index)"
+            v-if="!isEditing[index]" elevation="2">Edit</v-btn>
+          <v-btn class="px-4 rounded-5 text-white" style="background-color: #546E7A;" @click="updateValues(index)"
+            v-if="isEditing[index]" elevation="2">Update</v-btn>
+        </div>
+        <div class="card-body ms-5">
+          <div class="row mb-0 pb-0" v-for="(field, fieldIndex) in card.fields" :key="fieldIndex">
+            <div class="col-md-2 pb-3">
+              <h6 :for="field.key">{{ field.label }}</h6>
             </div>
-            <div v-else>
-              <v-text-field
-              v-model="editedItems[index][field.key]"
-              density="compact"
-              class="input"
-              hide-details
-              ></v-text-field>
+            <div class="col-md-1">:</div>
+            <div class="col-md-2">
+              <div v-if="!isEditing[index]">
+                <h6><v-icon size="small">mdi-currency-inr</v-icon>{{ editedItems[index][field.key] }}</h6>
+              </div>
+              <div v-else>
+                <v-text-field v-model="editedItems[index][field.key]" density="compact" class="input"
+                  hide-details></v-text-field>
+              </div>
             </div>
           </div>
         </div>
-      </div>
       </div>
     </div>
   </div>
@@ -60,7 +59,7 @@ export default {
           fields: [
             { key: 'teacher', label: 'Teacher' },
             { key: 'student', label: 'Student' },
-       
+
           ],
         },
         {
@@ -68,7 +67,7 @@ export default {
           fields: [
             { key: 'adult', label: 'Adult' },
             { key: 'child', label: 'Child' },
-  
+
           ],
         },
         {
@@ -76,7 +75,7 @@ export default {
           fields: [
             { key: 'gst', label: 'GST' },
             { key: 'cess', label: 'CESS' },
-      
+
           ],
         },
         // Add more card configurations as needed
@@ -100,14 +99,28 @@ export default {
   },
 };
 </script>
-  
 
-  <style scoped>
-  .v-table{
-      width : 73vw;
-  }
-  /* .card{
-    width: 700px;
-  } */
 
+<style scoped>
+:deep(.v-table) {
+  width: 73vw;
+}
+
+:deep(.v-input__control) {
+  width: 100px;
+  border-bottom: 2px solid #216D17;
+  height: 24px;
+}
+
+:deep(.v-field) {
+  height: 24px;
+}
+
+:deep(.v-field__input) {
+  min-height: 0px;
+  padding-top: 0px;
+  padding-inline: 0px;
+  text-align: end;
+  margin-right: 10px;
+}
 </style>

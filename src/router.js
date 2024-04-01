@@ -12,7 +12,6 @@ const router = createRouter({
         children: [
           {
             path : '/tickets',
-            alias : '',
             component : () => import('./components/TicketNav.vue'),
             children: [
               {
@@ -39,7 +38,8 @@ const router = createRouter({
             component : () => import('./components/ItemsPage.vue')
           },
           {
-            path : '/dashboard-page',
+            path: '/dashboard-page',
+            alias : '',
             component : () => import('./components/Dashboard/DashPage.vue')
           },
           {
