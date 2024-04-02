@@ -2,10 +2,8 @@
   <div class="green-background container-fluid">
     <h4 class="text-white mt-1" style=" font-size: 24px; margin-left: 250px;">{{ selectedNavItem }}</h4>
     <v-btn flat style="background-color: #EF3E3E; margin-right: 80px; text-transform: capitalize; color: white;"
-      class="rounded-5"><v-icon icon="mdi-logout" start></v-icon>Logout</v-btn>
-
+      class="rounded-5" @click="logout"><v-icon icon="mdi-logout" start></v-icon>Logout</v-btn>
   </div>
-
   <div class="d-flex">
     <div>
       <v-layout>
@@ -13,25 +11,17 @@
           <v-list-item class="d-flex justify-content-center " nav>
             <v-img src="@/assets/logo.png" class="image"></v-img>
           </v-list-item>
-
-
-
           <v-list density="compact" nav class="mt-0">
             <router-link to='/dashboard-page' style="text-decoration: none; color:black;"><v-list-item value="home"
                 class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;"> Overview</v-list-item> </router-link>
-
             <router-link to='/tickets' style="text-decoration: none; color:black;"><v-list-item value="ticket"
                 class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Tickets</v-list-item></router-link>
-
             <router-link to='/employee' style="text-decoration: none; color:black;"><v-list-item value="account"
                 class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Employees</v-list-item></router-link>
-
             <router-link to='/items-page' style="text-decoration: none; color:black;"><v-list-item value="items"
                 class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Items</v-list-item></router-link>
-
             <router-link to='/portal' style="text-decoration: none; color:black;"><v-list-item value="portal"
                 class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Portal</v-list-item></router-link>
-
           </v-list>
         </v-navigation-drawer>
         <v-main style="height: 250px"></v-main>
@@ -72,6 +62,11 @@ export default {
         }
       }
       return selectedItem ? selectedItem.text : '';
+    }
+  },
+  methods: {
+    logout() {
+      
     }
   },
   watch: {

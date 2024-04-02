@@ -1,7 +1,7 @@
 <template>
 
 
-  <div class="d-flex bg-white">
+  <!-- <div class="d-flex bg-white">
     <v-text-field v-model="newSlot.in" label="Time In" prepend-inner-icon="mdi-clock-time-four" density="compact"
       class="me-2 slot"></v-text-field>
     <v-text-field v-model="newSlot.out" label="Time Out" prepend-inner-icon="mdi-clock-time-four" density="compact"
@@ -11,7 +11,7 @@
     <v-btn color="#205f23" class="mb-2 me-2" @click="addSlot" style="text-transform: capitalize;">
       <b>+ Add Slots</b>
     </v-btn>
-  </div>
+  </div> -->
   <v-data-table :headers="headers" :items="desserts" :sort-by="[{ key: 'calories', order: 'asc' }]"
     style="background-color:#f9faf1;">
     <template v-slot:top>

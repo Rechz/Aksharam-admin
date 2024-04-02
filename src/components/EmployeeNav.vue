@@ -16,7 +16,7 @@
    
     data() {
       return {
-        tab: 'Add Employee',
+        // tab: 'Add Employee',
         items: ['Add Employee', 'Scanner Register'],
       };
     },
@@ -29,7 +29,22 @@
         this.$router.push('/employee/scanner')
       }
     }
-  } 
+    },
+    computed: {
+      tab: {
+        get() {
+          return this.$route.path === '/employee/scanner' ? 'Scanner Register' : 'Add Employee';
+        },
+        set(value) {
+          // Update route based on tab value
+          if (value === 'Add Employee') {
+            this.$router.push('/employee/add');
+          } else {
+            this.$router.push('/employee/scanner');
+          }
+        }
+      }
+    }, 
   };
   </script>
   

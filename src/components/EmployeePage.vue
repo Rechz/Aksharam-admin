@@ -84,7 +84,7 @@
         <v-card style="width: 680px; height:auto; border-radius: 15px;">
           <v-card-title class="d-flex justify-content-between px-4" style="background-color: #216D17; color: #FFFFFF;">
             <h4>Employee Details</h4>
-            <v-icon @click="close" class="mdi mdi-window-close"></v-icon>
+            <v-icon @click="closeDetails" class="mdi mdi-window-close"></v-icon>
           </v-card-title>
           <v-card-text class="mb-0  ms-1 pt-2 pb-4">
             <v-container class="py-0 d-flex flex-column">
@@ -163,104 +163,102 @@ export default {
     image: require('@/assets/acc.jpg'),
     employees: [
       {
-        employeeId: 'AKSH1001',
-        name: 'Anju',
-        phoneNo: 963895623,
-        tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-        permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-        email: 'anju@gmail.com',
-        image: require('@/assets/pic1.jpg')
+        "id": 2,
+        "name": "employee1",
+        "employeeId": "EMP10001",
+        "password": "$2a$10$f8j05ehJJ9zcjJw6MPYD3.YEpcw/smXqcy6t.BovsuLyBn1DHbn.6",
+        "image": "C:/Users/azhym/Desktop/Museum Employees/EMP10001_Screenshot (1).png",
+        "email": "employee1@gmail.com",
+        "phoneNo": "9888888888",
+        "tempAddress": "Kottayam",
+        "permAddress": "Alappuzha",
+        "role": "EMPLOYEE",
+        "enabled": true,
+        "credentialsNonExpired": true,
+        "accountNonExpired": true,
+        "username": "EMP10001",
+        "authorities": [
+          {
+            "authority": "EMPLOYEE"
+          }
+        ],
+        "accountNonLocked": true
       },
       {
-        employeeId: 'AKSH1002',
-        name: 'Akhila',
-        phoneNo: 945895743,
-        tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-        permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-        email: 'anju@gmail.com',
-        image: require('@/assets/pic1.jpg')
+        "id": 152,
+        "name": "employee4",
+        "employeeId": "EMP10004",
+        "password": "kft0s32r",
+        "image": "C:/Users/azhym/Desktop/Museum Employees/EMP10004_Screenshot (3).png",
+        "email": "employee4@gmail.com",
+        "phoneNo": "9888888886",
+        "tempAddress": "Mararikulam",
+        "permAddress": "Alappuzha",
+        "role": "EMPLOYEE",
+        "enabled": true,
+        "credentialsNonExpired": true,
+        "accountNonExpired": true,
+        "username": "EMP10004",
+        "authorities": [
+          {
+            "authority": "EMPLOYEE"
+          }
+        ],
+        "accountNonLocked": true
       },
       {
-        employeeId: 'AKSH1003',
-        name: 'Deva',
-        phoneNo: 963895623,
-        tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-        permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-        email: 'anju@gmail.com',
-        image: require('@/assets/pic1.jpg')
+        "id": 202,
+        "name": "employee5",
+        "employeeId": "EMP10005",
+        "password": "mGuPywuQ",
+        "image": "C:/Users/azhym/Desktop/Museum Employees/EMP10005_Screenshot 2024-02-09 135549.png",
+        "email": "employee5@gmail.com",
+        "phoneNo": "9888888885",
+        "tempAddress": "Kottayam",
+        "permAddress": "Alappuzha",
+        "role": "EMPLOYEE",
+        "enabled": true,
+        "credentialsNonExpired": true,
+        "accountNonExpired": true,
+        "username": "EMP10005",
+        "authorities": [
+          {
+            "authority": "EMPLOYEE"
+          }
+        ],
+        "accountNonLocked": true
       },
       {
-        employeeId: 'AKSH1004',
-        name: 'Ebin',
-        phoneNo: 963895623,
-        tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-        permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-        email: 'anju@gmail.com',
-        image: require('@/assets/pic1.jpg')
-      },
-      {
-        employeeId: 'AKSH1005',
-        name: 'Neethu',
-        phoneNo: 963895623,
-        tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-        permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-        email: 'anju@gmail.com',
-        image: require('@/assets/pic1.jpg')
-      },
-      {
-        employeeId: 'AKSH1006',
-        name: 'Stephy',
-        phoneNo: 963895623,
-        tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-        permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-        email: 'anju@gmail.com',
-        image: require('@/assets/pic1.jpg')
-      },
-      {
-        employeeId: 'AKSH1007',
-        name: 'Sangeetha',
-        phoneNo: 963895623,
-        tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-        permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-        email: 'anju@gmail.com',
-        image: require('@/assets/pic1.jpg')
-      },
-      {
-        employeeId: 'AKSH1008',
-        name: 'Aswathy',
-        phoneNo: 963895623,
-        tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-        permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-        email: 'anju@gmail.com',
-        image: require('@/assets/pic1.jpg')
-      },
-      {
-        employeeId: 'AKSH1009',
-        name: 'Siya',
-        phoneNo: 963895623,
-        tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-        permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-        email: 'anju@gmail.com',
-        image: require('@/assets/pic1.jpg')
-      },
-      {
-        employeeId: 'AKSH1010',
-        name: 'Reshma',
-        phoneNo: 963895623,
-        tempAddress: 'Advdfgh, Street No.12, Kalavoor P.O, Alappuzha',
-        permAddress: 'GDGHJrggh, Street No.33, Ambalapuzha P.O, Alappuzha',
-        email: 'anju@gmail.com',
-        image: require('@/assets/pic1.jpg')
-      },
+        "id": 252,
+        "name": "employee6",
+        "employeeId": "EMP10006",
+        "password": "O2pjHAed",
+        "image": "Photo",
+        "email": "employee6@gmail.com",
+        "phoneNo": "9888888884",
+        "tempAddress": "Kottayam",
+        "permAddress": "Alappuzha",
+        "role": "EMPLOYEE",
+        "enabled": true,
+        "credentialsNonExpired": true,
+        "accountNonExpired": true,
+        "username": "EMP10006",
+        "authorities": [
+          {
+            "authority": "EMPLOYEE"
+          }
+        ],
+        "accountNonLocked": true
+      }
     ],
     headers: [
       // { title: 'SL No.', align: 'center', key: 'serial no', sortable: false },
-      { title: 'Emp Id', align: 'start', key: 'empID', sortable: false },
+      { title: 'Emp Id', align: 'start', key: 'employeeId', sortable: false },
       { title: 'Image', align: 'start', key: 'image', sortable: false },
       { title: 'Name', align: 'start', key: 'name', sortable: false },
-      { title: 'Phone No.', align: 'start', key: 'fat', sortable: false },
-      { title: 'Details', align: 'center', key: 'carbs', sortable: false },
-      { title: 'Edit / Delete', align: 'center', key: 'actions', sortable: false },
+      { title: 'Phone No.', align: 'start', key: 'phoneNo', sortable: false },
+      { title: 'Details', align: 'center' },
+      { title: 'Edit / Delete', align: 'center'},
     ],
 
     editedIndex: -1,
@@ -298,9 +296,13 @@ export default {
         );
       }
       else { return this.employees; }
-
     },
-
+    url() {
+      return this.$store.getters.getUrl;
+    },
+    token() {
+      return this.$store.getters.getToken;
+    }
   },
 
   watch: {
@@ -326,11 +328,11 @@ export default {
 
     // },
     async getDetails() {
-      const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcxMDEzMzU3OSwiZXhwIjoxNzEwMTU1MTc5fQ.CT6zbwVpFay7tX5OHazu5fDn-ljpbp5dsL5gFIOIJOg';
+      
       try {
-        const response = await axios.get('http://localhost:8080/api/admin/employees', {
+        const response = await axios.get(`${this.url}/api/admin/employees`, {
           headers: {
-            Authorization: `Bearer ${token}` // Include the JWT token in the Authorization header
+            Authorization: `Bearer ${this.token}` // Include the JWT token in the Authorization header
           }
         });
         if (response.status === 200) {
@@ -375,6 +377,7 @@ export default {
         this.editedIndex = -1
       })
     },
+   
     add() {
       alert('item added');
     },
@@ -415,7 +418,7 @@ export default {
 :deep(.emp-add .v-input__control) {
   border-bottom: 2px solid #216D17;
   background-color: #DFE4D7 !important;
-  margin-bottom: 15px;
+  /* margin-bottom: 15px; */
 }
 :deep(.v-btn--variant-elevated){
   background: none;

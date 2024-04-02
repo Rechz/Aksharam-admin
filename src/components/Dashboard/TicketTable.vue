@@ -49,7 +49,7 @@ export default {
         async fetchTickets() {
             const url = this.$store.getters.getUrl;
             try {
-                const response = await axios.get(`${url}/api/admin/allTickets`);
+                const response = await axios.get(`${url}/api/dashboard/currentDayList`, );
                 if (response.status === 200) {
                     this.tickets = response.data;
                 }
@@ -57,7 +57,6 @@ export default {
             catch (error) {
                 console.error(error);
             }
-
         },
         totalCount(item) {
             const category = item.type

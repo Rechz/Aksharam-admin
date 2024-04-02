@@ -33,7 +33,7 @@
             <v-container>
               <v-row>
                 <v-col cols="12" sm="12" md="12">
-                  <v-text-field v-model="editedItem.empId" label="Employee ID" disabled class="scanner"
+                  <v-text-field v-model="editedItem.employeeId" label="Employee ID" disabled class="scanner"
                     density="comfortable"></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="12" md="12">
@@ -80,7 +80,7 @@
     <template v-slot:item='{ item}'>
       <tr style="background-color: #FCFDF6; color:black;">
         <!-- <td class="text-center">{{ index + 1 }}</td> -->
-        <td>{{ item.empId }}</td>
+        <td>{{ item.employeeId }}</td>
         <td><img :src='item.image' alt="employee" style="border-radius: 50%; height: 50px;" /> </td>
         <td>{{ item.name }}</td>
         <!-- <td class="text-center">{{ item.password }}</td> -->
@@ -93,6 +93,7 @@
   </v-data-table>
 </template>
 <script>
+import axios from 'axios';
 export default {
   data: () => ({
     dialog: false,
@@ -103,26 +104,16 @@ export default {
     newPassword: '',
     headers: [
       // { title: 'Sl No.', key: 'slno', sortable: false, align: 'center' },
-      { title: 'Emp Id', sortable: false, align: 'start', key: 'empId' },
+      { title: 'Emp Id', sortable: false, align: 'start', key: 'employeeId' },
       { title: 'Image', key: 'image',sortable: false,align:'start' },
       { title: 'Name ', key: 'name', sortable: false, align: 'start' },
       // { title: 'Password', key: 'password',sortable: false,align:'center' },
-      { title: 'Edit / Delete', key: 'actions', sortable: false, align: 'center' },
+      { title: 'Edit / Delete', key: 'actions',  align: 'center' },
     ],
     scanner: [],
     editedIndex: -1,
-    editedItem: {
-      empId: '',
-      image: null,
-      name: '',
-      password: null,
-    },
-    defaultItem: {
-      empId: '',
-      image: null,
-      name: '',
-      password: null,
-    },
+    editedItem: {},
+    defaultItem: {},
   }),
 
   computed: {
@@ -132,10 +123,16 @@ export default {
     filteredScanner() {
       if (this.search !== '') {
         return this.scanner.filter((item) =>
-          item.name.toLowerCase().includes(this.search.toLowerCase()) || item.empId.toLowerCase().includes(this.search.toLowerCase())
+          item.name.toLowerCase().includes(this.search.toLowerCase()) || item.employeeId.toLowerCase().includes(this.search.toLowerCase())
         );
       }
       else { return this.scanner; }
+    },
+    url() {
+      return this.$store.getters.getUrl;
+    },
+    token() {
+      return this.$store.getters.getToken;
     }
   },
 
@@ -151,73 +148,96 @@ export default {
   created() {
     this.initialize()
   },
-
+  mounted() {
+    this.getScanner();
+  },
   methods: {
     initialize() {
       this.scanner = [
         {
-          empId: 'AME1001',
-          name: 'Anju',
-          image: require('@/assets/pic1.jpg'),
-          password: 'am@12',
+          "id": 52,
+          "name": "employee2",
+          "employeeId": "EMP10002",
+          "password": "$2a$10$UazhIACz0qvD/.AS0P1F5O7aTzEOkHuoxFEAiCtPvhj6gnqA7YS3W",
+          "image": "C:/Users/azhym/Desktop/Museum Employees/EMP10002_Screenshot 2024-02-01 111851.png",
+          "email": "employee2@gmail.com",
+          "phoneNo": "9888888887",
+          "tempAddress": "Thrissur",
+          "permAddress": "Alappuzha",
+          "role": "SCANNER",
+          "enabled": true,
+          "credentialsNonExpired": true,
+          "accountNonExpired": true,
+          "username": "EMP10002",
+          "authorities": [
+            {
+              "authority": "SCANNER"
+            }
+          ],
+          "accountNonLocked": true
         },
         {
-          empId: 'AME1002',
-          name: 'Akhila',
-          image: require('@/assets/pic1.jpg'),
-          password: 'am@13',
+          "id": 102,
+          "name": "employee3",
+          "employeeId": "EMP10003",
+          "password": "$2a$10$D0/LNp4aluUpbLfEVpZU8.QELRYsQlSJpGi2VrV1KO3ljUNS4ZFEq",
+          "image": "C:/Users/azhym/Desktop/Museum Employees/EMP10003_Screenshot (2).png",
+          "email": "employee3@gmail.com",
+          "phoneNo": "9888888886",
+          "tempAddress": "Cherthala",
+          "permAddress": "Alappuzha",
+          "role": "SCANNER",
+          "enabled": true,
+          "credentialsNonExpired": true,
+          "accountNonExpired": true,
+          "username": "EMP10003",
+          "authorities": [
+            {
+              "authority": "SCANNER"
+            }
+          ],
+          "accountNonLocked": true
         },
         {
-          empId: 'AME1003',
-          name: 'Deva',
-          image: require('@/assets/pic1.jpg'),
-          password: 'am@14',
-        },
-        {
-          empId: 'AME1004',
-          name: 'Neethu',
-          image: require('@/assets/pic1.jpg'),
-          password: 'am@15',
-        },
-        {
-          empId: 'AME1005',
-          name: 'Siya',
-          image: require('@/assets/pic1.jpg'),
-          password: 'am@16',
-        },
-        {
-          empId: 'AME1006',
-          name: 'Stephy',
-          image: require('@/assets/pic1.jpg'),
-          password: 'am@17',
-        },
-        {
-          empId: 'AME1007',
-          name: 'Sangeetha',
-          image: require('@/assets/pic1.jpg'),
-          password: 'am@18',
-        },
-        {
-          empId: 'AME1008',
-          name: 'Reshma',
-          image: require('@/assets/pic1.jpg'),
-          password: 'am@19',
-        },
-        {
-          empId: 'AME1009',
-          name: 'Aswathy',
-          image: require('@/assets/pic1.jpg'),
-          password: 'am@20',
-        },
-        {
-          empId: 'AME1010',
-          name: 'Sreeja',
-          image: require('@/assets/pic1.jpg'),
-          password: 'am@21',
-        },
+          "id": 302,
+          "name": "employee7",
+          "employeeId": "EMP10007",
+          "password": "$2a$10$4//lY5s72SDTEbSxBl9a3ORuUmNH5AhGoFCFfZKvYNcUKrM0pznAO",
+          "image": "Photo",
+          "email": "employee7@gmail.com",
+          "phoneNo": "9888888886",
+          "tempAddress": "Kottayam",
+          "permAddress": "Trivandrum",
+          "role": "SCANNER",
+          "enabled": true,
+          "credentialsNonExpired": true,
+          "accountNonExpired": true,
+          "username": "EMP10007",
+          "authorities": [
+            {
+              "authority": "SCANNER"
+            }
+          ],
+          "accountNonLocked": true
+        }
       ]
     },
-
+    async getScanner() {
+      try {
+        const response = await axios.get(`${this.url}/api/admin/scanners`, {
+          headers: {
+            Authorization: `Bearer ${this.token}` // Include the JWT token in the Authorization header
+          }
+        });
+        if (response.status === 200) {
+          const fetchedScanner = response.data;
+          this.scanner = fetchedScanner;
+        }
+      }
+      catch (error) {
+        console.error(error);
+      }
+    },
     editItem(item) {
       this.editedIndex = this.scanner.indexOf(item)
       this.editedItem = Object.assign({}, item)
