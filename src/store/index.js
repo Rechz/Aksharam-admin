@@ -23,7 +23,7 @@ const store = createStore({
           bookDate: "2024-01-26",
           paymentid: null,
           orderId: "order_NUsXo2lfF8zfGS",
-          bookingId: "AKM1001",
+          ticketId: "AKM1001",
           visitStatus: true
         },
         {
@@ -41,7 +41,7 @@ const store = createStore({
           totalPrice: 100,
           orderId: "order_NV9f7KaJq8zpqK",
           paymentid: null,
-          bookingId: "AKM1002",
+          ticketId: "AKM1002",
           visitStatus: false
         },
         {
@@ -58,7 +58,7 @@ const store = createStore({
           bookDate: "2024-02-26",
           paymentid: "pay_NmX99W38UYI9bp",
           orderId: "order_NmX8yonSeM2ekn",
-          bookingId: "AKM12728",
+          ticketId: "AKM12728",
           visitStatus: true
         }
       ],
@@ -78,7 +78,7 @@ const store = createStore({
           bookDate: "2024-01-26",
           paymentid: null,
           orderId: "order_NUsXo2lfF8zfGS",
-          bookingId: "AKM1001",
+          ticketId: "AKM1001",
           visitStatus: true
         },
         {
@@ -96,7 +96,7 @@ const store = createStore({
           totalPrice: 100,
           orderId: "order_NV9f7KaJq8zpqK",
           paymentid: null,
-          bookingId: "AKM1002",
+          ticketId: "AKM1002",
           visitStatus: false
         },
         {
@@ -113,7 +113,7 @@ const store = createStore({
           bookDate: "2024-02-26",
           paymentid: "pay_NmX99W38UYI9bp",
           orderId: "order_NmX8yonSeM2ekn",
-          bookingId: "AKM12728",
+          ticketId: "AKM12728",
           visitStatus: true
         }
       ], 

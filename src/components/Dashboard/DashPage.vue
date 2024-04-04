@@ -101,12 +101,14 @@ import TicketTable from './TicketTable.vue';
 export default {
   mounted() {
     document.body.style.backgroundColor = '#D7E8CD';
+    this.fetchPieChart();
+    this.fetchBarChart();
   },
   created() {
-    this.fetchPieChart();
+    
     this.fetchTotalTickets();
     this.fetchTotalIncome();
-    this.fetchBarChart();
+    
   },
   beforeUnmount() {
     document.body.style.backgroundColor = '';
@@ -149,7 +151,8 @@ export default {
         const year = today.getFullYear();
         const month = String(today.getMonth() + 1).padStart(2, '0');
         const day = String(today.getDate()).padStart(2, '0');
-        const formattedDate = `${day}-${month}-${year}`; 
+        const formattedDate = `${year}-${month}-${day}`; 
+        console.log(formattedDate)
         await this.$store.dispatch('fetchPieChartDate', formattedDate)
       }
       catch (error) {

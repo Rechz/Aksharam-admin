@@ -21,7 +21,7 @@
                 {{
       viewItem.type === 'institution' ? 'Institution Name' : 'Name' }}
               </v-col>
-              <v-col col="5">:{{ viewItem.bookingId }}</v-col>
+              <v-col col="5">:{{ viewItem.type === 'institution' ? viewItem.institutionName : viewItem.name }}</v-col>
             </v-row>
             <v-row>
               <v-col col="3">
@@ -39,7 +39,7 @@
               <v-col col="3">
                 Ticket ID
               </v-col>
-              <v-col col="5">:{{ viewItem.bookingId }}</v-col>
+              <v-col col="5">:{{ viewItem.ticketId }}</v-col>
             </v-row>
             <v-row>
               <v-col col="3">
@@ -95,7 +95,7 @@
           {{ index + 1 }}
         </td>
         <td>
-          {{ item.bookingId }}
+          {{ item.ticketId }}
         </td>
         <td>
           {{ item.bookDate }}
@@ -128,7 +128,7 @@ export default {
       search: '',
       headers: [
         { title: 'Sl No.', sortable: false, align: 'center' },
-        { title: 'Ticket ID', align: 'start', sortable: false, key: 'bookingId' },
+        { title: 'Ticket ID', align: 'start', sortable: false, key: 'ticketId' },
         { title: 'Booking Date', sortable: false, key: 'bookDate', align: 'start' },
         { title: 'Entry Date', sortable: false, key: 'visitDate', align: 'start' },
         { title: 'Category', sortable: false, key: 'type', align: 'start' },
@@ -162,9 +162,9 @@ export default {
       }
       if (this.search !== '') {
         return this.tickets.filter((item) =>
-          item.visitDate.toLowerCase().includes(this.search.toLowerCase())
-          || item.type.toLowerCase().includes(this.search.toLowerCase())
-          || item.bookingId.toLowerCase().includes(this.search.toLowerCase())
+        (item.visitDate?.toLowerCase()?.includes(this.search.toLowerCase()) || '') ||
+    (item.type?.toLowerCase()?.includes(this.search.toLowerCase()) || '') ||
+    (item.ticketId?.toLowerCase()?.includes(this.search.toLowerCase()) || '')
         );
       }
       else {

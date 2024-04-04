@@ -11,7 +11,7 @@
         <template v-slot:item='{ item, index }'>
             <tr>
                 <td class="text-center">{{ index + 1 }}</td>
-                <td>{{ item.bookingId }}</td>
+                <td>{{ item.ticketId }}</td>
                 <td>{{ item.mobileNumber }}</td>
                 <td>{{ totalCount(item) }}</td>
                 <td>{{ item.visitDate }}</td>
@@ -28,7 +28,7 @@ export default {
     data: () => ({
         headers: [
             { title: 'Sl No.', sortable: false, align: 'center' },
-            { title: 'Ticket Id', align: 'start', sortable: false, key: 'bookingId' },
+            { title: 'Ticket Id', align: 'start', sortable: false, key: 'ticketId' },
             { title: 'Mobile number', sortable: false, key: 'visitDate', align: 'start' },
             { title: 'No. of people', sortable: false, key: 'type', align: 'start' },
             { title: 'Booking Date', sortable: false, key: 'visitors', align: 'start' },

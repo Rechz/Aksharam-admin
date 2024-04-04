@@ -1,4 +1,5 @@
 import axios from 'axios';
+import router from '../router.js';
 export default {
     //admin login
   async login({ commit, rootGetters }, { id, password }) {
@@ -10,7 +11,8 @@ export default {
           });
       if (response.status === 200) {
         commit('setToken', response.data.token);
-        console.log(response.data.token)
+        console.log(response.data.token);
+        router.push('/dashboard');
       }
     }
     catch (error) {
@@ -28,6 +30,7 @@ export default {
         });
         if (response.status === 200) {
             commit('setAllTickets', response.data);
+            console.log(response.data)
         }  
       }
       catch (error) {
@@ -44,6 +47,7 @@ export default {
         });
         if (response.status === 200) {
             commit('setCurrentTickets', response.data);
+            console.log(response.data)
         }  
       }
       catch (error) {
@@ -60,6 +64,7 @@ export default {
         });
         if (response.status === 200) {
             commit('setAllEmployees', response.data);
+            console.log(response.data)
         }  
       }
       catch (error) {
@@ -91,8 +96,11 @@ export default {
           },
         })
         if (response.status === 200) {
+          console.log(response.data);
           const labels = response.data.map(entry => entry.category);
           const data = response.data.map(entry => entry.totalVisitors);
+          console.log(labels);
+          console.log(data)
           commit('setPieChart', {
             label: labels,
             data: data

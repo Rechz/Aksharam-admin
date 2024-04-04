@@ -56,7 +56,8 @@ export default {
         await this.$store.dispatch('login', {
           id: this.name,
           password: this.password
-        })
+        });
+        
       }
       catch (error) {
         console.error(error)
