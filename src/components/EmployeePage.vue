@@ -150,7 +150,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+
 export default {
   data: () => ({
     dialog: false,
@@ -161,98 +161,7 @@ export default {
     isHovered: false,
     search: '',
     image: require('@/assets/acc.jpg'),
-    employees: [
-      {
-        "id": 2,
-        "name": "employee1",
-        "employeeId": "EMP10001",
-        "password": "$2a$10$f8j05ehJJ9zcjJw6MPYD3.YEpcw/smXqcy6t.BovsuLyBn1DHbn.6",
-        "image": "C:/Users/azhym/Desktop/Museum Employees/EMP10001_Screenshot (1).png",
-        "email": "employee1@gmail.com",
-        "phoneNo": "9888888888",
-        "tempAddress": "Kottayam",
-        "permAddress": "Alappuzha",
-        "role": "EMPLOYEE",
-        "enabled": true,
-        "credentialsNonExpired": true,
-        "accountNonExpired": true,
-        "username": "EMP10001",
-        "authorities": [
-          {
-            "authority": "EMPLOYEE"
-          }
-        ],
-        "accountNonLocked": true
-      },
-      {
-        "id": 152,
-        "name": "employee4",
-        "employeeId": "EMP10004",
-        "password": "kft0s32r",
-        "image": "C:/Users/azhym/Desktop/Museum Employees/EMP10004_Screenshot (3).png",
-        "email": "employee4@gmail.com",
-        "phoneNo": "9888888886",
-        "tempAddress": "Mararikulam",
-        "permAddress": "Alappuzha",
-        "role": "EMPLOYEE",
-        "enabled": true,
-        "credentialsNonExpired": true,
-        "accountNonExpired": true,
-        "username": "EMP10004",
-        "authorities": [
-          {
-            "authority": "EMPLOYEE"
-          }
-        ],
-        "accountNonLocked": true
-      },
-      {
-        "id": 202,
-        "name": "employee5",
-        "employeeId": "EMP10005",
-        "password": "mGuPywuQ",
-        "image": "C:/Users/azhym/Desktop/Museum Employees/EMP10005_Screenshot 2024-02-09 135549.png",
-        "email": "employee5@gmail.com",
-        "phoneNo": "9888888885",
-        "tempAddress": "Kottayam",
-        "permAddress": "Alappuzha",
-        "role": "EMPLOYEE",
-        "enabled": true,
-        "credentialsNonExpired": true,
-        "accountNonExpired": true,
-        "username": "EMP10005",
-        "authorities": [
-          {
-            "authority": "EMPLOYEE"
-          }
-        ],
-        "accountNonLocked": true
-      },
-      {
-        "id": 252,
-        "name": "employee6",
-        "employeeId": "EMP10006",
-        "password": "O2pjHAed",
-        "image": "Photo",
-        "email": "employee6@gmail.com",
-        "phoneNo": "9888888884",
-        "tempAddress": "Kottayam",
-        "permAddress": "Alappuzha",
-        "role": "EMPLOYEE",
-        "enabled": true,
-        "credentialsNonExpired": true,
-        "accountNonExpired": true,
-        "username": "EMP10006",
-        "authorities": [
-          {
-            "authority": "EMPLOYEE"
-          }
-        ],
-        "accountNonLocked": true
-      }
-    ],
     headers: [
-      // { title: 'SL No.', align: 'center', key: 'serial no', sortable: false },
       { title: 'Emp Id', align: 'start', key: 'employeeId', sortable: false },
       { title: 'Image', align: 'start', key: 'image', sortable: false },
       { title: 'Name', align: 'start', key: 'name', sortable: false },
@@ -260,26 +169,9 @@ export default {
       { title: 'Details', align: 'center' },
       { title: 'Edit / Delete', align: 'center'},
     ],
-
     editedIndex: -1,
-    editedItem: {
-      employeeId: '',
-      name: '',
-      phoneNo: null,
-      tempAddress: '',
-      permAddress: '',
-      email: '',
-      image: null
-    },
-    defaultItem: {
-      employeeId: '',
-      name: '',
-      phoneNo: null,
-      tempAddress: '',
-      permAddress: '',
-      email: '',
-      image: null
-    },
+    editedItem: {},
+    defaultItem: {},
   }),
 
   computed: {
@@ -297,14 +189,10 @@ export default {
       }
       else { return this.employees; }
     },
-    url() {
-      return this.$store.getters.getUrl;
-    },
-    token() {
-      return this.$store.getters.getToken;
+    employees() {
+      return this.$store.getters.getAllEmployees;
     }
   },
-
   watch: {
     dialog(val) {
       val || this.close()
@@ -313,36 +201,16 @@ export default {
       val || this.closeDelete()
     },
   },
-
-  // created () {
-  //   this.initialize()
-  // },
-
-
-  //   mounted () {
-  // this.getDetails();
-  //   },
-
+    created () {
+  this.getDetails();
+    },
   methods: {
-    // initialize () {
-
-    // },
     async getDetails() {
-      
       try {
-        const response = await axios.get(`${this.url}/api/admin/employees`, {
-          headers: {
-            Authorization: `Bearer ${this.token}` // Include the JWT token in the Authorization header
-          }
-        });
-        if (response.status === 200) {
-          const fetchedEmployees = response.data;
-          this.employees = fetchedEmployees;
-        }
+        await this.$store.dispatch('fetchAllEmployees');
       }
-      catch (error) {
-        console.error(error);
-        alert(error)
+      catch (error) {  
+        console.error(error.message)
       }
     },
     editItem(item) {

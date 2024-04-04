@@ -119,26 +119,23 @@
 </template>
 <script>
 export default {
-  data: () => ({
-    dialog: false,
-    sortColumn: '',
-    viewItem: [],
-    viewIndex: -1,
-    search: '',
-    headers: [
-      { title: 'Sl No.', sortable: false, align: 'center' },
-      { title: 'Ticket ID', align: 'start', sortable: false, key: 'bookingId' },
-      { title: 'Booking Date', sortable: false, key: 'bookDate', align: 'start' },
-      { title: 'Entry Date', sortable: false, key: 'visitDate', align: 'start' },
-      { title: 'Category', sortable: false, key: 'type', align: 'start' },
-      { title: 'Price', sortable: false, key: 'totalPrice', align: 'start' },
-      { title: 'Details', sortable: false, align: 'center', key: 'detail' },
-    ],
-    tickets: [],
-
-  }),
-  created() {
-    this.initialize();
+  data() {
+    return {
+      dialog: false,
+      sortColumn: '',
+      viewItem: [],
+      viewIndex: -1,
+      search: '',
+      headers: [
+        { title: 'Sl No.', sortable: false, align: 'center' },
+        { title: 'Ticket ID', align: 'start', sortable: false, key: 'bookingId' },
+        { title: 'Booking Date', sortable: false, key: 'bookDate', align: 'start' },
+        { title: 'Entry Date', sortable: false, key: 'visitDate', align: 'start' },
+        { title: 'Category', sortable: false, key: 'type', align: 'start' },
+        { title: 'Price', sortable: false, key: 'totalPrice', align: 'start' },
+        { title: 'Details', sortable: false, align: 'center', key: 'detail' },
+      ],
+    }
   },
   methods: {
     showDetails(item) {
@@ -149,64 +146,14 @@ export default {
     close() {
       this.dialog = false;
     },
-    initialize() {
-      this.tickets = [
-        {
-          id: 1,
-          mobileNumber: "9946561358",
-          type: "public",
-          email: "justinesangeetha@gmail.com",
-          sessionId: "e001c883-587e-45a3-8471-423ca0537a52",
-          name: "Maneesh",
-          numberOfAdults: 5,
-          numberOfChildren: 2,
-          numberOfSeniors: 0,
-          totalPrice: 150,
-          visitDate: "2024-02-05",
-          bookDate: "2024-01-26",
-          paymentid: null,
-          orderId: "order_NUsXo2lfF8zfGS",
-          bookingId: "AKM1001",
-          visitStatus: true
-        },
-        {
-          id: 2,
-          mobileNumber: "7306977849",
-          type: "institution",
-          email: "stjoseph@gmail.com",
-          sessionId: "cca36ef3-f6a7-41a8-972b-75c5e12a33dd",
-          institutionName: "St.joseph",
-          district: "Kottayam",
-          numberOfStudents: 1,
-          numberOfTeachers: 2,
-          visitDate: "2024-02-26",
-          bookDate: "2024-02-22",
-          totalPrice: 100,
-          orderId: "order_NV9f7KaJq8zpqK",
-          paymentid: null,
-          bookingId: "AKM1002",
-          visitStatus: false
-        },
-        {
-          id: 152,
-          mobileNumber: "8547086582",
-          type: "foreigner",
-          email: "ttttt@gmail.com",
-          sessionId: "dd6a0b09-69b8-4069-9728-f470834b5600",
-          name: "tttt",
-          numberOfAdults: 1,
-          numberOfChildren: 1,
-          totalPrice: 300,
-          visitDate: "2024-03-15",
-          bookDate: "2024-02-26",
-          paymentid: "pay_NmX99W38UYI9bp",
-          orderId: "order_NmX8yonSeM2ekn",
-          bookingId: "AKM12728",
-          visitStatus: true
-        }
-      ]
-    },
-
+    async fetchTickets() {
+      try {
+        await this.$store.dispatch('fetchAllTickets');
+      }
+      catch (error) {
+        console.error(error.message);
+      }
+    }
   },
   computed: {
     filteredTickets() {
@@ -224,7 +171,13 @@ export default {
         return this.tickets;
       }
     },
-  }
+    tickets() {
+      return this.$store.getters.getAllTickets;
+    }
+  },
+  created() {
+    this.fetchTickets();
+  },
 };
 </script>
 

@@ -18,5 +18,26 @@ export default {
     setScannerList(state, payload) {
       state.scannerList = payload;
       sessionStorage.setItem('scannerList', JSON.stringify(payload));
-    }
+    },
+    setPieChart(state, { label, data }) {
+      state.dataPie = data;
+      sessionStorage.setItem('dataPie', JSON.stringify(data));
+      state.labelsPie = label;
+      sessionStorage.setItem('labelsPie', JSON.stringify(label));
+    },
+    setBarChart(state, { label, data }) {
+      state.dataBar = data;
+      sessionStorage.setItem('dataBar', JSON.stringify(data));
+      state.labelsBar = label;
+      sessionStorage.setItem('labelsBar', JSON.stringify(label));
+  },
+    setTotalTickets(state, payload) {
+      state.totalTickets = payload;
+      sessionStorage.setItem('totalTickets', payload);
+  },
+    setTotalIncome(state, payload) {
+      state.totalIncome = payload;
+      sessionStorage.setItem('totalIncome', payload);
+    },
+     
 };

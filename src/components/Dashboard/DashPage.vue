@@ -14,7 +14,7 @@
             </v-btn-toggle>
           </div>
           <div class="d-flex flex-column">
-            <p class="text-style"><v-icon class="mdi mdi-currency-inr" size="24" color="white"></v-icon>12400</p>
+            <p class="text-style"><v-icon class="mdi mdi-currency-inr" size="24" color="white"></v-icon>{{totalIncome}}</p>
             <p class="text-type">Total Earning</p>
           </div>
         </div>
@@ -34,7 +34,7 @@
             </v-btn-toggle>
           </div>
           <div class="d-flex flex-column">
-            <p class="text-style">215</p>
+            <p class="text-style">{{totalTickets}}</p>
             <p class="text-type">Total Ticket</p>
           </div>
         </div>
@@ -75,17 +75,17 @@
   <div class="d-flex flex-wrap justify-content-between gap-3 mt-4">
     <v-card height="420" width="741" class="rounded-3 p-3">
       <div class="d-flex justify-content-between px-3 mt-1">
-        <p class="mt-2">Total visitors: 8928</p>
+        <p class="mt-2">Total income: &#8377;445200</p>
         <v-select :items="['2024', '2023', '2022']" density=compact class="year-select" v-model="year"></v-select>
       </div>
-      <BarChart />
+      <BarChart :labels="labelsBar" :data="dataBar" />
     </v-card>
     <v-card height="420" width="358" class="rounded-3 d-flex justify-content-center flex-column align-items-center ">
       <div class="d-flex justify-content-between w-100 px-4 mt-1 mb-4">
         <p class="mt-2">Total visitors: 8928</p>
         <v-select :items="['2024', '2023', '2022']" density=compact class="year-select" v-model="year1"></v-select>
       </div>
-      <PieChart />
+      <PieChart :labels="labelsPie" :data="dataPie" />
     </v-card>
   </div>
   <v-card class="mt-4">
@@ -102,8 +102,13 @@ export default {
   mounted() {
     document.body.style.backgroundColor = '#D7E8CD';
   },
+  created() {
+    this.fetchPieChart();
+    this.fetchTotalTickets();
+    this.fetchTotalIncome();
+    this.fetchBarChart();
+  },
   beforeUnmount() {
-    // Reset the background color when the component is destroyed
     document.body.style.backgroundColor = '';
   },
   components: {
@@ -114,8 +119,69 @@ export default {
       toggle: 'Today',
       toggle1: 'Today',
       year: '2024',
-      year1: '2024'
+      year1: '2024',
     }
+  },
+  computed: {
+    labelsPie() {
+      return this.$store.getters.getPieLabel;
+    },
+    labelsBar() {
+      return this.$store.getters.getBarLabel;
+    },
+    dataPie() {
+      return this.$store.getters.getPieData;
+    },
+    dataBar() {
+      return this.$store.getters.getBarData;
+    },
+    totalTickets() {
+      return this.$store.getters.getTotalTicket;
+    },
+    totalIncome() {
+      return this.$store.getters.getTotalIncome;
+    }
+  },
+  methods: {
+    async fetchPieChart() {
+      try {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const formattedDate = `${day}-${month}-${year}`; 
+        await this.$store.dispatch('fetchPieChartDate', formattedDate)
+      }
+      catch (error) {
+        console.error(error)
+      }
+    },
+    async fetchBarChart() {
+      try {
+        const today = new Date();
+        const year = today.getFullYear();
+        await this.$store.dispatch('totalIncomeBarGraph', year)
+      }
+      catch (error) {
+        console.error(error)
+      }
+    },
+    async fetchTotalTickets() {
+      try {
+        await this.$store.dispatch('totalTickets')
+      }
+      catch (error) {
+        console.error(error.message);
+      }
+    },
+    async fetchTotalIncome() {
+      try {
+        await this.$store.dispatch('totalIncome')
+      }
+      catch (error) {
+        console.error(error.message);
+      }
+    },
   }
 };
 </script>

@@ -9,28 +9,32 @@
 import { Pie } from 'vue-chartjs';
 import Chart from 'chart.js/auto';
 export default {
+    props: ['data', 'labels'],
     extends: Pie,
     mounted() {
-        const ctx = document.getElementById('pieChartCanvas');
-        new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: ['Foreigner', 'Institution', 'Public'],
-                datasets: [{
-                    data: [10, 20, 30],
-                    backgroundColor: ['#BCEBEE', '#D7E8CD', '#A5F790']
-                }]
-            },
-            options: {
-                plugins: {
-                    legend: {
-                        position: 'bottom'
+        this.getChart();
+    },
+    methods: {
+        getChart() {
+            const ctx = document.getElementById('pieChartCanvas');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: this.label,
+                    datasets: [{
+                        data: this.data,
+                        backgroundColor: ['#BCEBEE', '#D7E8CD', '#A5F790']
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
                     }
                 }
-
-            }
-
-        });
+            });
+        }
     }
 };
 </script>

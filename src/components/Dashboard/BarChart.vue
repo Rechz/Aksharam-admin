@@ -9,20 +9,17 @@
 import { Bar } from 'vue-chartjs';
 import Chart from 'chart.js/auto';
 export default {
-
+  props: ['labels','data'],
   extends: Bar,
   mounted() {
-    // Reference the canvas element using $refs
     const ctx = document.getElementById('myChart');
-
-    // Create the chart using Chart object
     new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        labels: this.labels,
         datasets: [{
-          label: '# of Votes',
-          data: [50, 19, 43, 15, 20, 3, 50, 19, 33, 75, 22, 3],
+          label: 'Total Income',
+          data: this.data,
           backgroundColor: [
             '#216D17'
           ],

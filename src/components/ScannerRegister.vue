@@ -93,7 +93,6 @@
   </v-data-table>
 </template>
 <script>
-import axios from 'axios';
 export default {
   data: () => ({
     dialog: false,
@@ -103,14 +102,11 @@ export default {
     password: '',
     newPassword: '',
     headers: [
-      // { title: 'Sl No.', key: 'slno', sortable: false, align: 'center' },
       { title: 'Emp Id', sortable: false, align: 'start', key: 'employeeId' },
       { title: 'Image', key: 'image',sortable: false,align:'start' },
       { title: 'Name ', key: 'name', sortable: false, align: 'start' },
-      // { title: 'Password', key: 'password',sortable: false,align:'center' },
       { title: 'Edit / Delete', key: 'actions',  align: 'center' },
     ],
-    scanner: [],
     editedIndex: -1,
     editedItem: {},
     defaultItem: {},
@@ -128,11 +124,8 @@ export default {
       }
       else { return this.scanner; }
     },
-    url() {
-      return this.$store.getters.getUrl;
-    },
-    token() {
-      return this.$store.getters.getToken;
+    scanner() {
+      return this.$store.getters.getScannerList;
     }
   },
 
@@ -144,98 +137,16 @@ export default {
       val || this.closeDelete()
     },
   },
-
   created() {
-    this.initialize()
-  },
-  mounted() {
     this.getScanner();
   },
   methods: {
-    initialize() {
-      this.scanner = [
-        {
-          "id": 52,
-          "name": "employee2",
-          "employeeId": "EMP10002",
-          "password": "$2a$10$UazhIACz0qvD/.AS0P1F5O7aTzEOkHuoxFEAiCtPvhj6gnqA7YS3W",
-          "image": "C:/Users/azhym/Desktop/Museum Employees/EMP10002_Screenshot 2024-02-01 111851.png",
-          "email": "employee2@gmail.com",
-          "phoneNo": "9888888887",
-          "tempAddress": "Thrissur",
-          "permAddress": "Alappuzha",
-          "role": "SCANNER",
-          "enabled": true,
-          "credentialsNonExpired": true,
-          "accountNonExpired": true,
-          "username": "EMP10002",
-          "authorities": [
-            {
-              "authority": "SCANNER"
-            }
-          ],
-          "accountNonLocked": true
-        },
-        {
-          "id": 102,
-          "name": "employee3",
-          "employeeId": "EMP10003",
-          "password": "$2a$10$D0/LNp4aluUpbLfEVpZU8.QELRYsQlSJpGi2VrV1KO3ljUNS4ZFEq",
-          "image": "C:/Users/azhym/Desktop/Museum Employees/EMP10003_Screenshot (2).png",
-          "email": "employee3@gmail.com",
-          "phoneNo": "9888888886",
-          "tempAddress": "Cherthala",
-          "permAddress": "Alappuzha",
-          "role": "SCANNER",
-          "enabled": true,
-          "credentialsNonExpired": true,
-          "accountNonExpired": true,
-          "username": "EMP10003",
-          "authorities": [
-            {
-              "authority": "SCANNER"
-            }
-          ],
-          "accountNonLocked": true
-        },
-        {
-          "id": 302,
-          "name": "employee7",
-          "employeeId": "EMP10007",
-          "password": "$2a$10$4//lY5s72SDTEbSxBl9a3ORuUmNH5AhGoFCFfZKvYNcUKrM0pznAO",
-          "image": "Photo",
-          "email": "employee7@gmail.com",
-          "phoneNo": "9888888886",
-          "tempAddress": "Kottayam",
-          "permAddress": "Trivandrum",
-          "role": "SCANNER",
-          "enabled": true,
-          "credentialsNonExpired": true,
-          "accountNonExpired": true,
-          "username": "EMP10007",
-          "authorities": [
-            {
-              "authority": "SCANNER"
-            }
-          ],
-          "accountNonLocked": true
-        }
-      ]
-    },
     async getScanner() {
       try {
-        const response = await axios.get(`${this.url}/api/admin/scanners`, {
-          headers: {
-            Authorization: `Bearer ${this.token}` // Include the JWT token in the Authorization header
-          }
-        });
-        if (response.status === 200) {
-          const fetchedScanner = response.data;
-          this.scanner = fetchedScanner;
+        await this.$store.dispatch('fetchScannerList');
         }
-      }
       catch (error) {
-        console.error(error);
+        console.error(error.message);
       }
     },
     editItem(item) {
