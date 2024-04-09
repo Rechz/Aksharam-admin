@@ -7,6 +7,7 @@ const store = createStore({
     return {
       base_url: 'http://localhost:8080',
       token: sessionStorage.getItem('token') || '',
+      employeeId: JSON.parse(sessionStorage.getItem('employeeId')) || [],
       allTickets: JSON.parse(sessionStorage.getItem('allTickets')) || [
         {
           id: 1,

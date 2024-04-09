@@ -42,6 +42,10 @@ export default {
     setTotalIncome(state, payload) {
       state.totalIncome = payload;
       sessionStorage.setItem('totalIncome', payload);
-    },
+  },
+  setEmployeeId(state, payload) {
+    state.employeeId = payload;
+    sessionStorage.setItem('employeeId', JSON.stringify(payload));
+    }
      
 };

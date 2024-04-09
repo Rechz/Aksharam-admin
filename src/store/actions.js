@@ -63,7 +63,9 @@ export default {
           }
         });
         if (response.status === 200) {
-            commit('setAllEmployees', response.data);
+          commit('setAllEmployees', response.data);
+          const employeeid = response.data.employees.map(employee => employee.employeeId);
+          commit('setEmployeeId', employeeid)
             console.log(response.data)
         }  
       }
@@ -214,7 +216,7 @@ export default {
       });
       if (response.status == 200) {
         alert('Scanner added successfully');
-        document.window.reload();
+        window.location.reload();
       }
     }
     catch (err) {
@@ -240,7 +242,7 @@ export default {
       });
       if (response.status == 200) {
         alert('Employee added successfully');
-        document.window.reload();
+        window.location.reload();
 
       }
     }
