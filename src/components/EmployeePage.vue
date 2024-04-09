@@ -279,6 +279,7 @@ export default {
     async update() {
       try {
         const success = await this.$store.dispatch('editEmployees', {
+          id: this.editedItem.employeeId,
           email: this.editedItem.email,
           name: this.editedItem.name,
           mobile: this.editedItem.phoneNo,

@@ -160,10 +160,13 @@ export default {
       }
     },
     async update() {
+
       try {
         const success = await this.$store.dispatch('updateScannerPassword', {
           id: this.editedItem.employeeId,
-          name: this.editedItem.name
+          name: this.editedItem.name,
+          password : this.password,
+          confirmPassword: this.newPassword
         });
         if (success) {
           this.dialog = false;

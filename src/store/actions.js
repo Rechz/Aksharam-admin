@@ -303,14 +303,14 @@ export default {
   //to delete employee
   async deleteEmployee({ rootGetters }, payload) {
     try {
-      const response = await axios.put(`${rootGetters.getUrl}/api/admin/delete/${payload}`,
+      const response = await axios.delete(`${rootGetters.getUrl}/api/admin/delete/${payload}`,
         {
           headers: {
             Authorization: `Bearer ${rootGetters.getToken}`
           },
         })
       if (response.status == 200) {
-        alert('Scanner deleted successfully');
+        alert('Employee deleted successfully');
         return true;
       }
     }
@@ -321,7 +321,7 @@ export default {
   //to delete scanner
   async deleteScanner({ rootGetters }, payload) {
     try {
-      const response = await axios.put(`${rootGetters.getUrl}/api/admin/updateRole/${payload.id}`,
+      const response = await axios.put(`${rootGetters.getUrl}/api/admin/updateRole/${payload}`,
         {
           "newRole": "EMPLOYEE",
           "newPassword": "password"
