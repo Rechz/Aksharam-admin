@@ -250,8 +250,19 @@ export default {
       })
     },
    
-    add() {
-      alert('item added');
+    async add() {
+      try {
+        await this.$store.dispatch('addEmployees', {
+          email: this.editedItem.email,
+          name: this.editedItem.name,
+          mobile:this.editedItem.phoneNo ,
+          temporary: this.editedItem.tempAddress,
+          permanent: this.editedItem.permAddress
+        })
+      }
+      catch (error) {
+        console.error(error);
+      }
     },
     update() {
       if (this.editedIndex > -1) {

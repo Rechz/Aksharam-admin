@@ -205,7 +205,7 @@ export default {
       const response = await axios.put(`${rootGetters.getUrl}/api/admin/updateRole/${payload.id}`,
         {
           "newRole":"SCANNER",
-          "newPassword":"payload.password"
+          "newPassword":payload.password
         },
         {
         headers: {
@@ -214,10 +214,38 @@ export default {
       });
       if (response.status == 200) {
         alert('Scanner added successfully');
+        document.window.reload();
       }
     }
     catch (err) {
       console.error(err);
     }
+  },
+  //to add employees
+  async addEmployees({ rootGetters }, payload) {
+    try {
+          const response = await axios.post(`${rootGetters.getUrl}/api/admin/addEmployee`,
+        {
+          "email":payload.email,
+          "name":payload.name,
+          "image":"Photo",
+          "phoneNo":payload.mobile,
+          "tempAddress":payload.temporary,
+          "permAddress":payload.permanent,
+        },
+        {
+        headers: {
+          Authorization: `Bearer ${rootGetters.getToken}`
+        },
+      });
+      if (response.status == 200) {
+        alert('Employee added successfully');
+        document.window.reload();
+
+      }
     }
+    catch (error) {
+      console.error(error);
+    }
+  },
 }
