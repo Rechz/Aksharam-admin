@@ -22,7 +22,6 @@
   <v-data-table :headers="headers" :items="filteredScanner" style="background-color: #f9faf1; color:black; "
     class="mt-3" :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
     <template v-slot:top>
-
       <v-dialog v-model="dialog" max-width="600px">
         <v-card style="width: 400px; height:auto; border-radius: 15px;" class="pb-5">
           <v-card-title class="d-flex justify-content-between px-4" style="background-color: #216D17; color: #FFFFFF;">
@@ -42,15 +41,12 @@
                 </v-col>
                 <v-col cols="12" sm="12" md="12">
                   <v-text-field v-model="password" label="New Password" class="scanner"
-                    density="comfortable"></v-text-field>
+                    density="comfortable" type="password"></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="12" md="12">
                   <v-text-field v-model="newPassword" label="Confirm Password" class="scanner"
                     density="comfortable"></v-text-field>
                 </v-col>
-                <!-- <v-col cols="12">
-                <v-file-input v-model="editedItem.image" label="Upload Image"></v-file-input>
-              </v-col> -->
               </v-row>
             </v-container>
           </v-card-text>
@@ -79,12 +75,10 @@
     </template>
     <template v-slot:item='{ item}'>
       <tr style="background-color: #FCFDF6; color:black;">
-        <!-- <td class="text-center">{{ index + 1 }}</td> -->
         <td>{{ item.employeeId }}</td>
         <td><img :src='item.image' @error="setFallbackImage" alt="employee" style="border-radius: 50%; height: 50px;" />
         </td>
         <td>{{ item.name }}</td>
-        <!-- <td class="text-center">{{ item.password }}</td> -->
         <td class="text-center">
           <v-icon size="large" color="teal-darken-3" class="me-4 mdi mdi-pencil" @click="editItem(item)"></v-icon>
           <v-icon size="large" color="danger" class="ms-4 mdi mdi-trash-can" @click="deleteItem(item)"></v-icon>
@@ -93,22 +87,24 @@
     </template>
   </v-data-table>
 </template>
+
 <script>
 export default {
   data: () => ({
     dialog: false,
     dialogDelete: false,
-    isHovered: false,
     search: '',
     scanPassword: '',
-    id:'',
+    id: '',
+    visible: false,
+    password: '',
     newPassword: '',
     image: require('@/assets/acc.jpg'),
     headers: [
       { title: 'Emp Id', sortable: false, align: 'start', key: 'employeeId' },
       { title: 'Image', key: 'image',sortable: false,align:'start' },
       { title: 'Name ', key: 'name', sortable: false, align: 'start' },
-      { title: 'Edit / Delete', key: 'actions',  align: 'center' },
+      { title: 'Edit / Delete', key: 'actions', align: 'center', sortable: false },
     ],
     editedIndex: -1,
     editedItem: {},
@@ -116,9 +112,6 @@ export default {
   }),
 
   computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-    },
     filteredScanner() {
       if (this.search !== '') {
         return this.scanner.filter((item) =>
@@ -190,7 +183,6 @@ export default {
         this.editedIndex = -1
       })
     },
-
     closeDelete() {
       this.dialogDelete = false
       this.$nextTick(() => {
@@ -200,15 +192,6 @@ export default {
     },
     setFallbackImage(event) {
       event.target.src = this.image;
-    },
-
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.scanner[this.editedIndex], this.editedItem)
-      } else {
-        this.scanner.push(this.editedItem)
-      }
-      this.close()
     },
   },
 }
@@ -240,6 +223,9 @@ export default {
   border-bottom: 2px solid #216D17;
   background-color: #DFE4D7 !important;
   /* margin-bottom: 15px; */
+}
+:deep(.scanner .v-input__details){
+display: none;
 }
 :deep(.v-pagination__list .v-btn--variant-plain) {
   opacity: 1;

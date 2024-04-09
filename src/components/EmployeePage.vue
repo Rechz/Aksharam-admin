@@ -257,7 +257,8 @@ export default {
           name: this.editedItem.name,
           mobile:this.editedItem.phoneNo ,
           temporary: this.editedItem.tempAddress,
-          permanent: this.editedItem.permAddress
+          permanent: this.editedItem.permAddress,
+          photo: "photo"
         })
       }
       catch (error) {
@@ -272,6 +273,7 @@ export default {
       }
       this.close()
     },
+    
     showDetails(item) {
       this.editedItem = Object.assign({}, item);
       this.detailsDialog = true;

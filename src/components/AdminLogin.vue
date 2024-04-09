@@ -41,14 +41,7 @@ export default {
       value => !!value || 'Password is required',
     ],
   }),
-//   computed: {
-//     url() {
-//       return this.$store.getters.getUrl;
-//     },
-//     token() {
-//       return this.$store.getters.getToken;
-//     }
-// },
+
   methods: {
     async onSubmit() {
       if (!this.form) return
