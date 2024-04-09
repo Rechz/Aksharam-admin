@@ -1,8 +1,10 @@
 <template>
   <v-container class="w-100 d-flex align-items-start justify- content-between gap-4 bg-white p-0 pb-3">
 
-    <v-text-field label="Select Employee" prepend-inner-icon="mdi-briefcase-account" density="compact" class="emp"
-      v-model="id"></v-text-field>
+    <!-- <v-text-field label="Select Employee" prepend-inner-icon="mdi-briefcase-account" density="compact" class="emp"
+      v-model="id"></v-text-field> -->
+    <v-select label="Select Employee" :items="employees" prepend-inner-icon="mdi-briefcase-account" density="compact"
+      class="emp" v-model="id"></v-select>
     <v-text-field label="Password" prepend-inner-icon="mdi-eye" density="compact" class="emp"
       v-model="scanPassword"></v-text-field>
     <v-btn size="large"
@@ -124,6 +126,9 @@ export default {
         );
       }
       else { return this.scanner; }
+    },
+    employees() {
+      return this.$store.getters.getEmployeeId;
     },
     scanner() {
       return this.$store.getters.getScannerList;

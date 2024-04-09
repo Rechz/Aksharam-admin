@@ -11,4 +11,5 @@ export default {
   getBarLabel: (state) => state.labelsBar,
   getTotalTicket: (state) => state.totalTickets,
   getTotalIncome: (state) => state.totalIncome,
+  getEmployeeId : (state) => state.employeeId,
 }
