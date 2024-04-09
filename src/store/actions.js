@@ -64,7 +64,8 @@ export default {
         });
         if (response.status === 200) {
           commit('setAllEmployees', response.data);
-          const employeeid = response.data.employees.map(employee => employee.employeeId);
+          const employeeid = response.data.map(employee => employee.employeeId);
+          console.log(employeeid)
           commit('setEmployeeId', employeeid)
             console.log(response.data)
         }  
