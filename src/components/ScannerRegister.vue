@@ -159,6 +159,21 @@ export default {
         console.error(err.message);
       }
     },
+    async update() {
+      try {
+        const success = await this.$store.dispatch('updateScannerPassword', {
+          id: this.editedItem.employeeId,
+          name: this.editedItem.name
+        });
+        if (success) {
+          this.dialog = false;
+          window.location.reload();
+        }
+      }
+      catch (error) {
+        console.log(error);
+      }
+    },
     editItem(item) {
       this.editedIndex = this.scanner.indexOf(item)
       this.editedItem = Object.assign({}, item)
@@ -171,8 +186,19 @@ export default {
       this.dialogDelete = true
     },
 
-    deleteItemConfirm() {
-      this.scanner.splice(this.editedIndex, 1)
+    async deleteItemConfirm() {
+      try {
+        const id = this.editedItem.employeeId;
+        const success = await this.$store.dispatch('deleteScanner', id);
+        if (success) {
+          this.closeDelete();
+          window.location.reload();
+        }
+      }    
+      catch (error) {
+        console.log(error);
+      }
+      // this.scanner.splice(this.editedIndex, 1)
       this.closeDelete()
     },
 

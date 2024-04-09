@@ -145,9 +145,6 @@
       </tr>
     </template>
   </v-data-table>
-
-
-
 </template>
 
 <script>
@@ -229,9 +226,19 @@ export default {
       this.dialogDelete = true
     },
 
-    deleteItemConfirm() {
-      this.employees.splice(this.editedIndex, 1)
-      this.closeDelete()
+    async deleteItemConfirm() {
+      // this.employees.splice(this.editedIndex, 1)
+      try {
+        const id = this.editedItem.employeeId;
+        const success= await this.$store.dispatch('deleteEmployee', id)
+        if (success) {
+          this.closeDelete();
+          window.location.reload();
+        } 
+      }
+      catch (error) {
+        console.error(error.message)
+      }
     },
 
     close() {
@@ -252,28 +259,47 @@ export default {
    
     async add() {
       try {
-        await this.$store.dispatch('addEmployees', {
+        const success = await this.$store.dispatch('addEmployees', {
           email: this.editedItem.email,
           name: this.editedItem.name,
-          mobile:this.editedItem.phoneNo ,
+          mobile: this.editedItem.phoneNo,
           temporary: this.editedItem.tempAddress,
           permanent: this.editedItem.permAddress,
           photo: "photo"
-        })
+        });
+        if (success) {
+          this.close();
+          window.location.reload();
+        }
       }
       catch (error) {
         console.error(error);
       }
     },
-    update() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.employees[this.editedIndex], this.editedItem)
-      } else {
-        this.employees.push(this.editedItem)
+    async update() {
+      try {
+        const success = await this.$store.dispatch('editEmployees', {
+          email: this.editedItem.email,
+          name: this.editedItem.name,
+          mobile: this.editedItem.phoneNo,
+          temporary: this.editedItem.tempAddress,
+          permanent: this.editedItem.permAddress,
+          photo: "photo"
+        });
+        if (success) {
+          this.close();
+          window.location.reload();
+        }
       }
-      this.close()
+      catch (error) {
+        console.error(error);
+      }
+      // if (this.editedIndex > -1) {
+      //   Object.assign(this.employees[this.editedIndex], this.editedItem)
+      // } 
+      // this.close()
     },
-    
+
     showDetails(item) {
       this.editedItem = Object.assign({}, item);
       this.detailsDialog = true;
