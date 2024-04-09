@@ -275,12 +275,14 @@ const store = createStore({
           "accountNonLocked": true
         }
       ],
-      dataPie: [30, 20, 30],
-      dataBar: [50, 19, 43, 15, 20, 13, 50, 29, 43, 80, 22, 30],
-      labelsPie: ['Foreigner', 'Institution', 'Public'],
-      labelsBar: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-      totalTickets: sessionStorage.getItem('totalTickets') || 8963,
-      totalIncome: sessionStorage.getItem('totalIncome') || 425300,
+      dataPie: JSON.parse(sessionStorage.getItem('dataPie')) || [],
+      dataBar: JSON.parse(sessionStorage.getItem('dataBar')) || [],
+      labelsPie: JSON.parse(sessionStorage.getItem('labelsPie')) || ['Foreigner', 'Institution', 'Public'],
+      labelsBar: JSON.parse(sessionStorage.getItem('labelsBar')) || ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+      totalPie: sessionStorage.getItem('totalPie') || 0,
+      totalBar: sessionStorage.getItem('totalBar') || 0,
+      totalTickets: sessionStorage.getItem('totalTickets') || 0,
+      totalIncome: sessionStorage.getItem('totalIncome') || 0,
     };
   },
   mutations: rootMutations,

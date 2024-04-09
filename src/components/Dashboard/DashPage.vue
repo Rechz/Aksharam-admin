@@ -14,7 +14,8 @@
             </v-btn-toggle>
           </div>
           <div class="d-flex flex-column">
-            <p class="text-style"><v-icon class="mdi mdi-currency-inr" size="24" color="white"></v-icon>{{totalIncome}}</p>
+            <p class="text-style"><v-icon class="mdi mdi-currency-inr" size="24" color="white"></v-icon>{{totalIncome}}
+            </p>
             <p class="text-type">Total Earning</p>
           </div>
         </div>
@@ -74,18 +75,40 @@
   </div>
   <div class="d-flex flex-wrap justify-content-between gap-3 mt-4">
     <v-card height="420" width="741" class="rounded-3 p-3">
-      <div class="d-flex justify-content-between px-3 mt-1">
-        <p class="mt-2">Total income: &#8377;445200</p>
-        <v-select :items="['2024', '2023', '2022']" density=compact class="year-select" v-model="year"></v-select>
+      <div v-if="!barError">
+        <div class="d-flex justify-content-between px-3 mt-1">
+          <p class="mt-2">Today's Total income: &#8377;445200</p>
+          <v-select :items="['2024', '2023', '2022']" density=compact class="year-select" v-model="year"></v-select>
+        </div>
+        <BarChart :labels="labelsBar" :data="dataBar" />
       </div>
-      <BarChart :labels="labelsBar" :data="dataBar" />
+      <div v-else class="mt-5 pt-5">
+        <div class="d-flex flex-column align-items-center justify-content-center pt-3">
+          <v-icon class="mdi mdi-alert-circle-outline" color="warning" size="54"></v-icon>
+          <h3 class="my-0">Something went wrong.</h3>
+          <p class="my-0">Please try again later.</p>
+          <v-btn variant="plain" size="small" color="#1A237E" class="text-capitalize" prepend-icon="mdi-reload"
+            @click="fetchBarChart">Retry</v-btn>
+        </div>
+      </div>
     </v-card>
     <v-card height="420" width="358" class="rounded-3 d-flex justify-content-center flex-column align-items-center ">
-      <div class="d-flex justify-content-between w-100 px-4 mt-1 mb-4">
-        <p class="mt-2">Total visitors: 8928</p>
-        <v-select :items="['2024', '2023', '2022']" density=compact class="year-select" v-model="year1"></v-select>
+      <div v-if="!pieError">
+        <div class="d-flex justify-content-between w-100 px-4 mt-1 mb-4">
+          <p class="mt-2">Today's Total visitors: 8928</p>
+          <v-select :items="['2024', '2023', '2022']" density=compact class="year-select" v-model="year1"></v-select>
+        </div>
+        <PieChart :labels="labelsPie" :data="dataPie" />
       </div>
-      <PieChart :labels="labelsPie" :data="dataPie" />
+      <div v-else>
+        <div class=" d-flex flex-column align-items-center">
+          <v-icon class=" mdi mdi-alert-circle-outline" color="warning" size="54"></v-icon>
+          <h3 class="my-0">Something went wrong.</h3>
+          <p class="my-0">Please try again later.</p>
+          <v-btn variant="plain" size="small" color="#1A237E" class="text-capitalize" prepend-icon="mdi-reload"
+            @click="fetchPieChart">Retry</v-btn>
+        </div>
+      </div>
     </v-card>
   </div>
   <v-card class="mt-4">
@@ -122,6 +145,8 @@ export default {
       toggle1: 'Today',
       year: '2024',
       year1: '2024',
+      barError: false,
+      pieError: false
     }
   },
   computed: {
@@ -146,6 +171,7 @@ export default {
   },
   methods: {
     async fetchPieChart() {
+      this.pieError = false;
       try {
         const today = new Date();
         const year = today.getFullYear();
@@ -156,17 +182,20 @@ export default {
         await this.$store.dispatch('fetchPieChartDate', formattedDate)
       }
       catch (error) {
-        console.error(error)
+        console.error(error);
+        this.pieError = true;
       }
     },
     async fetchBarChart() {
+      this.barError = false;
       try {
         const today = new Date();
         const year = today.getFullYear();
         await this.$store.dispatch('totalIncomeBarGraph', year)
       }
       catch (error) {
-        console.error(error)
+        console.error(error);
+        this.barError = true
       }
     },
     async fetchTotalTickets() {
@@ -258,7 +287,9 @@ body {
   display: flex;
   justify-content: end;
 }
-
+:deep(.v-btn__prepend){
+  margin-right: 0;
+}
 .button-style {
   text-transform: capitalize;
   color: white

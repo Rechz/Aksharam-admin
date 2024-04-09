@@ -99,11 +99,13 @@ export default {
           console.log(response.data);
           const labels = response.data.map(entry => entry.category);
           const data = response.data.map(entry => entry.totalVisitors);
+          const total = data.reduce((accumulator, currentValue) => {return accumulator + currentValue;}, 0);
           console.log(labels);
           console.log(data)
           commit('setPieChart', {
             label: labels,
-            data: data
+            data: data,
+            total: total
           });
         }
       }
@@ -122,9 +124,11 @@ export default {
         if (response.status === 200) {
           const labels = response.data.map(entry => entry.category);
           const data = response.data.map(entry => entry.totalVisitors);
+          const total = data.reduce((accumulator, currentValue) => {return accumulator + currentValue;}, 0);
           commit('setPieChart', {
             label: labels,
-            data: data
+            data: data,
+            total:total
           });
         }
       }
@@ -149,9 +153,11 @@ export default {
           labels.push(entry.month);
           incomes.push(sum);
           });
+         const total = incomes.reduce((accumulator, currentValue) => {return accumulator + currentValue;}, 0);
          commit('setBarChart', {
            label: labels,
-           data: incomes
+           data: incomes,
+           total: total
           })
         }
       }
@@ -193,5 +199,25 @@ export default {
         throw new Error('Error fetching data: ' + error.message);
       } 
   },
-  
+  //to add scanner
+  async addScanner({rootGetters}, payload) {
+    try {
+      const response = await axios.put(`${rootGetters.getUrl}/api/admin/updateRole/${payload.id}`,
+        {
+          "newRole":"SCANNER",
+          "newPassword":"payload.password"
+        },
+        {
+        headers: {
+          Authorization: `Bearer ${rootGetters.getToken}`
+        },
+      });
+      if (response.status == 200) {
+        alert('Scanner added successfully');
+      }
+    }
+    catch (err) {
+      console.error(err);
+    }
+    }
 }

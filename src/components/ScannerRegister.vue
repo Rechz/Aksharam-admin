@@ -1,16 +1,14 @@
 <template>
   <v-container class="w-100 d-flex align-items-start justify- content-between gap-4 bg-white p-0 pb-3">
 
-    <v-text-field label="Select Employee" prepend-inner-icon="mdi-briefcase-account" density="compact"
-      class="emp"></v-text-field>
-
-
-    <v-text-field label="Password" prepend-inner-icon="mdi-eye" density="compact" class="emp"></v-text-field>
-
+    <v-text-field label="Select Employee" prepend-inner-icon="mdi-briefcase-account" density="compact" class="emp"
+      v-model="id"></v-text-field>
+    <v-text-field label="Password" prepend-inner-icon="mdi-eye" density="compact" class="emp"
+      v-model="scanPassword"></v-text-field>
     <v-btn size="large"
-      style="background-color: #2C7721 !important; color: white !important; text-transform: capitalize;"> +
+      style="background-color: #2C7721 !important; color: white !important; text-transform: capitalize;"
+      @click="addScanner"> +
       Add as Scanner </v-btn>
-
   </v-container>
   <v-spacer></v-spacer>
   <v-spacer></v-spacer>
@@ -81,7 +79,8 @@
       <tr style="background-color: #FCFDF6; color:black;">
         <!-- <td class="text-center">{{ index + 1 }}</td> -->
         <td>{{ item.employeeId }}</td>
-        <td><img :src='item.image' alt="employee" style="border-radius: 50%; height: 50px;" /> </td>
+        <td><img :src='item.image' @error="setFallbackImage" alt="employee" style="border-radius: 50%; height: 50px;" />
+        </td>
         <td>{{ item.name }}</td>
         <!-- <td class="text-center">{{ item.password }}</td> -->
         <td class="text-center">
@@ -99,8 +98,10 @@ export default {
     dialogDelete: false,
     isHovered: false,
     search: '',
-    password: '',
+    scanPassword: '',
+    id:'',
     newPassword: '',
+    image: require('@/assets/acc.jpg'),
     headers: [
       { title: 'Emp Id', sortable: false, align: 'start', key: 'employeeId' },
       { title: 'Image', key: 'image',sortable: false,align:'start' },
@@ -149,6 +150,17 @@ export default {
         console.error(error.message);
       }
     },
+    async addScanner() {
+      try {
+        await this.$store.dispatch('addScanner', {
+          id: this.id,
+          password: this.scanPassword
+        })
+      }
+      catch (err) {
+        console.error(err.message);
+      }
+    },
     editItem(item) {
       this.editedIndex = this.scanner.indexOf(item)
       this.editedItem = Object.assign({}, item)
@@ -180,6 +192,9 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
       })
+    },
+    setFallbackImage(event) {
+      event.target.src = this.image;
     },
 
     save() {

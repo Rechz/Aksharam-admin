@@ -118,7 +118,7 @@
                   </v-row>
                 </div>
                 <div class="col-4 d-flex justify-content-center align-items-center">
-                  <img :src='editedItem.image' alt="employee" style="height: 184px;" />
+                  <img :src='editedItem.image' @error="setFallbackImage" alt="employee" style="height: 184px;" />
                 </div>
               </div>
             </v-container>
@@ -131,7 +131,8 @@
       <tr style="background-color:#FCFDF6; color:black;">
         <!-- <td class="text-center">{{ index + 1 }}</td> -->
         <td class="">{{ item.employeeId }}</td>
-        <td class=""><img :src='item.image' alt="employee" style="border-radius: 50%; height: 50px;" />
+        <td class=""><img :src="item.image" @error="setFallbackImage" alt="employee"
+            style="border-radius: 50%; height: 50px;" />
         </td>
         <td class="">{{ item.name }}</td>
         <td class="">{{ item.phoneNo }}</td>
@@ -205,6 +206,9 @@ export default {
   this.getDetails();
     },
   methods: {
+    setFallbackImage(event) {
+      event.target.src = this.image;
+    },
     async getDetails() {
       try {
         await this.$store.dispatch('fetchAllEmployees');
