@@ -5,8 +5,8 @@ import rootGetters from './getters.js';
 const store = createStore({
   state() {
     return {
-      base_url: 'http://192.168.1.13:8080',
-      //base_url: 'http://94.176.233.47:5000',
+      // base_url: 'http://192.168.1.13:8080',
+      base_url: 'http://94.176.233.47:5000',
       token: sessionStorage.getItem('token') || '',
       employeeId: JSON.parse(sessionStorage.getItem('employeeId')) || [],
       allTickets: JSON.parse(sessionStorage.getItem('allTickets')) || [],
