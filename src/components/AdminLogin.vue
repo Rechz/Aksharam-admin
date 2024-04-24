@@ -10,12 +10,12 @@
       <v-form v-model="form" @submit.prevent="onSubmit">
         <v-img src="@/assets/logo.png" style="height: 200px; width: 200px;" class="mx-auto"></v-img>
         <v-card-title class="ps-0 mb-1 title">LOGIN</v-card-title>
-        <v-text-field v-model="name" style="width: 362px; " density="comfortable" label="Username"
+        <v-text-field v-model="name" style="width: 362px; " density="comfortable" label="Username" single-line
           placeholder="Enter your ID" prepend-inner-icon="mdi-account-box" :rules="nameRules">
         </v-text-field>
         <v-text-field v-model="password" :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
           :type="visible ? 'text' : 'password'" style="width: 362px; " density="comfortable" label="Password"
-          placeholder="Enter your password" prepend-inner-icon="mdi-lock" :rules="passwordRules"
+          single-line placeholder="Enter your password" prepend-inner-icon="mdi-lock" :rules="passwordRules"
           @click:append-inner="visible = !visible">
         </v-text-field>
         <br>

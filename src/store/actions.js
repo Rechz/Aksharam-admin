@@ -99,12 +99,9 @@ export default {
         },
       })
       if (response.status === 200) {
-        console.log(response.data);
         const labels = response.data.map(entry => entry.category);
         const data = response.data.map(entry => entry.totalVisitors);
         const total = data.reduce((accumulator, currentValue) => { return accumulator + currentValue; }, 0);
-        console.log(labels);
-        console.log(data)
         commit('setPieChart', {
           label: labels,
           data: data,
@@ -116,7 +113,7 @@ export default {
       throw new Error('Error fetching data: ' + error.message);
     }
   },
-  //fetch piechart for total scanned visitors tii date
+  //fetch piechart for total scanned visitors till date
   async fetchPieChartVisited({ commit, rootGetters }) {
     try {
       const response = await axios.get(`${rootGetters.getUrl}/api/dashboard/totalVisitors/upToNow`, {
@@ -125,6 +122,7 @@ export default {
         },
       })
       if (response.status === 200) {
+        console.log('total visitors upto date',response.data)
         const labels = response.data.map(entry => entry.category);
         const data = response.data.map(entry => entry.totalVisitors);
         const total = data.reduce((accumulator, currentValue) => { return accumulator + currentValue; }, 0);
@@ -139,7 +137,7 @@ export default {
       throw new Error('Error fetching data: ' + error.message);
     }
   },
-  //fetching details for bargraph
+  //fetching income details for bargraph for year
   async totalIncomeBarGraph({ commit, rootGetters }, payload) {
     try {
       const response = await axios.get(`${rootGetters.getUrl}/api/dashboard/totalIncome/year?year=${payload}`, {
@@ -168,6 +166,33 @@ export default {
       throw new Error('Error fetching data: ' + error.message);
     }
   },
+  //fetching ticket details for bargraph for year
+  async totalTicketsBarGraph({ commit, rootGetters }, payload) {
+    try {
+      const response = await axios.get(`${rootGetters.getUrl}/api/dashboard/totalTickets/year?year=${payload}`, {
+        headers: {
+          Authorization: `Bearer ${rootGetters.getToken}`
+        },
+      })
+      if (response.status === 200) {
+        const data = response.data;
+        const tickets = [];
+        data.forEach(entry => {
+          let sum = entry.totalPublicTickets + entry.totalInstitutionTickets + entry.totalForeignerTickets;
+           sum = sum * 100
+          tickets.push(sum);
+        });
+        const total = tickets.reduce((accumulator, currentValue) => { return accumulator + currentValue; }, 0);
+        commit('setBarChartTicket', {
+          data: tickets,
+          total: total
+        })
+      }
+    }
+    catch (error) {
+      throw new Error('Error fetching data: ' + error.message);
+    }
+  },
   //fetch total tickets upto date
   async totalTickets({ commit, rootGetters }) {
     try {
@@ -177,7 +202,8 @@ export default {
         },
       })
       if (response.status === 200) {
-        const total = Object.values(response.data).reduce((acc, curr) => acc + curr, 0);
+        console.log('total tickets upto date',response.data)
+        const total = response.data.totalTickets;
         commit('setTotalTickets', total);
       }
     }
@@ -194,12 +220,81 @@ export default {
         },
       })
       if (response.status === 200) {
-        const total = Object.values(response.data).reduce((acc, curr) => acc + curr, 0);
+        console.log('total income upto date',response.data)
+        const total = response.data.totalIncome;
         commit('setTotalIncome', total);
       }
     }
     catch (error) {
       throw new Error('Error fetching data: ' + error.message);
+    }
+  },
+  //to fetch income for given date
+  async fetchIncomeByDate({rootGetters, commit}, payload) {
+    try {
+      const response = await axios.get(`${rootGetters.getUrl}/api/dashboard/totalIncome/date?date=${payload}`, {
+        headers: {
+          Authorization: `Bearer ${rootGetters.getToken}`
+        },
+      });
+      if (response.status === 200) {
+        const income = response.data.totalIncome;
+        commit('setDailyIncome', income);
+      }
+    }
+    catch (error) {
+      console.error(error);
+    }
+  },
+  //to fetch income for given month and year
+  async fetchIncomeByMonth({ rootGetters, commit }, payload) { 
+try {
+      const response = await axios.get(`${rootGetters.getUrl}/api/dashboard/totalTickets/month?monthName=${payload.month}&year=${payload.year}`, {
+        headers: {
+          Authorization: `Bearer ${rootGetters.getToken}`
+        },
+      });
+      if (response.status === 200) {
+        const income = response.data.totalIncome;
+        commit('setDailyIncome', income);
+      }
+    }
+    catch (error) {
+      console.error(error);
+    }
+  },
+    //to fetch ticket for given date
+  async fetchTicketByDate({rootGetters, commit}, payload) {
+    try {
+      const response = await axios.get(`${rootGetters.getUrl}/api/dashboard/totalTickets/date?date=${payload}`, {
+        headers: {
+          Authorization: `Bearer ${rootGetters.getToken}`
+        },
+      });
+      if (response.status === 200) {
+        const tickets = response.data.totalTickets;
+        commit('setDailyTickets', tickets);
+      }
+    }
+    catch (error) {
+      console.error(error);
+    }
+  },
+  //to fetch ticket for given month and year
+  async fetchTicketByMonth({ rootGetters, commit }, payload) { 
+try {
+      const response = await axios.get(`${rootGetters.getUrl}/api/dashboard/totalTickets/month?monthName=${payload.month}&year=${payload.year}'`, {
+        headers: {
+          Authorization: `Bearer ${rootGetters.getToken}`
+        },
+      });
+      if (response.status === 200) {
+        const tickets = response.data.totalTickets;
+        commit('setDailyTickets', tickets);
+      }
+    }
+    catch (error) {
+      console.error(error);
     }
   },
   //to add scanner
@@ -340,5 +435,6 @@ export default {
     catch (error) {
       console.error(error);
     }
-  }
+  },
+  //
 }

@@ -18,8 +18,8 @@
                 class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Tickets</v-list-item></router-link>
             <router-link to='/employee' style="text-decoration: none; color:black;"><v-list-item value="account"
                 class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Employees</v-list-item></router-link>
-            <router-link to='/items-page' style="text-decoration: none; color:black;"><v-list-item value="items"
-                class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Items</v-list-item></router-link>
+            <!-- <router-link to='/items-page' style="text-decoration: none; color:black;"><v-list-item value="items" -->
+                <!-- class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Items</v-list-item></router-link> -->
             <router-link to='/portal' style="text-decoration: none; color:black;"><v-list-item value="portal"
                 class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Portal</v-list-item></router-link>
           </v-list>
@@ -43,7 +43,7 @@ export default {
         { text: 'Overview', route: '/dashboard-page' },
         { text: 'Tickets', route: '/tickets' },
         { text: 'Employee', route: '/employee' },
-        { text: 'Items', route: '/items-page' },
+        // { text: 'Items', route: '/items-page' },
         { text: 'Portal', route: '/portal' }
       ],
     }
@@ -66,7 +66,7 @@ export default {
   },
   methods: {
     logout() {
-      
+      this.$router.push('/');
     }
   },
   watch: {

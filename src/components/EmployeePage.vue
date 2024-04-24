@@ -23,28 +23,27 @@
                     </v-btn>
                   </v-overlay>
                 </v-icon>
-                <v-img v-if="editedIndex !== -1" :src="editedItem.image" alt="Upload Image" style="height: 200px;"
-                  class="mb-3" v-bind="props">
+                <v-icon v-if="editedIndex !== -1" size="240" color="#DFE4D7" class="mdi mdi-account-box" v-bind="props">
                   <v-overlay :model-value="isHovering" class="align-center justify-center" scrim="#616161" contained>
                     <v-btn class="overlay" flat>
                       <v-icon size="32" class="mdi mdi-pencil" color="white"></v-icon>
                     </v-btn>
                   </v-overlay>
-                </v-img>
+                </v-icon>
               </v-hover>
             </div>
             <div class="d-flex flex-column w-100 emp-add">
               <div>
                 <v-text-field v-model="editedItem.name" label="Name" prepend-inner-icon="mdi-account-outline"
-                  density="comfortable"></v-text-field>
+                  single-line density="comfortable"></v-text-field>
                 <v-text-field v-model="editedItem.phoneNo" label="Phone No" prepend-inner-icon="mdi-phone-outline"
-                  density="comfortable"></v-text-field>
+                  density="comfortable" single-line></v-text-field>
                 <v-text-field v-model="editedItem.email" label="Email ID" prepend-inner-icon="mdi-email-outline"
-                  density="comfortable"></v-text-field>
+                  density="comfortable" single-line></v-text-field>
                 <v-text-field v-model="editedItem.tempAddress" label="Temporary Address"
-                  prepend-inner-icon="mdi-map-marker-outline" density="comfortable"></v-text-field>
+                  prepend-inner-icon="mdi-map-marker-outline" density="comfortable" single-line></v-text-field>
                 <v-text-field v-model="editedItem.permAddress" label="Permanent Address"
-                  prepend-inner-icon="mdi-home-map-marker" density="comfortable"></v-text-field>
+                  prepend-inner-icon="mdi-home-map-marker" density="comfortable" single-line></v-text-field>
               </div>
               <v-card-actions>
                 <v-btn color="white" block :style="{ backgroundColor: editedIndex === -1 ? '#1B5E20' : '#546E7A' }"
@@ -56,8 +55,8 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <v-text-field label="Search" v-model="search" prepend-inner-icon="mdi-magnify" class="search mt-5"
-      density="compact"></v-text-field>
+    <v-text-field label="Search" v-model="search" prepend-inner-icon="mdi-magnify" class="search mt-5" density="compact"
+      single-line></v-text-field>
   </div>
   <v-data-table :headers="headers" :items="filteredEmployees" class="mt-3"
     :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
@@ -118,7 +117,7 @@
                   </v-row>
                 </div>
                 <div class="col-4 d-flex justify-content-center align-items-center">
-                  <img :src='editedItem.image' @error="setFallbackImage" alt="employee" style="height: 184px;" />
+                  <v-img src='@/assets/acc.jpg' alt="employee" style="height: 184px;"></v-img>
                 </div>
               </div>
             </v-container>
@@ -131,9 +130,9 @@
       <tr style="background-color:#FCFDF6; color:black;">
         <!-- <td class="text-center">{{ index + 1 }}</td> -->
         <td class="">{{ item.employeeId }}</td>
-        <td class=""><img :src="item.image" @error="setFallbackImage" alt="employee"
-            style="border-radius: 50%; height: 50px;" />
-        </td>
+        <!-- <td class=""><v-img src="@/assets/acc.jpg"  alt="employee"
+            style="border-radius: 50%; height: 2px; display: inline;" ></v-img>
+        </td> -->
         <td class="">{{ item.name }}</td>
         <td class="">{{ item.phoneNo }}</td>
         <td class="text-center"><v-icon size="large" class="mdi mdi-eye" color="blue-grey-darken-3"
@@ -161,11 +160,11 @@ export default {
     image: require('@/assets/acc.jpg'),
     headers: [
       { title: 'Emp Id', align: 'start', key: 'employeeId', sortable: false },
-      { title: 'Image', align: 'start', key: 'image', sortable: false },
+      // { title: 'Image', align: 'start', key: 'image', sortable: false },
       { title: 'Name', align: 'start', key: 'name', sortable: false },
       { title: 'Phone No.', align: 'start', key: 'phoneNo', sortable: false },
       { title: 'Details', align: 'center' },
-      { title: 'Edit / Delete', align: 'center'},
+      { title: 'Edit / Delete', align: 'center' },
     ],
     editedIndex: -1,
     editedItem: {},
@@ -199,56 +198,46 @@ export default {
       val || this.closeDelete()
     },
   },
-    created () {
-  this.getDetails();
-    },
+  created() {
+    this.getDetails();
+  },
   methods: {
-    setFallbackImage(event) {
-      event.target.src = this.image;
-    },
+    // setFallbackImage(event) {
+    //     event.target.src = this.image;
+    // },
     async getDetails() {
       try {
         await this.$store.dispatch('fetchAllEmployees');
-      }
-      catch (error) {  
-        console.error(error.message)
-      }
-    },
-    editItem(item) {
-      this.editedIndex = this.employees.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialog = true
-    },
-
-    deleteItem(item) {
-      this.editedIndex = this.employees.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialogDelete = true
-    },
-
-    async deleteItemConfirm() {
-      // this.employees.splice(this.editedIndex, 1)
-      try {
-        const id = this.editedItem.employeeId;
-        const success= await this.$store.dispatch('deleteEmployee', id)
-        if (success) {
-          this.closeDelete();
-          window.location.reload();
-        } 
       }
       catch (error) {
         console.error(error.message)
       }
     },
-
-    close() {
-      this.dialog = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
+    showDetails(item) {
+      this.editedItem = Object.assign({}, item);
+      this.detailsDialog = true;
     },
-
+    closeDetails() {
+      this.detailsDialog = false;
+    },
+    deleteItem(item) {
+      this.editedIndex = this.employees.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialogDelete = true
+    },
+    async deleteItemConfirm() {
+      try {
+        const id = this.editedItem.employeeId;
+        const success = await this.$store.dispatch('deleteEmployee', id)
+        if (success) {
+          this.closeDelete();
+          window.location.reload();
+        }
+      }
+      catch (error) {
+        console.error(error.message)
+      }
+    },
     closeDelete() {
       this.dialogDelete = false
       this.$nextTick(() => {
@@ -256,7 +245,11 @@ export default {
         this.editedIndex = -1
       })
     },
-   
+    editItem(item) {
+      this.editedIndex = this.employees.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialog = true
+    },
     async add() {
       try {
         const success = await this.$store.dispatch('addEmployees', {
@@ -295,32 +288,25 @@ export default {
       catch (error) {
         console.error(error);
       }
-      // if (this.editedIndex > -1) {
-      //   Object.assign(this.employees[this.editedIndex], this.editedItem)
-      // } 
-      // this.close()
     },
-
-    showDetails(item) {
-      this.editedItem = Object.assign({}, item);
-      this.detailsDialog = true;
-    },
-    closeDetails() {
-      this.detailsDialog = false;
+    close() {
+      this.dialog = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
     },
   },
-}
+};
 </script>
 
 <style scoped>
 .v-table {
   width: 76vw;
 }
-
 :deep(.search .v-input__details) {
   display: none;
 }
-
 :deep(.search .v-input__control) {
   border-bottom: 2px solid #216D17;
   width: 200px !important;
@@ -340,21 +326,16 @@ export default {
   background-color: #216D17;
   color: #FCFDF6;
 }
-
 :deep(.v-pagination__list .v-btn--disabled) {
   opacity: 0.4;
 }
 .emp-details div{
   font-size: 14px;
 }
-
-
 :deep(.v-input__prepend,
 .v-input__append) {
   display: none;
 }
-
-
 :deep(.search.v-input) {
   display: flex;
   justify-content: end;

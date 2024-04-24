@@ -6,10 +6,10 @@
 
 <script>
 
-import { Bar } from 'vue-chartjs';
+import { Bar} from 'vue-chartjs';
 import Chart from 'chart.js/auto';
 export default {
-  props: ['labels','data'],
+  props: ['labels','data','data2'],
   extends: Bar,
   mounted() {
     const ctx = document.getElementById('myChart');
@@ -28,6 +28,13 @@ export default {
           ],
           borderWidth: 1
         },
+          {
+            label: 'Total Bookings',
+            data: this.data2,
+            backgroundColor: '#A5F790',
+            borderColor: '#A5F790',
+            borderWidth: 1
+          }
         ]
       },
       options: {

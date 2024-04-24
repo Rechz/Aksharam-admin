@@ -20,7 +20,7 @@ export default {
             new Chart(ctx, {
                 type: 'pie',
                 data: {
-                    labels: this.label,
+                    labels: this.labels,
                     datasets: [{
                         data: this.data,
                         backgroundColor: ['#BCEBEE', '#D7E8CD', '#A5F790']

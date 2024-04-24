@@ -221,7 +221,9 @@ export default {
 .ticket-details .v-col {
   padding: 8px;
 }
-
+:deep(.v-overlay__scrim){
+  background: #0c070775;
+}
 /* :deep(.v-data-table-header__content) {
   padding-left: 5px;
 } */

@@ -9,12 +9,12 @@
               <v-icon class="mdi mdi-cash" size="large" color="white"></v-icon>
             </div>
             <v-btn-toggle v-model="toggle" variant="text" class="button">
-              <v-btn size="small" class="button-style" :value="'Today'">Today</v-btn>
-              <v-btn size="small" class="button-style" :value="'Monthly'">Monthly</v-btn>
+              <v-btn size="small" class="button-style" :value="'Today'" @click="fetchIncomeDate">Today</v-btn>
+              <v-btn size="small" class="button-style" :value="'Monthly'" @click="fetchIncomeMonth">Monthly</v-btn>
             </v-btn-toggle>
           </div>
           <div class="d-flex flex-column">
-            <p class="text-style"><v-icon class="mdi mdi-currency-inr" size="24" color="white"></v-icon>{{totalIncome}}
+            <p class="text-style"><v-icon class="mdi mdi-currency-inr" size="24" color="white"></v-icon>{{dailyIncome}}
             </p>
             <p class="text-type">Total Earning</p>
           </div>
@@ -30,13 +30,13 @@
               <v-icon class="mdi mdi-ticket-confirmation" size="large" color="white"></v-icon>
             </div>
             <v-btn-toggle v-model="toggle1" variant="text" class="button button2">
-              <v-btn size="small" class="button-style" :value="'Today'">Today</v-btn>
-              <v-btn size="small" class="button-style" :value="'Monthly'">Monthly</v-btn>
+              <v-btn size="small" class="button-style" :value="'Today'" @click="fetchTicketDate">Today</v-btn>
+              <v-btn size="small" class="button-style" :value="'Monthly'" @click="fetchTicketMonth">Monthly</v-btn>
             </v-btn-toggle>
           </div>
           <div class="d-flex flex-column">
-            <p class="text-style">{{totalTickets}}</p>
-            <p class="text-type">Total Ticket</p>
+            <p class="text-style">{{dailyTickets}}</p>
+            <p class="text-type">Total Bookings</p>
           </div>
         </div>
       </div>
@@ -44,29 +44,30 @@
     <div class="d-flex flex-column gap-3">
       <v-card height="72" width="359" class="rounded-3">
         <v-img src="@/assets/Block3.png" class="card-style"></v-img>
-        <div style="height: 40px; width: 140px;" class="subcard">
+        <div style="height: 40px; width: 240px;" class="subcard">
           <div class="d-flex gap-2">
             <div class="icon-style card3 mt-2">
               <v-icon class="mdi mdi-cash" size="large" color="white"></v-icon>
             </div>
             <div class="d-flex flex-column">
-              <p class="text-white mb-0"><v-icon class="mdi mdi-currency-inr" size="16" color="white"></v-icon>426728
+              <p class="text-white mb-0"><v-icon class="mdi mdi-currency-inr" size="16"
+                  color="white"></v-icon>{{cumulativeIncome}}
               </p>
-              <p class="text-type mt-0">Yearly Income</p>
+              <p class="text-type mt-0">Cumulative Income</p>
             </div>
           </div>
         </div>
       </v-card>
       <v-card height="72" width="359" class="rounded-3">
         <v-img src="@/assets/Block4.png" class="card-style"></v-img>
-        <div style="height: 40px; width: 140px;" class="subcard">
+        <div style="height: 40px; width: 240px;" class="subcard">
           <div class="d-flex gap-2">
             <div class="icon-style card4 mt-2">
               <v-icon class="mdi mdi-ticket-confirmation" size="large" color="white"></v-icon>
             </div>
             <div class="d-flex flex-column">
-              <p class="text-white mb-0">8928</p>
-              <p class="text-type mt-0">Yearly Tickets</p>
+              <p class="text-white mb-0">{{cumulativeTickets}}</p>
+              <p class="text-type mt-0">Cumulative Bookings</p>
             </div>
           </div>
         </div>
@@ -74,13 +75,16 @@
     </div>
   </div>
   <div class="d-flex flex-wrap justify-content-between gap-3 mt-4">
-    <v-card height="420" width="741" class="rounded-3 p-3">
+    <v-card height="430" width="741" class="rounded-3 p-3">
       <div v-if="!barError">
         <div class="d-flex justify-content-between px-3 mt-1">
-          <p class="mt-2">Today's Total income: &#8377;445200</p>
+          <div>
+            <p class=" my-0">Total income: &#8377;{{ yearlyIncome }}</p>
+            <p class="my-0">Total tickets: {{ yearlyTickets }}</p>
+          </div>
           <v-select :items="['2024', '2023', '2022']" density=compact class="year-select" v-model="year"></v-select>
         </div>
-        <BarChart :labels="labelsBar" :data="dataBar" />
+        <BarChart :labels="labelsBar" :data="dataBar" :data2="data2Bar" />
       </div>
       <div v-else class="mt-5 pt-5">
         <div class="d-flex flex-column align-items-center justify-content-center pt-3">
@@ -92,10 +96,10 @@
         </div>
       </div>
     </v-card>
-    <v-card height="420" width="358" class="rounded-3 d-flex justify-content-center flex-column align-items-center ">
+    <v-card height="430" width="358" class="rounded-3 d-flex justify-content-center flex-column align-items-center ">
       <div v-if="!pieError">
         <div class="d-flex justify-content-between w-100 px-4 mt-1 mb-4">
-          <p class="mt-2">Today's Total visitors: 8928</p>
+          <p class="mt-2">Total visitors: 8928</p>
           <v-select :items="['2024', '2023', '2022']" density=compact class="year-select" v-model="year1"></v-select>
         </div>
         <PieChart :labels="labelsPie" :data="dataPie" />
@@ -122,31 +126,18 @@ import BarChart from './BarChart.vue';
 import PieChart from './PieChart.vue';
 import TicketTable from './TicketTable.vue';
 export default {
-  mounted() {
-    document.body.style.backgroundColor = '#D7E8CD';
-    this.fetchPieChart();
-    this.fetchBarChart();
-  },
-  created() {
-    
-    this.fetchTotalTickets();
-    this.fetchTotalIncome();
-    
-  },
-  beforeUnmount() {
-    document.body.style.backgroundColor = '';
-  },
   components: {
     BarChart, PieChart, TicketTable
   },
   data() {
     return {
-      toggle: 'Today',
-      toggle1: 'Today',
-      year: '2024',
-      year1: '2024',
-      barError: false,
-      pieError: false
+      toggle: 'Today', toggle1: 'Today',
+      year: '2024', year1: '2024',
+      barError: false, pieError: false, bar2Error: false,
+      currentDay: '',
+      currentMonth: '',
+      currentYear: '',
+      monthNames : ['January', 'February', 'March', 'April', 'May', 'June','July', 'August', 'September', 'October', 'November', 'December']
     }
   },
   computed: {
@@ -162,40 +153,58 @@ export default {
     dataBar() {
       return this.$store.getters.getBarData;
     },
-    totalTickets() {
+    data2Bar() {
+      return this.$store.getters.getBarData2;
+    },
+    cumulativeTickets() { 
       return this.$store.getters.getTotalTicket;
     },
-    totalIncome() {
+    yearlyTickets() {
+      return this.$store.getters.getBarTotal2/100;
+    },
+    dailyTickets() {
+      return this.$store.getters.getDailyTicket;
+    },
+    cumulativeIncome() { 
       return this.$store.getters.getTotalIncome;
-    }
+    },
+    yearlyIncome() {
+      return this.$store.getters.getBarTotal;
+    },
+    dailyIncome() {
+      return this.$store.getters.getDailyIncome;
+    },
   },
   methods: {
     async fetchPieChart() {
       this.pieError = false;
       try {
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0');
-        const day = String(today.getDate()).padStart(2, '0');
-        const formattedDate = `${year}-${month}-${day}`; 
-        console.log(formattedDate)
+        const formattedDate = `${this.currentYear}-${this.currentMonth}-${this.currentDay}`; 
         await this.$store.dispatch('fetchPieChartDate', formattedDate)
       }
       catch (error) {
         console.error(error);
-        this.pieError = true;
+        //this.pieError = true;
       }
     },
     async fetchBarChart() {
       this.barError = false;
       try {
-        const today = new Date();
-        const year = today.getFullYear();
-        await this.$store.dispatch('totalIncomeBarGraph', year)
+        await this.$store.dispatch('totalIncomeBarGraph', this.currentYear)
       }
       catch (error) {
         console.error(error);
-        this.barError = true
+        //this.barError = true
+      }
+    },
+    async fetchBarChartTickets() {
+      this.bar2Error = false;
+      try {
+        await this.$store.dispatch('totalTicketsBarGraph', this.currentYear)
+      }
+      catch (error) {
+        console.error(error);
+        //this.bar2Error = true
       }
     },
     async fetchTotalTickets() {
@@ -214,7 +223,78 @@ export default {
         console.error(error.message);
       }
     },
-  }
+    async fetchIncomeDate() {
+      try {
+        const formattedDate = `${this.currentYear}-${this.currentMonth}-${this.currentDay}`;
+        console.log('date',formattedDate);
+        await this.$store.dispatch('fetchIncomeByDate', formattedDate)
+      }
+      catch (error) {
+        console.error(error);
+      }
+    },
+    async fetchIncomeMonth() {
+      try {
+        const index = parseInt(this.currentMonth, 10);
+        const month = this.monthNames[index - 1];
+        await this.$store.dispatch('fetchIncomeByDate', {
+          year: this.currentYear,
+          month: month
+        });
+      }
+      catch (error) {
+        console.error(error);
+      }
+    },
+    async fetchTicketDate() {
+      try {
+        const formattedDate = `${this.currentYear}-${this.currentMonth}-${this.currentDay}`;
+        await this.$store.dispatch('fetchTicketByDate', formattedDate)
+      }
+      catch (error) {
+        console.error(error);
+      }
+    },
+    async fetchTicketMonth() {
+      try {
+        const index = parseInt(this.currentMonth, 10);
+        const month = this.monthNames[index - 1];
+        console.log('month', month)
+        console.log('year', this.currentYear)
+        await this.$store.dispatch('fetchTicketByMonth', {
+          year: this.currentYear,
+          month: month
+        });
+      }
+      catch (error) {
+        console.error(error);
+      }
+    },
+  },
+  mounted() {
+    document.body.style.backgroundColor = '#D7E8CD';
+    this.fetchPieChart();
+    this.fetchBarChart();
+    this.fetchBarChartTickets();
+    this.fetchIncomeDate();
+    this.fetchTicketDate();
+    this.fetchTotalTickets();
+    this.fetchTotalIncome();
+    const today = new Date();
+    this.currentDay = String(today.getDate()).padStart(2, '0');
+    this.currentMonth = String(today.getMonth() + 1).padStart(2, '0');
+    this.currentYear = today.getFullYear();
+  },
+  beforeUnmount() {
+    document.body.style.backgroundColor = '';
+  },
+  created() {
+    
+    const today = new Date();
+    this.currentDay = String(today.getDate()).padStart(2, '0');
+    this.currentMonth = String(today.getMonth() + 1).padStart(2, '0');
+    this.currentYear = today.getFullYear();
+  },
 };
 </script>
 
@@ -233,7 +313,6 @@ body {
   position: absolute;
   top: 16px;
   left: 16px;
-  /* background-color: aqua; */
 }
 
 .icon-style {

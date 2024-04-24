@@ -7,9 +7,16 @@ export default {
   getScannerList: (state) => state.scannerList,
   getPieData: (state) => state.dataPie,
   getBarData: (state) => state.dataBar,
+  getBarData2: (state) => state.data2Bar,
+  getBarTotal: (state) => state.totalBar,
+  getBarTotal2: (state) => state.total2Bar,
+  getPieTotal: (state) => state.totalPie,
   getPieLabel: (state) => state.labelsPie,
   getBarLabel: (state) => state.labelsBar,
   getTotalTicket: (state) => state.totalTickets,
   getTotalIncome: (state) => state.totalIncome,
-  getEmployeeId : (state) => state.employeeId,
+  getDailyIncome: (state) => state.dailyIncome,
+  getDailyTicket: (state) => state.dailyTickets,
+  getEmployeeId: (state) => state.employeeId,
+ 
 }

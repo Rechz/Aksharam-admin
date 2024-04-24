@@ -34,10 +34,6 @@ const router = createRouter({
             component : () => import('./components/PortalPage.vue')
           },
           {
-            path : '/items-page',
-            component : () => import('./components/ItemsPage.vue')
-          },
-          {
             path: '/dashboard-page',
             alias : '',
             component : () => import('./components/Dashboard/DashPage.vue')

@@ -35,6 +35,12 @@ export default {
       state.totalBar = total;
       sessionStorage.setItem('totalBar', total);
   },
+    setBarChartTicket(state, { data, total }) {
+      state.data2Bar = data;
+      sessionStorage.setItem('data2Bar', JSON.stringify(data));
+      state.total2Bar = total;
+      sessionStorage.setItem('total2Bar', total);
+  },
     setTotalTickets(state, payload) {
       state.totalTickets = payload;
       sessionStorage.setItem('totalTickets', payload);
@@ -43,9 +49,18 @@ export default {
       state.totalIncome = payload;
       sessionStorage.setItem('totalIncome', payload);
   },
+  setDailyIncome(state, payload) {
+    state.dailyIncome = payload
+    sessionStorage.setItem('dailyIncome', payload);
+  },
+  setDailyTickets(state, payload) {
+    state.dailyTickets = payload
+    sessionStorage.setItem('dailyTickets', payload);
+  },
   setEmployeeId(state, payload) {
     state.employeeId = payload;
     sessionStorage.setItem('employeeId', JSON.stringify(payload));
-    }
+  },
+
      
 };

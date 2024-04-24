@@ -17,7 +17,7 @@
                 <td>{{ item.visitDate }}</td>
                 <td style="text-transform: capitalize;">{{ item.type }}</td>
                 <td>{{ item.totalPrice }}</td>
-                <td>{{ item.status ? 'Entered' : 'Pending' }}</td>
+                <td>{{ item.visitStatus ? 'Entered' : 'Pending' }}</td>
             </tr>
         </template>
     </v-data-table-virtual>
