@@ -18,7 +18,7 @@ export default {
     data() {
         return {
             // tab: 'Details',
-            items: ['Add Items', 'View Items'],
+            items: ['Add Items', 'Item Details'],
         };
     },
     methods: {
@@ -36,14 +36,14 @@ export default {
         tab: {
             get() {
                 if ((this.$route.path === '/guide-app/view')) {
-                    return 'View Items';
+                    return 'Item Details';
                 }
                 else {
                     return 'Add Items';
                 }
             },
             set(value) {
-                if (value === 'View Items') {
+                if (value === 'Item Details') {
                     this.$router.push('/guide-app/view')
                 }
                 else {
