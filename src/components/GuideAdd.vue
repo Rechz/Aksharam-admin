@@ -1,35 +1,41 @@
 <template>
-    <div class="d-flex justify-content-between w-75 flex-wrap mb-1">
-        <div>
-            <div class="mb-3">
-                <input type="file" id="actual-btn" hidden @change="handleFileChange" />
-                <div class="d-flex align-items-center">
-                    <label for="actual-btn"
-                        class="label-btn text-center d-flex align-items-center justify-content-center"><v-icon
-                            class="mdi mdi-upload" color="white"></v-icon>Upload Image</label>
-                    <span id="file-chosen" class="ms-3">{{ fileName }}</span>
+    <div class="row">
+        <div class="col-8">
+            <div class="d-flex flex-wrap mb-1">
+                <div class="d-flex align-items-start gap-4">
+                    <div class="mb-3">
+                        <input type="file" id="actual-btn" hidden @change="handleFileChange" />
+                        <div class="d-flex align-items-center">
+                            <label for="actual-btn"
+                                class="label-btn text-center d-flex align-items-center justify-content-center"><v-icon
+                                    class="mdi mdi-upload" color="white"></v-icon>Upload Image</label>
+                            <span id="file-chosen" class="ms-1">{{ fileName }}</span>
+                        </div>
+                        <p class="error-message mt-2">{{ error }}</p>
+                    </div>
+
+                    <p class="text-center mt-2 py-0 fw-bold">or</p>
+                    <v-select class="select" label="Select uploaded images" single-line hide-details
+                        density="comfortable"></v-select>
+
                 </div>
-                <p class="error-message mt-2">{{ error }}</p>
+                <!-- <div>
+            <v-img src="@/assets/pic1.jpg" width="150" height="150"></v-img> 
+        </div> -->
             </div>
-            <div>
-                <p class="text-center mt-0 py-0">or</p>
-                <div class="d-flex align-items-center gap-1">Select already uploaded images:<v-select class="select"
-                        label="Select Image" single-line hide-details></v-select></div>
-            </div>
-        </div>
-        <div>
-            <v-img src="@/assets/pic1.jpg" width="150" height="150"></v-img>
-        </div>
-    </div>
-    <v-container fluid>
-    
-       
+            <v-container fluid>
+
+
                 <!-- <v-card width="80%" class="p-3 " elevation="4"> -->
-                    <div class="first-div">
-                        <div class="d-flex gap-4">
-                                <v-text-field v-model="titleMal" label="Image Heading" density="comfortable" variant="solo"
-                            bg-color="grey-lighten-2" single-line></v-text-field>
-                            <div>
+                <div class="first-div">
+                    <!-- <div class="d-flex "> -->
+                    <v-select class="select mb-3" label="Select Language" density="comfortable" single-line hide-details
+                        variant="outlined"></v-select>
+                    <v-text-field v-model="titleMal" label="Item Heading" density="comfortable" variant="outlined"
+                        class="guide"></v-text-field>
+
+                    <!-- </div> -->
+                    <div>
                         <input type="file" id="actual-btn" hidden @change="handleFileChange" />
                         <div class="d-flex align-items-center">
                             <label for="actual-btn"
@@ -38,35 +44,17 @@
                             <span id="file-chosen" class="ms-3">{{ fileName }}</span>
                         </div>
                     </div>
-                        </div>
-                    
-                        
-                        <v-textarea label="Description" variant="solo" bg-color="grey-lighten-2"
-                            class=""></v-textarea>
-                    </div>
-                <!-- </v-card> -->
-            
-            <!-- <v-col cols="12" md="5">
-                <v-card width="100%" class="px-3" elevation="4">
-                    <div class="second-div">
-                        English content
-                        <v-text-field v-model="titleMal" label="Image Heading" density="comfortable" variant="solo"
-                            bg-color="grey-lighten-2" single-line></v-text-field>
-                        <input type="file" id="actual-btn" hidden @change="handleFileChange" />
-                        <div class="d-flex align-items-center">
-                            <label for="actual-btn"
-                                class="label-btn text-center d-flex align-items-center justify-content-center"><v-icon
-                                    class="mdi mdi-upload" color="white"></v-icon>Upload Image</label>
-                            <span id="file-chosen" class="ms-3">{{ fileName }}</span>
-                        </div>
-                        <v-textarea label="Description" variant="solo" bg-color="grey-lighten-2"
-                            class="mt-4"></v-textarea>
-                    </div>
-                </v-card>
+                    <v-textarea label="Item Description" variant="outlined" class="mt-4" style="width: 500px;"></v-textarea>
+                </div>
+            </v-container>
+        </div>
+        <div class="col-4">
 
-            </v-col> -->
-  
-    </v-container>
+            <v-img src="@/assets/pic1.jpg" width="300" height="300"></v-img>
+
+        </div>
+    </div>
+
 </template>
 <script>
 import axios from 'axios';
@@ -130,8 +118,13 @@ export default {
 }
 :deep(.select .v-input__control) {
     width: 250px !important;
-    height: 45px !important;
+    /* height: 45px !important; */
     /* background-color: #DFE4D7 !important; */
     /* border-bottom: 1px solid #546E7A; */
 }
+:deep(.guide .v-input__control){
+    width: 250px !important;
+    /* height: 45px !important; */
+}
+
 </style>
