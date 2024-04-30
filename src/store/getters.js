@@ -18,5 +18,6 @@ export default {
   getDailyIncome: (state) => state.dailyIncome,
   getDailyTicket: (state) => state.dailyTickets,
   getEmployeeId: (state) => state.employeeId,
+  getPriceList: (state) => state.priceList,
  
 }

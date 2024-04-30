@@ -1,126 +1,135 @@
 <template>
-  <div class="row m-5 ms-0 mt-0" style="width: 1076px;">
-    <!-- Repeat the card structure as needed -->
-    <div v-for="(card, index) in cards" :key="index" class="card my-4 rounded-4 p-3 pb-0"
-      style="background-color:#f9faf1;">
-      <div class="ms-5">
-        <div class=" d-flex p-2 w-50 justify-content-between ">
-          <h5>{{ card.title }}</h5>
-          <v-btn class="mdi mdi-pencil rounded-5 px-4 border-1 border-black" @click="enableEdit(index)"
-            v-if="!isEditing[index]" elevation="2">Edit</v-btn>
-          <v-btn class="px-4 rounded-5 text-white" style="background-color: #546E7A;" @click="updateValues(index)"
-            v-if="isEditing[index]" elevation="2">Update</v-btn>
-        </div>
-        <div class="card-body ms-5">
-          <div class="row mb-0 pb-0" v-for="(field, fieldIndex) in card.fields" :key="fieldIndex">
-            <div class="col-md-2 pb-3">
-              <h6 :for="field.key">{{ field.label }}</h6>
-            </div>
-            <div class="col-md-1">:</div>
-            <div class="col-md-2">
-              <div v-if="!isEditing[index]">
-                <h6><v-icon size="small">mdi-currency-inr</v-icon>{{ editedItems[index][field.key] }}</h6>
-              </div>
-              <div v-else>
-                <v-text-field v-model="editedItems[index][field.key]" density="compact" class="input"
-                  hide-details></v-text-field>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+  <v-app>
+    <div class="d-flex justify-content-end ">
+      <v-btn class=" text-capitalize" color="#2C7721" size="large" style="font-size: 16px; font-weight: 600;" @click="dialogAdd = true" variant="outlined" density="comfortable">
+        + Add Price</v-btn>
     </div>
-  </div>
+    <v-dialog width="400" max-width="800" v-model="dialogAdd">
+      <v-card style="width: 400px; height:auto; border-radius: 15px;" class="pb-5">
+        <v-card-title class="d-flex justify-content-between px-4" style="background-color: #216D17; color: #FFFFFF;">
+          <h4>Price Details</h4>
+          <v-icon @click="closeDialogAdd" class="mdi mdi-window-close"></v-icon>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12" sm="12" md="12">
+                <v-select v-model="category" :items="categoryItems" label="Category" class="price" density="comfortable"
+                  :single-line="category"></v-select>
+              </v-col>
+              <v-col cols="12" sm="12" md="12">
+                <v-select v-model="type" :items="typeItems" label="Type" class="price" density="comfortable"
+                  :single-line="type"></v-select>
+              </v-col>
+              <v-col cols="12" sm="12" md="12">
+                <v-text-field v-model="price" label="Price" class="price" density="comfortable"
+                  single-line></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions class="mx-4">
+          <v-btn color="white" block style="background-color: #1B5E20; text-transform: capitalize" class="rounded-5"
+            elevation="4" size="large" @click="addPrice">Add</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <PriceTable :items="priceList.public" head="PUBLIC" class="mb-4" />
+    <PriceTable :items="priceList.institution" head="INSTITUTION" class="mb-4" />
+    <PriceTable :items="priceList.foreigner" head="FOREIGNER" class="mb-4" />
+    <PriceTable :items="priceList.tax" head="TAX" />
+  </v-app>
 </template>
 
 <script>
+import PriceTable from './PriceTable.vue';
 export default {
+  components: {
+    PriceTable
+  },
+  computed : {
+    priceList() {
+      return this.$store.getters.getPriceList;
+    },
+    
+  },
   data() {
     return {
-      isEditing: Array.from({ length: 4 }, () => false), // Assuming you have 4 cards, adjust as needed
-      editedItems: [
-        { child: 2, adult: 2, seniorcitizen: 1 }, // Card 1
-        { teacher: 3, student: 90 }, // Card 2
-        { adult: 2, child: 1 },
-        { gst: 18, cess: 2 },
-        // Add more objects for each card as needed
-      ],
-      cards: [
-        {
-          title: 'Public',
-          fields: [
-            { key: 'adult', label: 'Adult' },
-            { key: 'child', label: 'Child' },
-            { key: 'seniorcitizen', label: 'Senior Citizen' },
-          ],
-        },
-        {
-          title: 'Institution',
-          fields: [
-            { key: 'teacher', label: 'Teacher' },
-            { key: 'student', label: 'Student' },
-
-          ],
-        },
-        {
-          title: 'Foreign',
-          fields: [
-            { key: 'adult', label: 'Adult' },
-            { key: 'child', label: 'Child' },
-
-          ],
-        },
-        {
-          title: 'Tax',
-          fields: [
-            { key: 'gst', label: 'GST' },
-            { key: 'cess', label: 'CESS' },
-
-          ],
-        },
-        // Add more card configurations as needed
-      ],
+      dialogAdd: false,
+      category: null,
+      type: null,
+      price: null,
+      categoryItems: ['public', 'foreigner', 'institution', 'tax'],
+      typeItems: []
     };
   },
-
-  methods: {
-    enableEdit(index) {
-      // Disable editing for all cards
-      this.isEditing = Array.from({ length: this.isEditing.length }, () => false);
-
-      // Enable editing for the selected card
-      this.isEditing[index] = true;
-    },
-
-    updateValues(index) {
-      this.isEditing[index] = false;
-      // Optionally, you can perform any validation or additional logic here before updating values
-    },
+  watch: {
+    category(newValue) {
+      this.type = null;
+      if (newValue === 'public') {
+        this.typeItems = ['adult', 'child', 'senior'];
+      } else if (newValue === 'institution') {
+        this.typeItems = ['teacher', 'student'];
+      } else if (newValue === 'tax') {
+        this.typeItems = ['IGST', 'GST', 'CESS', 'ENTERTAINMENT TAX'];
+      } else if (newValue === 'foreigner') {
+        this.typeItems = ['foreign_adult', 'foreign_child'];
+      } else {
+        this.typeItems = [];
+      }
+    }
   },
+  mounted() {
+    this.loadPrice();
+},
+  methods: {
+    async addPrice() {
+      this.dialogAdd = true;
+      try {
+        const body = {
+          "price": parseInt(this.price),
+          "type": this.type,
+          "category": this.category
+        }
+        const res = await this.$store.dispatch("addPrice", body);
+        if (res) {
+          this.message = "Added Successfully!"
+          window.location.reload();
+        }
+      }
+      catch (error) {
+        console.error(error);
+      }
+    },
+
+    closeDialogAdd() {
+      this.dialogAdd = false;
+    },
+      async loadPrice() {
+        try {
+          await this.$store.dispatch('loadPrice')
+          }
+        catch (error) {
+          console.error(error)
+        }
+      },
+  }
 };
 </script>
 
 
 <style scoped>
 :deep(.v-table) {
-  width: 73vw;
+  width: 76vw;
 }
-
-:deep(.v-input__control) {
-  width: 100px;
+:deep(.price .v-input__control) {
   border-bottom: 2px solid #216D17;
-  height: 24px;
+  background-color: #DFE4D7 !important;
+  /* margin-bottom: 15px; */
 }
 
-:deep(.v-field) {
-  height: 24px;
-}
-
-:deep(.v-field__input) {
-  min-height: 0px;
-  padding-top: 0px;
-  padding-inline: 0px;
-  text-align: end;
-  margin-right: 10px;
+:deep(.price .v-input__details) {
+  display: none;
 }
 </style>

@@ -1,26 +1,21 @@
 <template>
   <v-app>
-    <v-snackbar v-model="snackbar" color="blue-lighten-1" :timeout="timeout" location="top">
-      <h5 class="text-center fw-bold ">{{ message }}</h5>
+    <v-snackbar v-model="snackbar" :color="color" :timeout="timeout" location="top">
+      <h6 class="text-center">{{ message }}</h6>
     </v-snackbar>
-    <v-container class="w-100 d-flex align-items-start justify- content-between gap-4 bg-white p-0 pb-3">
-      <!-- <v-text-field label="Select Employee" prepend-inner-icon="mdi-briefcase-account" density="compact" class="emp"
-      v-model="id"></v-text-field> -->
+    <v-container class=" d-flex align-items-start bg-white p-0 pb-3 flex-wrap ms-0" style="width: 70vw;">
       <v-select label="Select Employee" :items="employees" prepend-inner-icon="mdi-briefcase-account" density="compact"
-        class="emp" v-model="id" single-line></v-select>
+        class="emp ms-0" v-model="id" single-line hide-details></v-select>
       <v-text-field label="Password" prepend-inner-icon="mdi-eye" density="compact" class="emp" v-model="scanPassword"
-        single-line></v-text-field>
+        single-line hide-details></v-text-field>
       <v-btn size="large"
         style="background-color: #2C7721 !important; color: white !important; text-transform: capitalize;"
-        @click="addScanner"> +
+        @click="addScanner" :disabled="loading" :loading="loading"> +
         Add as Scanner </v-btn>
     </v-container>
-
-    <!-- <v-spacer></v-spacer>
-    <v-spacer></v-spacer> -->
-    <div class="d-flex justify-content-end ">
+    <div class="d-flex justify-content-end" style="width: 70vw;">
       <v-text-field v-model="search" label="Search" prepend-inner-icon="mdi-magnify" class="search" single-line
-        density="compact"></v-text-field>
+        density="compact" hide-details></v-text-field>
     </div>
     <v-data-table :headers="headers" :items="filteredScanner" style="background-color: #f9faf1; color:black; "
       class="mt-3" :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
@@ -35,21 +30,22 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" sm="12" md="12">
+                  <v-col cols="12" sm="12" md="12" class="p-0">
                     <v-text-field v-model="editedItem.employeeId" label="Employee ID" disabled class="scanner"
                       single-line density="comfortable"></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="12" md="12">
+                  <v-col cols="12" sm="12" md="12" class="p-0">
                     <v-text-field v-model="editedItem.name" label="Employee Name" disabled class="scanner" single-line
                       density="comfortable"></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="12" md="12">
+                  <v-col cols="12" sm="12" md="12" class="p-0">
                     <v-text-field v-model="password" label="New Password" class="scanner" density="comfortable"
-                      single-line type="password"></v-text-field>
+                      single-line type="password" :rules="[v => !!v || 'Password is required']"></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="12" md="12">
+                  <v-col cols="12" sm="12" md="12" class="p-0">
                     <v-text-field v-model="newPassword" label="Confirm Password" class="scanner" single-line
-                      density="comfortable"></v-text-field>
+                      density="comfortable"
+                      :rules="[v => !!v || 'Confirm Password is required', v => newPassword === password || 'Passwords do not match']"></v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
@@ -99,12 +95,14 @@ export default {
     dialog: false,
     dialogDelete: false,
     search: '',
+    loading: false,
     scanPassword: '',
     id: 'Select Employee',
     visible: false,
     password: '',
     newPassword: '',
-    message: 'Scanner added successfully !!',
+    message: '',
+    color:'',
     snackbar: false,
     timeout: 3000,
     image: require('@/assets/acc.jpg'),
@@ -174,17 +172,29 @@ export default {
       this.dialog = true
     },
     async addScanner() {
+      this.loading = !this.loading
       try {
-        await this.$store.dispatch('addScanner', {
+        const res = await this.$store.dispatch('addScanner', {
           id: this.id,
           password: this.scanPassword
         });
+        if (res) {
+          this.message = 'Scanner added successfully !!';
+          this.color = '#C8E6C9'
+          this.snackbar = true;
+          this.loading = false;
+          setInterval(() => { window.location.reload(); }, 2000)
+        }
       }
       catch (err) {
-        console.error(err.message);
+        this.message = err.message + '!';
+        this.color = '#C62828'
+        this.loading = false;
+        this.snackbar = true;
       }
     },
     async update() {
+      this.loading = !this.loading
       try {
         const success = await this.$store.dispatch('updateScannerPassword', {
           id: this.editedItem.employeeId,
@@ -194,11 +204,19 @@ export default {
         });
         if (success) {
           this.dialog = false;
-          window.location.reload();
+          this.loading = false;
+          this.message = 'Password updated!!';
+          this.color = '#C8E6C9'
+          this.snackbar = true;
+         
+          setInterval(() => { window.location.reload(); }, 2000)
         }
       }
       catch (error) {
-        console.log(error);
+        this.message = error.message + '!';
+        this.color = '#C62828'
+        this.loading = false;
+        this.snackbar = true;
       }
     },
     deleteItem(item) {
@@ -212,11 +230,16 @@ export default {
         const success = await this.$store.dispatch('deleteScanner', id);
         if (success) {
           this.closeDelete();
-          window.location.reload();
+          this.message = 'Scanner deleted successfully !!';
+          this.color = '#C8E6C9'
+          this.snackbar = true;
+          setInterval(() => { window.location.reload(); }, 2000)
         }
       }    
       catch (error) {
-        console.log(error);
+        this.message = error.message+'!';
+        this.color = '#C62828'
+        this.snackbar = true;
       }
       this.closeDelete()
     },
@@ -233,16 +256,12 @@ export default {
 
 <style scoped>
 .v-table{
-    width : 60vw;
+    width : 70vw;
 }
 :deep(.search.v-input) {
   display: flex;
   justify-content: end;
 }
-:deep(.search .v-input__details, .v-input__details) {
-  display: none;
-}
-
 :deep(.search .v-input__control) {
   border-bottom: 2px solid #216D17;
   width: 200px !important;
@@ -252,14 +271,15 @@ export default {
 :deep(.emp .v-input__control) {
   border-bottom: 2px solid #216D17;
   background-color: #DFE4D7 !important;
+  width: 400px !important;
 }
 :deep(.scanner .v-input__control) {
   border-bottom: 2px solid #216D17;
   background-color: #DFE4D7 !important;
   /* margin-bottom: 15px; */
 }
-:deep(.scanner .v-input__details){
-display: none;
+.emp.v-input--horizontal{
+  width: 400px !important;
 }
 :deep(.v-pagination__list .v-btn--variant-plain) {
   opacity: 1;

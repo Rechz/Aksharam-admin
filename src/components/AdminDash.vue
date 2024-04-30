@@ -1,13 +1,9 @@
 <template>
-  <div class="green-background container-fluid">
-    <h4 class="text-white mt-1" style=" font-size: 24px; margin-left: 250px;">{{ selectedNavItem }}</h4>
-    <v-btn flat style="background-color: #EF3E3E; margin-right: 80px; text-transform: capitalize; color: white;"
-      class="rounded-5" @click="logout"><v-icon icon="mdi-logout" start></v-icon>Logout</v-btn>
-  </div>
+
   <div class="d-flex">
-    <div>
+    <div style="width: 260px;">
       <v-layout>
-        <v-navigation-drawer v-model="drawer" permanent style="width: 236px;">
+        <v-navigation-drawer v-model="drawer" permanent style="width: 260px;">
           <v-list-item class="d-flex justify-content-center " nav>
             <v-img src="@/assets/logo.png" class="image"></v-img>
           </v-list-item>
@@ -19,16 +15,26 @@
             <router-link to='/employee' style="text-decoration: none; color:black;"><v-list-item value="account"
                 class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Employees</v-list-item></router-link>
             <!-- <router-link to='/items-page' style="text-decoration: none; color:black;"><v-list-item value="items" -->
-                <!-- class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Items</v-list-item></router-link> -->
+            <!-- class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Items</v-list-item></router-link> -->
+            <router-link to='/guide-app' style="text-decoration: none; color:black;"><v-list-item value="guide"
+                class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Guide-App</v-list-item></router-link>
             <router-link to='/portal' style="text-decoration: none; color:black;"><v-list-item value="portal"
                 class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Portal</v-list-item></router-link>
           </v-list>
         </v-navigation-drawer>
-        <v-main style="height: 250px"></v-main>
+        <!-- <v-main style="height: 250px"></v-main> -->
       </v-layout>
     </div>
-    <div class="mt-5 ms-5 w-80">
-      <router-view></router-view>
+    <div class="w-100">
+      <nav class="green-background container-fluid w-100">
+        <h4 class="text-white mt-1" style=" font-size: 24px; margin-left: 6.4%;">{{ selectedNavItem }}</h4>
+        <v-btn flat style="background-color: #EF3E3E; margin-right: 30px; text-transform: capitalize; color: white;"
+          class="rounded-5" @click="logout"><v-icon icon="mdi-logout" start></v-icon>Logout</v-btn>
+      </nav>
+      <div class="mt-5 mx-5 me-4">
+        <router-view></router-view>
+      </div>
+
     </div>
   </div>
 </template>
@@ -44,7 +50,8 @@ export default {
         { text: 'Tickets', route: '/tickets' },
         { text: 'Employee', route: '/employee' },
         // { text: 'Items', route: '/items-page' },
-        { text: 'Portal', route: '/portal' }
+        { text: 'Portal', route: '/portal' },
+        { text: 'Guide-App', route: '/guide-app' }
       ],
     }
   },
@@ -90,7 +97,7 @@ export default {
 .green-background {
   height: 80px;
   width: 100%;
-  margin-left: 40px;
+  /* margin-left: 40px; */
   background-color: #216D17;
   display: flex;
   justify-content: space-between;

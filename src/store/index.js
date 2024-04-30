@@ -5,8 +5,9 @@ import rootGetters from './getters.js';
 const store = createStore({
   state() {
     return {
-      // base_url: 'http://192.168.1.13:8080',
-      base_url: 'http://94.176.233.47:5000',
+      //base_url: 'http://192.168.1.2:8080',
+      // base_url: 'http://94.176.233.47:5000',
+      base_url: 'http://localhost:8448',
       token: sessionStorage.getItem('token') || '',
       employeeId: JSON.parse(sessionStorage.getItem('employeeId')) || [],
       allTickets: JSON.parse(sessionStorage.getItem('allTickets')) || [],
@@ -26,6 +27,77 @@ const store = createStore({
       dailyIncome: sessionStorage.getItem('dailyIncome') || 0,
       dailyTickets: sessionStorage.getItem('dailyTickets') || 0,
 
+      priceList:{
+    "public": [
+        {
+            "id": 1,
+            "type": "adult",
+            "price": 50,
+            "category": "public"
+        },
+        {
+            "id": 102,
+            "type": "senior",
+            "price": 30,
+            "category": "public"
+        },
+        {
+            "id": 2,
+            "type": "child",
+            "price": 30,
+            "category": "public"
+        }
+    ],
+    "foreigner": [
+        {
+            "id": 3,
+            "type": "foreign_adult",
+            "price": 200,
+            "category": "foreigner"
+        },
+        {
+            "id": 4,
+            "type": "foreign_child",
+            "price": 100,
+            "category": "foreigner"
+        }
+    ],
+    "institution": [
+        {
+            "id": 5,
+            "type": "student",
+            "price": 30,
+            "category": "institution"
+        },
+        {
+            "id": 6,
+            "type": "teacher",
+            "price": 40,
+            "category": "institution"
+        }
+    ],
+    "tax": [
+        {
+            "id": 52,
+            "type": "IGST",
+            "price": 18,
+            "category": "tax"
+        },
+        {
+            "id": 53,
+            "type": "CESS",
+            "price": 0,
+            "category": "tax"
+        },
+        {
+            "id": 55,
+            "type": "GST",
+            "price": 2,
+            "category": "tax"
+        }
+    ]
+}
+       // {}
     };
   },
   mutations: rootMutations,

@@ -20,6 +20,7 @@ export default {
         datasets: [{
           label: 'Total Income',
           data: this.data,
+        
           backgroundColor: [
             '#216D17'
           ],
@@ -31,6 +32,7 @@ export default {
           {
             label: 'Total Bookings',
             data: this.data2,
+          
             backgroundColor: '#A5F790',
             borderColor: '#A5F790',
             borderWidth: 1
@@ -42,7 +44,26 @@ export default {
           beginAtZero: true // Adjust the x-axis to start at 0
         },
         y: {
-          beginAtZero: true // Adjust the y-axis to start at 0
+          beginAtZero: true ,// Adjust the y-axis to start at 0
+          
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                var label = context.dataset.label || '';
+                if (label) {
+                  label += ': ';
+                }
+                if (context.datasetIndex === 1 && context.parsed.y !== null) {
+                  label += (context.parsed.y / 100); // Divide the y-value by 100 and format it to 2 decimal places
+                } else {
+                  label += context.parsed.y; // Format the y-value to 2 decimal places for other datasets
+                }
+                return label;
+              }
+            }
+          }
         }
       },
       responsive: true,

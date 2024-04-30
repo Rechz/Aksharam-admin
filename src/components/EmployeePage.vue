@@ -1,149 +1,158 @@
 <template>
-  <div class="d-flex justify-content-between">
-    <v-dialog v-model="dialog" width="650px">
-      <template v-slot:activator="{ props }">
-        <v-btn color="#2C7721" size="large" v-bind="props" class="mb-4 text-capitalize"
-          style="font-size: 16px; font-weight: 600;"> + Add
-          Employee
-        </v-btn>
-      </template>
-      <v-card class="pb-3" style="border-radius: 16px;">
-        <v-card-title class="d-flex justify-content-between px-4" style="background-color: #216D17; color: white ;">
-          <span class="text-h5 ms-4">{{ formTitle }}</span>
-          <v-icon @click="close" size="24" class="mdi mdi-window-close"></v-icon>
-        </v-card-title>
-        <v-card-text>
-          <v-container class="d-flex gap-2">
-            <div style="height: 300px; width: 300px;">
-              <v-hover v-slot="{ isHovering, props }">
-                <v-icon v-if="editedIndex === -1" size="240" color="#DFE4D7" class="mdi mdi-account-box" v-bind="props">
-                  <v-overlay :model-value="isHovering" class="align-center justify-center" scrim="#616161" contained>
-                    <v-btn class="overlay" flat>
-                      <v-icon size="32" class="mdi mdi-camera-plus"></v-icon>
-                    </v-btn>
-                  </v-overlay>
-                </v-icon>
-                <v-icon v-if="editedIndex !== -1" size="240" color="#DFE4D7" class="mdi mdi-account-box" v-bind="props">
-                  <v-overlay :model-value="isHovering" class="align-center justify-center" scrim="#616161" contained>
-                    <v-btn class="overlay" flat>
-                      <v-icon size="32" class="mdi mdi-pencil" color="white"></v-icon>
-                    </v-btn>
-                  </v-overlay>
-                </v-icon>
-              </v-hover>
-            </div>
-            <div class="d-flex flex-column w-100 emp-add">
-              <div>
-                <v-text-field v-model="editedItem.name" label="Name" prepend-inner-icon="mdi-account-outline"
-                  single-line density="comfortable"></v-text-field>
-                <v-text-field v-model="editedItem.phoneNo" label="Phone No" prepend-inner-icon="mdi-phone-outline"
-                  density="comfortable" single-line></v-text-field>
-                <v-text-field v-model="editedItem.email" label="Email ID" prepend-inner-icon="mdi-email-outline"
-                  density="comfortable" single-line></v-text-field>
-                <v-text-field v-model="editedItem.tempAddress" label="Temporary Address"
-                  prepend-inner-icon="mdi-map-marker-outline" density="comfortable" single-line></v-text-field>
-                <v-text-field v-model="editedItem.permAddress" label="Permanent Address"
-                  prepend-inner-icon="mdi-home-map-marker" density="comfortable" single-line></v-text-field>
-              </div>
-              <v-card-actions>
-                <v-btn color="white" block :style="{ backgroundColor: editedIndex === -1 ? '#1B5E20' : '#546E7A' }"
-                  style="text-transform: capitalize" class="rounded-5" elevation="4"
-                  @click="editedIndex === -1? add(): update()">{{ formButton }}</v-btn>
-              </v-card-actions>
-            </div>
-          </v-container>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-    <v-text-field label="Search" v-model="search" prepend-inner-icon="mdi-magnify" class="search mt-5" density="compact"
-      single-line></v-text-field>
-  </div>
-  <v-data-table :headers="headers" :items="filteredEmployees" class="mt-3"
-    :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
-    <template v-slot:top>
-      <v-dialog v-model="dialogDelete" width="400px">
-        <v-card class="rounded-4 pb-4">
-          <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
-            Employee</v-card-title>
-          <v-container class="px-4 d-flex flex-column align-items-center">
-            <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
-            <v-card-text class="mt-1 text-center">Are you sure you want to delete?</v-card-text>
-          </v-container>
-          <v-card-actions class="mx-4 d-flex flex-column align-items-center">
-            <v-btn block class="rounded-4 text-white mb-3" style="background-color: #BA1A1A;"
-              @click="deleteItemConfirm">Delete</v-btn>
-            <v-btn block variant="text" class="rounded-4 mb-3" @click=" closeDelete">Cancel</v-btn>
-
-          </v-card-actions>
-
-        </v-card>
-      </v-dialog>
-      <!-- Add new dialog for displaying details -->
-      <v-dialog v-model="detailsDialog" width="400px">
-        <v-card style="width: 680px; height:auto; border-radius: 15px;">
-          <v-card-title class="d-flex justify-content-between px-4" style="background-color: #216D17; color: #FFFFFF;">
-            <h4>Employee Details</h4>
-            <v-icon @click="closeDetails" class="mdi mdi-window-close"></v-icon>
+  <v-app>
+    <v-snackbar v-model="snackbar" :color="color" :timeout="timeout" location="top">
+      <div class="text-center">{{ message }}</div>
+    </v-snackbar>
+    <div class="d-flex justify-content-between">
+      <v-dialog v-model="dialog" width="650px">
+        <template v-slot:activator="{ props }">
+          <v-btn color="#2C7721" size="large" v-bind="props" class="mb-4 text-capitalize"
+            style="font-size: 16px; font-weight: 600;"> + Add
+            Employee
+          </v-btn>
+        </template>
+        <v-card class="pb-3" style="border-radius: 16px;">
+          <v-card-title class="d-flex justify-content-between px-4" style="background-color: #216D17; color: white ;">
+            <span class="text-h5 ms-4">{{ formTitle }}</span>
+            <v-icon @click="close" size="24" class="mdi mdi-window-close"></v-icon>
           </v-card-title>
-          <v-card-text class="mb-0  ms-1 pt-2 pb-4">
-            <v-container class="py-0 d-flex flex-column">
-              <div class="row emp-details">
-                <div class="col-8">
-                  <v-row class="mb-2 mt-2">
-                    <div class="col-4">Emp ID</div>
-                    <div class="col-8">: {{ editedItem.employeeId }}</div>
-                  </v-row>
-                  <v-row class="mb-2">
-                    <div class="col-4">Name</div>
-                    <div class="col-8">: {{ editedItem.name }}</div>
-                  </v-row>
-                  <v-row class="mb-2">
-                    <div class="col-4">Contact</div>
-                    <div class="col-8">: {{ editedItem.phoneNo }}</div>
-                  </v-row>
-                  <v-row class="mb-2 mt-2">
-                    <div class="col-4">Temporary Address</div>
-                    <div class="col-8 d-flex">: <div class="ms-1">{{ editedItem.tempAddress }}</div>
-                    </div>
-                  </v-row>
-                  <v-row class="mb-2 mt-2">
-                    <div class="col-4">Permanent Address</div>
-                    <div class="col-8 d-flex">: <div class="ms-1">{{ editedItem.permAddress }}</div>
-                    </div>
-                  </v-row>
-                  <v-row class="mb-2">
-                    <div class="col-4">Email</div>
-                    <div class="col-8">: {{ editedItem.email }}</div>
-                  </v-row>
+          <v-card-text>
+            <v-container class="d-flex gap-2">
+              <div style="height: 300px; width: 300px;">
+                <v-hover v-slot="{ isHovering, props }">
+                  <v-icon v-if="editedIndex === -1" size="240" color="#DFE4D7" class="mdi mdi-account-box"
+                    v-bind="props">
+                    <v-overlay :model-value="isHovering" class="align-center justify-center" scrim="#616161" contained>
+                      <v-btn class="overlay" flat>
+                        <v-icon size="32" class="mdi mdi-camera-plus"></v-icon>
+                      </v-btn>
+                    </v-overlay>
+                  </v-icon>
+                  <v-icon v-if="editedIndex !== -1" size="240" color="#DFE4D7" class="mdi mdi-account-box"
+                    v-bind="props">
+                    <v-overlay :model-value="isHovering" class="align-center justify-center" scrim="#616161" contained>
+                      <v-btn class="overlay" flat>
+                        <v-icon size="32" class="mdi mdi-pencil" color="white"></v-icon>
+                      </v-btn>
+                    </v-overlay>
+                  </v-icon>
+                </v-hover>
+              </div>
+              <div class="d-flex flex-column w-100 emp-add">
+                <div>
+                  <v-text-field v-model="editedItem.name" label="Name" prepend-inner-icon="mdi-account-outline"
+                    single-line density="comfortable"></v-text-field>
+                  <v-text-field v-model="editedItem.phoneNo" label="Phone No" prepend-inner-icon="mdi-phone-outline"
+                    density="comfortable" single-line></v-text-field>
+                  <v-text-field v-model="editedItem.email" label="Email ID" prepend-inner-icon="mdi-email-outline"
+                    density="comfortable" single-line></v-text-field>
+                  <v-text-field v-model="editedItem.tempAddress" label="Temporary Address"
+                    prepend-inner-icon="mdi-map-marker-outline" density="comfortable" single-line></v-text-field>
+                  <v-text-field v-model="editedItem.permAddress" label="Permanent Address"
+                    prepend-inner-icon="mdi-home-map-marker" density="comfortable" single-line></v-text-field>
                 </div>
-                <div class="col-4 d-flex justify-content-center align-items-center">
-                  <v-img src='@/assets/acc.jpg' alt="employee" style="height: 184px;"></v-img>
-                </div>
+                <v-card-actions>
+                  <v-btn color="white" block :style="{ backgroundColor: editedIndex === -1 ? '#1B5E20' : '#546E7A' }"
+                    style="text-transform: capitalize" class="rounded-5" elevation="4"
+                    @click="editedIndex === -1 ? add() : update()" :disabled="loading" :loading="loading">{{ formButton
+                    }}</v-btn>
+                </v-card-actions>
               </div>
             </v-container>
           </v-card-text>
         </v-card>
       </v-dialog>
-    </template>
-    <!-- <template v-slot:item="{ item, index }"> -->
-    <template v-slot:item="{ item }">
-      <tr style="background-color:#FCFDF6; color:black;">
-        <!-- <td class="text-center">{{ index + 1 }}</td> -->
-        <td class="">{{ item.employeeId }}</td>
-        <!-- <td class=""><v-img src="@/assets/acc.jpg"  alt="employee"
-            style="border-radius: 50%; height: 2px; display: inline;" ></v-img>
-        </td> -->
-        <td class="">{{ item.name }}</td>
-        <td class="">{{ item.phoneNo }}</td>
-        <td class="text-center"><v-icon size="large" class="mdi mdi-eye" color="blue-grey-darken-3"
-            @click="showDetails(item)"></v-icon></td>
-        <td class="text-center">
-          <v-icon size="large" color="teal-darken-3" class="me-4 mdi mdi-pencil" @click="editItem(item)"></v-icon>
-          <v-icon size="large" color="danger" class="ms-4 mdi mdi-trash-can" @click="deleteItem(item)"></v-icon>
-        </td>
-      </tr>
-    </template>
-  </v-data-table>
+      <v-text-field label="Search" v-model="search" prepend-inner-icon="mdi-magnify" class="search mt-5"
+        density="compact" single-line></v-text-field>
+    </div>
+    <v-data-table :headers="headers" :items="filteredEmployees" class="mt-3"
+      :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
+      <template v-slot:top>
+        <v-dialog v-model="dialogDelete" width="400px">
+          <v-card class="rounded-4 pb-4">
+            <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
+              Employee</v-card-title>
+            <v-container class="px-4 d-flex flex-column align-items-center">
+              <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
+              <v-card-text class="mt-1 text-center">Are you sure you want to delete?</v-card-text>
+            </v-container>
+            <v-card-actions class="mx-4 d-flex flex-column align-items-center">
+              <v-btn block class="rounded-4 text-white mb-3" style="background-color: #BA1A1A;"
+                @click="deleteItemConfirm">Delete</v-btn>
+              <v-btn block variant="text" class="rounded-4 mb-3" @click="closeDelete">Cancel</v-btn>
+
+            </v-card-actions>
+
+          </v-card>
+        </v-dialog>
+        <!-- Add new dialog for displaying details -->
+        <v-dialog v-model="detailsDialog" width="400px">
+          <v-card style="width: 680px; height:auto; border-radius: 15px;">
+            <v-card-title class="d-flex justify-content-between px-4"
+              style="background-color: #216D17; color: #FFFFFF;">
+              <h4>Employee Details</h4>
+              <v-icon @click="closeDetails" class="mdi mdi-window-close"></v-icon>
+            </v-card-title>
+            <v-card-text class="mb-0  ms-1 pt-2 pb-4">
+              <v-container class="py-0 d-flex flex-column">
+                <div class="row emp-details">
+                  <div class="col-8">
+                    <v-row class="mb-2 mt-2">
+                      <div class="col-4">Emp ID</div>
+                      <div class="col-8">: {{ editedItem.employeeId }}</div>
+                    </v-row>
+                    <v-row class="mb-2">
+                      <div class="col-4">Name</div>
+                      <div class="col-8">: {{ editedItem.name }}</div>
+                    </v-row>
+                    <v-row class="mb-2">
+                      <div class="col-4">Contact</div>
+                      <div class="col-8">: {{ editedItem.phoneNo }}</div>
+                    </v-row>
+                    <v-row class="mb-2 mt-2">
+                      <div class="col-4">Temporary Address</div>
+                      <div class="col-8 d-flex">: <div class="ms-1">{{ editedItem.tempAddress }}</div>
+                      </div>
+                    </v-row>
+                    <v-row class="mb-2 mt-2">
+                      <div class="col-4">Permanent Address</div>
+                      <div class="col-8 d-flex">: <div class="ms-1">{{ editedItem.permAddress }}</div>
+                      </div>
+                    </v-row>
+                    <v-row class="mb-2">
+                      <div class="col-4">Email</div>
+                      <div class="col-8">: {{ editedItem.email }}</div>
+                    </v-row>
+                  </div>
+                  <div class="col-4 d-flex justify-content-center align-items-center">
+                    <v-img src='@/assets/acc.jpg' alt="employee" style="height: 184px;"></v-img>
+                  </div>
+                </div>
+              </v-container>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+      </template>
+      <!-- <template v-slot:item="{ item, index }"> -->
+      <template v-slot:item="{ item }">
+        <tr style="background-color:#FCFDF6; color:black;">
+          <!-- <td class="text-center">{{ index + 1 }}</td> -->
+          <td class="">{{ item.employeeId }}</td>
+          <td class=""><v-img src="@/assets/acc.jpg" alt="employee"
+              style="border-radius: 50%; height: 50px; width: 50px;"></v-img>
+          </td>
+          <td class="">{{ item.name }}</td>
+          <td class="">{{ item.phoneNo }}</td>
+          <td class="text-center"><v-icon size="large" class="mdi mdi-eye" color="blue-grey-darken-3"
+              @click="showDetails(item)"></v-icon></td>
+          <td class="text-center">
+            <v-icon size="large" color="teal-darken-3" class="me-4 mdi mdi-pencil" @click="editItem(item)"></v-icon>
+            <v-icon size="large" color="danger" class="ms-4 mdi mdi-trash-can" @click="deleteItem(item)"></v-icon>
+          </td>
+        </tr>
+      </template>
+    </v-data-table>
+  </v-app>
 </template>
 
 <script>
@@ -151,16 +160,20 @@
 export default {
   data: () => ({
     dialog: false,
-    overlay: true,
-    dates: [],
+    // overlay: true,
     detailsDialog: false,
     dialogDelete: false,
     isHovered: false,
     search: '',
+    message: '',
+    loading: false,
+    snackbar: false,
+    color: '#E8F5E9',
+    timeout: 3000,
     image: require('@/assets/acc.jpg'),
     headers: [
       { title: 'Emp Id', align: 'start', key: 'employeeId', sortable: false },
-      // { title: 'Image', align: 'start', key: 'image', sortable: false },
+      { title: 'Image', align: 'start', key: 'image', sortable: false },
       { title: 'Name', align: 'start', key: 'name', sortable: false },
       { title: 'Phone No.', align: 'start', key: 'phoneNo', sortable: false },
       { title: 'Details', align: 'center' },
@@ -202,9 +215,9 @@ export default {
     this.getDetails();
   },
   methods: {
-    // setFallbackImage(event) {
-    //     event.target.src = this.image;
-    // },
+    setFallbackImage(event) {
+        event.target.src = this.image;
+    },
     async getDetails() {
       try {
         await this.$store.dispatch('fetchAllEmployees');
@@ -226,16 +239,25 @@ export default {
       this.dialogDelete = true
     },
     async deleteItemConfirm() {
+      this.loading = !this.loading
       try {
         const id = this.editedItem.employeeId;
         const success = await this.$store.dispatch('deleteEmployee', id)
         if (success) {
+          // this.loading = false
+          this.message = 'Employee deleted successfully !!';
+          this.color = '#C8E6C9'
           this.closeDelete();
-          window.location.reload();
+          this.snackbar = true;
+          setInterval(() => { window.location.reload(); }, 2000)
         }
       }
       catch (error) {
-        console.error(error.message)
+        
+        this.message = error.message + '!!';
+        this.color = '#C62828';
+        this.loading = false
+        this.snackbar = true;
       }
     },
     closeDelete() {
@@ -251,6 +273,7 @@ export default {
       this.dialog = true
     },
     async add() {
+      this.loading = !this.loading
       try {
         const success = await this.$store.dispatch('addEmployees', {
           email: this.editedItem.email,
@@ -262,14 +285,21 @@ export default {
         });
         if (success) {
           this.close();
-          window.location.reload();
+          this.message = 'Employee added successfully !!';
+          this.color = '#C8E6C9'
+          this.snackbar = true;
+          setInterval(()=>{window.location.reload();}, 2000)
         }
       }
       catch (error) {
-        console.error(error);
+        this.loading = false
+        this.message = error.message + '!!';
+        this.color = '#C62828';
+        this.snackbar = true;
       }
     },
     async update() {
+      this.loading = !this.loading
       try {
         const success = await this.$store.dispatch('editEmployees', {
           id: this.editedItem.employeeId,
@@ -282,11 +312,17 @@ export default {
         });
         if (success) {
           this.close();
-          window.location.reload();
+          this.message = 'Employee details updated !!';
+          this.color = '#C8E6C9'
+          this.snackbar = true;
+          setInterval(() => { window.location.reload(); }, 2000)
         }
       }
       catch (error) {
-        console.error(error);
+        this.loading = false
+        this.message = error.message + '!!';
+        this.color = '#C62828';
+        this.snackbar = true;
       }
     },
     close() {

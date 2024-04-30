@@ -1,20 +1,23 @@
 <template>
-  <div class="mb-5" style="width: 500px; display:inline-block; background-color:#FCFDF6;">
-    <v-tabs v-model="tab" color="green-darken-4" grow>
-      <v-tab v-for="item in items" :key="item" :value="item" @click="change(item)"
-        style="text-transform: capitalize; color: #1A1C18;">
-        {{ item }}
-      </v-tab>
-    </v-tabs>
+  <div style="margin-right: 2%; margin-left: 3%;">
+    <div class="mb-4" style="width: 500px; display:inline-block; background-color:#FCFDF6;">
+      <v-tabs v-model="tab" color="green-darken-4" grow>
+        <v-tab v-for="item in items" :key="item" :value="item" @click="change(item)"
+          style="text-transform: capitalize; color: #1A1C18;">
+          {{ item }}
+        </v-tab>
+      </v-tabs>
+    </div>
+    <router-view></router-view>
   </div>
-  <router-view></router-view>
+
 </template>
 
 <script>
 export default {
   data() {
     return {
-      tab: 'Details',
+      // tab: 'Details',
       items: ['Details', 'Price', 'Slots'],
     };
   },
@@ -30,6 +33,32 @@ export default {
         this.$router.push('/tickets/slots')
       }
     }
-  }
+  },
+  computed: {
+    tab: {
+      get() {
+        if ((this.$route.path === '/tickets/slots')) {
+          return 'Slots';
+        }
+        else if (this.$route.path === '/tickets/price') {
+          return 'Price';
+        }
+        else {
+          return 'Details';
+        }
+      },
+      set(value) {
+        if (value === 'Details') {
+          this.$router.push('/tickets/details')
+        }
+        else if (value === 'Price') {
+          this.$router.push('/tickets/price')
+        }
+        else {
+          this.$router.push('/tickets/slots')
+        }
+      }
+    }
+  },
 };
 </script>

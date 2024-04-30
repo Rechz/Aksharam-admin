@@ -1,47 +1,51 @@
 <template>
-  <div class="d-flex gap-4 container px-0 flex-wrap">
-    <v-card height="160" width="359" class="rounded-3">
-      <v-img src="@/assets/Block1.png" class="card-style"></v-img>
-      <div style="height: 128px; width: 327px;" class="subcard">
-        <div class="d-flex flex-column gap-5">
-          <div class="d-flex justify-content-between">
-            <div class="icon-style">
-              <v-icon class="mdi mdi-cash" size="large" color="white"></v-icon>
+  <div class="d-flex gap-md-4 gap-2 container px-0 flex-wrap justify-content-md-start justify-content-center ms-5">
+    <div class="d-flex flex-xl-row flex-column gap-md-4 gap-2 flex-wrap">
+      <v-card height="160" width="359" class="rounded-3">
+        <v-img src="@/assets/Block1.png" class="card-style"></v-img>
+        <div style="height: 128px; width: 327px;" class="subcard">
+          <div class="d-flex flex-column gap-5">
+            <div class="d-flex button-toggle">
+              <div class="icon-style">
+                <v-icon class="mdi mdi-cash" size="large" color="white"></v-icon>
+              </div>
+              <v-btn-toggle v-model="toggle" variant="text" class="button">
+                <v-btn size="small" class="button-style" :value="'Today'" @click="fetchIncomeDate">Today</v-btn>
+                <v-btn size="small" class="button-style" :value="'Monthly'" @click="fetchIncomeMonth">Monthly</v-btn>
+              </v-btn-toggle>
             </div>
-            <v-btn-toggle v-model="toggle" variant="text" class="button">
-              <v-btn size="small" class="button-style" :value="'Today'" @click="fetchIncomeDate">Today</v-btn>
-              <v-btn size="small" class="button-style" :value="'Monthly'" @click="fetchIncomeMonth">Monthly</v-btn>
-            </v-btn-toggle>
-          </div>
-          <div class="d-flex flex-column">
-            <p class="text-style"><v-icon class="mdi mdi-currency-inr" size="24" color="white"></v-icon>{{dailyIncome}}
-            </p>
-            <p class="text-type">Total Earning</p>
+            <div class="d-flex flex-column">
+              <p class="text-style"><v-icon class="mdi mdi-currency-inr" size="24" color="white"></v-icon>{{ dailyIncome
+                }}
+              </p>
+              <p class="text-type">Total Earning</p>
+            </div>
           </div>
         </div>
-      </div>
-    </v-card>
-    <v-card height="160" width="359" class="rounded-3">
-      <v-img src="@/assets/Block2.png" class="card-style"></v-img>
-      <div style="height: 128px; width: 327px;" class="subcard">
-        <div class="d-flex flex-column gap-5">
-          <div class="d-flex justify-content-between">
-            <div class="icon-style card2">
-              <v-icon class="mdi mdi-ticket-confirmation" size="large" color="white"></v-icon>
+      </v-card>
+      <v-card height="160" width="359" class="rounded-3">
+        <v-img src="@/assets/Block2.png" class="card-style"></v-img>
+        <div style="height: 128px; width: 327px;" class="subcard">
+          <div class="d-flex flex-column gap-5">
+            <div class="d-flex button-toggle">
+              <div class="icon-style card2">
+                <v-icon class="mdi mdi-ticket-confirmation" size="large" color="white"></v-icon>
+              </div>
+              <v-btn-toggle v-model="toggle1" variant="text" class="button button2">
+                <v-btn size="small" class="button-style" :value="'Today'" @click="fetchTicketDate">Today</v-btn>
+                <v-btn size="small" class="button-style" :value="'Monthly'" @click="fetchTicketMonth">Monthly</v-btn>
+              </v-btn-toggle>
             </div>
-            <v-btn-toggle v-model="toggle1" variant="text" class="button button2">
-              <v-btn size="small" class="button-style" :value="'Today'" @click="fetchTicketDate">Today</v-btn>
-              <v-btn size="small" class="button-style" :value="'Monthly'" @click="fetchTicketMonth">Monthly</v-btn>
-            </v-btn-toggle>
-          </div>
-          <div class="d-flex flex-column">
-            <p class="text-style">{{dailyTickets}}</p>
-            <p class="text-type">Total Bookings</p>
+            <div class="d-flex flex-column">
+              <p class="text-style">{{ dailyTickets }}</p>
+              <p class="text-type">Total Bookings</p>
+            </div>
           </div>
         </div>
-      </div>
-    </v-card>
-    <div class="d-flex flex-column gap-3">
+      </v-card>
+    </div>
+
+    <div class="d-flex flex-column  flex-wrap gap-3">
       <v-card height="72" width="359" class="rounded-3">
         <v-img src="@/assets/Block3.png" class="card-style"></v-img>
         <div style="height: 40px; width: 240px;" class="subcard">
@@ -74,48 +78,64 @@
       </v-card>
     </div>
   </div>
-  <div class="d-flex flex-wrap justify-content-between gap-3 mt-4">
-    <v-card height="430" width="741" class="rounded-3 p-3">
-      <div v-if="!barError">
-        <div class="d-flex justify-content-between px-3 mt-1">
-          <div>
-            <p class=" my-0">Total income: &#8377;{{ yearlyIncome }}</p>
-            <p class="my-0">Total tickets: {{ yearlyTickets }}</p>
-          </div>
-          <v-select :items="['2024', '2023', '2022']" density=compact class="year-select" v-model="year"></v-select>
+  <div class="d-flex flex-wrap  gap-4 mt-4 ms-5">
+    <v-card height="430" width="741" max-width="100%" class="rounded-3 p-3">
+      <div class="d-flex justify-content-between px-3 mt-1">
+        <div>
+          <p class=" my-0">Total income: &#8377;{{ yearlyIncome }}</p>
+          <p class="my-0">Total tickets: {{ yearlyTickets }}</p>
         </div>
+        <v-select :items="['2024', '2023', '2022']" density=compact class="year-select"
+          v-model="year"></v-select>
+      </div>
+      <div v-if="!barError">
+
         <BarChart :labels="labelsBar" :data="dataBar" :data2="data2Bar" />
       </div>
-      <div v-else class="mt-5 pt-5">
+      <div v-else class="mt-5">
         <div class="d-flex flex-column align-items-center justify-content-center pt-3">
-          <v-icon class="mdi mdi-alert-circle-outline" color="warning" size="54"></v-icon>
-          <h3 class="my-0">Something went wrong.</h3>
-          <p class="my-0">Please try again later.</p>
-          <v-btn variant="plain" size="small" color="#1A237E" class="text-capitalize" prepend-icon="mdi-reload"
+          <v-icon class="mdi mdi-alert-outline" color="danger" size="50"></v-icon>
+          <h4 class="my-0 text-wrap text-center">{{ errorBar }}</h4>
+          <p class="mt-0">Please try again later.</p>
+          <v-btn variant="outlined" size="small" color="#1A237E" class="text-capitalize" prepend-icon="mdi-reload"
             @click="fetchBarChart">Retry</v-btn>
         </div>
       </div>
     </v-card>
-    <v-card height="430" width="358" class="rounded-3 d-flex justify-content-center flex-column align-items-center ">
-      <div v-if="!pieError">
-        <div class="d-flex justify-content-between w-100 px-4 mt-1 mb-4">
-          <p class="mt-2">Total visitors: 8928</p>
-          <v-select :items="['2024', '2023', '2022']" density=compact class="year-select" v-model="year1"></v-select>
+    <v-card height="430" width="358" class="rounded-3 px-3">
+      <p class="mt-2 ">Scanned Visitors: {{scannedVisitors}}</p>
+      <div class="d-flex flex-column align-items-centers justify-content-center" style="height: 300px;">
+        <div v-if="!pieError">
+
+          <template v-if="dataPie.length === 0 || dataPie.every(value => value === 0)">
+            <div class=" d-flex flex-column align-items-center justify-content-center">
+              <v-icon class=" mdi mdi-alert-circle-outline" color="success" size="48"></v-icon>
+              <h6 class="my-0">No data available.</h6>
+            </div>
+          </template>
+          <template v-else>
+            <div class="d-flex mt-1 mb-4">
+
+              <v-select :items="['2024', '2023', '2022']" density=compact class="year-select"
+                v-model="year1"></v-select>
+            </div>
+            <PieChart :labels="labelsPie" :data="dataPie" />
+          </template>
         </div>
-        <PieChart :labels="labelsPie" :data="dataPie" />
-      </div>
-      <div v-else>
-        <div class=" d-flex flex-column align-items-center">
-          <v-icon class=" mdi mdi-alert-circle-outline" color="warning" size="54"></v-icon>
-          <h3 class="my-0">Something went wrong.</h3>
-          <p class="my-0">Please try again later.</p>
-          <v-btn variant="plain" size="small" color="#1A237E" class="text-capitalize" prepend-icon="mdi-reload"
-            @click="fetchPieChart">Retry</v-btn>
+        <div v-else>
+          <div class=" d-flex flex-column align-items-center">
+            <v-icon class=" mdi mdi-alert-outline" color="danger" size="48"></v-icon>
+            <h5 class="my-0 text-wrap text-center">{{ errorPie }}</h5>
+            <p class="mt-0">Please try again later.</p>
+            <v-btn variant="outlined" size="small" color="#1A237E" class="text-capitalize" prepend-icon="mdi-reload"
+              @click="fetchPieChart">Retry</v-btn>
+          </div>
         </div>
       </div>
+
     </v-card>
   </div>
-  <v-card class="mt-4">
+  <v-card class="mt-4 ms-5 me-4">
     <TicketTable />
   </v-card>
 
@@ -137,6 +157,8 @@ export default {
       currentDay: '',
       currentMonth: '',
       currentYear: '',
+      errorPie: '',
+      errorBar: '',
       monthNames : ['January', 'February', 'March', 'April', 'May', 'June','July', 'August', 'September', 'October', 'November', 'December']
     }
   },
@@ -174,6 +196,9 @@ export default {
     dailyIncome() {
       return this.$store.getters.getDailyIncome;
     },
+    scannedVisitors() {
+      return this.$store.getters.getPieTotal;
+    }
   },
   methods: {
     async fetchPieChart() {
@@ -184,7 +209,8 @@ export default {
       }
       catch (error) {
         console.error(error);
-        //this.pieError = true;
+        this.errorPie = error.message;
+        this.pieError = true;
       }
     },
     async fetchBarChart() {
@@ -194,7 +220,8 @@ export default {
       }
       catch (error) {
         console.error(error);
-        //this.barError = true
+        this.errorBar = error.message;
+        this.barError = true
       }
     },
     async fetchBarChartTickets() {
@@ -226,7 +253,7 @@ export default {
     async fetchIncomeDate() {
       try {
         const formattedDate = `${this.currentYear}-${this.currentMonth}-${this.currentDay}`;
-        console.log('date',formattedDate);
+        console.log('date income',formattedDate);
         await this.$store.dispatch('fetchIncomeByDate', formattedDate)
       }
       catch (error) {
@@ -237,10 +264,12 @@ export default {
       try {
         const index = parseInt(this.currentMonth, 10);
         const month = this.monthNames[index - 1];
-        await this.$store.dispatch('fetchIncomeByDate', {
+        const payload = {
           year: this.currentYear,
           month: month
-        });
+        }
+        console.log(payload)
+        await this.$store.dispatch('fetchIncomeByMonth', payload);
       }
       catch (error) {
         console.error(error);
@@ -398,5 +427,14 @@ body {
 
 :deep(.v-input__details) {
   display: none;
+}
+.button-toggle{
+  justify-content: space-between !important;
+}
+@media (max-width: 1261px) {
+  .cumulative-income-cards {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+  }
 }
 </style>

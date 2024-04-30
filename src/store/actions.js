@@ -1,9 +1,8 @@
 import axios from 'axios';
-import router from '../router.js';
+
 export default {
   //admin login
   async login({ commit, rootGetters }, { id, password }) {
-    try {
       const response = await axios.post(`${rootGetters.getUrl}/api/auth/signin`,
         {
           "employeeId": id,
@@ -12,7 +11,78 @@ export default {
       if (response.status === 200) {
         commit('setToken', response.data.token);
         console.log(response.data.token);
-        router.push('/dashboard');
+        return true;
+      }
+  },
+  //load price details
+  async loadPrice({ rootGetters, commit }) {
+        try {
+            const url = rootGetters.getUrl;
+            const response = await axios.get(`${url}/api/details/loadPrice`);
+            if (response.status === 200) {
+                const ctg = response.data;
+              console.log('price details', ctg)
+              const groupedItems = ctg.reduce((acc, item) => {
+                if (!acc[item.category]) {
+                  acc[item.category] = [];
+                 }
+              acc[item.category].push(item);
+              return acc;
+              }, {});
+            // Log the grouped items
+            console.log(groupedItems);
+              commit('setPriceList', groupedItems);
+            }
+        }
+        catch (error) {
+            console.error(error)
+        }
+  },
+  //delete price details
+  async deletePrice({rootGetters}, payload){
+    try {
+      const response = await axios.delete(`${rootGetters.getUrl}/api/admin/deletePrice/${payload}`, {
+        headers: {
+          Authorization: `Bearer ${rootGetters.getToken}`
+        }
+      });
+      if (response.status === 200) {
+        return true;
+      }
+    }
+    catch (error) {
+      console.error(error);
+    }
+  },
+  //edit price details
+  async editPrice({rootGetters}, payload) {
+    try {
+      console.log('edit clicked')
+      const response = await axios.put(`${rootGetters.getUrl}/api/admin/updatePrice/${payload.id}`,payload.body,
+      {
+        headers: {
+          Authorization: `Bearer ${rootGetters.getToken}`
+        }
+      });
+      if (response.status === 200) {
+        return true;
+      }
+    }
+    catch (error) {
+      console.error(error);
+    }
+  },
+  //add price details
+  async addPrice({rootGetters}, payload) {
+    try {
+      const response = await axios.post(`${rootGetters.getUrl}/api/admin/addPrice`, payload,
+      {
+        headers: {
+          Authorization: `Bearer ${rootGetters.getToken}`
+        }
+      });
+      if (response.status === 200) {
+        return true;
       }
     }
     catch (error) {
@@ -249,13 +319,14 @@ export default {
   //to fetch income for given month and year
   async fetchIncomeByMonth({ rootGetters, commit }, payload) { 
 try {
-      const response = await axios.get(`${rootGetters.getUrl}/api/dashboard/totalTickets/month?monthName=${payload.month}&year=${payload.year}`, {
+      const response = await axios.get(`${rootGetters.getUrl}/api/dashboard/totalIncome/month?monthName=${payload.month}&year=${payload.year}`, {
         headers: {
           Authorization: `Bearer ${rootGetters.getToken}`
         },
       });
       if (response.status === 200) {
         const income = response.data.totalIncome;
+        console.log(response.data)
         commit('setDailyIncome', income);
       }
     }
@@ -283,13 +354,14 @@ try {
   //to fetch ticket for given month and year
   async fetchTicketByMonth({ rootGetters, commit }, payload) { 
 try {
-      const response = await axios.get(`${rootGetters.getUrl}/api/dashboard/totalTickets/month?monthName=${payload.month}&year=${payload.year}'`, {
+      const response = await axios.get(`${rootGetters.getUrl}/api/dashboard/totalTickets/month?monthName=${payload.month}&year=${payload.year}`, {
         headers: {
           Authorization: `Bearer ${rootGetters.getToken}`
         },
       });
       if (response.status === 200) {
         const tickets = response.data.totalTickets;
+        console.log(response.data)
         commit('setDailyTickets', tickets);
       }
     }
@@ -297,9 +369,9 @@ try {
       console.error(error);
     }
   },
+
   //to add scanner
   async addScanner({ rootGetters }, payload) {
-    try {
       const response = await axios.put(`${rootGetters.getUrl}/api/admin/updateRole/${payload.id}`,
         {
           "newRole": "SCANNER",
@@ -311,18 +383,11 @@ try {
           },
         });
       if (response.status == 200) {
-        alert('Scanner added successfully');
-        window.location.reload();
         return true;
       }
-    }
-    catch (err) {
-      console.error(err);
-    }
   },
   //to add employees
   async addEmployees({ rootGetters }, payload) {
-    try {
       const response = await axios.post(`${rootGetters.getUrl}/api/admin/addEmployee`,
         {
           "email": payload.email,
@@ -338,17 +403,11 @@ try {
           },
         });
       if (response.status == 200) {
-        alert('Employee added successfully');
         return true;
       }
-    }
-    catch (error) {
-      console.error(error);
-    }
   },
   //to edit employees
   async editEmployees({ rootGetters }, payload) {
-    try {
       const response = await axios.put(`${rootGetters.getUrl}/api/admin/update/${payload.id}`,
         {
           "email": payload.email,
@@ -364,17 +423,11 @@ try {
           },
         });
       if (response.status == 200) {
-        alert('Employee updated successfully');
         return true;
       }
-    }
-    catch (error) {
-      console.error(error);
-    }
   },
   //to update scanner password
   async updateScannerPassword({ rootGetters }, payload) {
-    try {
       const response = await axios.put(`${rootGetters.getUrl}/api/admin/updateScannerPassword`, {
         "employeeId": payload.id,
         "employeeName": payload.name,
@@ -387,17 +440,11 @@ try {
           },
         });
       if (response.status == 200) {
-        alert('Password updated successfully');
         return true;
       }
-    }
-    catch (error) {
-      console.error(error);
-    }
   },
   //to delete employee
   async deleteEmployee({ rootGetters }, payload) {
-    try {
       const response = await axios.delete(`${rootGetters.getUrl}/api/admin/delete/${payload}`,
         {
           headers: {
@@ -405,17 +452,11 @@ try {
           },
         })
       if (response.status == 200) {
-        alert('Employee deleted successfully');
         return true;
       }
-    }
-    catch (error) {
-      console.error(error);
-    }
   },
   //to delete scanner
   async deleteScanner({ rootGetters }, payload) {
-    try {
       const response = await axios.put(`${rootGetters.getUrl}/api/admin/updateRole/${payload}`,
         {
           "newRole": "EMPLOYEE",
@@ -427,14 +468,8 @@ try {
           },
         });
       if (response.status == 200) {
-        alert('Scanner deleted successfully');
         return true;
       }
-
-    }
-    catch (error) {
-      console.error(error);
-    }
   },
   //
 }

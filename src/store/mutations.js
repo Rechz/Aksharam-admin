@@ -61,6 +61,9 @@ export default {
     state.employeeId = payload;
     sessionStorage.setItem('employeeId', JSON.stringify(payload));
   },
-
+  setPriceList(state, payload) {
+  state.priceList = payload;
+  sessionStorage.setItem('priceList', JSON.stringify(payload));
+}
      
 };

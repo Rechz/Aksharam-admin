@@ -1,0 +1,56 @@
+<template>
+    <div style="margin-right: 2%; margin-left: 3%;">
+        <div class="mb-4" style="width: 500px; display:inline-block; background-color:#FCFDF6;">
+            <v-tabs v-model="tab" color="green-darken-4" grow>
+                <v-tab v-for="item in items" :key="item" :value="item" @click="change(item)"
+                    style="text-transform: capitalize; color: #1A1C18;">
+                    {{ item }}
+                </v-tab>
+            </v-tabs>
+        </div>
+        <router-view></router-view>
+    </div>
+
+</template>
+
+<script>
+export default {
+    data() {
+        return {
+            // tab: 'Details',
+            items: ['Add Items', 'View Items'],
+        };
+    },
+    methods: {
+        change(item) {
+            if (item === 'Add Items') {
+                this.$router.push('/guide-app/add')
+            }
+            else {
+                this.$router.push('/guide-app/view')
+            }
+            
+        }
+    },
+    computed: {
+        tab: {
+            get() {
+                if ((this.$route.path === '/guide-app/view')) {
+                    return 'View Items';
+                }
+                else {
+                    return 'Add Items';
+                }
+            },
+            set(value) {
+                if (value === 'View Items') {
+                    this.$router.push('/guide-app/view')
+                }
+                else {
+                    this.$router.push('/guide-app/add')
+                }
+            }
+        },
+    }
+};
+</script>

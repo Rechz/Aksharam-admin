@@ -276,7 +276,7 @@ export default {
 
 <style>
 .v-table {
-  width: 73vw;
+  width: 76vw;
 }
 
 .hover-red:hover {
