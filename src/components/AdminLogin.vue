@@ -65,10 +65,15 @@ export default {
           password: this.password
         });
         if (success) {
+          console.log('admin')
           this.$router.push('/dashboard');
+   
         }
+     
       }
       catch (error) {
+        this.$store.commit('setStatus', false);
+        setTimeout(() => { this.$router.push('/guide-app') }, 3000);
         this.loading = false;
         if (error.response && error.response.status === 401) {
           this.message = 'Invalid username or password. Please try again.';

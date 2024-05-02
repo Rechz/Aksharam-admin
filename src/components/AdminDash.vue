@@ -8,18 +8,23 @@
             <v-img src="@/assets/logo.png" class="image"></v-img>
           </v-list-item>
           <v-list density="compact" nav class="mt-0">
-            <router-link to='/dashboard-page' style="text-decoration: none; color:black;"><v-list-item value="home"
-                class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;"> Overview</v-list-item> </router-link>
-            <router-link to='/tickets' style="text-decoration: none; color:black;"><v-list-item value="ticket"
-                class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Tickets</v-list-item></router-link>
-            <router-link to='/employee' style="text-decoration: none; color:black;"><v-list-item value="account"
-                class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Employees</v-list-item></router-link>
+            <v-list-item value="home"
+                class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;" :disabled="!status"
+                @click.prevent="navigate('/dashboard-page')">
+                Overview</v-list-item> 
+            <v-list-item value="ticket"
+                class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;" :disabled="!status"
+                @click.prevent="navigate('/tickets')">Tickets</v-list-item>
+            <v-list-item value="account"
+                class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;" :disabled="!status"
+                @click.prevent="navigate('/employee')">Employees</v-list-item>
             <!-- <router-link to='/items-page' style="text-decoration: none; color:black;"><v-list-item value="items" -->
             <!-- class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Items</v-list-item></router-link> -->
-            <router-link to='/guide-app' style="text-decoration: none; color:black;"><v-list-item value="guide"
-                class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Guide-App</v-list-item></router-link>
-            <router-link to='/portal' style="text-decoration: none; color:black;"><v-list-item value="portal"
-                class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Portal</v-list-item></router-link>
+            <v-list-item value="guide"
+                class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;" @click="$router.push('/guide-app')">Guide-App</v-list-item>
+            <v-list-item value="portal"
+                class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;" :disabled="!status"
+                @click.prevent="navigate('/portal')">Portal</v-list-item>
           </v-list>
         </v-navigation-drawer>
         <!-- <v-main style="height: 250px"></v-main> -->
@@ -69,12 +74,20 @@ export default {
         }
       }
       return selectedItem ? selectedItem.text : '';
+    },
+    status() {
+      return this.$store.getters.getStatus;
     }
   },
   methods: {
     logout() {
       this.$router.push('/');
-    }
+    },
+    navigate(route) {
+      if (this.status) {
+        this.$router.push(route);
+      }
+    },
   },
   watch: {
     selectedRoute(newRoute) {

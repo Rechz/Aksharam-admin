@@ -2,7 +2,11 @@ export default {
     setToken(state, payload) {
       state.token = payload;
       sessionStorage.setItem('token', payload);
-    },
+  },
+  setStatus(state, payload) {
+    state.status = payload;
+    sessionStorage.setItem('status', JSON.stringify(payload));
+  },
     setAllTickets(state, payload) {
       state.allTickets = payload;
       sessionStorage.setItem('allTickets', JSON.stringify(payload));

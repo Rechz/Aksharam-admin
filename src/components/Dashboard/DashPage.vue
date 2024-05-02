@@ -301,14 +301,9 @@ export default {
     },
   },
   mounted() {
+    
     document.body.style.backgroundColor = '#D7E8CD';
-    this.fetchPieChart();
-    this.fetchBarChart();
-    this.fetchBarChartTickets();
-    this.fetchIncomeDate();
-    this.fetchTicketDate();
-    this.fetchTotalTickets();
-    this.fetchTotalIncome();
+    
     const today = new Date();
     this.currentDay = String(today.getDate()).padStart(2, '0');
     this.currentMonth = String(today.getMonth() + 1).padStart(2, '0');
@@ -318,11 +313,17 @@ export default {
     document.body.style.backgroundColor = '';
   },
   created() {
-    
     const today = new Date();
     this.currentDay = String(today.getDate()).padStart(2, '0');
     this.currentMonth = String(today.getMonth() + 1).padStart(2, '0');
     this.currentYear = today.getFullYear();
+    this.fetchIncomeDate();
+    this.fetchTicketDate();
+    this.fetchTotalTickets();
+    this.fetchTotalIncome();
+    this.fetchPieChart();
+    this.fetchBarChart();
+    this.fetchBarChartTickets();
   },
 };
 </script>
