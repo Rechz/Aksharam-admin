@@ -1,8 +1,7 @@
 <template>
     <div>
         <v-data-table :headers="headers" :items="items" items-per-page="10" color="grey-darken-3" density="compact"
-            :pagination="false"
-            :header-props="{ style: 'background-color: #546E7A; color: #ffffff;' }">
+            :pagination="false" :header-props="{ style: 'background-color: #546E7A; color: #ffffff;' }">
             <template v-slot:top>
                 <v-toolbar flat class="bg-white">
                     <v-toolbar-title class="ms-0">
@@ -11,16 +10,26 @@
                 </v-toolbar>
             </template>
             <template v-slot:item='{ item, index }'>
-                <tr style="background-color:#FCFDF6; color:black;">
+                <tr style="background-color:#FCFDF6; color:black; height: 50px;">
                     <td class="text-center">{{ index + 1 }}</td>
                     <td class="text-center">
                         <p class="my-0">{{ item.type }}</p>
                     </td>
-                    <td class="text-center">{{ item.price }}</td>
-                    <td class="text-center">
-                        <v-icon v-if="!editButton" size="20" color="teal-darken-3" class=" mdi mdi-pencil"
-                            @click="edit"></v-icon>
-                        <v-btn v-else size="x-small" color="#2E7D32" @click="editItem(item)">Submit</v-btn>
+                    <td class="text-center" style="width: 200px;"> <template v-if="isEditing(index)">
+                            <v-text-field v-model="item.price" outlined dense
+                                class="d-flex justify-content-center"></v-text-field>
+                        </template>
+                        <template v-else>
+                            <p class="my-0">{{ item.price }}</p>
+                        </template>
+                    </td>
+                    <td class="text-center" style="width: 450px;">
+                        <v-icon v-if="!isEditing(index)" size="20" color="teal-darken-3" class=" mdi mdi-pencil"
+                            @click="startEditing(index)"></v-icon>
+                        <div v-else class="d-flex gap-1 justify-content-center">
+                            <v-btn size="x-small" color="#2E7D32" @click="editItem(item)" :loading="loading">Submit</v-btn>
+                            <v-btn size="x-small" color="#2E7D32" @click="editingIndex = null">Cancel</v-btn>
+                        </div>
                         <!-- <v-icon size="20" color="danger" class="ms-4 mdi mdi-trash-can"
                             @click="deleteItem(item)"></v-icon> -->
                     </td>
@@ -43,14 +52,18 @@ export default {
                 { title: 'Actions', sortable: false, align: 'center' },
             ],
             editButton: false,
+            editingIndex: null, // Track the index of the item being edited
         };
     },
     methods: {
-        edit() {
-            this.editButton = true;
+        isEditing(index) {
+            return this.editingIndex === index;
         },
-        async editItem(item) { 
-            this.editButton = false; 
+        startEditing(index) {
+            this.editingIndex = index;
+        },
+        async editItem(item) {
+            this.editingIndex = null; // Reset editing index after submission
             const id = item.id;
             const body = {
                 "price": item.price,
