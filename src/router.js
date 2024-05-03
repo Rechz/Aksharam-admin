@@ -33,9 +33,20 @@ const router = createRouter({
           ]
         },
         {
-          path: '/portal',
-          component: () => import('./components/PortalPage.vue'),
+          path: '/calendar',
+          component: () => import('./components/CalendarNav.vue'),
           meta: { requiresAuth: true, role: 'admin' },
+          children: [
+            {
+              path: '/calendar/addHoliday',
+              alias: '',
+              component: () => import('./components/AddHoliday.vue'),
+            },
+            {
+              path: '/calendar/viewHoliday',
+              component: () => import('./components/ViewHoliday.vue'),
+            }
+          ]
         },
         {
           path: '/dashboard-page',

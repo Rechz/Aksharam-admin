@@ -22,9 +22,9 @@
             <!-- class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Items</v-list-item></router-link> -->
             <v-list-item value="guide"
                 class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;" @click="$router.push('/guide-app')">Guide-App</v-list-item>
-            <v-list-item value="portal"
+            <v-list-item value="calendar"
                 class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;" :disabled="!status"
-                @click.prevent="navigate('/portal')">Portal</v-list-item>
+                @click.prevent="navigate('/calendar')">Calendar</v-list-item>
           </v-list>
         </v-navigation-drawer>
         <!-- <v-main style="height: 250px"></v-main> -->
@@ -55,7 +55,7 @@ export default {
         { text: 'Tickets', route: '/tickets' },
         { text: 'Employee', route: '/employee' },
         // { text: 'Items', route: '/items-page' },
-        { text: 'Portal', route: '/portal' },
+        { text: 'Museum Calendar', route: '/calendar' },
         { text: 'Guide-App', route: '/guide-app' }
       ],
     }

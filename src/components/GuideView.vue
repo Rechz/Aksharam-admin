@@ -3,13 +3,13 @@
 
     <div class="d-flex justify-content-between mb-4">
     </div>
-    <v-data-table :headers="headers" :items="filteredEmployees" class="mt-3"
+    <v-data-table :headers="headers" :items="employees" class="mt-3"
       :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
       <template v-slot:top>
         <v-dialog v-model="dialogDelete" width="400px">
           <v-card class="rounded-4 pb-4">
             <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
-              Employee</v-card-title>
+              Heading</v-card-title>
             <v-container class="px-4 d-flex flex-column align-items-center">
               <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
               <v-card-text class="mt-1 text-center">Are you sure you want to delete?</v-card-text>
@@ -37,9 +37,9 @@
                   <div class="d-flex">
                     <v-sheet :elevation="2" :height="540" :width="256" border color="#FCFDF6" class="me-2 px-2 py-2">
                       <div class="d-flex justify-content-center align-items-center flex-wrap">
-                        <v-img src='@/assets/acc.jpg' alt="employee" class="mb-3"
+                        <v-img src='@/assets/acc.jpg' alt="image" class="mb-3"
                           style=" height: 150px; width: 150px;"></v-img>
-                        <v-img src='@/assets/Qr.png' alt="employee" style=" height: 150px; width: 150px;"></v-img>
+                        <v-img src='@/assets/Qr.png' alt="QR" style=" height: 150px; width: 150px;"></v-img>
                         <div class="d-flex justify-content-between">
                           <v-btn class="text-none me-5" min-width="50" variant="outlined" rounded>
                             <v-icon class="mdi mdi-content-save-outline" color="green-darken-4"></v-icon>
@@ -122,7 +122,7 @@
             </v-card-title>
             <v-card-text class="mb-0 px-3 py-0">
               <v-container class="py-0">
-                <v-img src='@/assets/Qr.png' alt="employee" style=" height: 400px; width: 400px;"></v-img>
+                <v-img src='@/assets/Qr.png' alt="QR" style=" height: 400px; width: 400px;"></v-img>
               </v-container>
             </v-card-text>
             <v-card-text class="px-3 pt-0 mb-3">
@@ -139,15 +139,14 @@
         </v-dialog>
       </template>
       <!-- <template v-slot:item="{ item, index }"> -->
-      <template v-slot:item="{ item }">
+      <template v-slot:item="{ item,index }">
         <tr style="background-color:#FCFDF6; color:black;">
           <!-- <td class="text-center">{{ index + 1 }}</td> -->
-          <td class="">{{ item.employeeId }}</td>
-          <td class="">{{ item.phoneNo }}
-          </td>
-          <td class=""><v-img src="@/assets/acc.jpg" alt="employee"
+          <td class="">{{ index + 1 }}</td>
+          <td class="">{{ item.heading }}</td>
+          <td class=""><v-img src="@/assets/acc.jpg" alt="image"
               style="border-radius: 50%; height: 50px; width: 50px;"></v-img></td>
-          <td class=""><v-img src="@/assets/Qr.png" alt="employee" class="qr" style="height: 50px; width: 50px;"
+          <td class=""><v-img src="@/assets/Qr.png" alt="QR" class="qr" style="height: 50px; width: 50px;"
               @click="showQR(item)"></v-img></td>
           <td class="text-center">
             <v-btn class="text-none" color="#48663f" min-width="100" rounded @click="showDetails(item)">View</v-btn>
@@ -180,10 +179,10 @@
       timeout: 3000,
       image: require('@/assets/acc.jpg'),
       headers: [
-        { title: 'Sl.no', align: 'start', key: 'employeeId', sortable: false },
-        { title: 'Heading', align: 'start', key: 'image', sortable: false },
-        { title: 'Image', align: 'start', key: 'name', sortable: false },
-        { title: 'QR Code', align: 'start', key: 'phoneNo', sortable: false },
+        { title: 'Sl.no', align: 'start', sortable: false },
+        { title: 'Heading', align: 'start', key: 'heading', sortable: false },
+        { title: 'Image', align: 'start', key: 'image', sortable: false },
+        { title: 'QR Code', align: 'start', key: 'QR', sortable: false },
         { title: 'Details', align: 'center' },
         { title: 'Edit / Delete', align: 'center' },
       ],
@@ -198,14 +197,6 @@
       },
       formButton() {
         return this.editedIndex === -1 ? 'Add' : 'Update'
-      },
-      filteredEmployees() {
-        if (this.search !== '') {
-          return this.employees.filter((item) =>
-            item.name.toLowerCase().includes(this.search.toLowerCase()) || item.employeeId.toLowerCase().includes(this.search.toLowerCase())
-          );
-        }
-        else { return this.employees; }
       },
       employees() {
         return this.$store.getters.getAllEmployees;
@@ -260,7 +251,7 @@
           const success = await this.$store.dispatch('deleteEmployee', id)
           if (success) {
             // this.loading = false
-            this.message = 'Employee deleted successfully !!';
+            this.message = 'Heading deleted successfully !!';
             this.color = '#C8E6C9'
             this.closeDelete();
             this.snackbar = true;
@@ -300,7 +291,7 @@
           });
           if (success) {
             this.close();
-            this.message = 'Employee added successfully !!';
+            this.message = 'Heading added successfully !!';
             this.color = '#C8E6C9'
             this.snackbar = true;
             setInterval(()=>{window.location.reload();}, 2000)
@@ -327,7 +318,7 @@
           });
           if (success) {
             this.close();
-            this.message = 'Employee details updated !!';
+            this.message = 'Heading details updated !!';
             this.color = '#C8E6C9'
             this.snackbar = true;
             setInterval(() => { window.location.reload(); }, 2000)
