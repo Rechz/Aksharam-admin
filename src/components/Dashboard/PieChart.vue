@@ -1,23 +1,37 @@
-<!-- PieChart.vue -->
 <template>
     <div style="height: auto; width: 300px;">
-        <canvas id="pieChartCanvas"></canvas>
+        <canvas ref="pieChartCanvas"></canvas>
     </div>
 </template>
 
 <script>
 import { Pie } from 'vue-chartjs';
 import Chart from 'chart.js/auto';
+
 export default {
     props: ['data', 'labels'],
     extends: Pie,
     mounted() {
-        this.getChart();
+        this.renderChart();
+    },
+    watch: {
+        data: {
+            handler() {
+                this.renderChart();
+            },
+            deep: true
+        }
     },
     methods: {
-        getChart() {
-            const ctx = document.getElementById('pieChartCanvas');
-            new Chart(ctx, {
+        renderChart() {
+            if (this._chart) {
+                this._chart.destroy(); // Destroy the existing chart instance
+            }
+            this.renderChartMethod();
+        },
+        renderChartMethod() {
+            const ctx = this.$refs.pieChartCanvas.getContext('2d');
+            this._chart = new Chart(ctx, {
                 type: 'pie',
                 data: {
                     labels: this.labels,

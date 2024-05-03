@@ -1,5 +1,4 @@
 <template>
-
   <div class="d-flex">
     <div style="width: 260px;">
       <v-layout>
@@ -18,8 +17,6 @@
             <v-list-item value="account"
                 class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;" :disabled="!status"
                 @click.prevent="navigate('/employee')">Employees</v-list-item>
-            <!-- <router-link to='/items-page' style="text-decoration: none; color:black;"><v-list-item value="items" -->
-            <!-- class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;">Items</v-list-item></router-link> -->
             <v-list-item value="guide"
                 class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;" @click="$router.push('/guide-app')">Guide-App</v-list-item>
             <v-list-item value="calendar"
@@ -27,7 +24,6 @@
                 @click.prevent="navigate('/calendar')">Calendar</v-list-item>
           </v-list>
         </v-navigation-drawer>
-        <!-- <v-main style="height: 250px"></v-main> -->
       </v-layout>
     </div>
     <div class="w-100">
@@ -49,12 +45,11 @@ export default {
     return {
       drawer: true,
       rail: true,
-      navItems: [ // Define your navigation items here
+      navItems: [ 
         { text: 'Overview', route: '/dashboard' },
         { text: 'Overview', route: '/dashboard-page' },
         { text: 'Tickets', route: '/tickets' },
         { text: 'Employee', route: '/employee' },
-        // { text: 'Items', route: '/items-page' },
         { text: 'Museum Calendar', route: '/calendar' },
         { text: 'Guide-App', route: '/guide-app' }
       ],
@@ -65,7 +60,6 @@ export default {
       return this.$route.path;
     },
     selectedNavItem() {
-      // Find the closest matching parent route
       let selectedItem = null;
       for (let i = 0; i < this.navItems.length; i++) {
         if (this.selectedRoute.startsWith(this.navItems[i].route)) {
@@ -91,7 +85,6 @@ export default {
   },
   watch: {
     selectedRoute(newRoute) {
-      // Find the closest matching parent route
       let selectedItem = null;
       for (let i = 0; i < this.navItems.length; i++) {
         if (newRoute.startsWith(this.navItems[i].route)) {
@@ -110,26 +103,21 @@ export default {
 .green-background {
   height: 80px;
   width: 100%;
-  /* margin-left: 40px; */
   background-color: #216D17;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  ;
 }
-
 .image {
   height: 80px;
   width: 80px;
 }
-
 a.router-link-active .v-list-item,
 .v-list-item--active {
   background-color: #216D17;
   text-decoration: none;
   color: white;
 }
-
 .navlist {
   padding: 12px 64px;
 }

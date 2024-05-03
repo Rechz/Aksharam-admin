@@ -244,7 +244,7 @@ export default {
         const id = this.editedItem.employeeId;
         const success = await this.$store.dispatch('deleteEmployee', id)
         if (success) {
-          // this.loading = false
+          this.loading = false
           this.message = 'Employee deleted successfully !!';
           this.color = '#C8E6C9'
           this.closeDelete();

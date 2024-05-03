@@ -1,7 +1,11 @@
 <template>
     <div>
+        <v-snackbar v-model="snackbar" :color="color" :timeout="timeout" location="top">
+            <div class="text-center">{{ message }}</div>
+        </v-snackbar>
         <v-data-table :headers="headers" :items="items" items-per-page="10" color="grey-darken-3" density="compact"
             :pagination="false" :header-props="{ style: 'background-color: #546E7A; color: #ffffff;' }">
+
             <template v-slot:top>
                 <v-toolbar flat class="bg-white">
                     <v-toolbar-title class="ms-0">
@@ -27,11 +31,10 @@
                         <v-icon v-if="!isEditing(index)" size="20" color="teal-darken-3" class=" mdi mdi-pencil"
                             @click="startEditing(index)"></v-icon>
                         <div v-else class="d-flex gap-1 justify-content-center">
-                            <v-btn size="x-small" color="#2E7D32" @click="editItem(item)" :loading="loading">Submit</v-btn>
+                            <v-btn size="x-small" color="#2E7D32" @click="editItem(item)" :loading="loading"
+                                :disabled="loading">Submit</v-btn>
                             <v-btn size="x-small" color="#2E7D32" @click="editingIndex = null">Cancel</v-btn>
                         </div>
-                        <!-- <v-icon size="20" color="danger" class="ms-4 mdi mdi-trash-can"
-                            @click="deleteItem(item)"></v-icon> -->
                     </td>
                 </tr>
             </template>
@@ -52,7 +55,12 @@ export default {
                 { title: 'Actions', sortable: false, align: 'center' },
             ],
             editButton: false,
-            editingIndex: null, // Track the index of the item being edited
+            editingIndex: null, 
+            message: '',
+            loading: false,
+            snackbar: false,
+            color: '#E8F5E9',
+            timeout: 3000,
         };
     },
     methods: {
@@ -63,31 +71,33 @@ export default {
             this.editingIndex = index;
         },
         async editItem(item) {
-            this.editingIndex = null; // Reset editing index after submission
-            const id = item.id;
-            const body = {
-                "price": item.price,
-                "type": item.type,
-                "category": item.category
+            try {
+                this.loading = true;
+                const id = item.id;
+                const body = {
+                    "price": item.price,
+                    "type": item.type,
+                    "category": item.category
+                }
+                const res = await this.$store.dispatch("editPrice", {
+                    id: id,
+                    body: body
+                });
+                if (res) {
+                    setTimeout(() => {
+                        this.loading = false;
+                        this.message = "Price updated Successfully!"
+                        this.snackbar = true;
+                        this.editingIndex = null;
+                        this.$store.dispatch('loadPrice');
+                    }, 2000);
+                }
             }
-            console.log('edit clicked', id)
-            console.log('body', body)
-            const res = await this.$store.dispatch("editPrice", {
-                id: id,
-                body: body
-            });
-            if (res) {
-                this.message = "Updated Successfully!"
-                window.location.reload();
-            }
-        },
-        async deleteItem(item) {
-            const id = item.id;
-            console.log('delete clicked', id)
-            const res = await this.$store.dispatch("deletePrice", id);
-            if (res) {
-                this.message = "Deleted Successfully!"
-                window.location.reload();
+            catch (err) {
+                this.loading = false;
+                this.message = err.message;
+                this.color = 'red';
+                this.snackbar = true;
             }
         },
     }
@@ -99,17 +109,13 @@ export default {
 :deep(.v-table) {
     width: 60vw;
 }
-
 :deep(.v-input__control) {
     width: 100px;
     border-bottom: 2px solid #216D17;
-    /* height: 24px; */
 }
-
 :deep(.v-field) {
     height: 24px;
 }
-
 :deep(.v-field__input) {
     min-height: 0px;
     padding-top: 0px;

@@ -5,46 +5,46 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      component: () => import('./components/AdminLogin.vue')
+      component: () => import('./components/Home/AdminLogin.vue')
     },
     {
       path: '/dashboard',
-      component: () => import('./components/AdminDash.vue'),
+      component: () => import('./components/Home/AdminDash.vue'),
         
       children: [
         {
           path: '/tickets',
-          component: () => import('./components/TicketNav.vue'),
+          component: () => import('./components/Tickets/TicketNav.vue'),
           meta: { requiresAuth: true, role: 'admin' },
           children: [
             {
               path: '/tickets/details',
               alias: '',
-              component: () => import('./components/TicketPage.vue')
+              component: () => import('./components/Tickets/TicketPage.vue')
             },
             {
               path: '/tickets/price',
-              component: () => import('./components/TicketPrice.vue')
+              component: () => import('./components/Tickets/TicketPrice.vue')
             },
             {
               path: '/tickets/slots',
-              component: () => import('./components/TicketSlots.vue')
+              component: () => import('./components/Tickets/TicketSlots.vue')
             },
           ]
         },
         {
           path: '/calendar',
-          component: () => import('./components/CalendarNav.vue'),
+          component: () => import('./components/Holidays/CalendarNav.vue'),
           meta: { requiresAuth: true, role: 'admin' },
           children: [
             {
               path: '/calendar/addHoliday',
               alias: '',
-              component: () => import('./components/AddHoliday.vue'),
+              component: () => import('./components/Holidays/AddHoliday.vue'),
             },
             {
               path: '/calendar/viewHoliday',
-              component: () => import('./components/ViewHoliday.vue'),
+              component: () => import('./components/Holidays/ViewHoliday.vue'),
             }
           ]
         },
@@ -56,32 +56,32 @@ const router = createRouter({
         },
         {
           path: '/employee',
-          component: () => import('./components/EmployeeNav.vue'),
+          component: () => import('./components/Employees/EmployeeNav.vue'),
           meta: { requiresAuth: true, role: 'admin' },
           children: [
             {
               path: '/employee/add',
               alias: '',
-              component: () => import('./components/EmployeePage.vue'),
+              component: () => import('./components/Employees/EmployeePage.vue'),
             },
             {
               path: '/employee/scanner',
-              component: () => import('./components/ScannerRegister.vue'),
+              component: () => import('./components/Employees/ScannerRegister.vue'),
             }
           ]
         },
         {
           path: '/guide-app',
-          component: () => import('./components/GuideNav.vue'),
+          component: () => import('./components/GuideApp/GuideNav.vue'),
           children: [
             {
               path: '/guide-app/add',
               alias: '',
-              component: () => import('./components/GuideAdd.vue'),
+              component: () => import('./components/GuideApp/GuideAdd.vue'),
             },
             {
               path: '/guide-app/view',
-              component: () => import('./components/GuideView.vue'),
+              component: () => import('./components/GuideApp/GuideView.vue'),
             }
           ]
         }

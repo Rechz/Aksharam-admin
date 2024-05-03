@@ -1,7 +1,11 @@
 <template>
   <v-app>
+    <v-snackbar v-model="snackbar" :color="color" :timeout="timeout" location="top">
+      <div class="text-center">{{ message }}</div>
+    </v-snackbar>
     <div class="d-flex justify-content-end ">
-      <v-btn class=" text-capitalize" color="#2C7721" size="large" style="font-size: 16px; font-weight: 600;" @click="dialogAdd = true" variant="outlined" density="comfortable">
+      <v-btn class=" text-capitalize" color="#2C7721" size="large" style="font-size: 16px; font-weight: 600;"
+        @click="dialogAdd = true;" variant="outlined" density="comfortable">
         + Add Price</v-btn>
     </div>
     <v-dialog width="400" max-width="800" v-model="dialogAdd">
@@ -30,15 +34,18 @@
         </v-card-text>
         <v-card-actions class="mx-4">
           <v-btn color="white" block style="background-color: #1B5E20; text-transform: capitalize" class="rounded-5"
-            elevation="4" size="large" @click="addPrice">Add</v-btn>
+            elevation="4" size="large" @click="addPrice" :loading="loadingAdd" :disabled="loadingAdd">Add</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
-    <PriceTable :items="priceList.public" head="PUBLIC" class="mb-4" />
-    <PriceTable :items="priceList.institution" head="INSTITUTION" class="mb-4" />
-    <PriceTable :items="priceList.foreigner" head="FOREIGNER" class="mb-4" />
-    <PriceTable :items="priceList.tax" head="TAX" />
+    <PriceTable  :items="priceList.public" head="PUBLIC"
+      class="mb-4" />
+    <PriceTable :items="priceList.institution"
+      head="INSTITUTION" class="mb-4" />
+    <PriceTable  :items="priceList.foreigner"
+      head="FOREIGNER" class="mb-4" />
+    <PriceTable  :items="priceList.tax" head="TAX" />
   </v-app>
 </template>
 
@@ -61,7 +68,12 @@ export default {
       type: null,
       price: null,
       categoryItems: ['public', 'foreigner', 'institution', 'tax'],
-      typeItems: []
+      typeItems: [],
+      message: '',
+      loadingAdd: false,
+      snackbar: false,
+      color: '#E8F5E9',
+      timeout: 3000,
     };
   },
   watch: {
@@ -85,7 +97,8 @@ export default {
 },
   methods: {
     async addPrice() {
-      this.dialogAdd = true;
+      // this.dialogAdd = true;
+      this.loadingAdd = true;
       try {
         const body = {
           "price": parseInt(this.price),
@@ -94,26 +107,32 @@ export default {
         }
         const res = await this.$store.dispatch("addPrice", body);
         if (res) {
-          this.message = "Added Successfully!"
-          window.location.reload();
+          setTimeout(() => {
+            this.dialogAdd = false;
+            this.message = "Price added Successfully!"
+            this.snackbar = true;
+          }, 2000)
+          this.loadPrice();
         }
       }
-      catch (error) {
-        console.error(error);
+      catch (err) {
+        this.loadingAdd = false;
+        this.message = err.message;
+        this.color = 'red';
+        this.snackbar = true;
       }
     },
-
     closeDialogAdd() {
       this.dialogAdd = false;
     },
-      async loadPrice() {
-        try {
-          await this.$store.dispatch('loadPrice')
-          }
-        catch (error) {
-          console.error(error)
+    async loadPrice() {
+      try {
+        await this.$store.dispatch('loadPrice')
         }
-      },
+      catch (error) {
+        console.error(error)
+      }
+    },
   }
 };
 </script>

@@ -28,7 +28,7 @@
           </v-text-field>
           <br>
           <v-btn class="rounded-4" block style="background-color: #216D17; color: #FFFFFF" size="large" type="submit"
-            variant="elevated" :disabled="loading" :loading="loading">Login
+            variant="elevated" :disabled="loading" :loading="loading" >Login
           </v-btn>
         </v-form>
       </v-card>
@@ -67,20 +67,12 @@ export default {
         if (success) {
           console.log('admin')
           this.$router.push('/dashboard');
-   
         }
-     
       }
       catch (error) {
-        // this.$store.commit('setStatus', false);
-        // setTimeout(() => { this.$router.push('/guide-app') }, 3000);
-         this.loading = false;
-        if (error.response && error.response.status === 401) {
-          this.message = 'Invalid username or password. Please try again.';
-        } else {
-          this.message = error.message;
-          this.snackbar = true;
-        }
+        this.loading = false;
+        this.message = error.response.data.message;
+        this.snackbar = true;
       }
     },
   },

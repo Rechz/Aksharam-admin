@@ -30,7 +30,12 @@ export default {
               acc[item.category].push(item);
               return acc;
               }, {});
-            // Log the grouped items
+              // Log the grouped items
+              for (const category in groupedItems) {
+    if (Object.prototype.hasOwnProperty.call(groupedItems, category)) {
+        groupedItems[category].sort((a, b) => a.id - b.id);
+    }
+}
             console.log(groupedItems);
               commit('setPriceList', groupedItems);
             }
@@ -75,7 +80,6 @@ export default {
   },
   //add price details
   async addPrice({rootGetters}, payload) {
-    try {
       const response = await axios.post(`${rootGetters.getUrl}/api/admin/addPrice`, payload,
       {
         headers: {
@@ -85,10 +89,6 @@ export default {
       if (response.status === 200) {
         return true;
       }
-    }
-    catch (error) {
-      console.error(error);
-    }
   },
   //fetch all tickets
   async fetchAllTickets({ commit, rootGetters }) {

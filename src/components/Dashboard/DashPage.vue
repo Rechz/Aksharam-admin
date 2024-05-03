@@ -82,15 +82,27 @@
     <v-card height="430" width="741" max-width="100%" class="rounded-3 p-3">
       <div class="d-flex justify-content-between px-3 mt-1">
         <div>
-          <p class=" my-0">Total income: &#8377;{{ yearlyIncome }}</p>
-          <p class="my-0">Total tickets: {{ yearlyTickets }}</p>
+          <p class=" my-0">Total income:
+            &#8377;{{ yearlyIncome }}</p>
+          <p class="my-0">Total tickets : {{yearlyTickets }}</p>
         </div>
-        <v-select :items="['2024', '2023', '2022']" density=compact class="year-select"
-          v-model="year"></v-select>
+        <!-- <v-select :items="['2024', '2023', '2022']" density=compact class="year-select" v-model="year"></v-select> -->
+        <h6>Current Year: {{ currentYear }}</h6>
+        <!-- <v-btn-toggle v-model="toggleBar" variant="text" class="button">
+          <v-btn size="small" class=" barbtn" :value="'Current'" @click="fetchIncomeDate">Current</v-btn>
+          <v-btn size="small" class=" barbtn" :value="'Cumulative'" @click="fetchIncomeMonth">Cumulative</v-btn>
+        </v-btn-toggle> -->
       </div>
       <div v-if="!barError">
-
-        <BarChart :labels="labelsBar" :data="dataBar" :data2="data2Bar" />
+        <template v-if="dataBar.length === 0 || data2Bar.length === 0">
+          <div class=" d-flex flex-column align-items-center justify-content-center">
+            <v-icon class=" mdi mdi-alert-circle-outline" color="success" size="48"></v-icon>
+            <h6 class="my-0">No data available.</h6>
+          </div>
+        </template>
+        <template v-else>
+          <BarChart :labels="labelsBar" :data="dataBar" :data2="data2Bar" />
+        </template>
       </div>
       <div v-else class="mt-5">
         <div class="d-flex flex-column align-items-center justify-content-center pt-3">
@@ -103,7 +115,14 @@
       </div>
     </v-card>
     <v-card height="430" width="358" class="rounded-3 px-3">
-      <p class="mt-2 ">Scanned Visitors: {{scannedVisitors}}</p>
+      <div class="d-flex justify-content-between align-items-center">
+        <p class="mt-2 ">Scanned Visitors: {{scannedVisitors}}</p>
+        <v-btn-toggle v-model="togglePie" variant="text" class="button">
+          <v-btn size="small" class=" barbtn" :value="'Today'" @click="fetchPieChart">Today</v-btn>
+          <v-btn size="small" class=" barbtn" :value="'All'" @click="fetchPieChartAll">All</v-btn>
+        </v-btn-toggle>
+      </div>
+
       <div class="d-flex flex-column align-items-centers justify-content-center" style="height: 300px;">
         <div v-if="!pieError">
 
@@ -116,8 +135,8 @@
           <template v-else>
             <div class="d-flex mt-1 mb-4">
 
-              <v-select :items="['2024', '2023', '2022']" density=compact class="year-select"
-                v-model="year1"></v-select>
+              <!-- <v-select :items="['2024', '2023', '2022']" density=compact class="year-select"
+                v-model="year1"></v-select> -->
             </div>
             <PieChart :labels="labelsPie" :data="dataPie" />
           </template>
@@ -128,7 +147,7 @@
             <h5 class="my-0 text-wrap text-center">{{ errorPie }}</h5>
             <p class="mt-0">Please try again later.</p>
             <v-btn variant="outlined" size="small" color="#1A237E" class="text-capitalize" prepend-icon="mdi-reload"
-              @click="fetchPieChart">Retry</v-btn>
+              @click="togglePie === 'Today' ? fetchPieChart : fetchPieChartAll">Retry</v-btn>
           </div>
         </div>
       </div>
@@ -151,7 +170,7 @@ export default {
   },
   data() {
     return {
-      toggle: 'Today', toggle1: 'Today',
+      toggle: 'Today', toggle1: 'Today', toggleBar: 'Current', togglePie: 'Today',
       year: '2024', year1: '2024',
       barError: false, pieError: false, bar2Error: false,
       currentDay: '',
@@ -213,6 +232,17 @@ export default {
         this.pieError = true;
       }
     },
+    async fetchPieChartAll() {
+      this.pieError = false;
+      try {
+        await this.$store.dispatch('fetchPieChartVisited')
+      }
+      catch (error) {
+        console.error(error);
+        this.errorPie = error.message;
+        this.pieError = true;
+      }
+},
     async fetchBarChart() {
       this.barError = false;
       try {
@@ -234,6 +264,7 @@ export default {
         //this.bar2Error = true
       }
     },
+   
     async fetchTotalTickets() {
       try {
         await this.$store.dispatch('totalTickets')
@@ -301,13 +332,7 @@ export default {
     },
   },
   mounted() {
-    
     document.body.style.backgroundColor = '#D7E8CD';
-    
-    const today = new Date();
-    this.currentDay = String(today.getDate()).padStart(2, '0');
-    this.currentMonth = String(today.getMonth() + 1).padStart(2, '0');
-    this.currentYear = today.getFullYear();
   },
   beforeUnmount() {
     document.body.style.backgroundColor = '';
@@ -367,6 +392,12 @@ body {
   font-size: 14px;
   font-weight: 400;
 }
+.barbtn{
+  text-transform: capitalize;
+  font-size: 14px;
+  font-weight: 400;
+  color: black;
+}
 
 :deep(.button.v-btn-group) {
   height: 24px;
@@ -376,7 +407,10 @@ body {
   background-color: #BCEBEE;
   color: black;
 }
-
+:deep(.barbtn.v-btn--active) {
+  background-color: #BCEBEE;
+  /* color: white; */
+}
 :deep(.button2 .v-btn--active) {
   background-color: #D7E8CD;
 }
