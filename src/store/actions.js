@@ -3,7 +3,6 @@ import axios from 'axios';
 export default {
   //admin login
   async login({ commit, rootGetters }, { id, password }) {
-    try {
       const response = await axios.post(`${rootGetters.getUrl}/api/auth/signin`,
         {
           "employeeId": id,
@@ -11,19 +10,10 @@ export default {
         });
       if (response.status === 200) {
         commit('setToken', response.data.token);
-        commit('setStatus', true);
+        commit('setStatus', response.data.admin);
         console.log(response.data.token);
         return true;
       }
-      else {
-         commit('setStatus', false);
-      }
-    }  
-   catch(error){
-        
-      console.error(error)
-      throw error;
-    }
   },
   //load price details
   async loadPrice({ rootGetters, commit }) {

@@ -10,7 +10,7 @@
     :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
     <template v-slot:item='{ item, index }'>
       <v-dialog v-model="dialog" width="400px">
-        <v-card style="width: 600px; height:513px; border-radius: 16px;">
+        <v-card style="width: 600px; height:550px; border-radius: 16px;">
           <v-card-title class="d-flex justify-content-between px-4" style="background-color: #216D17; color: #FFFFFF;">
             <h4>Ticket Details</h4>
             <v-icon @click="close" class="mdi mdi-window-close"></v-icon>
@@ -19,7 +19,7 @@
             <v-row>
               <v-col col="3">
                 {{
-      viewItem.type === 'institution' ? 'Institution Name' : 'Name' }}
+                viewItem.type === 'institution' ? 'Institution Name' : 'Name' }}
               </v-col>
               <v-col col="5">:{{ viewItem.type === 'institution' ? viewItem.institutionName : viewItem.name }}</v-col>
             </v-row>
@@ -55,6 +55,12 @@
             </v-row>
             <v-row>
               <v-col col="3">
+                Slot
+              </v-col>
+              <v-col col="5">:{{ viewItem.slotName }}</v-col>
+            </v-row>
+            <v-row>
+              <v-col col="3">
                 Category
               </v-col>
               <v-col col="5" class="text-capitalize">:{{ viewItem.type }}</v-col>
@@ -62,7 +68,7 @@
             <v-row>
               <v-col col="3">
                 {{
-      viewItem.type === 'institution' ? 'Teachers' : 'Adults' }}
+                viewItem.type === 'institution' ? 'Teachers' : 'Adults' }}
               </v-col>
               <v-col col="5">:{{ viewItem.type === 'institution' ? viewItem.numberOfTeachers : viewItem.numberOfAdults
                 }}</v-col>
@@ -70,7 +76,7 @@
             <v-row>
               <v-col col="3">
                 {{
-      viewItem.type === 'institution' ? 'Students' : 'Children' }}
+                viewItem.type === 'institution' ? 'Students' : 'Children' }}
               </v-col>
               <v-col col="5">:{{ viewItem.type === 'institution' ? viewItem.numberOfStudents : viewItem.numberOfChildren
                 }}</v-col>
@@ -97,12 +103,12 @@
         <td>
           {{ item.ticketId }}
         </td>
-        <td>
-          {{ item.bookDate }}
-        </td>
 
         <td>
           {{ item.visitDate }}
+        </td>
+        <td>
+          {{ item.slotName }}
         </td>
         <td class="text-start " style="text-transform: capitalize;">
           {{ item.type }}
@@ -129,8 +135,9 @@ export default {
       headers: [
         { title: 'Sl No.', sortable: false, align: 'center' },
         { title: 'Ticket ID', align: 'start', sortable: false, key: 'ticketId' },
-        { title: 'Booking Date', sortable: false, key: 'bookDate', align: 'start' },
+        
         { title: 'Entry Date', sortable: false, key: 'visitDate', align: 'start' },
+        { title: 'Time', sortable: false, key: 'slotName', align: 'start' },
         { title: 'Category', sortable: false, key: 'type', align: 'start' },
         { title: 'Price', sortable: false, key: 'totalPrice', align: 'start' },
         { title: 'Details', sortable: false, align: 'center', key: 'detail' },
