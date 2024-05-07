@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 
 export default {
@@ -475,5 +476,40 @@ try {
         return true;
       }
   },
-  //
+  //add holiday
+  async addHoliday({ rootGetters }, payload) {
+    const response = await axios.post(`${rootGetters.getUrl}/api/holidays/addDayData`, payload,
+      {
+        headers: {
+          Authorization: `Bearer ${rootGetters.getToken}`
+        }
+      });
+    if (response.status === 200) {
+      return true;
+    }
+  },
+  //get holiday
+    async getHoliday({ rootGetters, commit }) {
+    const response = await axios.get(`${rootGetters.getUrl}/api/holidays/getDayList`,
+      {
+        headers: {
+          Authorization: `Bearer ${rootGetters.getToken}`
+        }
+      });
+      if (response.status === 200) {
+      commit('setHoliday', response.data)
+      return true;
+    }
+  },
+  //delete holiday
+    async deleteHoliday({ rootGetters }, payload) {
+    const response = await axios.delete(`${rootGetters.getUrl}/api/holidays/deleteDate/${payload}`, {
+                 headers: {
+                    Authorization: `Bearer ${rootGetters.getToken}`
+                }
+            });
+      if (response.status === 200) {
+      return true;
+    }
+  },
 }

@@ -1,110 +1,71 @@
 <template>
-    <v-app>
-      <div class="d-flex justify-content-between mb-4">
-      </div>
-      <v-data-table :headers="headers" :items="holidays" class="mt-3"
-        :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
-        <template v-slot:top>
-          <v-dialog v-model="dialogDelete" width="400px">
-            <v-card class="rounded-4 pb-4">
-              <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
-                Holiday</v-card-title>
-              <v-container class="px-4 d-flex flex-column align-items-center">
-                <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
-                <v-card-text class="mt-1 text-center">Are you sure you want to delete?</v-card-text>
-              </v-container>
-              <v-card-actions class="mx-4 d-flex flex-column align-items-center">
-                <v-btn block class="rounded-4 text-white mb-3" style="background-color: #BA1A1A;" :loading="loading"
-                  @click="deleteItemConfirm">Delete</v-btn>
-                <v-btn block variant="text" class="rounded-4 mb-3" @click="closeDelete">Cancel</v-btn>
-  
-              </v-card-actions>
-  
-            </v-card>
-          </v-dialog>
-        </template>
-        <template v-slot:item="{ item,index }">
-          <tr style="background-color:#FCFDF6; color:black;">
-            <td class="">{{ index + 1 }}</td>
-            <td class="">{{ item.date }}</td>
-            <td class="">{{ item.name }}</td>
-            <td class=""><v-btn @click="deleteHoliday(item)">Delete</v-btn></td>
-            <td class="text-center">
-              <v-icon size="large" color="teal-darken-3" class="me-4 mdi mdi-pencil" @click="editItem(item)"></v-icon>
-              <v-icon size="large" color="danger" class="ms-4 mdi mdi-trash-can" @click="deleteItem(item)"></v-icon>
-            </td>
-          </tr>
-        </template>
-      </v-data-table>
-    </v-app>
-  </template>
+  <v-app>
+    <v-snackbar v-model="snackbar" :color="color" :timeout="timeout" location="top">
+      <div class="text-center">{{ message }}</div>
+    </v-snackbar>
+    <div class="d-flex justify-content-between mb-4">
+    </div>
+    <v-data-table :headers="headers" :items="holidays" class="mt-3"
+      :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
+      <template v-slot:top>
+        <v-dialog v-model="dialogDelete" width="400px">
+          <v-card class="rounded-4 pb-4">
+            <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
+              Holiday</v-card-title>
+            <v-container class="px-4 d-flex flex-column align-items-center">
+              <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
+              <v-card-text class="mt-1 text-center">Are you sure you want to delete?</v-card-text>
+            </v-container>
+            <v-card-actions class="mx-4 d-flex flex-column align-items-center">
+              <v-btn block class="rounded-4 text-white mb-3" style="background-color: #BA1A1A;" :loading="loading"
+                :disabled="loading" @click="deleteItemConfirm">Delete</v-btn>
+              <v-btn block variant="text" class="rounded-4 mb-3" @click="closeDelete">Cancel</v-btn>
+
+            </v-card-actions>
+
+          </v-card>
+        </v-dialog>
+      </template>
+      <template v-slot:item="{ item,index }">
+        <tr style="background-color:#FCFDF6; color:black;">
+          <td class="">{{ index + 1 }}</td>
+          <td class="">{{ item.date }}</td>
+          <td class="">{{ item.name }}</td>
+          <td class="text-center">
+            <v-icon size="large" color="danger" class="mdi mdi-trash-can" @click="deleteItem(item)"></v-icon>
+          </td>
+        </tr>
+      </template>
+    </v-data-table>
+  </v-app>
+</template>
     
     <script>
-    import axios from 'axios';
     export default {
       data: () => ({
         holidays: [],
-        dialog: false,
-        // overlay: true,
         dialogDelete: false,
-        isHovered: false,
-        search: '',
         message: '',
         loading: false,
         snackbar: false,
         color: '#E8F5E9',
-        timeout: 3000,
+        timeout: 2000,
         headers: [
           { title: 'Sl.no', align: 'start', sortable: false },
           { title: 'Date', align: 'start', key: 'date', sortable: false },
           { title: 'Holiday Reason', align: 'start', key: 'name', sortable: false },
-          { title: 'Demo', align: 'start',  },
-          { title: 'Edit / Delete', align: 'center' },
+          { title: 'Delete', align: 'center' },
         ],
         editedIndex: -1,
         editedItem: {},
         defaultItem: {},
       }),
-    
-      computed: {
-        employees() {
-          return this.$store.getters.getAllEmployees;
-        }
-      },
       watch: {
-        dialog(val) {
-          val || this.close()
-        },
         dialogDelete(val) {
           val || this.closeDelete()
         },
       },
       methods: {
-        setFallbackImage(event) {
-            event.target.src = this.image;
-        },
-        async getDetails() {
-          try {
-            await this.$store.dispatch('fetchAllEmployees');
-          }
-          catch (error) {
-            console.error(error.message)
-          }
-        },
-        showDetails(item) {
-          this.editedItem = Object.assign({}, item);
-          this.detailsDialog = true;
-        },
-        showQR(item) {
-          this.editedItem = Object.assign({}, item);
-          this.qrDialog = true;
-        },
-        closeQR() {
-          this.qrDialog = false;
-        },
-        closeDetails() {
-          this.detailsDialog = false;
-        },
         deleteItem(item) {
           this.editedIndex = this.holidays.indexOf(item)
           this.editedItem = Object.assign({}, item)
@@ -115,28 +76,22 @@
           this.loading = !this.loading
           try {
             const id = this.editedItem.id;
-            const response = await axios.delete(`http://192.168.1.22:5000/api/holidays/deleteDate/${id}`, {
-                 headers: {
-                    Authorization: `Bearer ${this.$store.getters.getToken}`
-                }
-            });
-            if (response.status === 200) {
-                console.log('delete')
+            const response = await this.$store.dispatch('deleteHoliday', id);
+            if (response) {
               this.loading = false
-            //   this.message = 'Holiday deleted successfully !!';
-            //   this.color = '#C8E6C9'
+              this.message = 'Holiday deleted successfully !!';
+              this.color = '#C8E6C9'
               this.closeDelete();
-            //   this.snackbar = true;
-            this.getHoliday();
-            //   setInterval(() => { window.location.reload(); }, 1000)
+              this.snackbar = true;
+              this.getHoliday();
             }
           }
           catch (error) {
             console.error(error)
-            // this.message = error.message + '!!';
-            // this.color = '#C62828';
-            // this.loading = false
-            // this.snackbar = true;
+            this.message = error.message + '!!';
+            this.color = '#C62828';
+            this.loading = false
+            this.snackbar = true;
           }
         },
         closeDelete() {
@@ -146,97 +101,11 @@
             this.editedIndex = -1
           })
         },
-        editItem(item) {
-          this.editedIndex = this.employees.indexOf(item)
-          this.editedItem = Object.assign({}, item)
-          this.dialog = true
-        },
-        async add() {
-          this.loading = !this.loading
-          try {
-            const success = await this.$store.dispatch('addEmployees', {
-              email: this.editedItem.email,
-              name: this.editedItem.name,
-              mobile: this.editedItem.phoneNo,
-              temporary: this.editedItem.tempAddress,
-              permanent: this.editedItem.permAddress,
-              photo: "photo"
-            });
-            if (success) {
-              this.close();
-              this.message = 'Heading added successfully !!';
-              this.color = '#C8E6C9'
-              this.snackbar = true;
-              setInterval(()=>{window.location.reload();}, 2000)
-            }
-          }
-          catch (error) {
-            this.loading = false
-            this.message = error.message + '!!';
-            this.color = '#C62828';
-            this.snackbar = true;
-          }
-        },
-        async update() {
-          this.loading = !this.loading
-          try {
-            const success = await this.$store.dispatch('editEmployees', {
-              id: this.editedItem.employeeId,
-              email: this.editedItem.email,
-              name: this.editedItem.name,
-              mobile: this.editedItem.phoneNo,
-              temporary: this.editedItem.tempAddress,
-              permanent: this.editedItem.permAddress,
-              photo: "photo"
-            });
-            if (success) {
-              this.close();
-              this.message = 'Heading details updated !!';
-              this.color = '#C8E6C9'
-              this.snackbar = true;
-              setInterval(() => { window.location.reload(); }, 2000)
-            }
-          }
-          catch (error) {
-            this.loading = false
-            this.message = error.message + '!!';
-            this.color = '#C62828';
-            this.snackbar = true;
-          }
-        },
-        close() {
-          this.dialog = false
-          this.$nextTick(() => {
-            this.editedItem = Object.assign({}, this.defaultItem)
-            this.editedIndex = -1
-          })
-        },
         async getHoliday() {
             try {
-                const response = await axios.get(`http://192.168.1.22:5000/api/holidays/getDayList`, {
-                 headers: {
-                    Authorization: `Bearer ${this.$store.getters.getToken}`
-                }
-            });
-            if (response.status === 200) {
-                this.holidays = response.data
-            console.log(response.data)
-            }
-            }
-            catch (error) {
-        console.log(error)
-      }
-        },
-        async deleteHoliday(item) {
-            try {
-                const response = await axios.delete(`http://192.168.1.22:5000/api/holidays/deleteDate/${item.id}`, {
-                 headers: {
-                    Authorization: `Bearer ${this.$store.getters.getToken}`
-                }
-            });
-            if (response.status === 200) {
-                this.holidays = response.data
-            console.log(response.data)
+                const response = await this.$store.dispatch('getHoliday');
+            if (response) {
+              this.holidays = this.$store.getters.getHoliday;
             }
             }
             catch (error) {

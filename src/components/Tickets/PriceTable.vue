@@ -20,8 +20,10 @@
                         <p class="my-0">{{ item.type }}</p>
                     </td>
                     <td class="text-center" style="width: 200px;"> <template v-if="isEditing(index)">
-                            <v-text-field v-model="item.price" outlined dense
-                                class="d-flex justify-content-center"></v-text-field>
+                            <v-form v-model="form">
+                                <v-text-field v-model="item.price" outlined dense
+                                    :rules="[value => !!value || 'Price is required']"
+                                    class="d-flex justify-content-center"></v-text-field></v-form>
                         </template>
                         <template v-else>
                             <p class="my-0">{{ item.price }}</p>
@@ -61,6 +63,7 @@ export default {
             snackbar: false,
             color: '#E8F5E9',
             timeout: 3000,
+            form: false
         };
     },
     methods: {
@@ -71,6 +74,7 @@ export default {
             this.editingIndex = index;
         },
         async editItem(item) {
+            if (!this.form) return
             try {
                 this.loading = true;
                 const id = item.id;

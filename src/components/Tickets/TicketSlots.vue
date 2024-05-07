@@ -1,17 +1,18 @@
 <template>
-
-
-  <!-- <div class="d-flex bg-white">
-    <v-text-field v-model="newSlot.in" label="Time In" prepend-inner-icon="mdi-clock-time-four" density="compact"
-      class="me-2 slot"></v-text-field>
-    <v-text-field v-model="newSlot.out" label="Time Out" prepend-inner-icon="mdi-clock-time-four" density="compact"
-      class="me-2 slot"></v-text-field>
-    <v-text-field v-model="newSlot.ticketno" label="Tickets per slot" prepend-inner-icon="mdi-ticket-confirmation"
-      density="compact" class="me-2 slot"></v-text-field>
-    <v-btn color="#205f23" class="mb-2 me-2" @click="addSlot" style="text-transform: capitalize;">
-      <b>+ Add Slots</b>
-    </v-btn>
-  </div> -->
+  <v-container>
+    <v-row align="center">
+      <v-col cols="3">
+        <v-select v-model="selectedHour" :items="hours" label="Hour" outlined></v-select>
+      </v-col>
+      <v-col cols="1" class="text-center">
+        <span>:</span>
+      </v-col>
+      <v-col cols="3">
+        <v-select v-model="selectedMinute" :items="minutes" label="Minute" outlined></v-select>
+      </v-col>
+    </v-row>
+  </v-container>
+  
   <v-data-table :headers="headers" :items="desserts" :sort-by="[{ key: 'calories', order: 'asc' }]"
     style="background-color:#f9faf1;">
     <template v-slot:top>
@@ -91,41 +92,30 @@
 </template>
 <script>
 export default {
-  data: () => ({
-    newSlot: {
-      in: '',
-      out: '',
-      ticketno: '',
-    },
-    dialog: false,
-    dialogDelete: false,
-    isHovered: false,
-    headers: [
-      { title: 'Slot No', key: 'serial no', sortable: false, align: 'center' },
-      { title: 'Time In', key: 'in', sortable: false, align: 'center' },
-      { title: 'Time Out', key: 'out', sortable: false, align: 'center' },
-      { title: 'No.of Tickets', key: 'ticketno', sortable: false, align: 'center' },
+  data() {
 
-      { title: 'Edit / Delete', key: 'actions', sortable: false, align: 'center' },
-    ],
-    desserts: [],
-    editedIndex: -1,
-    editedItem: {
+    return {
+      selectedHour: null,
+      selectedMinute: null,
+      hours: Array.from({ length: 24 }, (_, i) => `${i}`.padStart(2, '0')),
+      minutes: ['00','15','30','45'],
+      dialog: false,
+      dialogDelete: false,
+      isHovered: false,
+      headers: [
+        { title: 'Slot No', key: 'serial no', sortable: false, align: 'center' },
+        { title: 'Time In', key: 'in', sortable: false, align: 'center' },
+        { title: 'Time Out', key: 'out', sortable: false, align: 'center' },
+        { title: 'No.of Tickets', key: 'ticketno', sortable: false, align: 'center' },
 
-      in: 0,
-      out: 0,
-      ticketno: 0,
-
-
-    },
-    defaultItem: {
-
-      in: 0,
-      out: 0,
-      ticketno: 0,
-
-    },
-  }),
+        { title: 'Edit / Delete', key: 'actions', sortable: false, align: 'center' },
+      ],
+      desserts: [],
+      editedIndex: -1,
+      editedItem: {},
+      defaultItem: {}
+    };
+  },
 
   computed: {
     formTitle() {
@@ -142,70 +132,9 @@ export default {
     },
   },
 
-  created() {
-    this.initialize()
-  },
+
 
   methods: {
-
-
-
-    initialize() {
-      this.desserts = [
-        {
-
-          in: 159,
-          out: 6.0,
-          ticketno: 24,
-
-        },
-        {
-
-          in: 19,
-          out: 6.05,
-          ticketno: 2344,
-
-        },
-        {
-
-          in: 179,
-          out: 35,
-          ticketno: 24,
-
-        },
-        {
-
-          in: 190,
-          out: 65,
-          ticketno: 44,
-
-        },
-        {
-
-          in: 79,
-          out: 698,
-          ticketno: 23,
-
-        },
-        {
-
-          in: 89988,
-          out: 85,
-          ticketno: 4,
-
-        },
-        {
-
-          in: 19,
-          out: 905,
-          ticketno: 2388944,
-
-        },
-
-
-      ]
-    },
-
     editItem(item) {
       this.editedIndex = this.desserts.indexOf(item)
       this.editedItem = Object.assign({}, item)
@@ -238,38 +167,7 @@ export default {
         this.editedIndex = -1
       })
     },
-
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem)
-      } else {
-        this.desserts.push(this.editedItem)
-      }
-      this.close()
-    }, addSlot() {
-      if (!this.newSlot.in || !this.newSlot.out || !this.newSlot.ticketno) {
-        // Show an error message or handle it as needed
-        return;
-      }
-
-      const newSlot = {
-        // You may consider adding a unique key here
-        in: this.newSlot.in,
-        out: this.newSlot.out,
-        ticketno: this.newSlot.ticketno,
-      };
-
-      this.desserts.push(newSlot);
-
-      // Optionally, provide feedback for successful slot addition
-      // this.$toast.success('Slot added successfully'); // Adjust this line based on your notification mechanism
-
-      // Clear the input fields after adding the slot
-      this.newSlot.in = '';
-      this.newSlot.out = '';
-      this.newSlot.ticketno = '';
-    },
-  },
+  }
 }
 
 </script>

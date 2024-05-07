@@ -68,6 +68,9 @@ export default {
   setPriceList(state, payload) {
   state.priceList = payload;
   sessionStorage.setItem('priceList', JSON.stringify(payload));
-}
-     
+},
+  setHoliday(state, payload) {
+    state.holidays = payload;
+  sessionStorage.setItem('holidays', JSON.stringify(payload));
+  }   
 };
