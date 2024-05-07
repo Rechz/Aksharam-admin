@@ -258,7 +258,7 @@ export default {
             try {
                   const response = await axios.get('http://192.168.1.21:8081/dataType1/getTalk')
             if (response.status === 200) {
-                this.languages = response.data
+                this.languages = response.data.map(item => item.talk);
                 console.log(response.data)
             }
             
