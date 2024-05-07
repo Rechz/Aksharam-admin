@@ -1,47 +1,15 @@
 <template>
-    <!-- <v-dialog v-model="dialog" width="600">
-        <v-sheet width="800" class="p-5">
-            <v-row>
-                <v-col v-for="n in images" :key="n.id" class="d-flex child-flex" cols="4">
-                    <v-img :src="n.image" aspect-ratio="1" class="bg-grey-lighten-2" @click="selectImage(n)" cover>
-                        <template v-slot:placeholder>
-                            <v-row align="center" class="fill-height ma-0" justify="center">
-                                <v-progress-circular color="grey-lighten-5" indeterminate></v-progress-circular>
-                            </v-row>
-                        </template>
-                    </v-img>
-                </v-col>
-                <v-col class="d-flex child-flex" cols="4">
-                    <input type="file" style="display: none" ref="fileInput" @change="handleFileUpload">
-                    <v-btn @click="openFileInput" height="200" width="200" prepend-icon="mdi-upload" class="fw-bold"
-                        elevation="6" color="blue-grey-lighten-5">Upload Image</v-btn>
-                </v-col>
-            </v-row>
-        </v-sheet>
-    </v-dialog> -->
     <div class="row ">
         <div class="col-8 pt-0">
-            <v-container fluid class="pb-0">
-                <!-- <div style="height: 70px;">
-                    <div class="d-flex align-items-center">
-                        <label @click="dialog = true"
-                            class="label-btn text-center d-flex align-items-center justify-content-center"><v-icon
-                                class="mdi mdi-camera me-2" color="white"></v-icon>Select Image</label>
-                        <span id="image-chosen" class="ms-3">{{ imageName }}</span>
-                    </div>
-                    <p v-if=!preview class="mb-0 error-message ps-3">{{ imageError }}</p>
-                </div> -->
-
-            </v-container>
-            <v-container fluid class="pt-0">
+            <v-container fluid class="pt-0" v-if="showContent">
                 <!-- <v-card width="80%" class="p-3 " elevation="4"> -->
                 <!-- <div class="first-div"> -->
                 <!-- <div class="d-flex "> -->
                 <v-form ref="form" @submit.prevent="submitDetails">
-                    <v-select class="select mb-3" label="Select Language" density="comfortable" :items="languages"
-                        v-model="language"  :rules="languageRules"></v-select>
+                    <!-- <v-select class="select mb-3" label="Select Language" density="comfortable" :items="languages"
+                        v-model="language"  :rules="languageRules"></v-select> -->
                     <v-text-field v-model="title"
-                        :label="language === 'Malayalam' ? 'ഇനത്തിൻ്റെ തലക്കെട്ട്' : 'Heading'" density="comfortable"
+                        :label="language === 'Malayalam' ? 'ഇനത്തിൻ്റെ തലക്കെട്ട്' : 'SubHeading'" density="comfortable"
                          class="guide mb-3" :rules="titleRules"></v-text-field>
                      <div style="height: 70px;"> 
                     <div class="d-flex align-items-center">
@@ -86,13 +54,20 @@
                         <p class="mb-0 ms-3 error-message">{{ fileError }}</p>
                     </div>
                     <v-btn  width="250" height="40" class="text-capitalize" style="font-size: 16px;color: green;border-radius: 15px;" 
-                         variant="outlined" @click="showTextField = true"><v-icon class="mdi mdi-plus"></v-icon> Add Reference URL</v-btn>
+                         variant="outlined" @click="showTextField = true"><v-icon class="mdi mdi-plus"></v-icon> Add Reference</v-btn>
                     <!-- </div> -->
                     <div class="d-flex justify-content-end">
-                    <router-link to="/guide-app/addSub"><v-btn color="#2C7721" width="160" height="40" class="text-capitalize" style="font-size: 16px; "
-                        type="submit">Proceed</v-btn></router-link></div>
+                    <v-btn color="#2C7721" width="160" height="40" class="text-capitalize" style="font-size: 16px; "
+                        type="submit" ><v-icon class="mdi mdi-plus"></v-icon>Add Sub Item</v-btn></div>
                 </v-form>
             </v-container>
+            <v-container fluid class="pb-0">
+                <v-btn  width="250" height="40" class="text-capitalize" style="font-size: 16px;color: green;border-radius: 15px;" 
+                         variant="outlined" @click="showContent = true"><v-icon class="mdi mdi-plus"></v-icon> Add Sub Details</v-btn>
+            </v-container>
+            <div class="d-flex justify-content-end">
+                    <v-btn color="#2C7721" width="160" height="40" class="text-capitalize" style="font-size: 16px;border-radius: 15px; "
+                        type="submit" ><v-icon class="mdi mdi-plus"></v-icon>Add Item</v-btn></div>
         </div>
         <div class="col-4 pt-0">
             <v-img :src="preview" width="300" height="300" aspect-ratio="1" alt="Image Preview"></v-img>
@@ -123,6 +98,7 @@ export default {
             showTextField: false, 
             url: null,
             urlRules: [v => !!v || '*URL is required'],
+            showContent: false,
             images: [
                 {
                     "image": "https://picsum.photos/500/300?image=15",
@@ -249,11 +225,11 @@ export default {
             if ((this.validateFile() && this.validateImage()) && valid)
                 alert('Form is valid')
         },
-        saveUrl() {
+      saveUrl() {
       console.log('URL saved:', this.url);
       this.showTextField = false;
       this.url = ''; 
-    }
+    },
     }
 };
 </script>
