@@ -161,9 +161,7 @@ export default {
             this.dialogDelete = true
             this.editingIndex = this.items.indexOf(item)
             this.editedItem = Object.assign({}, item)
-    
             console.log(this.editedItem)
-           
         },
     }
 };

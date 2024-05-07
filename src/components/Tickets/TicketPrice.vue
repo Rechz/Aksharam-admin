@@ -119,9 +119,13 @@ export default {
           this.loadPrice();
         }
       }
-      catch (err) {
+      catch (error) {
         this.loadingAdd = false;
-        this.message = err.message;
+        if (error.response) {
+          this.message = error.response.data.message;
+        }
+        else {this.message = error.message;}
+        
         this.color = 'red';
         this.snackbar = true;
       }
