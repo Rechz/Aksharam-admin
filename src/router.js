@@ -78,6 +78,17 @@ const router = createRouter({
               path: '/guide-app/add',
               alias: '',
               component: () => import('./components/GuideApp/GuideAdd.vue'),
+              children: [
+                {
+                  path: '/guide-app/addHeading',
+                  alias: '',
+                  component: () => import('./components/GuideApp/DummyCard.vue'),
+                },
+                {
+                  path: '/guide-app/addSub',
+                  component: () => import('./components/GuideApp/GuideSub.vue'),
+                }
+              ],
             },
             {
               path: '/guide-app/view',

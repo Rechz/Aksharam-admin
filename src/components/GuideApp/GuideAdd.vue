@@ -5,12 +5,14 @@
             height="10"></v-progress-linear>
 
         <!-- Stepper -->
-        <v-stepper v-model="step" :items="items" show-actions v-if="showStepper">
+        <v-stepper hide-actions v-model="step" :items="items" show-actions v-if="showStepper">
             <template v-slot:item="{ item}">
                 <span>{{ item }}</span>
+                <!-- <dummy-card></dummy-card> -->
+                <router-view></router-view>
             </template>
         </v-stepper>
-
+        
         <!-- Button actions -->
         <v-btn v-if="step !== 1" @click="prevStep" color="primary">
             Back
@@ -25,11 +27,16 @@
 </template>
 
 <script>
+// import DummyCard from './DummyCard.vue';
+
 export default {
+    // components:{
+    //     DummyCard
+    // },
     data() {
         return {
             step: 1,
-            items: ['Step 1', 'Step 2', 'Step 3'],
+            items: ['Add Introduction', 'Add Sub Details', 'Step 3'],
             showProgressLinear: true,
             showStepper: true
         };
