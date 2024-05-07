@@ -71,7 +71,11 @@ export default {
       }
       catch (error) {
         this.loading = false;
-        this.message = error.response.data.message;
+        console.error(error);
+        if (error.response) {
+          this.message = error.response.data.message;
+        } else
+        this.message = error.message        
         this.snackbar = true;
       }
     },
