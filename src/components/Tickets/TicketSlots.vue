@@ -91,6 +91,7 @@
   </v-data-table>
 </template>
 <script>
+import axios from 'axios'
 export default {
   data() {
 
@@ -98,7 +99,7 @@ export default {
       selectedHour: null,
       selectedMinute: null,
       hours: Array.from({ length: 24 }, (_, i) => `${i}`.padStart(2, '0')),
-      minutes: ['00','15','30','45'],
+      minutes: ['00', '15', '30', '45'],
       dialog: false,
       dialogDelete: false,
       isHovered: false,
@@ -167,9 +168,14 @@ export default {
         this.editedIndex = -1
       })
     },
+    async getSlot() {
+      const response = await axios.get(`this.$store.getters.getUrl/api/stime/getSlot`)
+      if (response.status === 200) {
+        console.log(response.data)
+      }
+    }
   }
-}
-
+};
 </script>
 
 <style>

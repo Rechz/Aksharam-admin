@@ -111,6 +111,10 @@ export default {
             this.dialogAdd = false;
             this.message = "Price added Successfully!"
             this.snackbar = true;
+            this.loadingAdd = false;
+            this.category = null;
+            this.type = null;
+            this.price = null;
           }, 2000)
           this.loadPrice();
         }
