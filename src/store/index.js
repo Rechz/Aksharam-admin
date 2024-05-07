@@ -7,7 +7,7 @@ const store = createStore({
     return {
       // base_url: 'http://192.168.30.232:5000',
       // base_url: 'http://94.176.233.47:5000',
-      base_url: 'https://aksharammuseum.com',
+      base_url: 'https://aksharammuseum.com/admin',
       token: sessionStorage.getItem('token') || '',
       status: JSON.parse(sessionStorage.getItem('status')) || false,
       user: JSON.parse(sessionStorage.getItem('user')) || {},

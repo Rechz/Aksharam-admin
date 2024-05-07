@@ -113,7 +113,7 @@ export default {
             dialog: false,
             preview: null,
             audio: null,
-            languages: ['English', 'Malayalam'],
+            languages: [],
             title: null,
             description: null,
             language: null,
@@ -253,8 +253,25 @@ export default {
       console.log('URL saved:', this.url);
       this.showTextField = false;
       this.url = ''; 
-    }
-    }
+        },
+        async getAllLanguages() {
+            try {
+                  const response = await axios.get('http://192.168.1.21:8081/dataType1/getTalk')
+            if (response.status === 200) {
+                this.languages = response.data
+                console.log(response.data)
+            }
+            
+            }
+            catch (error) {
+                console.error(error)
+            }
+          
+        },
+    },
+    mounted() {
+        this.getAllLanguages()
+    },
 };
 </script>
 
