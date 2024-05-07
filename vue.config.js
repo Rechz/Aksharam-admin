@@ -2,8 +2,7 @@ const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
   allowedHosts: [
-      'localhost',
-      '.aksharammuseum.com' 
+      'aksharammuseum.com' 
     ],
   pluginOptions: {
     vuetify: {
