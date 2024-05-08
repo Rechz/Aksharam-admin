@@ -24,10 +24,10 @@ export default {
     methods: {
         change(item) {
             if (item === 'Add Items') {
-                this.$router.push('/guide-app/add')
+                this.$router.push('/admin/guide-app/add')
             }
             else {
-                this.$router.push('/guide-app/view')
+                this.$router.push('/admin/guide-app/view')
             }
             
         }
@@ -35,7 +35,7 @@ export default {
     computed: {
         tab: {
             get() {
-                if ((this.$route.path === '/guide-app/view')) {
+                if ((this.$route.path === '/admin/guide-app/view')) {
                     return 'Item Details';
                 }
                 else {
@@ -44,10 +44,10 @@ export default {
             },
             set(value) {
                 if (value === 'Item Details') {
-                    this.$router.push('/guide-app/view')
+                    this.$router.push('/admin/guide-app/view')
                 }
                 else {
-                    this.$router.push('/guide-app/add')
+                    this.$router.push('/admin/guide-app/add')
                 }
             }
         },

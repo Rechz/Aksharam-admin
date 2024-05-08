@@ -4,94 +4,95 @@ const router = createRouter({
     history : createWebHistory(),
   routes: [
     {
-      path: '/',
+      path: '/admin',
+      alias:'',
       component: () => import('./components/Home/AdminLogin.vue')
     },
     {
-      path: '/dashboard',
+      path: '/admin/dashboard',
       component: () => import('./components/Home/AdminDash.vue'),
         
       children: [
         {
-          path: '/tickets',
+          path: '/admin/tickets',
           component: () => import('./components/Tickets/TicketNav.vue'),
           meta: { requiresAuth: true, role: 'admin' },
           children: [
             {
-              path: '/tickets/details',
+              path: '/admin/tickets/details',
               alias: '',
               component: () => import('./components/Tickets/TicketPage.vue')
             },
             {
-              path: '/tickets/price',
+              path: '/admin/tickets/price',
               component: () => import('./components/Tickets/TicketPrice.vue')
             },
             {
-              path: '/tickets/slots',
+              path: '/admin/tickets/slots',
               component: () => import('./components/Tickets/TicketSlots.vue')
             },
           ]
         },
         {
-          path: '/calendar',
+          path: '/admin/calendar',
           component: () => import('./components/Holidays/CalendarNav.vue'),
           meta: { requiresAuth: true, role: 'admin' },
           children: [
             {
-              path: '/calendar/addHoliday',
+              path: '/admin/calendar/addHoliday',
               alias: '',
               component: () => import('./components/Holidays/AddHoliday.vue'),
             },
             {
-              path: '/calendar/viewHoliday',
+              path: '/admin/calendar/viewHoliday',
               component: () => import('./components/Holidays/ViewHoliday.vue'),
             }
           ]
         },
         {
-          path: '/dashboard-page',
+          path: '/admin/dashboard-page',
           alias: '',
           component: () => import('./components/Dashboard/DashPage.vue'),
           meta: { requiresAuth: true, role: 'admin' },
         },
         {
-          path: '/employee',
+          path: '/admin/employee',
           component: () => import('./components/Employees/EmployeeNav.vue'),
           meta: { requiresAuth: true, role: 'admin' },
           children: [
             {
-              path: '/employee/add',
+              path: '/admin/employee/add',
               alias: '',
               component: () => import('./components/Employees/EmployeePage.vue'),
             },
             {
-              path: '/employee/scanner',
+              path: '/admin/employee/scanner',
               component: () => import('./components/Employees/ScannerRegister.vue'),
             }
           ]
         },
         {
-          path: '/guide-app',
+          path: '/admin/guide-app',
           component: () => import('./components/GuideApp/GuideNav.vue'),
           children: [
             {
-              path: '/guide-app/add',
+              path: '/admin/guide-app/add',
               alias: '',
               component: () => import('./components/GuideApp/GuideAdd.vue'),
               children: [
                 {
-                  path: '/guide-app/addHeading',
+                  path: '/admin/guide-app/addHeading',
                   alias: '',
                   component: () => import('./components/GuideApp/DummyCard.vue'),
                 },
                 {
-                  path: '/guide-app/addSub',
+                  path: '/admin/guide-app/addSub',
                   component: () => import('./components/GuideApp/GuideSub.vue'),
                 }
               ],
             },
             {
-              path: '/guide-app/view',
+              path: '/admin/guide-app/view',
               component: () => import('./components/GuideApp/GuideView.vue'),
             }
           ]
@@ -107,11 +108,9 @@ router.beforeEach((to, _ , next) => {
     const isAuthenticated = store.getters.getStatus;
     console.log('status', isAuthenticated)
     if (isAuthenticated ) {
-      console.log('enter admn')
         next();
     } else {
-            console.log('enter emp')
-        next('/guide-app');
+        next('/admin/guide-app');
     }
   } else {
     next();

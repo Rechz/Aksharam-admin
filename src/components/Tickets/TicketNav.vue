@@ -24,23 +24,23 @@ export default {
   methods: {
     change(item) {
       if (item === 'Details') {
-        this.$router.push('/tickets/details')
+        this.$router.push('/admin/tickets/details')
       }
       else if (item === 'Price') {
-        this.$router.push('/tickets/price')
+        this.$router.push('/admin/tickets/price')
       }
       else {
-        this.$router.push('/tickets/slots')
+        this.$router.push('/admin/tickets/slots')
       }
     }
   },
   computed: {
     tab: {
       get() {
-        if ((this.$route.path === '/tickets/slots')) {
+        if ((this.$route.path === '/admin/tickets/slots')) {
           return 'Slots';
         }
-        else if (this.$route.path === '/tickets/price') {
+        else if (this.$route.path === '/admin/tickets/price') {
           return 'Price';
         }
         else {
@@ -49,13 +49,13 @@ export default {
       },
       set(value) {
         if (value === 'Details') {
-          this.$router.push('/tickets/details')
+          this.$router.push('/admin/tickets/details')
         }
         else if (value === 'Price') {
-          this.$router.push('/tickets/price')
+          this.$router.push('/admin/tickets/price')
         }
         else {
-          this.$router.push('/tickets/slots')
+          this.$router.push('/admin/tickets/slots')
         }
       }
     }
