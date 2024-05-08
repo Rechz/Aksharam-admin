@@ -1,7 +1,8 @@
 <template>
     <div class="row ">
         <div class="col-8 pt-0">
-            <v-container fluid class="pt-0" v-if="showContent">
+            <v-sheet v-if="showContent" :elevation="2" :height=auto :width="750" color="light-green-lighten-4 ">
+            <v-container fluid class="pt-3" >
                 <!-- <v-card width="80%" class="p-3 " elevation="4"> -->
                 <!-- <div class="first-div"> -->
                 <!-- <div class="d-flex "> -->
@@ -50,7 +51,7 @@
                     </div>
                     <!-- video end -->
                     <div>
-                        <v-text-field v-if="showTextField" label="Add URL" density="comfortable" class="mt-3 mb-3" :rules="urlRules" outlined v-model="url" style="width: 500px;"></v-text-field>
+                        <v-text-field v-if="showTextField" label="Add URL" density="comfortable" class="mt-3 mb-3 select" :rules="urlRules" outlined v-model="url" style="width: 500px;"></v-text-field>
                         <p class="mb-0 ms-3 error-message">{{ fileError }}</p>
                     </div>
                     <v-btn  width="250" height="40" class="text-capitalize" style="font-size: 16px;color: green;border-radius: 15px;" 
@@ -61,6 +62,7 @@
                         type="submit" ><v-icon class="mdi mdi-plus"></v-icon>Add Sub Item</v-btn></div>
                 </v-form>
             </v-container>
+            </v-sheet>
             <v-container fluid class="pb-0">
                 <v-btn  width="250" height="40" class="text-capitalize" style="font-size: 16px;color: green;border-radius: 15px;" 
                          variant="outlined" @click="showContent = true"><v-icon class="mdi mdi-plus"></v-icon> Add Sub Details</v-btn>
@@ -266,16 +268,29 @@ export default {
     color: green;
 }
 
-:deep(.select .v-input__control) {
-    width: 250px !important;
+/* :deep(.select .v-input__control) { */
+    /* width: 250px !important; */
     /* height: 45px !important; */
     /* background-color: #DFE4D7 !important; */
     /* border-bottom: 1px solid #546E7A; */
+/* } */
+
+:deep(.select .v-input__control) {
+  border-bottom: 2px solid #216D17;
+  background-color: #DFE4D7 !important;
+  width: 400px !important;
+}
+
+:deep(.desc .v-input__control) {
+  border-bottom: 2px solid #216D17;
+  background-color: #DFE4D7 !important;
+  width: 700px !important;
 }
 
 :deep(.guide .v-input__control) {
-    width: 250px !important;
-    /* height: 45px !important; */
+    border-bottom: 2px solid #216D17;
+    background-color: #DFE4D7 !important;
+    width: 400px !important;
 }
 
 :deep(.v-input__details) {

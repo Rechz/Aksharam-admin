@@ -46,10 +46,10 @@
                     density="comfortable" single-line></v-text-field>
                   <v-text-field v-model="editedItem.email" label="Email ID" prepend-inner-icon="mdi-email-outline"
                     density="comfortable" single-line></v-text-field>
-                  <v-text-field v-model="editedItem.tempAddress" label="Temporary Address"
-                    prepend-inner-icon="mdi-map-marker-outline" density="comfortable" single-line></v-text-field>
-                  <v-text-field v-model="editedItem.permAddress" label="Permanent Address"
-                    prepend-inner-icon="mdi-home-map-marker" density="comfortable" single-line></v-text-field>
+                  <v-textarea v-model="editedItem.tempAddress" label="Temporary Address"
+                    prepend-inner-icon="mdi-map-marker-outline" density="comfortable" single-line></v-textarea>
+                  <v-textarea v-model="editedItem.permAddress" label="Permanent Address"
+                    prepend-inner-icon="mdi-home-map-marker" density="comfortable" single-line></v-textarea>
                 </div>
                 <v-card-actions>
                   <v-btn color="white" block :style="{ backgroundColor: editedIndex === -1 ? '#1B5E20' : '#546E7A' }"
@@ -111,12 +111,12 @@
                     </v-row>
                     <v-row class="mb-2 mt-2">
                       <div class="col-4">Temporary Address</div>
-                      <div class="col-8 d-flex">: <div class="ms-1">{{ editedItem.tempAddress }}</div>
+                      <div class="col-8 d-flex">: <div class="ms-1"><pre style="font-family: 'Arial', sans-serif;">{{ editedItem.tempAddress }}</pre></div>
                       </div>
                     </v-row>
                     <v-row class="mb-2 mt-2">
                       <div class="col-4">Permanent Address</div>
-                      <div class="col-8 d-flex">: <div class="ms-1">{{ editedItem.permAddress }}</div>
+                      <div class="col-8 d-flex">: <div class="ms-1"><pre style="font-family: 'Arial', sans-serif;">{{ editedItem.permAddress }}</pre></div>
                       </div>
                     </v-row>
                     <v-row class="mb-2">

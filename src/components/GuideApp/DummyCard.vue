@@ -42,7 +42,7 @@
                         v-model="language"  :rules="languageRules"></v-select>
                     <v-text-field v-model="title"
                         :label="language === 'Malayalam' ? 'ഇനത്തിൻ്റെ തലക്കെട്ട്' : 'Heading'" density="comfortable"
-                         class="guide mb-3" :rules="titleRules"></v-text-field>
+                         class="select mb-3" :rules="titleRules"></v-text-field>
                      <div style="height: 70px;"> 
                     <div class="d-flex align-items-center">
                         <label
@@ -82,15 +82,18 @@
                     </div>
                     <!-- video end -->
                     <div>
-                        <v-text-field v-if="showTextField" label="Add URL" density="comfortable" class="mt-3 mb-3" :rules="urlRules" outlined v-model="url" style="width: 500px;"></v-text-field>
+                        <v-text-field v-if="showTextField" label="Add URL" density="comfortable" class="mt-3 mb-3 select" :rules="urlRules" outlined v-model="url" style="width: 500px;"></v-text-field>
                         <p class="mb-0 ms-3 error-message">{{ fileError }}</p>
                     </div>
                     <v-btn  width="250" height="40" class="text-capitalize" style="font-size: 16px;color: green;border-radius: 15px;" 
                          variant="outlined" @click="showTextField = true"><v-icon class="mdi mdi-plus"></v-icon> Add Reference URL</v-btn>
                     <!-- </div> -->
                     <div class="d-flex justify-content-end">
-                    <router-link to="/guide-app/addSub"><v-btn color="#2C7721" width="160" height="40" class="text-capitalize" style="font-size: 16px; "
-                        type="submit">Proceed</v-btn></router-link></div>
+                    <!-- <router-link to="/guide-app/addSub"> -->
+                        <v-btn color="#2C7721" width="160" height="40" class="text-capitalize" style="font-size: 16px; "
+                        type="submit" @click="proceedToNextStep">Proceed</v-btn>
+                    <!-- </router-link> -->
+                </div>
                 </v-form>
             </v-container>
         </div>
@@ -176,6 +179,10 @@ export default {
 
     },
     methods: {
+        proceedToNextStep() {
+      // Emit an event to notify the parent component to proceed to the next step
+      this.$emit('proceed'); // Emit a custom event named 'proceed'
+    },
         selectImage(selectedImage) {
             // Update the file name in the dialog box
             this.imageName = selectedImage.name;
@@ -307,11 +314,22 @@ export default {
     color: green;
 }
 
-:deep(.select .v-input__control) {
-    width: 250px !important;
+/* :deep(.select .v-input__control) {
+    width: 250px !important; */
     /* height: 45px !important; */
     /* background-color: #DFE4D7 !important; */
     /* border-bottom: 1px solid #546E7A; */
+/* } */
+:deep(.select .v-input__control) {
+  border-bottom: 2px solid #216D17;
+  background-color: #DFE4D7 !important;
+  width: 400px !important;
+}
+
+:deep(.desc .v-input__control) {
+  border-bottom: 2px solid #216D17;
+  background-color: #DFE4D7 !important;
+  width: 700px !important;
 }
 
 :deep(.guide .v-input__control) {
