@@ -94,9 +94,9 @@ export default {
             titleRules: [v => !!v || '*Title is required'],
             descriptionRules: [v => !!v || '*Description is required'],
             languageRules: [v => !!v || '*Language is required'],
-            showTextField: false, 
+            showTextField: false,
             url: null,
-            urlRules: [v => !!v || '*URL is required'],  
+            urlRules: [v => !!v || '*URL is required'],
         };
     },
     computed: {
@@ -106,7 +106,7 @@ export default {
         handleImageChange() {
             const file = this.$refs.pic.files[0];
             if (file) {
-                
+
                 this.imageName = file.name; // Assuming you have imageName property to display the file name
                 // Optionally, you can also preview the image
                 const reader = new FileReader();
@@ -121,14 +121,14 @@ export default {
             const file = event.target.files[0];
             if (file) {
                 this.audio = file;
-                this.audioName = file.name; 
+                this.audioName = file.name;
             }
         },
         handleVideoChange(event) {
             const file = event.target.files[0];
             if (file) {
                 this.video = file;
-                this.videoName = file.name; 
+                this.videoName = file.name;
             }
         },
         proceedToNextStep() {
@@ -172,33 +172,58 @@ export default {
         async submitDetails() {
             const { valid } = await this.$refs.form.validate();
             if ((this.validateImage() && this.validateAudio()) && valid) {
-                const data = JSON.stringify({
-                    "title": this.title,
-                    "description": this.description,
-                    "referenceUrl": this.url
-                })
+                const data = {
+                    title: this.title,
+                    description: this.description,
+                    referenceUrl: this.url
+                };
                 const formData = new FormData();
-                formData.append("data", data);
+                formData.append("data", JSON.stringify(data));
                 formData.append("img", this.image);
                 formData.append("audio", this.audio);
                 formData.append("video", this.video);
-                console.log(formData)
+                console.log(formData);
                 try {
                     const response = await axios.post(`http://192.168.1.34:8081/DataEntry/TalkType?dId=${this.language}`, formData, {
                         headers: {
-                            'Content-Type': 'multipart/form-data'
-                        }
-                    }); 
-                    if (response.status === 200) {
-                        console.log(response.data)
-                        this.proceedToNextStep()
+                        'Content-Type': 'multipart/form-data'
+                    }
+            });
+                if (response.status === 200) {
+                    console.log(response.data);
+                    this.proceedToNextStep();
                 }
-                }
-                catch (error) {
-                    console.error(error)
-                }   
-            }     
-        },
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    },
+
+
+
+// async submitDetails() {
+           
+//             if (this.validateAudio()) {
+              
+//                 const formData = new FormData();
+//                 formData.append("file", this.audio);
+//                 try {
+//                     const response = await axios.post('http://192.168.1.34:8081/fileData/uploadJPG', formData, {
+//                         headers: {
+//                             'Content-Type': 'multipart/form-data'
+//                         }
+//                     }); 
+//                     if (response.status === 200) {
+//                         console.log(response.data)
+//                         this.proceedToNextStep()
+//                 }
+//                 }
+//                 catch (error) {
+//                     console.error(error)
+//                 }   
+//             }     
+//         },
+
         saveUrl() {
       console.log('URL saved:', this.url);
       this.showTextField = false;

@@ -5,7 +5,7 @@ const router = createRouter({
   routes: [
     {
       path: '/admin',
-      alias:'',
+      // alias:'',
       component: () => import('./components/Home/AdminLogin.vue')
     },
     {
