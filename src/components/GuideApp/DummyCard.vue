@@ -169,25 +169,29 @@ export default {
             }
         },
 
+
+
         async submitDetails() {
-            const { valid } = await this.$refs.form.validate();
-            if ((this.validateImage() && this.validateAudio()) && valid) {
-                const data = {
-                    title: this.title,
-                    description: this.description,
-                    referenceUrl: this.url
+            // const { valid } = await this.$refs.form.validate();
+            
+                const body = {
+                    "title": this.title,
+                    "description": this.description,
+                    "referenceUrl": this.url
                 };
-                const formData = new FormData();
-                formData.append("data", JSON.stringify(data));
-                formData.append("img", this.image);
-                formData.append("audio", this.audio);
-                formData.append("video", this.video);
-                console.log(formData);
+                const formdata = new FormData();
+            formdata.append("data", new Blob([JSON.stringify(body)], { type: "application/json" }));
+            // formdata.append("data", JSON.stringify(body))
+            formdata.append("img", this.image);
+            formdata.append("video", this.video);
+            formdata.append("audio", this.audio);
+            // formdata.append("img", new Blob([this.image], { type: 'application/octet-stream' }));
+            // formdata.append("video", new Blob([this.video], { type: 'application/octet-stream' }));
+            // formdata.append("audio", new Blob([this.audio], { type: 'application/octet-stream' }));
+                console.log(formdata);
                 try {
-                    const response = await axios.post(`http://192.168.1.34:8081/DataEntry/TalkType?dId=${this.language}`, formData, {
-                        headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
+                    const response = await axios.post(`http://localhost:8086/DataEntry/TalkType?dId=${this.language}`, formdata, {
+                        
             });
                 if (response.status === 200) {
                     console.log(response.data);
@@ -196,34 +200,8 @@ export default {
             } catch (error) {
                 console.error(error);
             }
-        }
+        
     },
-
-
-
-// async submitDetails() {
-           
-//             if (this.validateAudio()) {
-              
-//                 const formData = new FormData();
-//                 formData.append("file", this.audio);
-//                 try {
-//                     const response = await axios.post('http://192.168.1.34:8081/fileData/uploadJPG', formData, {
-//                         headers: {
-//                             'Content-Type': 'multipart/form-data'
-//                         }
-//                     }); 
-//                     if (response.status === 200) {
-//                         console.log(response.data)
-//                         this.proceedToNextStep()
-//                 }
-//                 }
-//                 catch (error) {
-//                     console.error(error)
-//                 }   
-//             }     
-//         },
-
         saveUrl() {
       console.log('URL saved:', this.url);
       this.showTextField = false;
@@ -231,7 +209,7 @@ export default {
         },
         async getAllLanguages() {
             try {
-                  const response = await axios.get('http://192.168.1.34:8081/dataType1/getTalk')
+                const response = await axios.get('http://localhost:8086/dataType1/getTalk')
             if (response.status === 200) {
                 this.languages = response.data
                     // .map(item => item.talk);

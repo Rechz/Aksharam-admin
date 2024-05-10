@@ -66,7 +66,7 @@ export default {
         });
         if (success) {
           console.log('admin')
-          this.$router.push('/admin/dashboard');
+          this.$router.push('/dashboard');
         }
       }
       catch (error) {

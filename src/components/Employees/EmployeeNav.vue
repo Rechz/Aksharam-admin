@@ -26,24 +26,24 @@
     methods: {
     change(item){
       if (item === 'Add Employee'){
-        this.$router.push('/admin/employee/add')
+        this.$router.push('/employee/add')
       }
       else {
-        this.$router.push('/admin/employee/scanner')
+        this.$router.push('/employee/scanner')
       }
     }
     },
     computed: {
       tab: {
         get() {
-          return this.$route.path === '/admin/employee/scanner' ? 'Scanner Register' : 'Add Employee';
+          return this.$route.path === '/employee/scanner' ? 'Scanner Register' : 'Add Employee';
         },
         set(value) {
           // Update route based on tab value
           if (value === 'Add Employee') {
-            this.$router.push('/admin/employee/add');
+            this.$router.push('/employee/add');
           } else {
-            this.$router.push('/admin/employee/scanner');
+            this.$router.push('/employee/scanner');
           }
         }
       }
