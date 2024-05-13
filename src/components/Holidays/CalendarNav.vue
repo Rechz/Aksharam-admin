@@ -24,10 +24,10 @@ export default {
     methods: {
         change(item) {
             if (item === 'Add Holiday') {
-                this.$router.push('/calendar/addHoliday')
+                this.$router.push({ name: 'holiday-add' })
             }
             else {
-                this.$router.push('/calendar/viewHoliday')
+                this.$router.push({ name: 'holiday-view' })
             }
             
         }
@@ -35,7 +35,7 @@ export default {
     computed: {
         tab: {
             get() {
-                if ((this.$route.path === '/calendar/viewHoliday')) {
+                if ((this.$route.name === 'holiday-view')) {
                     return 'View Holiday';
                 }
                 else {
@@ -44,10 +44,10 @@ export default {
             },
             set(value) {
                 if (value === 'View Holiday') {
-                    this.$router.push('/calendar/viewHoliday')
+                    this.$router.push({ name: 'holiday-view' })
                 }
                 else {
-                    this.$router.push('/calendar/addHoliday')
+                    this.$router.push({ name: 'holiday-add' })
                 }
             }
         },

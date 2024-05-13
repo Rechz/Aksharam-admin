@@ -8,16 +8,16 @@
           </v-list-item>
           <v-list density="compact" nav class="mt-0">
             <v-list-item value="home" class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;" :disabled="!status"
-              @click.prevent="navigate('/dashboard-page')">
+              @click.prevent="navigate({name: 'dashboard'})">
               Overview</v-list-item>
             <v-list-item value="ticket" class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;"
-              :disabled="!status" @click.prevent="navigate('/tickets')">Tickets</v-list-item>
+              :disabled="!status" @click.prevent="navigate({name: 'ticket-details'})">Tickets</v-list-item>
             <v-list-item value="account" class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;"
-              :disabled="!status" @click.prevent="navigate('/employee')">Employees</v-list-item>
+              :disabled="!status" @click.prevent="navigate({ name: 'employee-add' })">Employees</v-list-item>
             <v-list-item value="guide" class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;"
-              @click="$router.push('/guide-app')">Guide-App</v-list-item>
+              @click="$router.push({ name: 'guide-add-main' })">Guide-App</v-list-item>
             <v-list-item value="calendar" class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;"
-              :disabled="!status" @click.prevent="navigate('/calendar')">Calendar</v-list-item>
+              :disabled="!status" @click.prevent="navigate({ name: 'holiday-add' })">Calendar</v-list-item>
           </v-list>
         </v-navigation-drawer>
       </v-layout>
@@ -42,12 +42,12 @@ export default {
       drawer: true,
       rail: true,
       navItems: [ 
-        { text: 'Overview', route: '/dashboard' },
-        { text: 'Overview', route: '/dashboard-page' },
-        { text: 'Tickets', route: '/tickets' },
-        { text: 'Employee', route: '/employee' },
-        { text: 'Museum Calendar', route: '/calendar' },
-        { text: 'Guide-App', route: '/guide-app' }
+        // { text: 'Dashboard', route: '/admin/dashboard-page' },
+        { text: 'Overview', route: '/admin/dashboard-page' },
+        { text: 'Tickets', route: '/admin/tickets' },
+        { text: 'Employee', route: '/admin/employee' },
+        { text: 'Museum Calendar', route: '/admin/calendar' },
+        { text: 'Guide-App', route: '/admin/guide-app' }
       ],
     }
   },
@@ -71,7 +71,7 @@ export default {
   },
   methods: {
     logout() {
-      this.$router.push('/');
+      this.$router.push({ name: 'admin-login' });
     },
     navigate(route) {
       if (this.status) {

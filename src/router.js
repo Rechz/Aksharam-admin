@@ -4,86 +4,86 @@ const router = createRouter({
     history : createWebHistory(),
   routes: [
     {
-      path: '/',
+      path: '/admin',
       name: 'admin-login',
       component: () => import('./components/Home/AdminLogin.vue')
     },
     {
-      path: '/dashboard',
+      path: '/admin/dashboard',
       component: () => import('./components/Home/AdminDash.vue'),
        name: 'overview',
       children: [
         {
-          path: '/tickets',
+          path: '/admin/tickets',
           component: () => import('./components/Tickets/TicketNav.vue'),
           meta: { requiresAuth: true, role: 'admin' },
           name: 'tickets',
           children: [
             {
-              path: '/tickets/details',
+              path: '/admin/tickets/details',
               alias: '',
               name: 'ticket-details',
               component: () => import('./components/Tickets/TicketPage.vue')
             },
             {
-              path: '/tickets/price',
+              path: '/admin/tickets/price',
               name: 'ticket-price',
               component: () => import('./components/Tickets/TicketPrice.vue')
             },
             {
-              path: '/tickets/slots',
+              path: '/admin/tickets/slots',
               name: 'ticket-slots',
               component: () => import('./components/Tickets/TicketSlots.vue')
             },
           ]
         },
         {
-          path: '/calendar',
+          path: '/admin/calendar',
           name: 'calendar',
           component: () => import('./components/Holidays/CalendarNav.vue'),
           meta: { requiresAuth: true, role: 'admin' },
           children: [
             {
-              path: '/calendar/addHoliday',
+              path: '/admin/calendar/addHoliday',
               alias: '',
               name: 'holiday-add',
               component: () => import('./components/Holidays/AddHoliday.vue'),
             },
             {
-              path: '/calendar/viewHoliday',
+              path: '/admin/calendar/viewHoliday',
                name: 'holiday-view',
               component: () => import('./components/Holidays/ViewHoliday.vue'),
             }
           ]
         },
         {
-          path: '/dashboard-page',
+          path: '/admin/dashboard-page',
           alias: '',
          name: 'dashboard',
           component: () => import('./components/Dashboard/DashPage.vue'),
           meta: { requiresAuth: true, role: 'admin' },
         },
         {
-          path: '/employee',
+          path: '/admin/employee',
           name: 'employee',
           component: () => import('./components/Employees/EmployeeNav.vue'),
           meta: { requiresAuth: true, role: 'admin' },
           children: [
             {
-              path: '/employee/add',
+              path: '/admin/employee/add',
               alias: '',
               name: 'employee-add',
               component: () => import('./components/Employees/EmployeePage.vue'),
             },
             {
-              path: '/employee/scanner',
+              path: '/admin/employee/scanner',
               name: 'scanner',
               component: () => import('./components/Employees/ScannerRegister.vue'),
             }
           ]
         },
         {
-          path: '/guide-app',
+          path: '/admin/guide-app',
           name: 'guide-app',
           component: () => import('./components/GuideApp/GuideNav.vue'),
           children: [
@@ -94,20 +94,20 @@ const router = createRouter({
               component: () => import('./components/GuideApp/GuideAdd.vue'),
               children: [
                 {
-                  path: '/guide-app/addHeading',
+                  path: '/admin/guide-app/addHeading',
                   alias: '',
                   name: 'guide-add-sub',
                   component: () => import('./components/GuideApp/DummyCard.vue'),
                 },
                 {
-                  path: '/guide-app/addSub',
+                  path: '/admin/guide-app/addSub',
                   name: 'guide-add-sub-sub',
                   component: () => import('./components/GuideApp/GuideSub.vue'),
                 }
               ],
             },
             {
-              path: '/guide-app/view',
+              path: '/admin/guide-app/view',
               name: 'guide-view',
               component: () => import('./components/GuideApp/GuideView.vue'),
             }
@@ -126,7 +126,7 @@ router.beforeEach((to, _ , next) => {
     if (isAuthenticated ) {
         next();
     } else {
-        next('/guide-app');
+        next({ name: 'guide-add-main' });
     }
   } else {
     next();

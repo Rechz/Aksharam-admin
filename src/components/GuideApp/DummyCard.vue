@@ -11,6 +11,8 @@
                     <v-text-field v-model="title"
                         :label="language === 'Malayalam' ? 'ഇനത്തിൻ്റെ തലക്കെട്ട്' : 'Heading'" density="comfortable"
                         class="select mb-3" :rules="titleRules"></v-text-field>
+                        <p v-if="heading">{{ heading }}</p>
+                        <v-btn @click="submitHeading" color="green" class="mb-3">Submit</v-btn>
                     <!-- image -->
                     <div style="height: 70px;">
                         <input type="file" ref=pic id="image-btn" hidden @change="handleImageChange($event)" />
@@ -80,6 +82,8 @@ export default {
             audioName: 'No file chosen',
             imageName: 'No file chosen',
             videoName: 'No file chosen',
+            heading: null,
+            mainId: null,
             image: null,
             audio: null,
             video: null,
@@ -169,7 +173,20 @@ export default {
             }
         },
 
-
+        async submitHeading() {
+            console.log('submit heading');
+            try {
+                const response = await axios.post(`http://192.168.1.34:8081/`);
+                if (response.status === 200) {
+                    console.log(response.data);
+                    this.mainId = response.data;
+                    this.heading = response.data
+                }
+            }
+            catch (err) {
+                console.error(err);
+            }
+        },
 
         async submitDetails() {
             // const { valid } = await this.$refs.form.validate();
@@ -190,7 +207,7 @@ export default {
             // formdata.append("audio", new Blob([this.audio], { type: 'application/octet-stream' }));
                 console.log(formdata);
                 try {
-                    const response = await axios.post(`http://localhost:8086/DataEntry/TalkType?dId=${this.language}`, formdata, {
+                    const response = await axios.post(`http://192.168.1.95:8081/DataEntry/TalkType?dId=${this.language}`, formdata, {
                         
             });
                 if (response.status === 200) {
@@ -209,7 +226,7 @@ export default {
         },
         async getAllLanguages() {
             try {
-                const response = await axios.get('http://localhost:8086/dataType1/getTalk')
+                const response = await axios.get('http://192.168.1.95:8081/dataType1/getTalk')
             if (response.status === 200) {
                 this.languages = response.data
                     // .map(item => item.talk);
