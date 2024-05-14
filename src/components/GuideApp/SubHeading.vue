@@ -2,7 +2,7 @@
     <v-stepper v-model="step" :items="items" :show-actions="action" :hide-actions="!action" elevation="0" alt-labels
         :disabled="false" next-text="Proceed to next step" prev-text="Back" color="success" flat>
         <template v-if="step === 1">
-            <h4 class="text-center mt-4 fw-bolder "><u>Add Main Heading</u></h4>
+            <h4 class="text-center mt-4 fw-bolder "><u>Add Sub Heading</u></h4>
             <p class="text-danger fst-italic mt-1">*Please submit Malayalam & English data before proceeding to next
                 page.</p>
             <div class="d-flex">
@@ -15,8 +15,9 @@
                         v-model="description" :rules="descriptionRules"></v-textarea>
                     <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable" class=" select"
                         rows="3" outlined v-model="url"></v-textarea>
-                    <div class="d-flex justify-content-start ">
+                    <div class="d-flex justify-content-start gap-2">
                         <v-btn color="#2C7721" size="large" class="mb-3" type="submit">Submit</v-btn>
+                        <v-btn color="#2C7721" size="large" class="mb-3" @click="addNewTopic">Back to Main</v-btn>
                     </div>
                 </v-form>
                 <div class="w-100">
@@ -28,7 +29,7 @@
 
         </template>
         <template v-else-if="step === 2">
-            <h4 class="text-center mt-4 fw-bolder "><u>Main Heading Image</u></h4>
+            <h4 class="text-center mt-4 fw-bolder "><u>Subheading Images</u></h4>
             <div class="mt-5">
                 <input type="file" multiple @change="handleFileUpload" class="mb-3">
                 <div class="d-flex gap-4 flex-wrap ">
@@ -49,8 +50,8 @@
 
         </template>
         <template v-else-if="step === 3">
-            <h4 class="text-center mt-4 fw-bolder "><u>Main Heading Audio/Video</u></h4>
             <div class="my-3">
+                <h4 class="text-center mt-4 fw-bolder "><u>SubHeading Audio/Video</u></h4>
                 <v-select class="select mb-3" label="Select Language" density="comfortable" :items="languages"
                     v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"></v-select>
                 <div class="d-flex flex-column gap-5">
@@ -84,50 +85,55 @@
         <template v-else>
             <div style="height: 50vh;" class="my-5 d-flex flex-column justify-content-center align-items-center"
                 v-if="!subhead">
-                <v-btn color="green" class="mb-3" @click="subhead = true; action= false" size="x-large"
-                    append-icon="mdi-step-forward">Add
+                <v-btn color="green" class="mb-3" @click="subhead = true; action = false" size="x-large"
+                    append-icon="mdi-step-forward">Add New Sub of
                     Subheading</v-btn>
 
-                <v-btn color="green" class="mb-3" @click="step = 1; action = true; subhead = false;"
-                    prepend-icon="mdi-step-backward">Add
-                    New Topic</v-btn>
+                <v-btn color="green" class="mb-3" @click="step = 1; subhead = false;"
+                    prepend-icon="mdi-step-backward">Add New
+                    Subheading</v-btn>
+
+                <v-btn color="green" class="mb-3" @click="addNewTopic" prepend-icon="mdi-step-backward-2">Add New Main
+                    Topic</v-btn>
             </div>
-            <SubHeading v-else @add-new-topic="step = 1; action = true; subhead = false;"
-                @back-main="step = 1; action = true; subhead = false;" />
+
+            <SubSubHeading v-else @add-new-sub="step = 1; action = true; subhead = false;" @add-new-topic="backMain" />
         </template>
 
     </v-stepper>
 </template>
 
 <script>
-import SubHeading from './SubHeading.vue'
+import SubSubHeading from './SubSubHeading.vue'
 import axios from 'axios';
 export default {
-    components: 
+    components:
     {
-        SubHeading
+        SubSubHeading
     },
     data() {
         return {
+            action: true,
             malSubmit: false,
             engSubmit: false,
             step: 1,
-            subhead: false,
             items: [
-                'Main Topic',
+                'Subheading Topic',
                 'Upload Images',
                 'Upload Audio/Video',
-                'Subheadings'
+                'Sub of Subheadings'
             ],
-            action: true,
             images: [],
+            subhead : false,
             imgPreview: [],
-            fileTypes: [],
+            fileTypes: [{ "id": 1, "fileType": "Audio" }, { "id": 2, "fileType": "Video" }],
             fileType: {},
             idmal: sessionStorage.getItem('id1'),
             ideng: sessionStorage.getItem('id2'),
-            heading: null,       
-            languages: [],
+            subidmal: sessionStorage.getItem('subid1'),
+            subideng: sessionStorage.getItem('subid2'),
+            heading: null,
+            languages: [{ talk: 'Malayalam', dtId: 1 }, { talk: 'English', dtId: 2 }],
             title: null,
             description: null,
             language: 1,
@@ -139,8 +145,7 @@ export default {
             audioFiles: [],
             videoFiles: [],
             audioId: null,
-            videoId: null,
-            
+            videoId: null
         };
     },
     computed: {
@@ -152,6 +157,12 @@ export default {
     },
     methods: {
         
+        addNewTopic() {
+            this.$emit('add-new-topic'); // Emitting an event named 'add-new-topic'
+        },
+        backMain() {
+            this.$emit('back-main'); // Emitting an event named 'add-new-topic'
+        },
         handleAudio(event) {
             const selectedFiles = event.target.files;
             for (let i = 0; i < selectedFiles.length; i++) {
@@ -181,10 +192,10 @@ export default {
             console.log('malayalam', this.idmal)
             const formData = new FormData();
             this.images.forEach((image) => {
-                formData.append("file", image);
+                formData.append("files", image);
             });
             try {
-                const response = await axios.post(`http://192.168.1.24:8081/imgData/uploadImg?englishUId=${this.ideng}&malUid=${this.idmal}`, formData);
+                const response = await axios.post(`http://192.168.1.24:8081/imgData/uploadImg1?englishUId=${this.subideng}&malUid=${this.subidmal}`, formData);
                 if (response.status === 200) {
                     alert('success')
                     this.images = [];
@@ -200,8 +211,7 @@ export default {
                     console.log('gettype', response.data)
                     response.data.forEach(item => {
                         this.fileType[item.fileType.toLowerCase()] = item.id;
-                    });  
-                    console.log(this.fileType)   
+                    });
                 }
             }
             catch (err) {
@@ -225,54 +235,56 @@ export default {
                 console.error(error)
             }
         },
-        async submitHeading() {  
+        async submitHeading() {
+            let uid = '';
+            if (this.language === 1) {
+                uid = this.idmal;
+            } else {
+                uid = this.ideng;
+            }
             const { valid } = await this.$refs.form.validate()
             if (valid) {
-                console.log('click')   
+                // console.log('click')
                 try {
-                    const response = await axios.post(`http://192.168.1.24:8081/DataEntry1/mainT?dId=${this.language}`, {
+                    const response = await axios.post(`http://192.168.1.24:8081/DataEntry2/firstSub?uId=${uid}`, {
                         "title": this.title,
                         "description": this.description,
-                        "referenceURL": this.url
+                        "reference": this.url
                     });
                     if (response.status >= 200 && response.status < 300) {
-                        
                         alert('success');
                         if (this.language === 1) {
                             this.$refs.form.reset();
-                            this.heading = response.data.description;
                             this.malSubmit = true;
-                            sessionStorage.setItem('id1', response.data.mmalUid)
+                            sessionStorage.setItem('subid1', response.data.fsUid)
                             this.language = 2;
                         }
                         else {
-                            sessionStorage.setItem('id2', response.data.mengUid)
+                            sessionStorage.setItem('subid2', response.data.fsUid)
                             this.$refs.form.reset();
                             this.engSubmit = true;
                             this.language = 1;
-                        }      
+                        }
                     }
                 }
                 catch (err) {
                     console.error(err);
                 }
             }
-            
         },
         async submitAudio(id) {
-            let uid = ''
+            let uid = '';
             if (this.language === 1) {
-                uid = this.idmal;
-            }
-            else {
-                uid = this.ideng
+                uid = this.subidmal;
+            } else {
+                uid = this.subideng;
             }
             const formData = new FormData();
             this.audioFiles.forEach((file) => {
                 formData.append("files", file);
             });
             try {
-                const response = await axios.post(`http://192.168.1.24:8081/mediaData/mpData?uId=${uid}&mtId=${id}`, formData);
+                const response = await axios.post(`http://192.168.1.24:8081/mediaData/mpData1?uId=${uid}&mtId=${id}`, formData);
                 if (response.status >= 200 && response.status < 300) {
                     alert('success');
                 }
@@ -282,19 +294,18 @@ export default {
             }
         },
         async submitVideo(id) {
-            let uid = ''
+            let uid = '';
             if (this.language === 1) {
-                uid = this.idmal;
-            }
-            else {
-                uid = this.ideng
+                uid = this.subidmal;
+            } else {
+                uid = this.subideng;
             }
             const formData = new FormData();
             this.videoFiles.forEach((file) => {
                 formData.append("files", file);
             });
             try {
-                const response = await axios.post(`http://192.168.1.24:8081/mediaData/mpData?uId=${uid}&mtId=${id}`, formData);
+                const response = await axios.post(`http://192.168.1.24:8081/mediaData/mpData1?uId=${uid}&mtId=${id}`, formData);
                 if (response.status >= 200 && response.status < 300) {
                     alert('success');
                 }
@@ -304,11 +315,7 @@ export default {
             }
         }
     },
-    // created() {
-    //     this.fileType = this.fileTypes.forEach(item => {
-    //         this.fileTypes[item.fileType.toLowerCase()] = item.id;
-    //     });
-    // },
+
     mounted() {
         this.getAllLanguages();
         this.getType();
@@ -383,7 +390,8 @@ export default {
     border-bottom-color: #48663f;
     /* Focus border color */
 }
-:deep(.v-stepper-window){
+
+:deep(.v-stepper-window) {
     margin: 0;
 }
 </style>

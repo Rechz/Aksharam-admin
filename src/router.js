@@ -88,7 +88,7 @@ const router = createRouter({
           component: () => import('./components/GuideApp/GuideNav.vue'),
           children: [
             {
-              path: '/guide-app/add',
+              path: '/admin/guide-app/add',
               alias: '',
               name: 'guide-add-main',
               component: () => import('./components/GuideApp/GuideAdd.vue'),
@@ -114,6 +114,11 @@ const router = createRouter({
           ]
         }
       ]
+    },
+    {
+      path: '/admin/add-items',
+      name: 'add-items',
+      component: () => import('./components/GuideApp/ItemsAdd.vue'),
     }
   ]
 });

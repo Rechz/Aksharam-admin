@@ -1,8 +1,8 @@
 <template>
-    <v-stepper v-model="step" :items="items" :show-actions="action" :hide-actions="!action" elevation="0" alt-labels
-        :disabled="false" next-text="Proceed to next step" prev-text="Back" color="success" flat>
+    <v-stepper v-model="step" :items="items" show-actions elevation="0" alt-labels next-text="Proceed to next step"
+        :disabled="false" prev-text="Back" color="success" flat>
         <template v-if="step === 1">
-            <h4 class="text-center mt-4 fw-bolder "><u>Add Main Heading</u></h4>
+            <h4 class="text-center mt-4 fw-bolder "><u>Add Sub of Subheading</u></h4>
             <p class="text-danger fst-italic mt-1">*Please submit Malayalam & English data before proceeding to next
                 page.</p>
             <div class="d-flex">
@@ -15,8 +15,9 @@
                         v-model="description" :rules="descriptionRules"></v-textarea>
                     <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable" class=" select"
                         rows="3" outlined v-model="url"></v-textarea>
-                    <div class="d-flex justify-content-start ">
+                    <div class="d-flex justify-content-start gap-2">
                         <v-btn color="#2C7721" size="large" class="mb-3" type="submit">Submit</v-btn>
+                        <v-btn color="#2C7721" size="large" class="mb-3" @click="addNewSub">Back to Subheadings</v-btn>
                     </div>
                 </v-form>
                 <div class="w-100">
@@ -28,7 +29,7 @@
 
         </template>
         <template v-else-if="step === 2">
-            <h4 class="text-center mt-4 fw-bolder "><u>Main Heading Image</u></h4>
+            <h4 class="text-center mt-4 fw-bolder "><u>Sub of subheading Images</u></h4>
             <div class="mt-5">
                 <input type="file" multiple @change="handleFileUpload" class="mb-3">
                 <div class="d-flex gap-4 flex-wrap ">
@@ -49,7 +50,7 @@
 
         </template>
         <template v-else-if="step === 3">
-            <h4 class="text-center mt-4 fw-bolder "><u>Main Heading Audio/Video</u></h4>
+            <h4 class="text-center mt-4 fw-bolder "><u>Sub of subheading Audio/Video</u></h4>
             <div class="my-3">
                 <v-select class="select mb-3" label="Select Language" density="comfortable" :items="languages"
                     v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"></v-select>
@@ -63,7 +64,7 @@
                                 </v-chip>
                             </li>
                         </ul>
-                        <button @click="submitAudio(fileType.audio)" class="btn btn-success mt-2">Submit Audio</button>
+                        <button @click="submitAudio(fileTypes.audio)" class="btn btn-success mt-2">Submit Audio</button>
                     </v-card>
                     <v-card class="bg-blue-grey-lighten-5 p-3">
                         <input type="file" ref="fileVideo" multiple @change="handleVideo" class="mb-2">
@@ -74,7 +75,7 @@
                                 </v-chip>
                             </li>
                         </ul>
-                        <button @click="submitVideo(fileType.video)" class="btn btn-success mt-2">Submit Video</button>
+                        <button @click="submitVideo(fileTypes.video)" class="btn btn-success mt-2">Submit Video</button>
                     </v-card>
 
                 </div>
@@ -82,51 +83,45 @@
             </div>
         </template>
         <template v-else>
-            <div style="height: 50vh;" class="my-5 d-flex flex-column justify-content-center align-items-center"
-                v-if="!subhead">
-                <v-btn color="green" class="mb-3" @click="subhead = true; action= false" size="x-large"
-                    append-icon="mdi-step-forward">Add
-                    Subheading</v-btn>
-
-                <v-btn color="green" class="mb-3" @click="step = 1; action = true; subhead = false;"
-                    prepend-icon="mdi-step-backward">Add
-                    New Topic</v-btn>
+            <div style="height: 50vh;" class="my-5 d-flex flex-column justify-content-center align-items-center">
+                <v-btn color="green" class="mb-3" @click="step = 1" size="x-large" append-icon="mdi-step-forward">Add
+                    another sub of Subheadings</v-btn>
+                <v-btn color="green" class="mb-3" @click="addNewSub" prepend-icon="mdi-step-backward">Back to add new
+                    main
+                    Subheadings</v-btn>
+                <v-btn color="green" class="mb-3" @click="addNewTopic" prepend-icon="mdi-step-backward-2">Back to add
+                    new main
+                    topics</v-btn>
             </div>
-            <SubHeading v-else @add-new-topic="step = 1; action = true; subhead = false;"
-                @back-main="step = 1; action = true; subhead = false;" />
+
         </template>
 
     </v-stepper>
 </template>
 
 <script>
-import SubHeading from './SubHeading.vue'
 import axios from 'axios';
 export default {
-    components: 
-    {
-        SubHeading
-    },
     data() {
         return {
             malSubmit: false,
             engSubmit: false,
             step: 1,
-            subhead: false,
             items: [
-                'Main Topic',
+                'Sub of Subheading Topic',
                 'Upload Images',
                 'Upload Audio/Video',
-                'Subheadings'
+                'Actions'
             ],
-            action: true,
             images: [],
             imgPreview: [],
             fileTypes: [],
             fileType: {},
-            idmal: sessionStorage.getItem('id1'),
-            ideng: sessionStorage.getItem('id2'),
-            heading: null,       
+            idmal: sessionStorage.getItem('subid1'),
+            ideng: sessionStorage.getItem('subid2'),
+            subidmal: sessionStorage.getItem('subsubid1'),
+            subideng: sessionStorage.getItem('subsubid2'),
+            heading: null,
             languages: [],
             title: null,
             description: null,
@@ -139,8 +134,7 @@ export default {
             audioFiles: [],
             videoFiles: [],
             audioId: null,
-            videoId: null,
-            
+            videoId: null
         };
     },
     computed: {
@@ -151,7 +145,12 @@ export default {
         }
     },
     methods: {
-        
+        addNewTopic() {
+            this.$emit('add-new-topic'); // Emitting an event named 'add-new-topic'
+        },
+        addNewSub() {
+            this.$emit('add-new-sub'); // Emitting an event named 'add-new-topic'
+        },
         handleAudio(event) {
             const selectedFiles = event.target.files;
             for (let i = 0; i < selectedFiles.length; i++) {
@@ -200,8 +199,7 @@ export default {
                     console.log('gettype', response.data)
                     response.data.forEach(item => {
                         this.fileType[item.fileType.toLowerCase()] = item.id;
-                    });  
-                    console.log(this.fileType)   
+                    });
                 }
             }
             catch (err) {
@@ -225,39 +223,44 @@ export default {
                 console.error(error)
             }
         },
-        async submitHeading() {  
+        async submitHeading() {
+            let uid = '';
+            if (this.language === 1) {
+                uid = this.idmal;
+            } else {
+                uid = this.ideng;
+            }
             const { valid } = await this.$refs.form.validate()
             if (valid) {
-                console.log('click')   
+                console.log('click')
                 try {
-                    const response = await axios.post(`http://192.168.1.24:8081/DataEntry1/mainT?dId=${this.language}`, {
+                    const response = await axios.post(`http://192.168.1.24:8081/DataEntry3/secondSub?uId=${uid}`, {
                         "title": this.title,
                         "description": this.description,
                         "referenceURL": this.url
                     });
                     if (response.status >= 200 && response.status < 300) {
-                        
+
                         alert('success');
                         if (this.language === 1) {
                             this.$refs.form.reset();
                             this.heading = response.data.description;
                             this.malSubmit = true;
-                            sessionStorage.setItem('id1', response.data.mmalUid)
+                            sessionStorage.setItem('subsubid1', response.data.mmalUid)
                             this.language = 2;
                         }
                         else {
-                            sessionStorage.setItem('id2', response.data.mengUid)
+                            sessionStorage.setItem('subsubid2', response.data.mengUid)
                             this.$refs.form.reset();
                             this.engSubmit = true;
                             this.language = 1;
-                        }      
+                        }
                     }
                 }
                 catch (err) {
                     console.error(err);
                 }
             }
-            
         },
         async submitAudio(id) {
             let uid = ''
@@ -272,7 +275,7 @@ export default {
                 formData.append("files", file);
             });
             try {
-                const response = await axios.post(`http://192.168.1.24:8081/mediaData/mpData?uId=${uid}&mtId=${id}`, formData);
+                const response = await axios.post(`http://192.168.1.24:8081/mediaData/mpData?uId=${uid}&dtId=${id}`, formData);
                 if (response.status >= 200 && response.status < 300) {
                     alert('success');
                 }
@@ -294,7 +297,7 @@ export default {
                 formData.append("files", file);
             });
             try {
-                const response = await axios.post(`http://192.168.1.24:8081/mediaData/mpData?uId=${uid}&mtId=${id}`, formData);
+                const response = await axios.post(`http://192.168.1.24:8081/mediaData/mpData?uId=${uid}&dtId=${id}`, formData);
                 if (response.status >= 200 && response.status < 300) {
                     alert('success');
                 }
@@ -304,11 +307,7 @@ export default {
             }
         }
     },
-    // created() {
-    //     this.fileType = this.fileTypes.forEach(item => {
-    //         this.fileTypes[item.fileType.toLowerCase()] = item.id;
-    //     });
-    // },
+    
     mounted() {
         this.getAllLanguages();
         this.getType();
@@ -383,7 +382,8 @@ export default {
     border-bottom-color: #48663f;
     /* Focus border color */
 }
-:deep(.v-stepper-window){
+
+:deep(.v-stepper-window) {
     margin: 0;
 }
 </style>
