@@ -101,8 +101,23 @@ export default {
         }
       });
       if (response.status === 200) {
-        commit('setAllTickets', response.data);
-        console.log(response.data)
+        const ticket = response.data.sort((a, b) => {
+    // Extract the 'bookDate' values and convert them to Date objects
+    let dateA = new Date(a.bookDate);
+    let dateB = new Date(b.bookDate);
+    
+    // Compare the dates in descending order
+    if (dateA > dateB) {
+        return -1;
+    }
+    if (dateA < dateB) {
+        return 1;
+    }
+    return 0;
+});
+
+        commit('setAllTickets', ticket);
+        console.log(ticket)
       }
     }
     catch (error) {
@@ -119,7 +134,7 @@ export default {
       });
       if (response.status === 200) {
         commit('setCurrentTickets', response.data);
-        console.log(response.data)
+        console.log('current ticket',response.data)
       }
     }
     catch (error) {

@@ -14,7 +14,7 @@
                 <td>{{ item.ticketId }}</td>
                 <td>{{ item.mobileNumber }}</td>
                 <td>{{ totalCount(item) }}</td>
-                <td>{{ item.visitDate }}</td>
+                <td>{{ item.slotName }}</td>
                 <td style="text-transform: capitalize;">{{ item.type }}</td>
                 <td>{{ item.totalPrice }}</td>
                 <td><v-chip :color="item.visitStatus ? 'green' : 'orange'">
@@ -31,15 +31,23 @@ export default {
         headers: [
             { title: 'Sl No.', sortable: false, align: 'center' },
             { title: 'Ticket Id', align: 'start', sortable: false, key: 'ticketId' },
-            { title: 'Mobile number', sortable: false, key: 'visitDate', align: 'start' },
-            { title: 'No. of people', sortable: false, key: 'type', align: 'start' },
-            { title: 'Booking Date', sortable: false, key: 'visitors', align: 'start' },
-            { title: 'Category', sortable: false, key: 'visitors', align: 'start' },
-            { title: 'Price', sortable: false, key: 'visitors', align: 'start' },
-            { title: 'Status', sortable: false, key: 'status', align: 'start' },
+            { title: 'Mobile number', sortable: false, key: 'mobileNumber', align: 'start' },
+            { title: 'No. of people', sortable: false, key: 'total', align: 'start' },
+            { title: 'Visit Time', sortable: false, key: 'slotName', align: 'start' },
+            { title: 'Category', sortable: false, key: 'type', align: 'start' },
+            { title: 'Price', sortable: false, key: 'totalPrice', align: 'start' },
+            { title: 'Status', sortable: false, key: 'visitStatus', align: 'start' },
         ],
     }),
     methods: {
+        formatTime(timeString) {
+            const [hours, minutes] = timeString.split(':');
+            let hoursInt = parseInt(hours, 10);
+            const ampm = hoursInt >= 12 ? 'pm' : 'am';
+            hoursInt = hoursInt % 12;
+            hoursInt = hoursInt ? hoursInt : 12; // Handle midnight (0 hours)
+            return `${hoursInt}:${minutes} ${ampm}`;
+        },
         async fetchTickets() {
             try {
                 await this.$store.dispatch('fetchCurrentTickets');

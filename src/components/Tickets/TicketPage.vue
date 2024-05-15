@@ -1,127 +1,135 @@
 <template>
-  <div class="d-flex justify-content-between mb-3">
-    <v-text-field label="Search" v-model="search" prepend-inner-icon="mdi-magnify" class="search" density="compact"
-      @click="search"></v-text-field>
-    <v-spacer></v-spacer>
-    <v-select v-model="sortColumn" :items="['All', 'Public', 'Institution', 'Foreigner']" density="compact"
-      prepend-inner-icon="mdi-sort-variant" label="Sort by" class="sort"></v-select>
-  </div>
-  <v-data-table :headers="headers" :items="filteredTickets" style="background-color: #f9faf1;" max-width="100%"
-    :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
-    <template v-slot:item='{ item, index }'>
-      <v-dialog v-model="dialog" width="400px">
-        <v-card style="width: 600px; height:550px; border-radius: 16px;">
-          <v-card-title class="d-flex justify-content-between px-4" style="background-color: #216D17; color: #FFFFFF;">
-            <h4>Ticket Details</h4>
-            <v-icon @click="close" class="mdi mdi-window-close"></v-icon>
-          </v-card-title>
-          <v-card-text class="ticket-details">
-            <v-row>
-              <v-col col="3">
-                {{
-                viewItem.type === 'institution' ? 'Institution Name' : 'Name' }}
-              </v-col>
-              <v-col col="5">:{{ viewItem.type === 'institution' ? viewItem.institutionName : viewItem.name }}</v-col>
-            </v-row>
-            <v-row>
-              <v-col col="3">
-                Mobile Number
-              </v-col>
-              <v-col col="5">:{{ viewItem.mobileNumber }}</v-col>
-            </v-row>
-            <v-row>
-              <v-col col="3">
-                Email
-              </v-col>
-              <v-col col="5">:{{ viewItem.email }}</v-col>
-            </v-row>
-            <v-row>
-              <v-col col="3">
-                Ticket ID
-              </v-col>
-              <v-col col="5">:{{ viewItem.ticketId }}</v-col>
-            </v-row>
-            <v-row>
-              <v-col col="3">
-                Booking date
-              </v-col>
-              <v-col col="5">:{{ viewItem.bookDate }}</v-col>
-            </v-row>
-            <v-row>
-              <v-col col="3">
-                Entry date
-              </v-col>
-              <v-col col="5">:{{ viewItem.visitDate }}</v-col>
-            </v-row>
-            <v-row>
-              <v-col col="3">
-                Slot
-              </v-col>
-              <v-col col="5">:{{ viewItem.slotName }}</v-col>
-            </v-row>
-            <v-row>
-              <v-col col="3">
-                Category
-              </v-col>
-              <v-col col="5" class="text-capitalize">:{{ viewItem.type }}</v-col>
-            </v-row>
-            <v-row>
-              <v-col col="3">
-                {{
-                viewItem.type === 'institution' ? 'Teachers' : 'Adults' }}
-              </v-col>
-              <v-col col="5">:{{ viewItem.type === 'institution' ? viewItem.numberOfTeachers : viewItem.numberOfAdults
-                }}</v-col>
-            </v-row>
-            <v-row>
-              <v-col col="3">
-                {{
-                viewItem.type === 'institution' ? 'Students' : 'Children' }}
-              </v-col>
-              <v-col col="5">:{{ viewItem.type === 'institution' ? viewItem.numberOfStudents : viewItem.numberOfChildren
-                }}</v-col>
-            </v-row>
-            <v-row v-if="viewItem.type === 'public'">
-              <v-col col="3">
-                Senior Citizen
-              </v-col>
-              <v-col col="5">:{{ viewItem.numberOfSeniors }}</v-col>
-            </v-row>
-            <v-row>
-              <v-col col="3">
-                Total amount
-              </v-col>
-              <v-col col="5">:&#8377;{{ viewItem.totalPrice }}</v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-dialog>
-      <tr style="background-color:#FCFDF6; color:black;">
-        <td class="text-center">
-          {{ index + 1 }}
-        </td>
-        <td>
-          {{ item.ticketId }}
-        </td>
 
-        <td>
-          {{ item.visitDate }}
-        </td>
-        <td>
-          {{ item.slotName }}
-        </td>
-        <td class="text-start " style="text-transform: capitalize;">
-          {{ item.type }}
-        </td>
-        <td>
-          Rs.{{ item.totalPrice }}/-
-        </td>
-        <td class="text-center"><v-icon size="20" color="blue-grey-darken-3" class="mdi mdi-eye"
-            @click="showDetails(item)"></v-icon>
-        </td>
-      </tr>
-    </template>
-  </v-data-table>
+  <v-container class="py-8 px-0" fluid>
+    <div class="d-flex justify-content-between mb-3">
+      <v-text-field label="Search" v-model="search" prepend-inner-icon="mdi-magnify" class="search" density="compact"
+        @click="search"></v-text-field>
+      <v-spacer></v-spacer>
+      <v-select v-model="sortColumn" :items="['All', 'Public', 'Institution', 'Foreigner']" density="compact"
+        prepend-inner-icon="mdi-sort-variant" label="Sort by" class="sort"></v-select>
+    </div>
+    <v-data-table :headers="headers" :items="filteredTickets" style="background-color: #f9faf1;" max-width="100%"
+      :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
+      <template v-slot:item='{ item, index }'>
+        <v-dialog v-model="dialog" width="400px">
+          <v-card style="width: 600px; height:550px; border-radius: 16px;">
+            <v-card-title class="d-flex justify-content-between px-4"
+              style="background-color: #216D17; color: #FFFFFF;">
+              <h4>Ticket Details</h4>
+              <v-icon @click="close" class="mdi mdi-window-close"></v-icon>
+            </v-card-title>
+            <v-card-text class="ticket-details">
+              <v-row>
+                <v-col col="3">
+                  {{
+                  viewItem.type === 'institution' ? 'Institution Name' : 'Name' }}
+                </v-col>
+                <v-col col="5">:{{ viewItem.type === 'institution' ? viewItem.institutionName : viewItem.name
+                  }}</v-col>
+              </v-row>
+              <v-row>
+                <v-col col="3">
+                  Mobile Number
+                </v-col>
+                <v-col col="5">:{{ viewItem.mobileNumber }}</v-col>
+              </v-row>
+              <v-row>
+                <v-col col="3">
+                  Email
+                </v-col>
+                <v-col col="5">:{{ viewItem.email }}</v-col>
+              </v-row>
+              <v-row>
+                <v-col col="3">
+                  Ticket ID
+                </v-col>
+                <v-col col="5">:{{ viewItem.ticketId }}</v-col>
+              </v-row>
+              <v-row>
+                <v-col col="3">
+                  Booking date
+                </v-col>
+                <v-col col="5">:{{ viewItem.bookDate }}</v-col>
+              </v-row>
+              <v-row>
+                <v-col col="3">
+                  Entry date
+                </v-col>
+                <v-col col="5">:{{ viewItem.visitDate }}</v-col>
+              </v-row>
+              <v-row>
+                <v-col col="3">
+                  Slot
+                </v-col>
+                <v-col col="5">:{{ formatTime(viewItem.slotName) }}</v-col>
+              </v-row>
+              <v-row>
+                <v-col col="3">
+                  Category
+                </v-col>
+                <v-col col="5" class="text-capitalize">:{{ viewItem.type }}</v-col>
+              </v-row>
+              <v-row>
+                <v-col col="3">
+                  {{
+                  viewItem.type === 'institution' ? 'Teachers' : 'Adults' }}
+                </v-col>
+                <v-col col="5">:{{ viewItem.type === 'institution' ? viewItem.numberOfTeachers :
+                  viewItem.numberOfAdults
+                  }}</v-col>
+              </v-row>
+              <v-row>
+                <v-col col="3">
+                  {{
+                  viewItem.type === 'institution' ? 'Students' : 'Children' }}
+                </v-col>
+                <v-col col="5">:{{ viewItem.type === 'institution' ? viewItem.numberOfStudents :
+                  viewItem.numberOfChildren
+                  }}</v-col>
+              </v-row>
+              <v-row v-if="viewItem.type === 'public'">
+                <v-col col="3">
+                  Senior Citizen
+                </v-col>
+                <v-col col="5">:{{ viewItem.numberOfSeniors }}</v-col>
+              </v-row>
+              <v-row>
+                <v-col col="3">
+                  Total amount
+                </v-col>
+                <v-col col="5">:&#8377;{{ viewItem.totalPrice }}</v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+        <tr style="background-color:#FCFDF6; color:black;">
+          <td class="text-center">
+            {{ index + 1 }}
+          </td>
+          <td>
+            {{ item.ticketId }}
+          </td>
+
+          <td>
+            {{ item.visitDate }}
+          </td>
+          <td>
+            {{ formatTime(item.slotName) }}
+          </td>
+          <td class="text-start " style="text-transform: capitalize;">
+            {{ item.type }}
+          </td>
+          <td>
+            Rs.{{ item.totalPrice }}/-
+          </td>
+          <td class="text-center"><v-icon size="20" color="blue-grey-darken-3" class="mdi mdi-eye"
+              @click="showDetails(item)"></v-icon>
+          </td>
+        </tr>
+      </template>
+    </v-data-table>
+  </v-container>
+
 </template>
 <script>
 export default {
@@ -150,6 +158,15 @@ export default {
       this.viewItem = Object.assign({}, item)
       this.dialog = true
     },
+    formatTime(timeString) {
+      const [hours, minutes] = timeString.split(':');
+      let hoursInt = parseInt(hours, 10);
+      const ampm = hoursInt >= 12 ? 'pm' : 'am';
+      hoursInt = hoursInt % 12;
+      hoursInt = hoursInt ? hoursInt : 12; // Handle midnight (0 hours)
+      return `${hoursInt}:${minutes} ${ampm}`;
+    },
+
     close() {
       this.dialog = false;
     },
@@ -164,19 +181,24 @@ export default {
   },
   computed: {
     filteredTickets() {
+      let uniqueTickets = [];
       if (this.sortColumn && this.sortColumn !== 'All') {
-        return this.tickets.filter(ticket => ticket.type.toLowerCase() === this.sortColumn.toLowerCase());
+        uniqueTickets = this.tickets.filter(ticket => ticket.type.toLowerCase() === this.sortColumn.toLowerCase());
+      } else {
+        uniqueTickets = this.tickets;
       }
+
       if (this.search !== '') {
-        return this.tickets.filter((item) =>
-        (item.visitDate?.toLowerCase()?.includes(this.search.toLowerCase()) || '') ||
-    (item.type?.toLowerCase()?.includes(this.search.toLowerCase()) || '') ||
-    (item.ticketId?.toLowerCase()?.includes(this.search.toLowerCase()) || '')
+        uniqueTickets = uniqueTickets.filter((item) =>
+          (item.visitDate?.toLowerCase()?.includes(this.search.toLowerCase()) || '') ||
+          (item.type?.toLowerCase()?.includes(this.search.toLowerCase()) || '') ||
+          (item.ticketId?.toLowerCase()?.includes(this.search.toLowerCase()) || '')
         );
       }
-      else {
-        return this.tickets;
-      }
+
+      // Remove duplicates based on a unique identifier
+      return [...new Map(uniqueTickets.map(item => [item.ticketId, item])).values()];
+
     },
     tickets() {
       return this.$store.getters.getAllTickets;
@@ -189,9 +211,9 @@ export default {
 </script>
 
 <style scoped>
-.v-table {
+/* .v-table {
   width: 76vw;
-}
+} */
 
 :deep(.search.v-input) {
   display: flex;

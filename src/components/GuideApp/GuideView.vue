@@ -1,6 +1,6 @@
 <template>
-  <v-app>
 
+  <v-container class="py-8 px-0" fluid>
     <div class="d-flex justify-content-between mb-4">
     </div>
     <v-data-table :headers="headers" :items="employees" class="mt-3"
@@ -158,7 +158,7 @@
         </tr>
       </template>
     </v-data-table>
-  </v-app>
+  </v-container>
 </template>
   
   <script>
@@ -343,9 +343,9 @@
   </script>
   
   <style scoped>
-  .v-table {
+  /* .v-table {
     width: 76vw;
-  }
+  } */
   :deep(.search .v-input__details) {
     display: none;
   }

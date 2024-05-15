@@ -1,94 +1,97 @@
 <template>
-  <v-container>
-    <v-row align="center">
-      <v-col cols="3">
-        <v-select v-model="selectedHour" :items="hours" label="Hour" outlined></v-select>
-      </v-col>
-      <v-col cols="1" class="text-center">
-        <span>:</span>
-      </v-col>
-      <v-col cols="3">
-        <v-select v-model="selectedMinute" :items="minutes" label="Minute" outlined></v-select>
-      </v-col>
-    </v-row>
+
+  <v-container class="py-8 px-0" fluid>
+   
+      <v-row >
+        <v-col cols="3">
+          <v-select v-model="selectedHour" :items="hours" label="Hour" outlined></v-select>
+        </v-col>
+        <v-col cols="1" class="text-center">
+          <span>:</span>
+        </v-col>
+        <v-col cols="3">
+          <v-select v-model="selectedMinute" :items="minutes" label="Minute" outlined></v-select>
+        </v-col>
+      </v-row>
+
+
+    <v-data-table :headers="headers" :items="desserts" :sort-by="[{ key: 'calories', order: 'asc' }]"
+      style="background-color:#f9faf1;">
+      <template v-slot:top>
+        <v-toolbar flat style="background-color: white; height: 20px;">
+
+
+          <v-dialog v-model="dialog" max-width="500px">
+            <v-card>
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-col cols="12" sm="12" md="12">
+                      <v-text-field v-model="editedItem.in" label="Time IN"></v-text-field>
+                    </v-col>
+
+                    <v-col cols="12" sm="12" md="12">
+                      <v-text-field v-model="editedItem.out" label="Time OUT"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="12" md="12">
+                      <v-text-field v-model="editedItem.ticketno" label="No. of Tickets"></v-text-field>
+                    </v-col>
+
+                  </v-row>
+                </v-container>
+              </v-card-text>
+
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue-darken-1" variant="text" @click="close">
+                  Cancel
+                </v-btn>
+                <v-btn color="blue-darken-1" variant="text" @click="save">
+                  Save
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <v-dialog v-model="dialogDelete" width="420px" height="300px">
+            <v-card class="rounded-4 pb-4">
+              <v-card-title style="background-color: #BA1A1A;" class="mb-2 text-white text-center">Delete
+                Slot?</v-card-title>
+              <v-icon color="red-accent-4" size="54" class="align-self-center mt-2">mdi-trash-can</v-icon>
+              <v-card-text lass="text-center">Are you sure you want to delete this slot?</v-card-text>
+              <v-card-actions style="display: block;">
+
+                <v-btn color="black" block class=" rounded-4 text-white" style="background-color: #BA1A1A; "
+                  @click="deleteItemConfirm">Delete</v-btn>
+                <v-btn color="black" block variant="text rounded-4" @click="closeDelete">Cancel</v-btn>
+                <v-spacer></v-spacer>
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
+
+        </v-toolbar>
+      </template>
+      <template v-slot:item='{ item, index }'>
+        <tr style="background-color:#f9faf1; color:black; ">
+          <td class="text-center">{{ index + 1 }}</td>
+
+          <td class="text-center">{{ item.in }}</td>
+          <td class="text-center">{{ item.out }}</td>
+          <td class="text-center">{{ item.ticketno }}</td>
+
+          <td class="text-center">
+            <v-icon size="large" color="teal-darken-3" class="me-4" @click="editItem(item)">
+              mdi-pencil
+            </v-icon>
+            <v-icon size="large" color="danger" class="ms-4" @click="deleteItem(item)">
+              mdi-trash-can
+            </v-icon>
+          </td>
+        </tr>
+      </template>
+    </v-data-table>
   </v-container>
-  
-  <v-data-table :headers="headers" :items="desserts" :sort-by="[{ key: 'calories', order: 'asc' }]"
-    style="background-color:#f9faf1;">
-    <template v-slot:top>
-      <v-toolbar flat style="background-color: white; height: 20px;">
-
-
-        <v-dialog v-model="dialog" max-width="500px">
-          <v-card>
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12" sm="12" md="12">
-                    <v-text-field v-model="editedItem.in" label="Time IN"></v-text-field>
-                  </v-col>
-
-                  <v-col cols="12" sm="12" md="12">
-                    <v-text-field v-model="editedItem.out" label="Time OUT"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="12" md="12">
-                    <v-text-field v-model="editedItem.ticketno" label="No. of Tickets"></v-text-field>
-                  </v-col>
-
-                </v-row>
-              </v-container>
-            </v-card-text>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue-darken-1" variant="text" @click="close">
-                Cancel
-              </v-btn>
-              <v-btn color="blue-darken-1" variant="text" @click="save">
-                Save
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <v-dialog v-model="dialogDelete" width="420px" height="300px">
-          <v-card class="rounded-4 pb-4">
-            <v-card-title style="background-color: #BA1A1A;" class="mb-2 text-white text-center">Delete
-              Slot?</v-card-title>
-            <v-icon color="red-accent-4" size="54" class="align-self-center mt-2">mdi-trash-can</v-icon>
-            <v-card-text lass="text-center">Are you sure you want to delete this slot?</v-card-text>
-            <v-card-actions style="display: block;">
-
-              <v-btn color="black" block class=" rounded-4 text-white" style="background-color: #BA1A1A; "
-                @click="deleteItemConfirm">Delete</v-btn>
-              <v-btn color="black" block variant="text rounded-4" @click="closeDelete">Cancel</v-btn>
-              <v-spacer></v-spacer>
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-
-
-      </v-toolbar>
-    </template>
-    <template v-slot:item='{ item, index }'>
-      <tr style="background-color:#f9faf1; color:black; ">
-        <td class="text-center">{{ index + 1 }}</td>
-
-        <td class="text-center">{{ item.in }}</td>
-        <td class="text-center">{{ item.out }}</td>
-        <td class="text-center">{{ item.ticketno }}</td>
-
-        <td class="text-center">
-          <v-icon size="large" color="teal-darken-3" class="me-4" @click="editItem(item)">
-            mdi-pencil
-          </v-icon>
-          <v-icon size="large" color="danger" class="ms-4" @click="deleteItem(item)">
-            mdi-trash-can
-          </v-icon>
-        </td>
-      </tr>
-    </template>
-  </v-data-table>
 </template>
 <script>
 import axios from 'axios'
@@ -179,9 +182,9 @@ export default {
 </script>
 
 <style>
-.v-table {
+/* .v-table {
   width: 76vw;
-}
+} */
 
 .hover-red:hover {
   background-color: #b71c1c !important;

@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-container class="pb-0 pt-0 px-0" fluid>
     <v-snackbar v-model="snackbar" :color="color" :timeout="timeout" location="top">
       <div class="text-center">{{ message }}</div>
     </v-snackbar>
@@ -111,12 +111,16 @@
                     </v-row>
                     <v-row class="mb-2 mt-2">
                       <div class="col-4">Temporary Address</div>
-                      <div class="col-8 d-flex">: <div class="ms-1"><pre style="font-family: 'Arial', sans-serif;">{{ editedItem.tempAddress }}</pre></div>
+                      <div class="col-8 d-flex">: <div class="ms-1">
+                          <pre style="font-family: 'Arial', sans-serif;">{{ editedItem.tempAddress }}</pre>
+                        </div>
                       </div>
                     </v-row>
                     <v-row class="mb-2 mt-2">
                       <div class="col-4">Permanent Address</div>
-                      <div class="col-8 d-flex">: <div class="ms-1"><pre style="font-family: 'Arial', sans-serif;">{{ editedItem.permAddress }}</pre></div>
+                      <div class="col-8 d-flex">: <div class="ms-1">
+                          <pre style="font-family: 'Arial', sans-serif;">{{ editedItem.permAddress }}</pre>
+                        </div>
                       </div>
                     </v-row>
                     <v-row class="mb-2">
@@ -152,7 +156,7 @@
         </tr>
       </template>
     </v-data-table>
-  </v-app>
+  </v-container>
 </template>
 
 <script>
@@ -337,9 +341,9 @@ export default {
 </script>
 
 <style scoped>
-.v-table {
+/* .v-table {
   width: 76vw;
-}
+} */
 :deep(.search .v-input__details) {
   display: none;
 }

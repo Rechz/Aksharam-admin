@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <v-container class="pb-0 pt-0 px-0" fluid>
         <v-snackbar v-model="snackbar" :color="color" :timeout="timeout" location="top">
             <div class="text-center">{{ message }}</div>
         </v-snackbar>
@@ -49,7 +49,7 @@
                         <div v-if="!isEditing(index) || dialogDelete">
                             <v-icon size="20" color="teal-darken-3" class=" mdi mdi-pencil"
                                 @click="startEditing(index)"></v-icon>
-                            <v-icon @click="deleteItem(item)" :loading="loading" size="20" color="teal-darken-3"
+                            <v-icon @click="deleteItem(item)" :loading="loading" size="20" color="danger"
                                 class=" mdi mdi-trash-can ms-2" :disabled="loading">Submit</v-icon>
                         </div>
 
@@ -63,7 +63,7 @@
                 </tr>
             </template>
         </v-data-table>
-    </div>
+    </v-container>
 </template>
 
 <script>
@@ -169,9 +169,9 @@ export default {
 
 
 <style scoped>
-:deep(.v-table) {
+/* :deep(.v-table) {
     width: 60vw;
-}
+} */
 :deep(.v-input__control) {
     width: 100px;
     border-bottom: 2px solid #216D17;

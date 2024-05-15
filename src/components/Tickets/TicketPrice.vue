@@ -1,5 +1,6 @@
 <template>
-  <v-app>
+
+  <v-container class="py-8 ps-0 pe-0" fluid>
     <v-snackbar v-model="snackbar" :color="color" :timeout="timeout" location="top">
       <div class="text-center">{{ message }}</div>
     </v-snackbar>
@@ -39,14 +40,11 @@
       </v-card>
     </v-dialog>
 
-    <PriceTable  :items="priceList.public" head="PUBLIC"
-      class="mb-4" />
-    <PriceTable :items="priceList.institution"
-      head="INSTITUTION" class="mb-4" />
-    <PriceTable  :items="priceList.foreigner"
-      head="FOREIGNER" class="mb-4" />
-    <PriceTable  :items="priceList.tax" head="TAX" />
-  </v-app>
+    <PriceTable :items="priceList.public" head="PUBLIC" class="mb-4" />
+    <PriceTable :items="priceList.institution" head="INSTITUTION" class="mb-4" />
+    <PriceTable :items="priceList.foreigner" head="FOREIGNER" class="mb-4" />
+    <PriceTable :items="priceList.tax" head="TAX" />
+  </v-container>
 </template>
 
 <script>
@@ -147,9 +145,9 @@ export default {
 
 
 <style scoped>
-:deep(.v-table) {
+/* :deep(.v-table) {
   width: 76vw;
-}
+} */
 :deep(.price .v-input__control) {
   border-bottom: 2px solid #216D17;
   background-color: #DFE4D7 !important;

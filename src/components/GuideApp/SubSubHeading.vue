@@ -64,7 +64,7 @@
                                 </v-chip>
                             </li>
                         </ul>
-                        <button @click="submitAudio(fileTypes.audio)" class="btn btn-success mt-2">Submit Audio</button>
+                        <button @click="submitAudio(fileType.audio)" class="btn btn-success mt-2">Submit Audio</button>
                     </v-card>
                     <v-card class="bg-blue-grey-lighten-5 p-3">
                         <input type="file" ref="fileVideo" multiple @change="handleVideo" class="mb-2">
@@ -75,7 +75,7 @@
                                 </v-chip>
                             </li>
                         </ul>
-                        <button @click="submitVideo(fileTypes.video)" class="btn btn-success mt-2">Submit Video</button>
+                        <button @click="submitVideo(fileType.video)" class="btn btn-success mt-2">Submit Video</button>
                     </v-card>
 
                 </div>
@@ -180,10 +180,10 @@ export default {
             console.log('malayalam', this.idmal)
             const formData = new FormData();
             this.images.forEach((image) => {
-                formData.append("file", image);
+                formData.append("files", image);
             });
             try {
-                const response = await axios.post(`http://192.168.1.24:8081/imgData/uploadImg?englishUId=${this.ideng}&malUid=${this.idmal}`, formData);
+                const response = await axios.post(`http://192.168.1.17:8081/imgData/uploadImg2?englishUId=${this.subideng}&malUid=${this.subidmal}`, formData);
                 if (response.status === 200) {
                     alert('success')
                     this.images = [];
@@ -194,7 +194,7 @@ export default {
         },
         async getType() {
             try {
-                const response = await axios.get('http://192.168.1.24:8081/fileType/getFileType');
+                const response = await axios.get('http://192.168.1.17:8081/fileType/getFileType');
                 if (response.status >= 200 && response.status < 300) {
                     console.log('gettype', response.data)
                     response.data.forEach(item => {
@@ -212,7 +212,7 @@ export default {
 
         async getAllLanguages() {
             try {
-                const response = await axios.get('http://192.168.1.24:8081/dataType1/getTalk')
+                const response = await axios.get('http://192.168.1.17:8081/dataType1/getTalk')
                 if (response.status === 200) {
                     this.languages = response.data
                     // .map(item => item.talk);
@@ -234,7 +234,7 @@ export default {
             if (valid) {
                 console.log('click')
                 try {
-                    const response = await axios.post(`http://192.168.1.24:8081/DataEntry3/secondSub?uId=${uid}`, {
+                    const response = await axios.post(`http://192.168.1.17:8081/DataEntry3/secondSub?uId=${uid}`, {
                         "title": this.title,
                         "description": this.description,
                         "referenceURL": this.url
@@ -246,11 +246,11 @@ export default {
                             this.$refs.form.reset();
                             this.heading = response.data.description;
                             this.malSubmit = true;
-                            sessionStorage.setItem('subsubid1', response.data.mmalUid)
+                            sessionStorage.setItem('subsubid1', response.data.ssUid)
                             this.language = 2;
                         }
                         else {
-                            sessionStorage.setItem('subsubid2', response.data.mengUid)
+                            sessionStorage.setItem('subsubid2', response.data.ssUid)
                             this.$refs.form.reset();
                             this.engSubmit = true;
                             this.language = 1;
@@ -263,19 +263,18 @@ export default {
             }
         },
         async submitAudio(id) {
-            let uid = ''
+            let uid = '';
             if (this.language === 1) {
-                uid = this.idmal;
-            }
-            else {
-                uid = this.ideng
+                uid = this.subidmal;
+            } else {
+                uid = this.subideng;
             }
             const formData = new FormData();
             this.audioFiles.forEach((file) => {
                 formData.append("files", file);
             });
             try {
-                const response = await axios.post(`http://192.168.1.24:8081/mediaData/mpData?uId=${uid}&dtId=${id}`, formData);
+                const response = await axios.post(`http://192.168.1.17:8081/mediaData/mpData2?uId=${uid}&mtId=${id}`, formData);
                 if (response.status >= 200 && response.status < 300) {
                     alert('success');
                 }
@@ -285,19 +284,18 @@ export default {
             }
         },
         async submitVideo(id) {
-            let uid = ''
+            let uid = '';
             if (this.language === 1) {
-                uid = this.idmal;
-            }
-            else {
-                uid = this.ideng
+                uid = this.subidmal;
+            } else {
+                uid = this.subideng;
             }
             const formData = new FormData();
             this.videoFiles.forEach((file) => {
                 formData.append("files", file);
             });
             try {
-                const response = await axios.post(`http://192.168.1.24:8081/mediaData/mpData?uId=${uid}&dtId=${id}`, formData);
+                const response = await axios.post(`http://192.168.1.17:8081/mediaData/mpData2?uId=${uid}&mtId=${id}`, formData);
                 if (response.status >= 200 && response.status < 300) {
                     alert('success');
                 }

@@ -195,7 +195,7 @@ export default {
                 formData.append("files", image);
             });
             try {
-                const response = await axios.post(`http://192.168.1.24:8081/imgData/uploadImg1?englishUId=${this.subideng}&malUid=${this.subidmal}`, formData);
+                const response = await axios.post(`http://192.168.1.17:8081/imgData/uploadImg1?englishUId=${this.subideng}&malUid=${this.subidmal}`, formData);
                 if (response.status === 200) {
                     alert('success')
                     this.images = [];
@@ -206,7 +206,7 @@ export default {
         },
         async getType() {
             try {
-                const response = await axios.get('http://192.168.1.24:8081/fileType/getFileType');
+                const response = await axios.get('http://192.168.1.17:8081/fileType/getFileType');
                 if (response.status >= 200 && response.status < 300) {
                     console.log('gettype', response.data)
                     response.data.forEach(item => {
@@ -224,7 +224,7 @@ export default {
 
         async getAllLanguages() {
             try {
-                const response = await axios.get('http://192.168.1.24:8081/dataType1/getTalk')
+                const response = await axios.get('http://192.168.1.17:8081/dataType1/getTalk')
                 if (response.status === 200) {
                     this.languages = response.data
                     // .map(item => item.talk);
@@ -246,10 +246,10 @@ export default {
             if (valid) {
                 // console.log('click')
                 try {
-                    const response = await axios.post(`http://192.168.1.24:8081/DataEntry2/firstSub?uId=${uid}`, {
+                    const response = await axios.post(`http://192.168.1.17:8081/DataEntry2/firstSub?uId=${uid}`, {
                         "title": this.title,
                         "description": this.description,
-                        "reference": this.url
+                        "referenceURL": this.url
                     });
                     if (response.status >= 200 && response.status < 300) {
                         alert('success');
@@ -284,7 +284,7 @@ export default {
                 formData.append("files", file);
             });
             try {
-                const response = await axios.post(`http://192.168.1.24:8081/mediaData/mpData1?uId=${uid}&mtId=${id}`, formData);
+                const response = await axios.post(`http://192.168.1.17:8081/mediaData/mpData1?uId=${uid}&mtId=${id}`, formData);
                 if (response.status >= 200 && response.status < 300) {
                     alert('success');
                 }
@@ -305,7 +305,7 @@ export default {
                 formData.append("files", file);
             });
             try {
-                const response = await axios.post(`http://192.168.1.24:8081/mediaData/mpData1?uId=${uid}&mtId=${id}`, formData);
+                const response = await axios.post(`http://192.168.1.17:8081/mediaData/mpData1?uId=${uid}&mtId=${id}`, formData);
                 if (response.status >= 200 && response.status < 300) {
                     alert('success');
                 }

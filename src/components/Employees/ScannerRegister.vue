@@ -1,9 +1,9 @@
 <template>
-  <v-app>
+  <v-container class="pb-0 pt-0 px-0" fluid>
     <v-snackbar v-model="snackbar" :color="color" :timeout="timeout" location="top">
       <h6 class="text-center">{{ message }}</h6>
     </v-snackbar>
-    <v-container class=" d-flex align-items-start bg-white p-0 pb-3 flex-wrap ms-0" style="width: 70vw;">
+    <v-container class=" d-flex align-items-start bg-white p-0 pb-3 flex-wrap ms-0" >
       <v-select label="Select Employee" :items="employees" prepend-inner-icon="mdi-briefcase-account" density="compact"
         class="emp ms-0" v-model="id" single-line hide-details></v-select>
       <v-text-field label="Password" prepend-inner-icon="mdi-eye" density="compact" class="emp" v-model="scanPassword"
@@ -13,7 +13,7 @@
         @click="addScanner" :disabled="loading" :loading="loading"> +
         Add as Scanner </v-btn>
     </v-container>
-    <div class="d-flex justify-content-end" style="width: 70vw;">
+    <div class="d-flex justify-content-end" >
       <v-text-field v-model="search" label="Search" prepend-inner-icon="mdi-magnify" class="search" single-line
         density="compact" hide-details></v-text-field>
     </div>
@@ -86,7 +86,7 @@
         </tr>
       </template>
     </v-data-table>
-  </v-app>
+  </v-container>
 </template>
 
 <script>
@@ -255,9 +255,9 @@ export default {
 </script>
 
 <style scoped>
-.v-table{
+/* .v-table{
     width : 70vw;
-}
+} */
 :deep(.search.v-input) {
   display: flex;
   justify-content: end;

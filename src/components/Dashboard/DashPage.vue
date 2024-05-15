@@ -1,163 +1,169 @@
 <template>
-  <div class="d-flex gap-md-4 gap-2 container px-0 flex-wrap justify-content-md-start justify-content-center ms-5">
-    <div class="d-flex flex-xl-row flex-column gap-md-4 gap-2 flex-wrap">
-      <v-card height="160" width="359" class="rounded-3">
-        <v-img src="@/assets/Block1.png" class="card-style"></v-img>
-        <div style="height: 128px; width: 327px;" class="subcard">
-          <div class="d-flex flex-column gap-5">
-            <div class="d-flex button-toggle">
-              <div class="icon-style">
-                <v-icon class="mdi mdi-cash" size="large" color="white"></v-icon>
+  <v-main style="background-color: #D7E8CD;">
+    <v-container class="py-8 px-6" fluid>
+      <div class="d-flex gap-md-4 gap-2 container px-0 flex-wrap justify-content-md-start justify-content-center ms-5">
+        <div class="d-flex flex-xl-row flex-column gap-md-4 gap-2 flex-wrap">
+          <v-card height="160" width="359" class="rounded-3">
+            <v-img src="@/assets/Block1.png" class="card-style"></v-img>
+            <div style="height: 128px; width: 327px;" class="subcard">
+              <div class="d-flex flex-column gap-5">
+                <div class="d-flex button-toggle">
+                  <div class="icon-style">
+                    <v-icon class="mdi mdi-cash" size="large" color="white"></v-icon>
+                  </div>
+                  <v-btn-toggle v-model="toggle" variant="text" class="button">
+                    <v-btn size="small" class="button-style" :value="'Today'" @click="fetchIncomeDate">Today</v-btn>
+                    <v-btn size="small" class="button-style" :value="'Monthly'"
+                      @click="fetchIncomeMonth">Monthly</v-btn>
+                  </v-btn-toggle>
+                </div>
+                <div class="d-flex flex-column">
+                  <p class="text-style"><v-icon class="mdi mdi-currency-inr" size="24" color="white"></v-icon>{{
+                    dailyIncome
+                    }}
+                  </p>
+                  <p class="text-type">Total Earning</p>
+                </div>
               </div>
-              <v-btn-toggle v-model="toggle" variant="text" class="button">
-                <v-btn size="small" class="button-style" :value="'Today'" @click="fetchIncomeDate">Today</v-btn>
-                <v-btn size="small" class="button-style" :value="'Monthly'" @click="fetchIncomeMonth">Monthly</v-btn>
-              </v-btn-toggle>
             </div>
-            <div class="d-flex flex-column">
-              <p class="text-style"><v-icon class="mdi mdi-currency-inr" size="24" color="white"></v-icon>{{ dailyIncome
-                }}
-              </p>
-              <p class="text-type">Total Earning</p>
-            </div>
-          </div>
-        </div>
-      </v-card>
-      <v-card height="160" width="359" class="rounded-3">
-        <v-img src="@/assets/Block2.png" class="card-style"></v-img>
-        <div style="height: 128px; width: 327px;" class="subcard">
-          <div class="d-flex flex-column gap-5">
-            <div class="d-flex button-toggle">
-              <div class="icon-style card2">
-                <v-icon class="mdi mdi-ticket-confirmation" size="large" color="white"></v-icon>
+          </v-card>
+          <v-card height="160" width="359" class="rounded-3">
+            <v-img src="@/assets/Block2.png" class="card-style"></v-img>
+            <div style="height: 128px; width: 327px;" class="subcard">
+              <div class="d-flex flex-column gap-5">
+                <div class="d-flex button-toggle">
+                  <div class="icon-style card2">
+                    <v-icon class="mdi mdi-ticket-confirmation" size="large" color="white"></v-icon>
+                  </div>
+                  <v-btn-toggle v-model="toggle1" variant="text" class="button button2">
+                    <v-btn size="small" class="button-style" :value="'Today'" @click="fetchTicketDate">Today</v-btn>
+                    <v-btn size="small" class="button-style" :value="'Monthly'"
+                      @click="fetchTicketMonth">Monthly</v-btn>
+                  </v-btn-toggle>
+                </div>
+                <div class="d-flex flex-column">
+                  <p class="text-style">{{ dailyTickets }}</p>
+                  <p class="text-type">Total Bookings</p>
+                </div>
               </div>
-              <v-btn-toggle v-model="toggle1" variant="text" class="button button2">
-                <v-btn size="small" class="button-style" :value="'Today'" @click="fetchTicketDate">Today</v-btn>
-                <v-btn size="small" class="button-style" :value="'Monthly'" @click="fetchTicketMonth">Monthly</v-btn>
-              </v-btn-toggle>
             </div>
-            <div class="d-flex flex-column">
-              <p class="text-style">{{ dailyTickets }}</p>
-              <p class="text-type">Total Bookings</p>
-            </div>
-          </div>
+          </v-card>
         </div>
-      </v-card>
-    </div>
 
-    <div class="d-flex flex-column  flex-wrap gap-3">
-      <v-card height="72" width="359" class="rounded-3">
-        <v-img src="@/assets/Block3.png" class="card-style"></v-img>
-        <div style="height: 40px; width: 240px;" class="subcard">
-          <div class="d-flex gap-2">
-            <div class="icon-style card3 mt-2">
-              <v-icon class="mdi mdi-cash" size="large" color="white"></v-icon>
+        <div class="d-flex flex-column  flex-wrap gap-3">
+          <v-card height="72" width="359" class="rounded-3">
+            <v-img src="@/assets/Block3.png" class="card-style"></v-img>
+            <div style="height: 40px; width: 240px;" class="subcard">
+              <div class="d-flex gap-2">
+                <div class="icon-style card3 mt-2">
+                  <v-icon class="mdi mdi-cash" size="large" color="white"></v-icon>
+                </div>
+                <div class="d-flex flex-column">
+                  <p class="text-white mb-0"><v-icon class="mdi mdi-currency-inr" size="16"
+                      color="white"></v-icon>{{cumulativeIncome}}
+                  </p>
+                  <p class="text-type mt-0">Cumulative Income</p>
+                </div>
+              </div>
             </div>
-            <div class="d-flex flex-column">
-              <p class="text-white mb-0"><v-icon class="mdi mdi-currency-inr" size="16"
-                  color="white"></v-icon>{{cumulativeIncome}}
-              </p>
-              <p class="text-type mt-0">Cumulative Income</p>
+          </v-card>
+          <v-card height="72" width="359" class="rounded-3">
+            <v-img src="@/assets/Block4.png" class="card-style"></v-img>
+            <div style="height: 40px; width: 240px;" class="subcard">
+              <div class="d-flex gap-2">
+                <div class="icon-style card4 mt-2">
+                  <v-icon class="mdi mdi-ticket-confirmation" size="large" color="white"></v-icon>
+                </div>
+                <div class="d-flex flex-column">
+                  <p class="text-white mb-0">{{cumulativeTickets}}</p>
+                  <p class="text-type mt-0">Cumulative Bookings</p>
+                </div>
+              </div>
             </div>
-          </div>
+          </v-card>
         </div>
-      </v-card>
-      <v-card height="72" width="359" class="rounded-3">
-        <v-img src="@/assets/Block4.png" class="card-style"></v-img>
-        <div style="height: 40px; width: 240px;" class="subcard">
-          <div class="d-flex gap-2">
-            <div class="icon-style card4 mt-2">
-              <v-icon class="mdi mdi-ticket-confirmation" size="large" color="white"></v-icon>
+      </div>
+      <div class="d-flex flex-wrap  gap-4 mt-4 ms-5">
+        <v-card height="430" width="741" max-width="100%" class="rounded-3 p-3">
+          <div class="d-flex justify-content-between px-3 mt-1">
+            <div>
+              <p class=" my-0">Total income:
+                &#8377;{{ yearlyIncome }}</p>
+              <p class="my-0">Total tickets : {{yearlyTickets }}</p>
             </div>
-            <div class="d-flex flex-column">
-              <p class="text-white mb-0">{{cumulativeTickets}}</p>
-              <p class="text-type mt-0">Cumulative Bookings</p>
-            </div>
-          </div>
-        </div>
-      </v-card>
-    </div>
-  </div>
-  <div class="d-flex flex-wrap  gap-4 mt-4 ms-5">
-    <v-card height="430" width="741" max-width="100%" class="rounded-3 p-3">
-      <div class="d-flex justify-content-between px-3 mt-1">
-        <div>
-          <p class=" my-0">Total income:
-            &#8377;{{ yearlyIncome }}</p>
-          <p class="my-0">Total tickets : {{yearlyTickets }}</p>
-        </div>
-        <!-- <v-select :items="['2024', '2023', '2022']" density=compact class="year-select" v-model="year"></v-select> -->
-        <h6>Current Year: {{ currentYear }}</h6>
-        <!-- <v-btn-toggle v-model="toggleBar" variant="text" class="button">
+            <!-- <v-select :items="['2024', '2023', '2022']" density=compact class="year-select" v-model="year"></v-select> -->
+            <h6>Current Year: {{ currentYear }}</h6>
+            <!-- <v-btn-toggle v-model="toggleBar" variant="text" class="button">
           <v-btn size="small" class=" barbtn" :value="'Current'" @click="fetchIncomeDate">Current</v-btn>
           <v-btn size="small" class=" barbtn" :value="'Cumulative'" @click="fetchIncomeMonth">Cumulative</v-btn>
         </v-btn-toggle> -->
-      </div>
-      <div v-if="!barError">
-        <template v-if="dataBar.length === 0 || data2Bar.length === 0">
-          <div class=" d-flex flex-column align-items-center justify-content-center">
-            <v-icon class=" mdi mdi-alert-circle-outline" color="success" size="48"></v-icon>
-            <h6 class="my-0">No data available.</h6>
           </div>
-        </template>
-        <template v-else>
-          <BarChart :labels="labelsBar" :data="dataBar" :data2="data2Bar" />
-        </template>
-      </div>
-      <div v-else class="mt-5">
-        <div class="d-flex flex-column align-items-center justify-content-center pt-3">
-          <v-icon class="mdi mdi-alert-outline" color="danger" size="50"></v-icon>
-          <h4 class="my-0 text-wrap text-center">{{ errorBar }}</h4>
-          <p class="mt-0">Please try again later.</p>
-          <v-btn variant="outlined" size="small" color="#1A237E" class="text-capitalize" prepend-icon="mdi-reload"
-            @click="fetchBarChart">Retry</v-btn>
-        </div>
-      </div>
-    </v-card>
-    <v-card height="430" width="358" class="rounded-3 px-3">
-      <div class="d-flex justify-content-between align-items-center">
-        <p class="mt-2 ">Scanned Visitors: {{scannedVisitors}}</p>
-        <v-btn-toggle v-model="togglePie" variant="text" class="button">
-          <v-btn size="small" class=" barbtn" :value="'Today'" @click="fetchPieChart">Today</v-btn>
-          <v-btn size="small" class=" barbtn" :value="'All'" @click="fetchPieChartAll">All</v-btn>
-        </v-btn-toggle>
-      </div>
-
-      <div class="d-flex flex-column align-items-centers justify-content-center" style="height: 300px;">
-        <div v-if="!pieError">
-
-          <template v-if="dataPie.length === 0 || dataPie.every(value => value === 0)">
-            <div class=" d-flex flex-column align-items-center justify-content-center">
-              <v-icon class=" mdi mdi-alert-circle-outline" color="success" size="48"></v-icon>
-              <h6 class="my-0">No data available.</h6>
+          <div v-if="!barError">
+            <template v-if="dataBar.length === 0 || data2Bar.length === 0">
+              <div class=" d-flex flex-column align-items-center justify-content-center">
+                <v-icon class=" mdi mdi-alert-circle-outline" color="success" size="48"></v-icon>
+                <h6 class="my-0">No data available.</h6>
+              </div>
+            </template>
+            <template v-else>
+              <BarChart :labels="labelsBar" :data="dataBar" :data2="data2Bar" />
+            </template>
+          </div>
+          <div v-else class="mt-5">
+            <div class="d-flex flex-column align-items-center justify-content-center pt-3">
+              <v-icon class="mdi mdi-alert-outline" color="danger" size="50"></v-icon>
+              <h4 class="my-0 text-wrap text-center">{{ errorBar }}</h4>
+              <p class="mt-0">Please try again later.</p>
+              <v-btn variant="outlined" size="small" color="#1A237E" class="text-capitalize" prepend-icon="mdi-reload"
+                @click="fetchBarChart">Retry</v-btn>
             </div>
-          </template>
-          <template v-else>
-            <div class="d-flex mt-1 mb-4">
+          </div>
+        </v-card>
+        <v-card height="430" width="358" class="rounded-3 px-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <p class="mt-2 ">Scanned Visitors: {{scannedVisitors}}</p>
+            <v-btn-toggle v-model="togglePie" variant="text" class="button">
+              <v-btn size="small" class=" barbtn" :value="'Today'" @click="fetchPieChart">Today</v-btn>
+              <v-btn size="small" class=" barbtn" :value="'All'" @click="fetchPieChartAll">All</v-btn>
+            </v-btn-toggle>
+          </div>
 
-              <!-- <v-select :items="['2024', '2023', '2022']" density=compact class="year-select"
+          <div class="d-flex flex-column align-items-centers justify-content-center" style="height: 300px;">
+            <div v-if="!pieError">
+
+              <template v-if="dataPie.length === 0 || dataPie.every(value => value === 0)">
+                <div class=" d-flex flex-column align-items-center justify-content-center">
+                  <v-icon class=" mdi mdi-alert-circle-outline" color="success" size="48"></v-icon>
+                  <h6 class="my-0">No data available.</h6>
+                </div>
+              </template>
+              <template v-else>
+                <div class="d-flex mt-1 mb-4">
+
+                  <!-- <v-select :items="['2024', '2023', '2022']" density=compact class="year-select"
                 v-model="year1"></v-select> -->
+                </div>
+                <PieChart :labels="labelsPie" :data="dataPie" />
+              </template>
             </div>
-            <PieChart :labels="labelsPie" :data="dataPie" />
-          </template>
-        </div>
-        <div v-else>
-          <div class=" d-flex flex-column align-items-center">
-            <v-icon class=" mdi mdi-alert-outline" color="danger" size="48"></v-icon>
-            <h5 class="my-0 text-wrap text-center">{{ errorPie }}</h5>
-            <p class="mt-0">Please try again later.</p>
-            <v-btn variant="outlined" size="small" color="#1A237E" class="text-capitalize" prepend-icon="mdi-reload"
-              @click="togglePie === 'Today' ? fetchPieChart : fetchPieChartAll">Retry</v-btn>
+            <div v-else>
+              <div class=" d-flex flex-column align-items-center">
+                <v-icon class=" mdi mdi-alert-outline" color="danger" size="48"></v-icon>
+                <h5 class="my-0 text-wrap text-center">{{ errorPie }}</h5>
+                <p class="mt-0">Please try again later.</p>
+                <v-btn variant="outlined" size="small" color="#1A237E" class="text-capitalize" prepend-icon="mdi-reload"
+                  @click="togglePie === 'Today' ? fetchPieChart : fetchPieChartAll">Retry</v-btn>
+              </div>
+            </div>
           </div>
-        </div>
+
+        </v-card>
       </div>
-
-    </v-card>
-  </div>
-  <v-card class="mt-4 ms-5 me-4">
-    <TicketTable />
-  </v-card>
-
+      <v-card class="mt-4 ms-5 me-4">
+        <TicketTable />
+      </v-card>
+    </v-container>
+  </v-main>
 </template>
 
 <script>
@@ -331,12 +337,12 @@ export default {
       }
     },
   },
-  mounted() {
-    document.body.style.backgroundColor = '#D7E8CD';
-  },
-  beforeUnmount() {
-    document.body.style.backgroundColor = '';
-  },
+  // mounted() {
+  //   document.body.style.backgroundColor = '#D7E8CD';
+  // },
+  // beforeUnmount() {
+  //   document.body.style.backgroundColor = '';
+  // },
   created() {
     const today = new Date();
     this.currentDay = String(today.getDate()).padStart(2, '0');

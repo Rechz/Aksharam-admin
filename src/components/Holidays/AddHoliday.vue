@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-container class="py-8 px-0" fluid>
     <v-snackbar v-model="snackbar" :color="color" :timeout="timeout" location="top">
       <div class="text-center">{{ message }}</div>
     </v-snackbar>
@@ -12,7 +12,7 @@
         <v-btn @click="sendHoliday" block color="#2C7721" class="">Add Holiday</v-btn>
       </div>
     </div>
-  </v-app>
+  </v-container>
 </template>
 
 <script>
