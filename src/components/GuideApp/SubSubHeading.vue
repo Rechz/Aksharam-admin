@@ -102,6 +102,7 @@
 <script>
 import axios from 'axios';
 export default {
+    props: ['idmal', 'ideng'],
     data() {
         return {
             malSubmit: false,
@@ -117,10 +118,10 @@ export default {
             imgPreview: [],
             fileTypes: [],
             fileType: {},
-            idmal: sessionStorage.getItem('subid1'),
-            ideng: sessionStorage.getItem('subid2'),
-            subidmal: sessionStorage.getItem('subsubid1'),
-            subideng: sessionStorage.getItem('subsubid2'),
+            // idmal: sessionStorage.getItem('subid1'),
+            // ideng: sessionStorage.getItem('subid2'),
+            subidmal: '',
+            subideng: '',
             heading: null,
             languages: [],
             title: null,
@@ -178,12 +179,14 @@ export default {
         async uploadImages() {
             console.log('english', this.ideng)
             console.log('malayalam', this.idmal)
+            console.log('english sub', this.subideng)
+            console.log('malayalam sub', this.subidmal)
             const formData = new FormData();
             this.images.forEach((image) => {
                 formData.append("files", image);
             });
             try {
-                const response = await axios.post(`http://192.168.1.17:8081/imgData/uploadImg2?englishUId=${this.subideng}&malUid=${this.subidmal}`, formData);
+                const response = await axios.post(`http://192.168.1.21:8081/imgData/uploadImg2?englishUId=${this.subideng}&malUid=${this.subidmal}`, formData);
                 if (response.status === 200) {
                     alert('success')
                     this.images = [];
@@ -194,7 +197,7 @@ export default {
         },
         async getType() {
             try {
-                const response = await axios.get('http://192.168.1.17:8081/fileType/getFileType');
+                const response = await axios.get('http://192.168.1.21:8081/fileType/getFileType');
                 if (response.status >= 200 && response.status < 300) {
                     console.log('gettype', response.data)
                     response.data.forEach(item => {
@@ -212,7 +215,7 @@ export default {
 
         async getAllLanguages() {
             try {
-                const response = await axios.get('http://192.168.1.17:8081/dataType1/getTalk')
+                const response = await axios.get('http://192.168.1.21:8081/dataType1/getTalk')
                 if (response.status === 200) {
                     this.languages = response.data
                     // .map(item => item.talk);
@@ -224,6 +227,10 @@ export default {
             }
         },
         async submitHeading() {
+            console.log('english', this.ideng)
+            console.log('malayalam', this.idmal)
+            console.log('english sub', this.subideng)
+            console.log('malayalam sub', this.subidmal)
             let uid = '';
             if (this.language === 1) {
                 uid = this.idmal;
@@ -234,7 +241,7 @@ export default {
             if (valid) {
                 console.log('click')
                 try {
-                    const response = await axios.post(`http://192.168.1.17:8081/DataEntry3/secondSub?uId=${uid}`, {
+                    const response = await axios.post(`http://192.168.1.21:8081/DataEntry3/secondSub?uId=${uid}`, {
                         "title": this.title,
                         "description": this.description,
                         "referenceURL": this.url
@@ -247,12 +254,14 @@ export default {
                             this.heading = response.data.description;
                             this.malSubmit = true;
                             sessionStorage.setItem('subsubid1', response.data.ssUid)
+                            this.subidmal = response.data.ssUid
                             this.language = 2;
                         }
                         else {
                             sessionStorage.setItem('subsubid2', response.data.ssUid)
                             this.$refs.form.reset();
                             this.engSubmit = true;
+                            this.subideng = response.data.ssUid
                             this.language = 1;
                         }
                     }
@@ -263,6 +272,10 @@ export default {
             }
         },
         async submitAudio(id) {
+            console.log('english', this.ideng)
+            console.log('malayalam', this.idmal)
+            console.log('english sub', this.subideng)
+            console.log('malayalam sub', this.subidmal)
             let uid = '';
             if (this.language === 1) {
                 uid = this.subidmal;
@@ -274,7 +287,7 @@ export default {
                 formData.append("files", file);
             });
             try {
-                const response = await axios.post(`http://192.168.1.17:8081/mediaData/mpData2?uId=${uid}&mtId=${id}`, formData);
+                const response = await axios.post(`http://192.168.1.21:8081/mediaData/mpData2?uId=${uid}&mtId=${id}`, formData);
                 if (response.status >= 200 && response.status < 300) {
                     alert('success');
                 }
@@ -284,6 +297,10 @@ export default {
             }
         },
         async submitVideo(id) {
+            console.log('english', this.ideng)
+            console.log('malayalam', this.idmal)
+            console.log('english sub', this.subideng)
+            console.log('malayalam sub', this.subidmal)
             let uid = '';
             if (this.language === 1) {
                 uid = this.subidmal;
@@ -295,7 +312,7 @@ export default {
                 formData.append("files", file);
             });
             try {
-                const response = await axios.post(`http://192.168.1.17:8081/mediaData/mpData2?uId=${uid}&mtId=${id}`, formData);
+                const response = await axios.post(`http://192.168.1.21:8081/mediaData/mpData2?uId=${uid}&mtId=${id}`, formData);
                 if (response.status >= 200 && response.status < 300) {
                     alert('success');
                 }

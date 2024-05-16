@@ -97,7 +97,9 @@
                     Topic</v-btn>
             </div>
 
-            <SubSubHeading v-else @add-new-sub="step = 1; action = true; subhead = false;" @add-new-topic="backMain" />
+            <SubSubHeading v-else @add-new-sub="step = 1; action = true; subhead = false;" @add-new-topic="backMain" 
+            :idmal="subidmal"
+            :ideng="subideng" />
         </template>
 
     </v-stepper>
@@ -111,6 +113,7 @@ export default {
     {
         SubSubHeading
     },
+    props: ['idmal','ideng'],
     data() {
         return {
             action: true,
@@ -128,10 +131,10 @@ export default {
             imgPreview: [],
             fileTypes: [{ "id": 1, "fileType": "Audio" }, { "id": 2, "fileType": "Video" }],
             fileType: {},
-            idmal: sessionStorage.getItem('id1'),
-            ideng: sessionStorage.getItem('id2'),
-            subidmal: sessionStorage.getItem('subid1'),
-            subideng: sessionStorage.getItem('subid2'),
+            // idmal: sessionStorage.getItem('id1'),
+            // ideng: sessionStorage.getItem('id2'),
+            subidmal: '',
+            subideng: '',
             heading: null,
             languages: [{ talk: 'Malayalam', dtId: 1 }, { talk: 'English', dtId: 2 }],
             title: null,
@@ -190,12 +193,15 @@ export default {
         async uploadImages() {
             console.log('english', this.ideng)
             console.log('malayalam', this.idmal)
+            console.log('english sub', this.subideng)
+            console.log('malayalam sub', this.subidmal)
+          
             const formData = new FormData();
             this.images.forEach((image) => {
                 formData.append("files", image);
             });
             try {
-                const response = await axios.post(`http://192.168.1.17:8081/imgData/uploadImg1?englishUId=${this.subideng}&malUid=${this.subidmal}`, formData);
+                const response = await axios.post(`http://192.168.1.21:8081/imgData/uploadImg1?englishUId=${this.subideng}&malUid=${this.subidmal}`, formData);
                 if (response.status === 200) {
                     alert('success')
                     this.images = [];
@@ -206,7 +212,7 @@ export default {
         },
         async getType() {
             try {
-                const response = await axios.get('http://192.168.1.17:8081/fileType/getFileType');
+                const response = await axios.get('http://192.168.1.21:8081/fileType/getFileType');
                 if (response.status >= 200 && response.status < 300) {
                     console.log('gettype', response.data)
                     response.data.forEach(item => {
@@ -224,7 +230,7 @@ export default {
 
         async getAllLanguages() {
             try {
-                const response = await axios.get('http://192.168.1.17:8081/dataType1/getTalk')
+                const response = await axios.get('http://192.168.1.21:8081/dataType1/getTalk')
                 if (response.status === 200) {
                     this.languages = response.data
                     // .map(item => item.talk);
@@ -236,17 +242,23 @@ export default {
             }
         },
         async submitHeading() {
+            console.log('english', this.ideng)
+            console.log('malayalam', this.idmal)
+            console.log('english sub', this.subideng)
+            console.log('malayalam sub', this.subidmal)
             let uid = '';
             if (this.language === 1) {
                 uid = this.idmal;
             } else {
                 uid = this.ideng;
             }
+            console.log('language', this.language)
+            console.log('selected uid', uid)
             const { valid } = await this.$refs.form.validate()
             if (valid) {
                 // console.log('click')
                 try {
-                    const response = await axios.post(`http://192.168.1.17:8081/DataEntry2/firstSub?uId=${uid}`, {
+                    const response = await axios.post(`http://192.168.1.21:8081/DataEntry2/firstSub?uId=${uid}`, {
                         "title": this.title,
                         "description": this.description,
                         "referenceURL": this.url
@@ -257,12 +269,16 @@ export default {
                             this.$refs.form.reset();
                             this.malSubmit = true;
                             sessionStorage.setItem('subid1', response.data.fsUid)
+                            this.subidmal = response.data.fsUid;
+                            console.log('subidmal',this.subidmal);
                             this.language = 2;
                         }
                         else {
                             sessionStorage.setItem('subid2', response.data.fsUid)
                             this.$refs.form.reset();
                             this.engSubmit = true;
+                            this.subideng = response.data.fsUid;
+                            console.log('subideng',this.subideng);
                             this.language = 1;
                         }
                     }
@@ -273,6 +289,10 @@ export default {
             }
         },
         async submitAudio(id) {
+            console.log('english', this.ideng)
+            console.log('malayalam', this.idmal)
+            console.log('english sub', this.subideng)
+            console.log('malayalam sub', this.subidmal)
             let uid = '';
             if (this.language === 1) {
                 uid = this.subidmal;
@@ -284,7 +304,7 @@ export default {
                 formData.append("files", file);
             });
             try {
-                const response = await axios.post(`http://192.168.1.17:8081/mediaData/mpData1?uId=${uid}&mtId=${id}`, formData);
+                const response = await axios.post(`http://192.168.1.21:8081/mediaData/mpData1?uId=${uid}&mtId=${id}`, formData);
                 if (response.status >= 200 && response.status < 300) {
                     alert('success');
                 }
@@ -294,6 +314,10 @@ export default {
             }
         },
         async submitVideo(id) {
+            console.log('english', this.ideng)
+            console.log('malayalam', this.idmal)
+            console.log('english sub', this.subideng)
+            console.log('malayalam sub', this.subidmal)
             let uid = '';
             if (this.language === 1) {
                 uid = this.subidmal;
@@ -305,7 +329,7 @@ export default {
                 formData.append("files", file);
             });
             try {
-                const response = await axios.post(`http://192.168.1.17:8081/mediaData/mpData1?uId=${uid}&mtId=${id}`, formData);
+                const response = await axios.post(`http://192.168.1.21:8081/mediaData/mpData1?uId=${uid}&mtId=${id}`, formData);
                 if (response.status >= 200 && response.status < 300) {
                     alert('success');
                 }

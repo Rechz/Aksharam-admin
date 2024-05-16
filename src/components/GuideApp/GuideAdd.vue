@@ -99,7 +99,7 @@
                         New Topic</v-btn>
                 </div>
                 <SubHeading v-else @add-new-topic="step = 1; action = true; subhead = false;"
-                    @back-main="step = 1; action = true; subhead = false;" />
+                    @back-main="step = 1; action = true; subhead = false;" :idmal="idmal" :ideng="ideng" />
             </template>
 
         </v-stepper>
@@ -131,8 +131,8 @@ export default {
             imgPreview: [],
             fileTypes: [],
             fileType: {},
-            idmal: sessionStorage.getItem('id1'),
-            ideng: sessionStorage.getItem('id2'),
+            idmal: '',
+            ideng: '',
             heading: null,       
             languages: [],
             title: null,
@@ -186,12 +186,15 @@ export default {
         async uploadImages() {
             console.log('english', this.ideng)
             console.log('malayalam', this.idmal)
+            console.log('english sub', this.subideng)
+            console.log('malayalam sub', this.subidmal)
+            console.log('http://192.168.1.21:8081/imgData/uploadImg?englishUId=',this.ideng,'&malUid=',this.idmal)
             const formData = new FormData();
             this.images.forEach((image) => {
                 formData.append("file", image);
             });
             try {
-                const response = await axios.post(`http://192.168.1.17:8081/imgData/uploadImg?englishUId=${this.ideng}&malUid=${this.idmal}`, formData);
+                const response = await axios.post(`http://192.168.1.21:8081/imgData/uploadImg?englishUId=${this.ideng}&malUid=${this.idmal}`, formData);
                 if (response.status === 200) {
                     alert('success')
                     this.images = [];
@@ -202,7 +205,7 @@ export default {
         },
         async getType() {
             try {
-                const response = await axios.get('http://192.168.1.17:8081/fileType/getFileType');
+                const response = await axios.get('http://192.168.1.21:8081/fileType/getFileType');
                 if (response.status >= 200 && response.status < 300) {
                     console.log('gettype', response.data)
                     response.data.forEach(item => {
@@ -221,7 +224,7 @@ export default {
 
         async getAllLanguages() {
             try {
-                const response = await axios.get('http://192.168.1.17:8081/dataType1/getTalk')
+                const response = await axios.get('http://192.168.1.21:8081/dataType1/getTalk')
                 if (response.status === 200) {
                     this.languages = response.data
                     // .map(item => item.talk);
@@ -233,11 +236,15 @@ export default {
             }
         },
         async submitHeading() {  
+            console.log('english', this.ideng)
+            console.log('malayalam', this.idmal)
+            console.log('english sub', this.subideng)
+            console.log('malayalam sub', this.subidmal)
             const { valid } = await this.$refs.form.validate()
             if (valid) {
                 console.log('click')   
                 try {
-                    const response = await axios.post(`http://192.168.1.17:8081/DataEntry1/mainT?dId=${this.language}`, {
+                    const response = await axios.post(`http://192.168.1.21:8081/DataEntry1/mainT?dId=${this.language}`, {
                         "title": this.title,
                         "description": this.description,
                         "referenceURL": this.url
@@ -250,10 +257,14 @@ export default {
                             this.heading = response.data.description;
                             this.malSubmit = true;
                             sessionStorage.setItem('id1', response.data.mmalUid)
+                            this.idmal = response.data.mmalUid;
+                            console.log('malayalam',this.idmal)
                             this.language = 2;
                         }
                         else {
                             sessionStorage.setItem('id2', response.data.mengUid)
+                            this.ideng = response.data.mengUid;
+                            console.log('english',this.ideng)
                             this.$refs.form.reset();
                             this.engSubmit = true;
                             this.language = 1;
@@ -267,6 +278,10 @@ export default {
             
         },
         async submitAudio(id) {
+            console.log('english', this.ideng)
+            console.log('malayalam', this.idmal)
+            console.log('english sub', this.subideng)
+            console.log('malayalam sub', this.subidmal)
             let uid = ''
             if (this.language === 1) {
                 uid = this.idmal;
@@ -279,7 +294,7 @@ export default {
                 formData.append("files", file);
             });
             try {
-                const response = await axios.post(`http://192.168.1.17:8081/mediaData/mpData?uId=${uid}&mtId=${id}`, formData);
+                const response = await axios.post(`http://192.168.1.21:8081/mediaData/mpData?uId=${uid}&mtId=${id}`, formData);
                 if (response.status >= 200 && response.status < 300) {
                     alert('success');
                 }
@@ -289,6 +304,10 @@ export default {
             }
         },
         async submitVideo(id) {
+            console.log('english', this.ideng)
+            console.log('malayalam', this.idmal)
+            console.log('english sub', this.subideng)
+            console.log('malayalam sub', this.subidmal)
             let uid = ''
             if (this.language === 1) {
                 uid = this.idmal;
@@ -301,7 +320,7 @@ export default {
                 formData.append("files", file);
             });
             try {
-                const response = await axios.post(`http://192.168.1.17:8081/mediaData/mpData?uId=${uid}&mtId=${id}`, formData);
+                const response = await axios.post(`http://192.168.1.21:8081/mediaData/mpData?uId=${uid}&mtId=${id}`, formData);
                 if (response.status >= 200 && response.status < 300) {
                     alert('success');
                 }
