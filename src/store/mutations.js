@@ -9,11 +9,11 @@ export default {
   },
     setAllTickets(state, payload) {
       state.allTickets = payload;
-      sessionStorage.setItem('allTickets', JSON.stringify(payload));
+      // sessionStorage.setItem('allTickets', JSON.stringify(payload));
     },
     setCurrentTickets(state, payload) {
       state.currentTickets = payload;
-      sessionStorage.setItem('currentTickets', JSON.stringify(payload));
+      // sessionStorage.setItem('currentTickets', JSON.stringify(payload));
     },
     setAllEmployees(state, payload) {
       state.allEmployees = payload;
@@ -71,6 +71,11 @@ export default {
 },
   setHoliday(state, payload) {
     state.holidays = payload;
-  sessionStorage.setItem('holidays', JSON.stringify(payload));
-  }   
+    sessionStorage.setItem('holidays', JSON.stringify(payload));
+  },
+  setSlots(state, payload) {
+    state.slots = payload;
+    sessionStorage.setItem('slots', JSON.stringify(payload));
+  }
+
 };

@@ -1,19 +1,21 @@
 <template>
 
   <v-container class="py-8 px-0" fluid>
-   
-      <v-row >
-        <v-col cols="3">
-          <v-select v-model="selectedHour" :items="hours" label="Hour" outlined></v-select>
-        </v-col>
-        <v-col cols="1" class="text-center">
-          <span>:</span>
-        </v-col>
-        <v-col cols="3">
-          <v-select v-model="selectedMinute" :items="minutes" label="Minute" outlined></v-select>
-        </v-col>
-      </v-row>
+    <v-container class="py-0">
+      <p class="text-danger text-caption mb-2"><i>*Enter time in 24 hour (hh:mm:ss) format. 5.30 pm should be entered as
+          17:30:00.</i></p>
+      <v-form class=" d-flex align-items-start bg-white p-0 pb-3 flex-wrap ms-0 gap-3">
 
+        <v-text-field label="Start Time (hh:mm:ss) " prepend-inner-icon="mdi-clock-in" density="compact" class="emp ms-0"
+          v-model="startTime" hide-details variant="outlined"></v-text-field>
+        <v-text-field label="End Time (hh:mm:ss) " prepend-inner-icon="mdi-clock-out" density="compact" class="emp ms-0"
+          v-model="startTime" hide-details variant="outlined"></v-text-field>
+        <v-btn size="large"
+          style="background-color: #2C7721 !important; color: white !important; text-transform: capitalize;"
+          @click="addSlot" :disabled="loading" :loading="loading"> +
+          Add Slot </v-btn>
+      </v-form>
+    </v-container>
 
     <v-data-table :headers="headers" :items="desserts" :sort-by="[{ key: 'calories', order: 'asc' }]"
       style="background-color:#f9faf1;">
@@ -182,9 +184,7 @@ export default {
 </script>
 
 <style>
-/* .v-table {
-  width: 76vw;
-} */
+
 
 .hover-red:hover {
   background-color: #b71c1c !important;
@@ -203,6 +203,14 @@ export default {
 .v-table__wrapper>table>thead {
   background-color: #236726;
   color: white;
+}
+:deep(.emp .v-input__control) {
+  border-bottom: 2px solid #216D17;
+  background-color: #DFE4D7 !important;
+  width: 400px !important;
+}
+:deep(.emp .v-input--horizontal) {
+  width: 400px !important;
 }
 </style>
 style="background-color: #1B5E20; color:white"

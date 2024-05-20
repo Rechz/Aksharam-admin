@@ -1,145 +1,139 @@
 <template>
-    <v-stepper v-model="step" :items="items" :show-actions="action" :hide-actions="!action" elevation="0" alt-labels
-        :disabled="false" next-text="Proceed to next step" prev-text="Back" color="success" flat>
-        <template v-if="step === 1">
-            <h4 class="text-center mt-4 fw-bolder "><u>Add Sub Heading</u></h4>
-            <p class="text-danger fst-italic mt-1">*Please submit Malayalam & English data before proceeding to next
-                page.</p>
-            <div class="d-flex">
-                <v-form class="pt-0" ref="form" @submit.prevent="submitHeading">
-                    <v-select class="select" label="Language" density="comfortable" :items="languages"
-                        v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"></v-select>
-                    <v-text-field v-model="title" :label="language === 1 ? 'തലക്കെട്ട്' : 'Heading'"
-                        density="comfortable" class="select" :rules="titleRules"></v-text-field>
-                    <v-textarea :label="language === 1 ? 'വിവരണം' : 'Description'" class="desc" rows="6"
-                        v-model="description" :rules="descriptionRules"></v-textarea>
-                    <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable" class=" select"
-                        rows="3" outlined v-model="url"></v-textarea>
-                    <div class="d-flex justify-content-start gap-2">
-                        <v-btn color="#2C7721" size="large" class="mb-3" type="submit">Submit</v-btn>
-                        <v-btn color="#2C7721" size="large" class="mb-3" @click="addNewTopic">Back to Main</v-btn>
-                    </div>
-                </v-form>
-                <div class="w-100">
-                    <p class="text-success text-end fst-italic mb-0" v-if="malSubmit">*Malayalam data submitted.</p>
-                    <p class="text-success text-end fst-italic" v-if="engSubmit">*English data submitted.</p>
+    <h5 class="text-center mt-0">Sub Heading {{ count }} - {{ head }}</h5>
+    <v-card flat :disabled="!proceed">
+        <div class="">
+            <v-form class="pt-0" ref="form" @submit.prevent="submitHeading">
+                <v-select class="select" label='Select Language' density="comfortable" :items="languages"
+                    v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"
+                    single-line></v-select>
+                <v-text-field v-model="title" :label="language === 1 ? 'തലക്കെട്ട്' : 'Heading'" density="comfortable"
+                    class="select" :rules="titleRules" single-line></v-text-field>
+                <v-textarea :label="language === 1 ? 'വിവരണം' : 'Description'" class="desc" rows="6"
+                    v-model="description" :rules="descriptionRules" single-line></v-textarea>
+                <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable" class="reference"
+                    rows="2" v-model="url" single-line></v-textarea>
+                <div>
+                    <v-btn color="#386568" size="large" class="text-capitalize" type="submit" :disabled="subload"
+                        variant="elevated" rounded :loading="subload">Add {{ topic }}
+                        topic</v-btn>
                 </div>
-
+            </v-form>
+            <div class="w-100 d-flex flex-column align-items-end justify-content-center ">
+                <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malHeading }} topic
+                    added.
+                </h6>
+                <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engHeading }} topic
+                    added.
+                </h6>
             </div>
-
-        </template>
-        <template v-else-if="step === 2">
-            <h4 class="text-center mt-4 fw-bolder "><u>Subheading Images</u></h4>
-            <div class="mt-5">
-                <input type="file" multiple @change="handleFileUpload" class="mb-3">
+        </div>
+    </v-card>
+    <v-divider></v-divider>
+    <v-btn @click="expand = !expand" color="#386568" size="large" variant="outlined" v-if="proceed"
+        class="text-capitalize">+ Add Images</v-btn>
+    <v-expand-transition>
+        <v-card flat v-show="expand">
+            <div class="mt-4">
+                <input type="file" multiple @change="handleFileUpload" class="mb-1">
                 <div class="d-flex gap-4 flex-wrap ">
                     <div v-for="(image, index) in imgPreview" :key="index" elevation="4" style="position: relative;">
                         <v-card height="100" width="200">
                             <img :src="image.url" alt="Uploaded Image"
                                 style="max-width: 200px; background-size: cover;">
                         </v-card>
-
                         <v-icon class="mdi mdi-close-circle-outline" @click="removeImage(index)" size="32"
                             style="position:absolute; top: -16%; right:-6%" color="green-lighten-1"></v-icon>
                     </div>
                 </div>
-                <div class="d-flex justify-content-start mb-5">
-                    <button @click="uploadImages" class="btn btn-success mt-3">Submit Images</button>
+                <div class="d-flex justify-content-start gap-3 my-2">
+                    <v-btn @click="uploadImages" color="#386568" size="large" variant="elevated" rounded
+                        prepend-icon="mdi-upload" class="text-capitalize">Upload Images</v-btn>
                 </div>
             </div>
-
-        </template>
-        <template v-else-if="step === 3">
+        </v-card>
+    </v-expand-transition>
+    <v-divider></v-divider>
+    <v-btn @click="expand2 = !expand2" color="#386568" size="large" variant="outlined" v-if="proceed"
+        class="text-capitalize">+ Add Audio/Video</v-btn>
+    <v-expand-transition>
+        <v-card flat v-show="expand2">
             <div class="my-3">
-                <h4 class="text-center mt-4 fw-bolder "><u>SubHeading Audio/Video</u></h4>
-                <v-select class="select mb-3" label="Select Language" density="comfortable" :items="languages"
-                    v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"></v-select>
-                <div class="d-flex flex-column gap-5">
-                    <v-card class="bg-blue-grey-lighten-5 p-3">
-                        <input type="file" ref="fileAudio" multiple @change="handleAudio" class="mb-2">
-                        <ul>
-                            <li v-for="(file, index) in audioFiles" :key="index" style="list-style: none;" class="my-1">
-                                <v-chip closable>
-                                    {{ file.name }}
-                                </v-chip>
-                            </li>
-                        </ul>
-                        <button @click="submitAudio(fileType.audio)" class="btn btn-success mt-2">Submit Audio</button>
-                    </v-card>
-                    <v-card class="bg-blue-grey-lighten-5 p-3">
-                        <input type="file" ref="fileVideo" multiple @change="handleVideo" class="mb-2">
-                        <ul>
-                            <li v-for="(file, index) in videoFiles" :key="index" style="list-style: none;" class="my-1">
-                                <v-chip closable>
-                                    {{ file.name }}
-                                </v-chip>
-                            </li>
-                        </ul>
-                        <button @click="submitVideo(fileType.video)" class="btn btn-success mt-2">Submit Video</button>
-                    </v-card>
+                <v-select class="select" label="Select Language" density="comfortable" :items="languages"
+                    v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"
+                    single-line></v-select>
+                <v-select class="select" label="Select Audio/Video" density="comfortable" :items="fileTypes"
+                    v-model="fileType" :rules="languageRules" item-title="fileType" item-value="id"
+                    single-line></v-select>
 
-                </div>
+                <v-card flat v-if="fileType === 1">
+                    <input type="file" ref="fileAudio" @change="handleAudio" class="mb-2">
+                    <ul>
+                        <li v-for="(file, index) in audioFiles" :key="index" style="list-style: none;" class="my-1">
+                            <v-chip closable @click:close="removeAudio(index)">
+                                {{ file.name }}
+                            </v-chip>
+                        </li>
+                    </ul>
+                </v-card>
+                <v-card flat v-if="fileType === 2">
+                    <input type="file" ref="fileVideo" @change="handleVideo" class="mb-2">
+                    <ul>
+                        <li v-for="(file, index) in videoFiles" :key="index" style="list-style: none;" class="my-1">
+                            <v-chip closable>
+                                {{ file.name }}
+                            </v-chip>
+                        </li>
+                    </ul>
+                </v-card>
 
+                <v-btn @click="submitVideo(fileType)" color="#386568" size="large" variant="elevated" rounded
+                    prepend-icon="mdi-video" class="text-capitalize" :disabled="videoLoad" :loading="videoLoad"
+                    v-if="fileType === 2">Submit
+                    Video</v-btn>
+                <v-btn @click="submitAudio(fileType)" color="#386568" size="large" variant="elevated" rounded
+                    prepend-icon="mdi-music" class="text-capitalize" :disabled="audioLoad" :loading="audioLoad"
+                    v-if="fileType === 1">Submit
+                    Audio</v-btn>
             </div>
-        </template>
-        <template v-else>
-            <div style="height: 50vh;" class="my-5 d-flex flex-column justify-content-center align-items-center"
-                v-if="!subhead">
-                <v-btn color="green" class="mb-3" @click="subhead = true; action = false" size="x-large"
-                    append-icon="mdi-step-forward">Add New Sub of
-                    Subheading</v-btn>
+        </v-card>
+    </v-expand-transition>
+    <v-divider></v-divider>
+    <v-btn color="#386568" size="large" variant="outlined" v-if="proceed" class="text-capitalize" @click="step++">+ Add
+        Subheading</v-btn>
 
-                <v-btn color="green" class="mb-3" @click="step = 1; subhead = false;"
-                    prepend-icon="mdi-step-backward">Add New
-                    Subheading</v-btn>
 
-                <v-btn color="green" class="mb-3" @click="addNewTopic" prepend-icon="mdi-step-backward-2">Add New Main
-                    Topic</v-btn>
-            </div>
-
-            <SubSubHeading v-else @add-new-sub="step = 1; action = true; subhead = false;" @add-new-topic="backMain" 
-            :idmal="subidmal"
-            :ideng="subideng" />
-        </template>
-
-    </v-stepper>
 </template>
-
 <script>
-import SubSubHeading from './SubSubHeading.vue'
+// import SubSubHeading from './SubSubHeading.vue'
 import axios from 'axios';
 export default {
-    components:
-    {
-        SubSubHeading
-    },
-    props: ['idmal','ideng'],
+    // components:
+    // {
+    //     SubSubHeading
+    // },
+    props: ['idmal', 'ideng', 'head'],
     data() {
         return {
-            action: true,
+            expand: false,
+            expand2: false,
             malSubmit: false,
             engSubmit: false,
             step: 1,
-            items: [
-                'Subheading Topic',
-                'Upload Images',
-                'Upload Audio/Video',
-                'Sub of Subheadings'
-            ],
+            count: 1,
             images: [],
-            subhead : false,
+            subhead: false,
             imgPreview: [],
-            fileTypes: [{ "id": 1, "fileType": "Audio" }, { "id": 2, "fileType": "Video" }],
-            fileType: {},
+            fileTypes: [],
+            fileType: null,
             // idmal: sessionStorage.getItem('id1'),
             // ideng: sessionStorage.getItem('id2'),
             subidmal: '',
             subideng: '',
             heading: null,
-            languages: [{ talk: 'Malayalam', dtId: 1 }, { talk: 'English', dtId: 2 }],
+            languages: [],
             title: null,
             description: null,
-            language: 1,
+            language: null,
             titleRules: [v => !!v || '*Title is required'],
             descriptionRules: [v => !!v || '*Description is required'],
             languageRules: [v => !!v || '*Language is required'],
@@ -148,7 +142,10 @@ export default {
             audioFiles: [],
             videoFiles: [],
             audioId: null,
-            videoId: null
+            videoId: null,
+            base_url: 'http://localhost:8086',
+            malHeading: '',
+            engHeading: '',
         };
     },
     computed: {
@@ -156,10 +153,16 @@ export default {
             if ((this.malSubmit) && (this.engSubmit)) {
                 return false;
             } else return true;
+        },
+        topic() {
+            if (this.language === 1) return 'Malayalam'
+            else if (this.language === 2) return 'English'
+            else return '';
         }
+      
     },
     methods: {
-        
+
         addNewTopic() {
             this.$emit('add-new-topic'); // Emitting an event named 'add-new-topic'
         },
@@ -168,15 +171,19 @@ export default {
         },
         handleAudio(event) {
             const selectedFiles = event.target.files;
-            for (let i = 0; i < selectedFiles.length; i++) {
-                this.audioFiles.push(selectedFiles[i]);
-            }
+            this.audioFiles = selectedFiles
+        },
+        removeAudio(index) {
+            this.audioFiles.splice(index, 1);
+            this.$refs.fileAudio.value = '';
         },
         handleVideo(event) {
             const selectedFiles = event.target.files;
-            for (let i = 0; i < selectedFiles.length; i++) {
-                this.videoFiles.push(selectedFiles[i]);
-            }
+            this.videoFiles = selectedFiles;
+        },
+        removeVideo(index) {
+            this.videoFiles.splice(index, 1);
+            this.$refs.fileVideo.value = '';
         },
         handleFileUpload(event) {
             const files = event.target.files;
@@ -191,17 +198,14 @@ export default {
             }
         },
         async uploadImages() {
-            console.log('english', this.ideng)
-            console.log('malayalam', this.idmal)
-            console.log('english sub', this.subideng)
-            console.log('malayalam sub', this.subidmal)
-          
+
+
             const formData = new FormData();
             this.images.forEach((image) => {
                 formData.append("files", image);
             });
             try {
-                const response = await axios.post(`http://192.168.1.21:8081/imgData/uploadImg1?englishUId=${this.subideng}&malUid=${this.subidmal}`, formData);
+                const response = await axios.post(`${this.base_url}/imgData/uploadImg1?englishUId=${this.subideng}&malUid=${this.subidmal}`, formData);
                 if (response.status === 200) {
                     alert('success')
                     this.images = [];
@@ -212,7 +216,7 @@ export default {
         },
         async getType() {
             try {
-                const response = await axios.get('http://192.168.1.21:8081/fileType/getFileType');
+                const response = await axios.get(`${this.base_url}/fileType/getFileType`);
                 if (response.status >= 200 && response.status < 300) {
                     console.log('gettype', response.data)
                     response.data.forEach(item => {
@@ -230,7 +234,7 @@ export default {
 
         async getAllLanguages() {
             try {
-                const response = await axios.get('http://192.168.1.21:8081/dataType1/getTalk')
+                const response = await axios.get(`${this.base_url}/dataType1/getTalk`)
                 if (response.status === 200) {
                     this.languages = response.data
                     // .map(item => item.talk);
@@ -242,10 +246,6 @@ export default {
             }
         },
         async submitHeading() {
-            console.log('english', this.ideng)
-            console.log('malayalam', this.idmal)
-            console.log('english sub', this.subideng)
-            console.log('malayalam sub', this.subidmal)
             let uid = '';
             if (this.language === 1) {
                 uid = this.idmal;
@@ -258,7 +258,7 @@ export default {
             if (valid) {
                 // console.log('click')
                 try {
-                    const response = await axios.post(`http://192.168.1.21:8081/DataEntry2/firstSub?uId=${uid}`, {
+                    const response = await axios.post(`${this.base_url}/DataEntry2/firstSub?uId=${uid}`, {
                         "title": this.title,
                         "description": this.description,
                         "referenceURL": this.url
@@ -266,19 +266,25 @@ export default {
                     if (response.status >= 200 && response.status < 300) {
                         alert('success');
                         if (this.language === 1) {
-                            this.$refs.form.reset();
+                            const language = this.languages.find(lang => lang.dtId === this.language);
+                            this.message = `${response.data.title} (${language.talk}) added successfully`;
+                            this.snackbar = true;
+                            this.malHeading = response.data.title
                             this.malSubmit = true;
-                            sessionStorage.setItem('subid1', response.data.fsUid)
+                            this.$refs.form.reset();
+                            sessionStorage.setItem('subidmal', response.data.fsUid)
                             this.subidmal = response.data.fsUid;
-                            console.log('subidmal',this.subidmal);
                             this.language = 2;
                         }
                         else {
-                            sessionStorage.setItem('subid2', response.data.fsUid)
-                            this.$refs.form.reset();
-                            this.engSubmit = true;
+                            const language = this.languages.find(lang => lang.dtId === this.language);
+                            this.message = `${response.data.title} (${language.talk}) added successfully`;
+                            this.dialogTopic = true;
+                            sessionStorage.setItem('subideng', response.data.fsUid)
                             this.subideng = response.data.fsUid;
-                            console.log('subideng',this.subideng);
+                            this.$refs.form.reset();
+                            this.engHeading = response.data.title
+                            this.engSubmit = true;
                             this.language = 1;
                         }
                     }
@@ -289,10 +295,6 @@ export default {
             }
         },
         async submitAudio(id) {
-            console.log('english', this.ideng)
-            console.log('malayalam', this.idmal)
-            console.log('english sub', this.subideng)
-            console.log('malayalam sub', this.subidmal)
             let uid = '';
             if (this.language === 1) {
                 uid = this.subidmal;
@@ -304,7 +306,7 @@ export default {
                 formData.append("files", file);
             });
             try {
-                const response = await axios.post(`http://192.168.1.21:8081/mediaData/mpData1?uId=${uid}&mtId=${id}`, formData);
+                const response = await axios.post(`${this.base_url}/mediaData/mpData1?uId=${uid}&mtId=${id}`, formData);
                 if (response.status >= 200 && response.status < 300) {
                     alert('success');
                 }
@@ -314,10 +316,7 @@ export default {
             }
         },
         async submitVideo(id) {
-            console.log('english', this.ideng)
-            console.log('malayalam', this.idmal)
-            console.log('english sub', this.subideng)
-            console.log('malayalam sub', this.subidmal)
+           
             let uid = '';
             if (this.language === 1) {
                 uid = this.subidmal;
@@ -329,7 +328,7 @@ export default {
                 formData.append("files", file);
             });
             try {
-                const response = await axios.post(`http://192.168.1.21:8081/mediaData/mpData1?uId=${uid}&mtId=${id}`, formData);
+                const response = await axios.post(`${this.base_url}/mediaData/mpData1?uId=${uid}&mtId=${id}`, formData);
                 if (response.status >= 200 && response.status < 300) {
                     alert('success');
                 }

@@ -65,7 +65,7 @@
       <v-text-field label="Search" v-model="search" prepend-inner-icon="mdi-magnify" class="search mt-5"
         density="compact" single-line></v-text-field>
     </div>
-    <v-data-table :headers="headers" :items="filteredEmployees" class="mt-3"
+    <v-data-table :headers="headers" :items="filteredEmployees" class="mt-3" item-value="employeeId"
       :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
       <template v-slot:top>
         <v-dialog v-model="dialogDelete" width="400px">
