@@ -20,6 +20,8 @@ export default {
   getDailyTicket: (state) => state.dailyTickets,
   getEmployeeId: (state) => state.employeeId,
   getPriceList: (state) => state.priceList,
-  getHoliday: (state) => state.holidays
+  getHoliday: (state) => state.holidays,
+  getData: (state) => state.maintopics,
+  getDetail: (state) => state.detailTopic
  
 }

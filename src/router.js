@@ -110,7 +110,8 @@ const router = createRouter({
               path: '/admin/guide-app/view',
               name: 'guide-view',
               component: () => import('./components/GuideApp/GuideView.vue'),
-            }
+            },
+            
           ]
         }
       ]
@@ -119,6 +120,11 @@ const router = createRouter({
       path: '/admin/add-items',
       name: 'add-items',
       component: () => import('./components/GuideApp/ItemsAdd.vue'),
+    },
+    {
+      path: '/admin/guide-app/edit',
+      name: 'guide-edit',
+      component: () => import('./components/GuideApp/DetailsView.vue'),
     }
   ]
 });

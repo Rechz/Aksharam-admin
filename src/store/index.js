@@ -29,7 +29,9 @@ const store = createStore({
       dailyIncome: sessionStorage.getItem('dailyIncome') || 0,
       dailyTickets: sessionStorage.getItem('dailyTickets') || 0,
       priceList: {},
-      holidays: JSON.parse(sessionStorage.getItem('holidays')) || []
+      holidays: JSON.parse(sessionStorage.getItem('holidays')) || [],
+      maintopics: [],
+      detailTopic: [],
     };
   },
   mutations: rootMutations,
