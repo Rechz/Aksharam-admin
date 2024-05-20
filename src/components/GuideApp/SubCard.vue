@@ -9,6 +9,8 @@
         </div>
       </div>
       <div class="carousel-wrapper">
+        <v-btn prepend-icon="mdi-pencil" rounded="4" class="mb-3 text-success text-capitalize me-2" size="small">Edit</v-btn>
+        <v-btn prepend-icon="mdi-trash-can" rounded="4" class="mb-3 text-danger text-capitalize" size="small">Delete</v-btn>
         <v-carousel class="sub-carousel" height="100%" hide-delimiters cover :show-arrows="!images.length === 1">
 
           <v-carousel-item @click="openDialog(image.furl)" cover :src="image.furl" v-for="(image, index) in images"
@@ -100,7 +102,7 @@ export default {
   aspect-ratio: 813/600;
   position: absolute;
   left: 80%;
-  top: 15%;
+  top: 8%;
   width: 50%;
   aspect-ratio: 271 / 200; /* Define aspect ratio for the wrapper */
 }

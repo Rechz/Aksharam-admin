@@ -143,7 +143,7 @@ export default {
             videoFiles: [],
             audioId: null,
             videoId: null,
-            base_url: 'http://localhost:8086',
+            base_url: 'http://192.168.106.39:8086',
             malHeading: '',
             engHeading: '',
         };

@@ -1,8 +1,8 @@
 <template>
     <div class="full-page">
         <div class="d-flex justify-content-between align-items-center nav mx-5 pt-5 pb-3">
-            <router-link to="/display"><v-btn class="home-btn text-capitalize" rounded size="x-large"><v-icon
-                        class="mdi mdi-home"></v-icon>Home</v-btn></router-link>
+            <router-link to="/admin/guide-app/view"><v-btn class="home-btn text-capitalize" rounded size="x-large"><v-icon
+                        class="mdi mdi-arrow-left"></v-icon>Back</v-btn></router-link>
             <h1 style="color: white; font-size: 360%;" class="text-center">{{subTopic.title}}</h1>
             <v-btn class="translate-btn text-capitalize" rounded size="x-large">
                 <svg width="50" height="50" viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -41,17 +41,19 @@ export default {
         SubCard,
         SubReverse
     },
+    
     computed: {
         subTopic() {
-            return this.$store.getters.getFirstSub[0];
-        }
+            return this.$store.getters.getDetail;
+        },
     },
     mounted() {
         document.body.style.backgroundImage = 'linear-gradient(to bottom,#0B0F0A,#56754E)';
     },
     beforeUnmount() {
         document.body.style.backgroundImage = ''; 
-    }
+    },
+    
 }
 </script>
 

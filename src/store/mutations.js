@@ -76,6 +76,11 @@ export default {
   setSlots(state, payload) {
     state.slots = payload;
     sessionStorage.setItem('slots', JSON.stringify(payload));
-  }
-
+  },
+  setAllTopics(state, payload) {
+    state.maintopics = payload;
+  },
+setDetails(state,payload){
+  state.detailTopic = payload;
+}
 };

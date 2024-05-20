@@ -3,7 +3,7 @@
   <v-container class="py-8 px-0" fluid>
     <div class="d-flex justify-content-between mb-4">
     </div>
-    <v-data-table :headers="headers" :items="employees" class="mt-3"
+    <v-data-table :headers="headers" :items="mainheadings" class="mt-3"
       :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
       <template v-slot:top>
         <v-dialog v-model="dialogDelete" width="400px">
@@ -24,8 +24,8 @@
           </v-card>
         </v-dialog>
         <!-- Add new dialog for displaying details -->
-        <v-dialog v-model="detailsDialog" width="600px">
-          <v-card style="width: 880px; height:650px; border-radius: 15px;">
+        <!-- <v-dialog v-model="detailsDialog" width="600px"> -->
+          <!-- <v-card style="width: 880px; height:650px; border-radius: 15px;">
             <v-card-title class="d-flex justify-content-between px-4"
               style="background-color: #216D17; color: #FFFFFF;">
               <h4>Item Heading</h4>
@@ -110,8 +110,9 @@
                 </div>
               </v-container>
             </v-card-text>
-          </v-card>
-        </v-dialog>
+          </v-card> -->
+          <!-- <details-view :subTopic="subTopic"></details-view>
+        </v-dialog> -->
         <!-- QrDialog -->
         <v-dialog v-model="qrDialog" width="400px">
           <v-card style="width: 400px; height:auto; border-radius: 15px;">
@@ -122,7 +123,7 @@
             </v-card-title>
             <v-card-text class="mb-0 px-3 py-0">
               <v-container class="py-0">
-                <v-img src='@/assets/Qr.png' alt="QR" style=" height: 400px; width: 400px;"></v-img>
+                <v-img :src='editedItem.qrCodeUrl' alt="QR" style=" height: 400px; width: 400px;"></v-img>
               </v-container>
             </v-card-text>
             <v-card-text class="px-3 pt-0 mb-3">
@@ -143,10 +144,10 @@
         <tr style="background-color:#FCFDF6; color:black;">
           <!-- <td class="text-center">{{ index + 1 }}</td> -->
           <td class="">{{ index + 1 }}</td>
-          <td class="">{{ item.heading }}</td>
-          <td class=""><v-img src="@/assets/acc.jpg" alt="image"
-              style="border-radius: 50%; height: 50px; width: 50px;"></v-img></td>
-          <td class=""><v-img src="@/assets/Qr.png" alt="QR" class="qr" style="height: 50px; width: 50px;"
+          <td class="">{{ item.title }}</td>
+          <!-- <td class=""><v-img :src="@/assets/acc.jpg" alt="image"
+              style="border-radius: 50%; height: 50px; width: 50px;"></v-img></td> -->
+          <td class=""><v-img :src="item.qrCodeUrl" alt="QR" class="qr" style="height: 50px; width: 50px;"
               @click="showQR(item)"></v-img></td>
           <td class="text-center">
             <v-btn class="text-none" color="#48663f" min-width="100" rounded @click="showDetails(item)">View</v-btn>
@@ -162,8 +163,13 @@
 </template>
   
   <script>
-  
+  // import DetailsView from './DetailsView.vue';
+  import axios from 'axios';
+  import { mapGetters } from 'vuex';
   export default {
+    // components: {
+    //   DetailsView
+    // },
     data: () => ({
       dialog: false,
       // overlay: true,
@@ -177,11 +183,11 @@
       snackbar: false,
       color: '#E8F5E9',
       timeout: 3000,
+      subTopic:{},
       image: require('@/assets/acc.jpg'),
       headers: [
         { title: 'Sl.no', align: 'start', sortable: false },
         { title: 'Heading', align: 'start', key: 'heading', sortable: false },
-        { title: 'Image', align: 'start', key: 'image', sortable: false },
         { title: 'QR Code', align: 'start', key: 'QR', sortable: false },
         { title: 'Details', align: 'center' },
         { title: 'Edit / Delete', align: 'center' },
@@ -192,6 +198,10 @@
     }),
   
     computed: {
+      ...mapGetters(['getData']),
+    mainheadings() {
+      return this.getData;
+    },
       formTitle() {
         return this.editedIndex === -1 ? 'Add Employee' : 'Edit Employee'
       },
@@ -213,7 +223,24 @@
     created() {
       this.getDetails();
     },
+    mounted() {
+      this.getTopics();
+    },
     methods: {
+      async getTopics() {
+      try {
+        const response = await axios.get(`http://192.168.1.19:8081/DataEntry1/getMainComplete?dtId=2`);
+
+        if (response.status === 200) {
+          console.log(response.data);
+          // this.subTopic = response.data;
+          this.$store.commit('setAllTopics', response.data);
+        }
+      } catch (error) {
+        console.log(error.message);
+        console.error(error);
+      }
+    },
       setFallbackImage(event) {
           event.target.src = this.image;
       },
@@ -226,8 +253,11 @@
         }
       },
       showDetails(item) {
-        this.editedItem = Object.assign({}, item);
-        this.detailsDialog = true;
+        console.log('item',item);
+        this.$store.commit('setDetails', item)
+        this.$router.push({name:'guide-edit'})
+        // this.subTopic = Object.assign({}, item);
+        // this.detailsDialog = true;
       },
       showQR(item) {
         this.editedItem = Object.assign({}, item);
