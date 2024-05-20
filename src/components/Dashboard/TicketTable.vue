@@ -1,6 +1,7 @@
 <template>
     <v-data-table-virtual :headers="headers" :items="tickets" max-width="100%" color="grey-darken-3" class="p-3"
-        :header-props="{ style: 'background-color: #386568; color: white;' }" height="300" fixed-header>
+        :header-props="{ style: 'background-color: #386568; color: white;' }" height="300" fixed-header
+        item-value="ticketId">
         <template v-slot:top>
             <v-toolbar flat>
                 <v-toolbar-title>

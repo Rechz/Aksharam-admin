@@ -527,4 +527,18 @@ try {
       return true;
     }
   },
+    //getslots
+    async getSlots({ rootGetters, commit }) {
+      try {
+        const url = rootGetters.getUrl;
+        const response = await axios.get(`${url}/api/stime/getSlot`);
+        if (response.status === 200) {
+          commit('setSlots', response.data);
+          return true;
+        }
+      }
+      catch (error) {
+        console.error(error)
+      }
+  },
 }
