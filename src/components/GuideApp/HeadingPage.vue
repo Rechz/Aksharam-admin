@@ -1,137 +1,46 @@
+
+
 <template>
-    <v-stepper v-model="step" :items="items" :hide-actions="true" elevation="0" alt-labels color="#2C7721" flat>
-        <template v-if="step === 1">
-            <v-card flat :disabled="!proceed">
-                <div class="">
-                    <v-form class="pt-0" ref="form" @submit.prevent="submitHeading">
-                        <v-select class="select" label='Select Language' density="comfortable" :items="languages"
-                            v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"
-                            single-line></v-select>
-                        <v-text-field v-model="title" :label="language === 1 ? 'തലക്കെട്ട്' : 'Heading'"
-                            density="comfortable" class="select" :rules="titleRules" single-line></v-text-field>
-                        <v-textarea :label="language === 1 ? 'വിവരണം' : 'Description'" class="desc" rows="6"
-                            v-model="description" :rules="descriptionRules" single-line></v-textarea>
-                        <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
-                            class="reference" rows="2" v-model="url" single-line></v-textarea>
-                        <div>
-                            <v-btn color="#386568" size="large" class="text-capitalize" type="submit"
-                                :disabled="subload" variant="elevated" rounded :loading="subload">Add {{ topic }}
-                                topic</v-btn>
-                        </div>
-                    </v-form>
-                    <div class="w-100 d-flex flex-column align-items-end justify-content-center ">
-                        <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malHeading }} topic
-                            added.
-                        </h6>
-                        <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engHeading }} topic
-                            added.
-                        </h6>
-                    </div>
+    <v-card flat :disabled="!proceed">
+        <div class="">
+            <v-form class="pt-0" ref="form" @submit.prevent="submitHeading">
+                <v-select class="select" label='Select Section' density="comfortable" :items="items" v-model="item"
+                    :rules="itemRules" single-line></v-select>
+                <v-select class="select" label='Select Language' density="comfortable" :items="languages"
+                    v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"
+                    single-line></v-select>
+                <v-text-field v-model="title" :label="language === 1 ? 'തലക്കെട്ട്' : 'Heading'" density="comfortable"
+                    class="select" :rules="titleRules" single-line></v-text-field>
+                <v-textarea :label="language === 1 ? 'വിവരണം' : 'Description'" class="desc" rows="6"
+                    v-model="description" :rules="descriptionRules" single-line></v-textarea>
+                <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable" class="reference"
+                    rows="2" v-model="url" single-line></v-textarea>
+                <div>
+                    <v-btn color="#386568" size="large" class="text-capitalize" type="submit" :disabled="subload"
+                        variant="elevated" rounded :loading="subload">Add {{ topic }}
+                        topic</v-btn>
                 </div>
-            </v-card>
-            <v-divider></v-divider>
-            <v-btn @click="expand = !expand" color="#386568" size="large" variant="outlined" v-if="!proceed"
-                class="text-capitalize">+ Add Images</v-btn>
-            <v-expand-transition>
-                <v-card flat v-show="expand">
-                    <div class="mt-4">
-                        <input type="file" multiple @change="handleFileUpload" class="mb-1">
-                        <div class="d-flex gap-4 flex-wrap ">
-                            <div v-for="(image, index) in imgPreview" :key="index" elevation="4"
-                                style="position: relative;">
-                                <v-card height="100" width="200">
-                                    <img :src="image.url" alt="Uploaded Image"
-                                        style="max-width: 200px; background-size: cover;">
-                                </v-card>
-                                <v-icon class="mdi mdi-close-circle-outline" @click="removeImage(index)" size="32"
-                                    style="position:absolute; top: -16%; right:-6%" color="green-lighten-1"></v-icon>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-start gap-3 my-2">
-                            <v-btn @click="uploadImages" color="#386568" size="large" variant="elevated" rounded
-                                prepend-icon="mdi-upload" class="text-capitalize">Upload Images</v-btn>
-                        </div>
-                    </div>
-                </v-card>
-            </v-expand-transition>
-            <v-divider></v-divider>
-            <v-btn @click="expand2 = !expand2" color="#386568" size="large" variant="outlined" v-if="!proceed"
-                class="text-capitalize">+ Add Audio/Video</v-btn>
-            <v-expand-transition>
-                <v-card flat v-show="expand2">
-                    <div class="my-3">
-                        <v-select class="select" label="Select Language" density="comfortable" :items="languages"
-                            v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"
-                            single-line></v-select>
-                        <v-select class="select" label="Select Audio/Video" density="comfortable" :items="fileTypes"
-                            v-model="fileType" :rules="languageRules" item-title="fileType" item-value="id"
-                            single-line></v-select>
-
-                        <v-card flat v-if="fileType === 1">
-                            <input type="file" ref="fileAudio" @change="handleAudio" class="mb-2">
-                            <ul>
-                                <li v-for="(file, index) in audioFiles" :key="index" style="list-style: none;"
-                                    class="my-1">
-                                    <v-chip closable @click:close="removeAudio(index)">
-                                        {{ file.name }}
-                                    </v-chip>
-                                </li>
-                            </ul>
-                        </v-card>
-                        <v-card flat v-if="fileType === 2">
-                            <input type="file" ref="fileVideo" @change="handleVideo" class="mb-2">
-                            <ul>
-                                <li v-for="(file, index) in videoFiles" :key="index" style="list-style: none;"
-                                    class="my-1">
-                                    <v-chip closable>
-                                        {{ file.name }}
-                                    </v-chip>
-                                </li>
-                            </ul>
-                        </v-card>
-
-                        <v-btn @click="submitVideo(fileType)" color="#386568" size="large" variant="elevated" rounded
-                            prepend-icon="mdi-video" class="text-capitalize" :disabled="videoLoad" :loading="videoLoad"
-                            v-if="fileType === 2">Submit
-                            Video</v-btn>
-                        <v-btn @click="submitAudio(fileType)" color="#386568" size="large" variant="elevated" rounded
-                            prepend-icon="mdi-music" class="text-capitalize" :disabled="audioLoad" :loading="audioLoad"
-                            v-if="fileType === 1">Submit
-                            Audio</v-btn>
-                    </div>
-                </v-card>
-            </v-expand-transition>
-            <v-divider></v-divider>
-            <v-btn color="#386568" size="large" variant="outlined" v-if="!proceed" class="text-capitalize"
-                @click="step++">+ Add
-                Subheading</v-btn>
-            <div class="d-flex justify-content-end ">
-                <v-btn color="#386568" size="large" variant="elevated" v-if="!proceed">Finish</v-btn>
+            </v-form>
+            <div class="w-100 d-flex flex-column align-items-end justify-content-center ">
+                <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malHeading }} topic
+                    added.
+                </h6>
+                <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engHeading }} topic
+                    added.
+                </h6>
             </div>
-        </template>
-        <template v-if="step === 2">
-            <SubHeading @add-new-topic="step = 1; action = true; subhead = false;"
-                @back-main="step = 1; action = true; subhead = false;" :idmal="idmal" :ideng="ideng"
-                :head="engHeading" />
-        </template>
-        <template v-if="step === 3">
-            <SubSubHeading @add-new-sub="step = 1; action = true; subhead = false;" @add-new-topic="backMain"
-                :idmal="subidmal" :ideng="subideng" />
-        </template>
-
-    </v-stepper>
-
+        </div>
+    </v-card>
 </template>
-
 <script>
-import SubHeading from './SubHeading.vue'
-import SubSubHeading from './SubSubHeading.vue'
+// import SubHeading from './SubHeading.vue'
+// import SubSubHeading from './SubSubHeading.vue'
 import axios from 'axios';
 export default {
-    components:
-    {
-        SubHeading, SubSubHeading
-    },
+    // components:
+    // {
+    //     SubHeading, SubSubHeading
+    // },
     data() {
         return {
             expand: false,
@@ -140,7 +49,8 @@ export default {
             engSubmit: false,
             step: 1,
             subhead: false,
-            items: ['Main Topic', 'SubHeadings', 'Sub of Subheadings'],
+            items: ['Main Topic', 'SubHeading', 'Sub of Subheading'],
+            item:null,
             action: false,
             subload: false,
             images: [],
