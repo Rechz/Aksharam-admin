@@ -82,5 +82,69 @@ export default {
   },
 setDetails(state,payload){
   state.detailTopic = payload;
-}
+  },
+ setIdmal(state, payload) {
+      state.idmal = payload;
+      // sessionStorage.setItem('idmal', payload);
+    },
+    setIdeng(state, payload) {
+      state.ideng = payload;
+      // sessionStorage.setItem('ideng', payload);
+    },
+    setVideomal(state, payload) {
+      state.videomal = payload;
+      // sessionStorage.setItem('videomal', payload);
+    },
+    setAudiomal(state, payload) {
+      state.audiomal = payload;
+      // sessionStorage.setItem('audiomal', payload);
+    },
+    setVideoeng(state, payload) {
+      state.videoeng = payload;
+      // sessionStorage.setItem('videoeng', payload);
+    },
+    setAudioeng(state, payload) {
+      state.audioeng = payload;
+      // sessionStorage.setItem('audioeng', payload);
+    },
+    setVideoSubMal(state, payload) {
+      state.videoSubMal = payload;
+      // sessionStorage.setItem('videoSubMal', payload);
+    },
+    setAudioSubMal(state, payload) {
+      state.audioSubMal = payload;
+      // sessionStorage.setItem('audioSubMal', payload);
+    },
+    setVideoSubEng(state, payload) {
+      state.videoSubEng = payload;
+      // sessionStorage.setItem('videoSubEng', payload);
+    },
+    setAudioSubEng(state, payload) {
+      state.audioSubEng = payload;
+      // sessionStorage.setItem('audioSubEng', payload);
+    },
+    setMalHeading(state, payload) {
+      state.malHeading = payload;
+      // sessionStorage.setItem('malHeading', payload);
+    },
+    setEngHeading(state, payload) {
+      state.engHeading = payload;
+      // sessionStorage.setItem('engHeading', payload);
+    },
+    setMalSubHeading(state, payload) {
+      state.malSubHeading = payload;
+      // sessionStorage.setItem('malSubHeading', payload);
+    },
+    setEngSubHeading(state, payload) {
+      state.engSubHeading = payload;
+      // sessionStorage.setItem('engSubHeading', payload);
+    },
+    setSubidmal(state, payload) {
+      state.subidmal = payload;
+      // sessionStorage.setItem('subidmal', payload);
+    },
+    setSubideng(state, payload) {
+      state.subideng = payload;
+      // sessionStorage.setItem('subideng', payload);
+    },
 };

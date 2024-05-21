@@ -22,6 +22,22 @@ export default {
   getPriceList: (state) => state.priceList,
   getHoliday: (state) => state.holidays,
   getData: (state) => state.maintopics,
-  getDetail: (state) => state.detailTopic
- 
+  getDetail: (state) => state.detailTopic,
+  idmal: (state) => state.idmal,
+  ideng: (state) => state.ideng,
+  videomal: (state) => state.videomal,
+  audiomal: (state) => state.audiomal,
+  videoeng: (state) => state.videoeng,
+  audioeng: (state) => state.audioeng,
+  videoSubMal: (state) => state.videoSubMal,
+  audioSubMal: (state) => state.audioSubMal,
+  videoSubEng: (state) => state.videoSubEng,
+  audioSubEng: (state) => state.audioSubEng,
+  malHeading: (state) => state.malHeading,
+  engHeading: (state) => state.engHeading,
+  malSubHeading: (state) => state.malSubHeading,
+  engSubHeading: (state) => state.engSubHeading,
+  subidmal: (state) => state.subidmal,
+  subideng: (state) => state.subideng,
+
 }

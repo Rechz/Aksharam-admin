@@ -1,9 +1,9 @@
 <template>
-    <v-container class="py-8 px-0" fluid>
+    <v-stepper v-model="step" :items="items" :hide-actions="true" elevation="0" alt-labels color="#2C7721" flat>
         <v-dialog width="600" max-width="600" v-model="dialogTopic">
             <v-card width="600" rounded="3">
-                <v-card-title class="text-center text-white" :style="{ backgroundColor: color }">{{
-                    dialogHead }}</v-card-title>
+                <v-card-title class="text-center text-white" :style="{backgroundColor: color}">{{
+                    dialogHead}}</v-card-title>
                 <v-card-text class="px-5 text-center">
                     <v-icon size="88" class="mdi mdi-check-circle-outline" color="success"></v-icon>
                     <h6>{{ message }}</h6>
@@ -13,47 +13,40 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <v-stepper v-model="step" :items="items" hide-actions="true" elevation="0" alt-labels flat>
-            <template v-if="step === 1">
-                <h5 class="text-center mt-4 fw-bolder ">Add Main Heading</h5>
-                <p class="text-danger fst-italic mt-1">*Please submit Malayalam & English data before proceeding to next
-                    page.</p>
-                <v-card flat>
-                    <div class="d-flex gap-4">
-                        <v-form class="pt-0" ref="form" @submit.prevent="submitHeading">
-                            <v-select class="select" label='Select Language' density="comfortable" :items="languages"
-                                v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"
-                                single-line></v-select>
-                            <v-text-field v-model="title" :label="language === 1 ? 'തലക്കെട്ട്' : 'Heading'"
-                                density="comfortable" class="select" :rules="titleRules" single-line></v-text-field>
-                            <v-textarea :label="language === 1 ? 'വിവരണം' : 'Description'" class="desc" rows="6"
-                                v-model="description" :rules="descriptionRules" single-line></v-textarea>
-                            <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
-                                class="reference" rows="2" v-model="url" single-line></v-textarea>
-                            <div class="d-flex gap-2">
-                                <v-btn color="#386568" size="large" class="text-capitalize" type="submit"
-                                    :disabled="subload" variant="elevated" rounded :loading="subload">Add {{ topic }}
-                                    topic</v-btn>
-                                <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
-                                    @click="step++">Next</v-btn>
-                            </div>
-                        </v-form>
-                        <div class="d-flex flex-column align-items-end justify-content-center ">
-                            <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malHeading }}
-                                (Malayalam) topic
-                                added.
-                            </h6>
-                            <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engHeading }}
-                                (English) topic
-                                added.
-                            </h6>
+        <template v-if="step === 1">
+            <v-card flat :disabled="!proceed">
+                <div class="d-flex gap-4">
+                    <v-form class="pt-0" ref="form" @submit.prevent="submitHeading">
+                        <v-select class="select" label='Select Language' density="comfortable" :items="languages"
+                            v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"
+                            single-line></v-select>
+                        <v-text-field v-model="title" :label="language === 1 ? 'തലക്കെട്ട്' : 'Heading'"
+                            density="comfortable" class="select" :rules="titleRules" single-line></v-text-field>
+                        <v-textarea :label="language === 1 ? 'വിവരണം' : 'Description'" class="desc" rows="6"
+                            v-model="description" :rules="descriptionRules" single-line></v-textarea>
+                        <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
+                            class="reference" rows="2" v-model="url" single-line></v-textarea>
+                        <div>
+                            <v-btn color="#386568" size="large" class="text-capitalize" type="submit"
+                                :disabled="subload" variant="elevated" rounded :loading="subload">Add {{ topic }}
+                                topic</v-btn>
                         </div>
+                    </v-form>
+                    <div class="d-flex flex-column align-items-end justify-content-center ">
+                        <h6 class="text-success text-end fst-italic mb-0" v-if="malHeading">*{{ malHeading }} (Malayalam) topic
+                            added.
+                        </h6>
+                        <h6 class="text-success text-end fst-italic mb-0" v-if="engHeading">*{{ engHeading }} (English) topic
+                            added.
+                        </h6>
                     </div>
-                </v-card>
-            </template>
-            <template v-else-if="step === 2">
-                <h5 class="text-center mt-4 fw-bolder ">Main Heading Image</h5>
-                <v-card flat>
+                </div>
+            </v-card>
+            <v-divider></v-divider>
+            <v-btn @click="expand = !expand" color="#386568" size="large" variant="outlined" v-if="!proceed"
+                class="text-capitalize">+ Add Images</v-btn>
+            <v-expand-transition>
+                <v-card flat v-show="expand">
                     <div class="d-flex gap-3">
                         <v-card flat class="mt-4" :disabled="imageLoad">
                             <input type="file" ref="imageFile" multiple @change="handleFileUpload" class="mb-1">
@@ -69,7 +62,11 @@
                                         color="green-lighten-1"></v-icon>
                                 </div>
                             </div>
-
+                            <div class="d-flex justify-content-start gap-3 my-2">
+                                <v-btn @click="uploadImages" color="#386568" size="large" variant="elevated" rounded
+                                    :disabled="imageLoad" :loading="imageLoad" prepend-icon="mdi-upload"
+                                    class="text-capitalize">Upload Images</v-btn>
+                            </div>
                         </v-card>
                         <div class="d-flex flex-column align-items-end justify-content-center ">
                             <h6 class="text-success text-end fst-italic mb-0" v-if="imageSubmit">*Image successfully
@@ -77,22 +74,14 @@
                             </h6>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-between gap-3 my-2 w-100">
-                        <v-btn @click="uploadImages" color="#386568" size="large" variant="elevated" rounded
-                            :disabled="imageLoad" :loading="imageLoad" prepend-icon="mdi-upload"
-                            class="text-capitalize">Upload Images</v-btn>
-                        <div class="d-flex gap-2">
-                            <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
-                                @click="step--">Back</v-btn>
-                            <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
-                                @click="step++">Next</v-btn>
-                        </div>
-                    </div>
+
                 </v-card>
-            </template>
-            <template v-else-if="step === 3">
-                <h5 class="text-center mt-4 fw-bolder ">Main Heading Audio/Video</h5>
-                <v-card flat>
+            </v-expand-transition>
+            <v-divider></v-divider>
+            <v-btn @click="expand2 = !expand2" color="#386568" size="large" variant="outlined" v-if="!proceed"
+                class="text-capitalize">+ Add Audio/Video</v-btn>
+            <v-expand-transition>
+                <v-card flat v-show="expand2">
                     <div class="d-flex gap-3">
                         <v-card flat :disabled="audioLoad || videoLoad" class="my-3">
                             <v-select class="select" label="Select Language" density="comfortable" :items="languages"
@@ -125,29 +114,6 @@
                                 </ul>
                             </v-card>
 
-
-                        </v-card>
-                        <div class="d-flex flex-column align-items-end justify-content-center ">
-                            <h6 class="text-success text-end fst-italic mb-0" v-if="audioMalSubmit">*Malayalam audio
-                                successfully
-                                uploaded.
-                            </h6>
-                            <h6 class="text-success text-end fst-italic mb-0" v-if="audioEngSubmit">*English audio
-                                successfully
-                                uploaded.
-                            </h6>
-                            <h6 class="text-success text-end fst-italic mb-0" v-if="videoMalSubmit">*Malayalam video
-                                successfully
-                                uploaded.
-                            </h6>
-                            <h6 class="text-success text-end fst-italic mb-0" v-if="videoEngSubmit">*English video
-                                successfully
-                                uploaded.
-                            </h6>
-                        </div>
-                    </div>
-                    <div class="d-flex gap-2 justify-content-between ">
-                        <div>
                             <v-btn @click="submitVideo(fileType)" color="#386568" size="large" variant="elevated"
                                 rounded prepend-icon="mdi-video" class="text-capitalize" :disabled="videoLoad"
                                 :loading="videoLoad" v-if="fileType === 2">Submit
@@ -156,49 +122,59 @@
                                 rounded prepend-icon="mdi-music" class="text-capitalize" :disabled="audioLoad"
                                 :loading="audioLoad" v-if="fileType === 1">Submit
                                 Audio</v-btn>
-                        </div>
-                        <div class="d-flex gap-2">
-                            <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
-                                @click="step--">Back</v-btn>
-                            <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
-                                @click="step++">Next</v-btn>
+                        </v-card>
+                        <div class="d-flex flex-column align-items-end justify-content-center ">
+                            <h6 class="text-success text-end fst-italic mb-0" v-if="audioMalSubmit">*Malayalam audio successfully
+                                uploaded.
+                            </h6>
+                            <h6 class="text-success text-end fst-italic mb-0" v-if="audioEngSubmit">*English audio successfully
+                                uploaded.
+                            </h6>
+                            <h6 class="text-success text-end fst-italic mb-0" v-if="videoMalSubmit">*Malayalam video successfully
+                                uploaded.
+                            </h6>
+                            <h6 class="text-success text-end fst-italic mb-0" v-if="videoEngSubmit">*English video successfully
+                                uploaded.
+                            </h6>
                         </div>
                     </div>
                 </v-card>
-            </template>
-            <template v-else>
-                <div style="height: 50vh;" class="my-5 d-flex flex-column justify-content-center align-items-center"
-                    v-if="!subhead">
-                    <v-btn color="green" class="mb-3" @click="subhead = true; action= false" size="x-large"
-                        variant="outlined" append-icon="mdi-step-forward">Add
-                        Subheading</v-btn>
-                    <v-btn color="green" class="mb-3" @click="finish"
-                        variant="outlined" prepend-icon="mdi-step-backward">Finish & Add New Topic</v-btn>
-                </div>
-                <SubHeading v-else @add-new-topic="finish"
-                    @back-main="step = 1; action = true; subhead = false;" :idmal="idmal" :ideng="ideng" />
-            </template>
-        </v-stepper>
-    </v-container>
+            </v-expand-transition>
+            <v-divider></v-divider>
+            <v-btn color="#386568" size="large" variant="outlined" v-if="!proceed" class="text-capitalize"
+                @click="addSub">+ Add
+                Subheading</v-btn>
+            <div class="d-flex justify-content-end ">
+                <v-btn color="#386568" size="large" variant="elevated" v-if="!proceed" @click="finish">Finish</v-btn>
+            </div>
+        </template>
+        <template v-if="step === 2">
+            <SubHeading @add-new-topic="step = 1; action = true; subhead = false;"
+                @back-main="backToMain" :idmal="idmal" :ideng="ideng"
+                :head="engHeading" />
+        </template>
+        <template v-if="step === 3">
+            <SubSubHeading @add-new-sub="step = 1; action = true; subhead = false;" @add-new-topic="backMain"
+                :idmal="subidmal" :ideng="subideng" />
+        </template>
+
+    </v-stepper>
+
 </template>
 
 <script>
 import SubHeading from './SubHeading.vue'
+import SubSubHeading from './SubSubHeading.vue'
 import axios from 'axios';
 export default {
-    components: 
+    components:
     {
-        SubHeading
+        SubHeading, SubSubHeading
     },
     data() {
         return {
-            items: [
-                'Main Topic',
-                'Upload Images',
-                'Upload Audio/Video',
-                'Subheadings'
-            ],
-            action: true,
+            expand: false,
+            expand2: false,
             malSubmit: false,
             engSubmit: false,
             imageSubmit: false,
@@ -207,23 +183,25 @@ export default {
             audioEngSubmit: false,
             audioMalSubmit: false,
             subhead: false,
+            items: ['Main Topic', 'SubHeadings', 'Sub of Subheadings'],
+            action: false,
             subload: false,
             imageLoad: false,
             videoLoad: false,
-            audioLoad: false,
+            audioLoad : false,
             images: [],
             imgPreview: [],
             fileTypes: [],
             fileType: null,
-            step: 1,
+            step: parseInt(sessionStorage.getItem('step')) || 1,
             idmal: this.$store.getters.idmal || '',
             ideng: this.$store.getters.ideng || '',
-            videomal: '',
-            audiomal: '',
-            videoeng: '',
-            audioeng: '',
-            malHeading: '',
-            engHeading: '',
+            videomal: this.$store.getters.videomal || '',
+            audiomal: this.$store.getters.audiomal || '',
+            videoeng: this.$store.getters.videoeng || '',
+            audioeng: this.$store.getters.audioeng || '',
+            malHeading: this.$store.getters.malHeading || '',
+            engHeading: this.$store.getters.engHeading || '',
             languages: [],
             title: null,
             titleRules: [v => !!v || '*Title is required'],
@@ -242,7 +220,6 @@ export default {
             color: '',
             dialogTopic: false,
             dialogHead: '',  
-            
         };
     },
     computed: {
@@ -258,17 +235,59 @@ export default {
         }
     },
     methods: {
-        finish() {
-            sessionStorage.clear();
-            this.step = 1
-            this.$store.commit('idmal', '')
-            this.$store.commit('ideng', '')
-            this.malHeading=''
-            this.engHeading=''
-            this.action = true;
-            this.subhead = false;
+        backToMain() {
+            this.step = 1;
+            sessionStorage.setItem('step', this.step);  
         },
-        
+        async submitHeading() {
+            const { valid } = await this.$refs.form.validate()
+            if (valid) {
+                this.subload = true;
+                try {
+                    const response = await axios.post(`${this.base_url}/DataEntry1/mainT?dId=${this.language}`, {
+                        "title": this.title,
+                        "description": this.description,
+                        "referenceURL": this.url
+                    });
+                    if (response.status >= 200 && response.status < 300) {
+                        this.subload = false;
+                        if (this.language === 1) {
+                            const language = this.languages.find(lang => lang.dtId === this.language);
+                            this.$store.commit('setMalHeading', response.data.title)
+                            this.$store.commit('setIdmal', response.data.mmalUid)
+                            this.message = `${this.malHeading} (${language.talk}) added successfully!`;
+                            this.dialogHead = 'Success'
+                            this.color = '#2E7D32'
+                            this.dialogTopic = true;
+                            this.malSubmit = true;
+                            this.$refs.form.reset();
+                            this.language = 2;
+                        }
+                        else {
+                            const language = this.languages.find(lang => lang.dtId === this.language);
+                            this.$store.commit('setEngHeading', response.data.title)
+                            this.$store.commit('setIdeng', response.data.mengUid)
+                            this.message = `${response.data.title} (${language.talk}) added successfully!`;
+                            this.dialogHead = 'Success'
+                            this.color = '#2E7D32'
+                            this.dialogTopic = true;
+                            this.engSubmit = true;
+                            this.$refs.form.reset();                         
+                            this.engSubmit = true;
+                            this.language = 1;
+                        }
+                    }
+                }
+                catch (err) {
+                    this.subload = false;
+                    this.color = '#BA1A1A';
+                    this.dialogHead = 'Error';
+                    this.message = err.message;
+                    this.dialogTopic = true;
+                    console.error(err);
+                }
+            }
+        },
         handleAudio(event) {
             const selectedFiles = event.target.files[0];
             this.audioFiles.push(selectedFiles)
@@ -335,11 +354,25 @@ export default {
                 this.dialogTopic = true;
             }
         },
+        finish() {
+            sessionStorage.clear();
+            this.step =1
+            this.idmal= ''
+            this.ideng= ''
+            this.videomal= ''
+            this.audiomal= ''
+            this.videoeng = ''
+            this.audioeng=''
+            this.malHeading=''
+            this.engHeading = ''
+            this.malSubmit = false
+            this.engSubmit =false
+        },
         async getType() {
             try {
                 const response = await axios.get(`${this.base_url}/fileType/getFileType`);
                 if (response.status >= 200 && response.status < 300) {
-                    this.fileTypes = response.data;
+                    this.fileTypes = response.data; 
                 }
             }
             catch (err) {
@@ -356,56 +389,13 @@ export default {
             catch (error) {
                 console.error(error)
             }
-        },
-
-        async submitHeading() {
-            const { valid } = await this.$refs.form.validate()
-            if (valid) {
-                this.subload = true;
-                try {
-                    const response = await axios.post(`${this.base_url}/DataEntry1/mainT?dId=${this.language}`, {
-                        "title": this.title,
-                        "description": this.description,
-                        "referenceURL": this.url
-                    });
-                    if (response.status >= 200 && response.status < 300) {
-                        this.subload = false;
-                        if (this.language === 1) {
-                            const language = this.languages.find(lang => lang.dtId === this.language);
-                            this.$store.commit('setMalHeading', response.data.title)
-                            this.$store.commit('setIdmal', response.data.mmalUid)
-                            this.message = `${this.malHeading} (${language.talk}) added successfully!`;
-                            this.dialogHead = 'Success'
-                            this.color = '#2E7D32'
-                            this.dialogTopic = true;
-                            this.malSubmit = true;
-                            this.$refs.form.reset();
-                            this.language = 2;
-                        }
-                        else {
-                            const language = this.languages.find(lang => lang.dtId === this.language);
-                            this.$store.commit('setEngHeading', response.data.title)
-                            this.$store.commit('setIdeng', response.data.mengUid)
-                            this.message = `${response.data.title} (${language.talk}) added successfully!`;
-                            this.dialogHead = 'Success'
-                            this.color = '#2E7D32'
-                            this.dialogTopic = true;
-                            this.engSubmit = true;
-                            this.$refs.form.reset();
-                            this.engSubmit = true;
-                            this.language = 1;
-                        }
-                    }
-                }
-                catch (err) {
-                    this.subload = false;
-                    this.color = '#BA1A1A';
-                    this.dialogHead = 'Error';
-                    this.message = err.message;
-                    this.dialogTopic = true;
-                    console.error(err);
-                }
-            }
+        }, 
+        addSub() {
+            const response = window.confirm(`Are you sure you want to add subheading for ${this.engHeading}/${this.malHeading}`)  
+            if (response) {
+                this.step++;
+                sessionStorage.setItem('step', this.step)
+          }
         },
         async submitAudio(id) {
             this.audioLoad = true;
@@ -433,7 +423,7 @@ export default {
                         this.message = 'English audio uploaded successfully';
                         this.audioEngSubmit = true;
                         this.languageAV = 1;
-                    }
+                    }  
                     this.dialogHead = 'Success'
                     this.color = '#2E7D32'
                     this.dialogTopic = true;
@@ -491,12 +481,26 @@ export default {
                 this.dialogTopic = true;
             }
         },
+        generateQR() {
+            this.$refs.form.reset();
+            this.loading = true
+            this.QRload = true;
+
+            setTimeout(() => {
+                this.qrgenerated = true;
+                // this.malSubmit = false;
+                // this.engSubmit = false;
+                this.action = true;
+                this.QRload = false;
+                this.loading = false;
+                this.proceed = true;
+                this.message = 'QR generated successfully';
+                this.snackbar = true;
+                this.$refs.form.reset();
+
+            }, 5000);
+        }
     },
-    // created() {
-    //     this.fileType = this.fileTypes.forEach(item => {
-    //         this.fileTypes[item.fileType.toLowerCase()] = item.id;
-    //     });
-    // },
     watch: {
         proceed(newValue) {
             if (!newValue) {
@@ -504,6 +508,7 @@ export default {
             }
         }
     },
+
     mounted() {
         this.getAllLanguages();
         this.getType();
@@ -511,20 +516,7 @@ export default {
 };
 </script>
 <style scoped>
-.label-btn {
-    background-color: #546E7A;
-    color: white;
-    /* padding: 0.5rem; */
-    font-family: sans-serif;
-    border-radius: 0.3rem;
-    cursor: pointer;
-    /* margin-top: 1rem; */
-    height: 40px;
-    width: 190px;
-    border-radius: 20px;
-    padding: 12px 24px 12px 16px;
-    font-size: 16px;
-}
+/*  */
 
 #file-chosen {
     margin-left: 0.3rem;
@@ -544,14 +536,23 @@ export default {
 
 :deep(.select .v-input__control) {
     border-bottom: 2px solid #216D17;
-    /* background-color: #DFE4D7 !important; */
+    background-color: #DFE4D7 !important;
     width: 400px !important;
+    height: 50px !important;
+}
+
+:deep(.reference .v-input__control) {
+    border-bottom: 2px solid #216D17;
+    background-color: #DFE4D7 !important;
+    width: 400px !important;
+    /* height: 60px !important; */
 }
 
 :deep(.desc .v-input__control) {
     border-bottom: 2px solid #216D17;
-    /* background-color: #DFE4D7 !important; */
-    width: 700px !important;
+    background-color: #DFE4D7 !important;
+    width: 800px !important;
+    height: 160px;
 }
 
 :deep(.guide .v-input__control) {
@@ -561,24 +562,5 @@ export default {
 
 :deep(.v-input__details) {
     padding-top: 1px;
-}
-
-:deep(.v-input--outlined .v-input__control .guide .desc) {
-    border-bottom: 1px solid #48663f;
-    /* Default border color */
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    transition: border-color 0.2s ease-in-out;
-    /* Transition for border color change */
-}
-
-/* When focused, change the bottom border color */
-:deep(.v-input--outlined.v-input--is-focused .v-input__control .guide .desc) {
-    border-bottom-color: #48663f;
-    /* Focus border color */
-}
-:deep(.v-stepper-window){
-    margin: 0;
 }
 </style>
