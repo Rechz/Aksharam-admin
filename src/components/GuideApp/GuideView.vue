@@ -230,7 +230,7 @@
     methods: {
       async getTopics() {
       try {
-        const response = await axios.get(`http://192.168.1.19:8081/DataEntry1/getMainComplete?dtId=2`);
+        const response = await axios.get(`http://192.168.1.12:8081/DataEntry1/getMainComplete?dtId=2`);
 
         if (response.status === 200) {
           console.log(response.data);
@@ -253,10 +253,22 @@
           console.error(error.message)
         }
       },
-      showDetails(item) {
-        console.log('item',item);
-        this.$store.commit('setDetails', item)
-        this.$router.push({name:'guide-edit'})
+      async showDetails(item) {
+        try {
+        const response = await axios.get(`http://192.168.1.12:8081/qrcode/getScanDetails?dtId=2&commonId=${item.commonId}`);
+
+        if (response.status === 200) {
+          console.log(response.data);
+          // this.subTopic = response.data;
+          console.log('item',item);
+          this.$store.commit('setDetails', response.data)
+          this.$router.push({name:'guide-edit'})
+        }
+      } catch (error) {
+        console.log(error.message);
+        console.error(error);
+      }
+        
         // this.subTopic = Object.assign({}, item);
         // this.detailsDialog = true;
       },
@@ -339,7 +351,9 @@
         const link = document.createElement('a');
         link.href = qrCodeUrl;
         link.download = 'qr_code.png';
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
       },
       async update() {
         this.loading = !this.loading

@@ -125,7 +125,13 @@ const router = createRouter({
       path: '/admin/guide-app/edit',
       name: 'guide-edit',
       component: () => import('./components/GuideApp/DetailsView.vue'),
-    }
+    },
+    {
+      path: '/admin/guide-app/editForm',
+      name: 'guide-editForm',
+      component: () => import('./components/GuideApp/EditForm.vue'),
+    },
+    
   ]
 });
 router.beforeEach((to, _ , next) => {
