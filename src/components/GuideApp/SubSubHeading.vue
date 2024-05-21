@@ -1,97 +1,172 @@
 <template>
-    <v-stepper v-model="step" :items="items" show-actions elevation="0" alt-labels next-text="Proceed to next step"
-        :disabled="false" prev-text="Back" color="success" flat>
+    <v-dialog width="600" max-width="600" v-model="dialogTopic">
+        <v-card width="600" rounded="3">
+            <v-card-title class="text-center text-white" :style="{ backgroundColor: color }">{{
+                dialogHead }}</v-card-title>
+            <v-card-text class="px-5 text-center">
+                <v-icon size="88" :class="icon" :color="color"></v-icon>
+                <h6>{{ message }}</h6>
+            </v-card-text>
+            <v-card-actions>
+                <v-btn @click="dialogTopic = !dialogTopic" :color="color">Okay</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+    <v-stepper v-model="step" :items="items" hide-actions elevation="0" alt-labels flat>
         <template v-if="step === 1">
-            <h4 class="text-center mt-4 fw-bolder "><u>Add Sub of Subheading</u></h4>
-            <p class="text-danger fst-italic mt-1">*Please submit Malayalam & English data before proceeding to next
-                page.</p>
+            <h5 class="text-center mt-4 fw-bolder ">Add Sub of Subheading -{{ count }} ({{ engHeading }})</h5>
+            <p class="text-danger fst-italic mt-1">**Please submit Malayalam & English data before proceeding to next
+                page. Do not refresh the page to avoid data loss.</p>
             <div class="d-flex">
                 <v-form class="pt-0" ref="form" @submit.prevent="submitHeading">
-                    <v-select class="select" label="Language" density="comfortable" :items="languages"
-                        v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"></v-select>
-                    <v-text-field v-model="title" :label="language === 1 ? 'തലക്കെട്ട്' : 'Heading'"
-                        density="comfortable" class="select" :rules="titleRules"></v-text-field>
-                    <v-textarea :label="language === 1 ? 'വിവരണം' : 'Description'" class="desc" rows="6"
-                        v-model="description" :rules="descriptionRules"></v-textarea>
-                    <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable" class=" select"
-                        rows="3" outlined v-model="url"></v-textarea>
-                    <div class="d-flex justify-content-start gap-2">
-                        <v-btn color="#2C7721" size="large" class="mb-3" type="submit">Submit</v-btn>
-                        <v-btn color="#2C7721" size="large" class="mb-3" @click="addNewSub">Back to Subheadings</v-btn>
+                    <v-select class="select" label='Select Language' density="comfortable" :items="languages"
+                        v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"
+                        single-line></v-select>
+                    <v-text-field v-model="title" :label="language === 1 ? 'തലക്കെട്ട്' : 'Sub Heading'"
+                        density="comfortable" class="select" :rules="titleRules" single-line></v-text-field>
+                    <v-textarea :label="language === 1 ? 'വിവരണം' : 'Subheading Description'" class="desc" rows="6"
+                        v-model="description" :rules="descriptionRules" single-line></v-textarea>
+                    <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
+                        class="reference" rows="2" v-model="url" single-line></v-textarea>
+                    <div class="d-flex justify-content-between  gap-2">
+                        <v-btn color="#386568" size="large" class="text-capitalize" type="submit" :disabled="subload"
+                            variant="elevated" rounded :loading="subload">Add {{ topic }} sub topic</v-btn>
+                        <div class="d-flex gap-2">
+                            <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
+                                @click="back">Back</v-btn>
+                            <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
+                                @click="step++">Next</v-btn>
+                        </div>
                     </div>
                 </v-form>
-                <div class="w-100">
-                    <p class="text-success text-end fst-italic mb-0" v-if="malSubmit">*Malayalam data submitted.</p>
-                    <p class="text-success text-end fst-italic" v-if="engSubmit">*English data submitted.</p>
+                <div class="d-flex flex-column ">
+                    <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malSubHeading }}
+                        (Malayalam) subtopic added.
+                    </h6>
+                    <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engSubHeading }}
+                        (English) subtopic added.
+                    </h6>
                 </div>
-
             </div>
-
         </template>
         <template v-else-if="step === 2">
-            <h4 class="text-center mt-4 fw-bolder "><u>Sub of subheading Images</u></h4>
-            <div class="mt-5">
-                <input type="file" multiple @change="handleFileUpload" class="mb-3">
-                <div class="d-flex gap-4 flex-wrap ">
-                    <div v-for="(image, index) in imgPreview" :key="index" elevation="4" style="position: relative;">
-                        <v-card height="100" width="200">
-                            <img :src="image.url" alt="Uploaded Image"
-                                style="max-width: 200px; background-size: cover;">
-                        </v-card>
-
-                        <v-icon class="mdi mdi-close-circle-outline" @click="removeImage(index)" size="32"
-                            style="position:absolute; top: -16%; right:-6%" color="green-lighten-1"></v-icon>
+            <h5 class="text-center mt-4 fw-bolder ">Sub of subheading Images</h5>
+            <v-card flat>
+                <div class="d-flex gap-3">
+                    <v-card flat class="mt-4" :disabled="imageLoad">
+                        <input type="file" ref="imageFile" multiple @change="handleFileUpload" class="mb-1"
+                            accept="image/*">
+                        <div class="d-flex gap-4 flex-wrap ">
+                            <div v-for="(image, index) in imgPreview" :key="index" elevation="4"
+                                style="position: relative;">
+                                <v-card height="100" width="200">
+                                    <img :src="image.url" alt="Uploaded Image"
+                                        style="max-width: 200px; background-size: cover;">
+                                </v-card>
+                                <v-icon class="mdi mdi-close-circle-outline" @click="removeImage(index)" size="32"
+                                    style="position:absolute; top: -16%; right:-6%" color="green-lighten-1"></v-icon>
+                            </div>
+                        </div>
+                    </v-card>
+                    <div class="d-flex flex-column align-items-end justify-content-center ">
+                        <h6 class="text-success text-end fst-italic mb-0" v-if="imageSubmit">*Image successfully
+                            uploaded.
+                        </h6>
                     </div>
                 </div>
-                <div class="d-flex justify-content-start mb-5">
-                    <button @click="uploadImages" class="btn btn-success mt-3">Submit Images</button>
+                <div class="d-flex justify-content-between gap-3 my-2 w-100">
+                    <v-btn @click="uploadImages" color="#386568" size="large" variant="elevated" rounded
+                        :disabled="imageLoad" :loading="imageLoad" prepend-icon="mdi-upload"
+                        class="text-capitalize">Upload Images</v-btn>
+                    <div class="d-flex gap-2">
+                        <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
+                            @click="step--">Back</v-btn>
+                        <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
+                            @click="step++">Next</v-btn>
+                    </div>
                 </div>
-            </div>
-
+            </v-card>
         </template>
         <template v-else-if="step === 3">
-            <h4 class="text-center mt-4 fw-bolder "><u>Sub of subheading Audio/Video</u></h4>
+            <h5 class="text-center mt-4 fw-bolder ">Sub of subheading Audio/Video</h5>
             <div class="my-3">
                 <v-select class="select mb-3" label="Select Language" density="comfortable" :items="languages"
-                    v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"></v-select>
-                <div class="d-flex flex-column gap-5">
-                    <v-card class="bg-blue-grey-lighten-5 p-3">
-                        <input type="file" ref="fileAudio" multiple @change="handleAudio" class="mb-2">
-                        <ul>
-                            <li v-for="(file, index) in audioFiles" :key="index" style="list-style: none;" class="my-1">
-                                <v-chip closable>
-                                    {{ file.name }}
-                                </v-chip>
-                            </li>
-                        </ul>
-                        <button @click="submitAudio(fileType.audio)" class="btn btn-success mt-2">Submit Audio</button>
+                    v-model="languageAV" :rules="languageRules" item-title="talk" item-value="dtId"></v-select>
+                <div class="d-flex flex-column gap-2">
+                    <v-card class="p-3 d-flex gap-2" flat :disabled="audioMalSubmit && audioEngSubmit">
+                        <div>
+                            <input type="file" ref="fileAudio" @change="handleAudio" class="mb-2" accept="audio/*">
+                            <ul>
+                                <li v-for=" (file, index) in audioFiles" :key="index" style="list-style: none;"
+                                    class="my-1">
+                                    <v-chip closable>
+                                        {{ file.name }}
+                                    </v-chip>
+                                </li>
+                            </ul>
+                            <v-btn @click="submitAudio(fileType.audio)" color="#386568" size="large" variant="elevated"
+                                rounded prepend-icon="mdi-music" class="text-capitalize" :disabled="audioLoad"
+                                :loading="audioLoad">Submit Audio</v-btn>
+                        </div>
+                        <div class="d-flex flex-column align-items-end justify-content-center ">
+                            <h6 class="text-success text-end fst-italic mb-0" v-if="audioMalSubmit">**Malayalam
+                                audio
+                                successfully
+                                uploaded.
+                            </h6>
+                            <h6 class="text-success text-end fst-italic mb-0" v-if="audioEngSubmit">**English audio
+                                successfully
+                                uploaded.
+                            </h6>
+                        </div>
                     </v-card>
-                    <v-card class="bg-blue-grey-lighten-5 p-3">
-                        <input type="file" ref="fileVideo" multiple @change="handleVideo" class="mb-2">
-                        <ul>
-                            <li v-for="(file, index) in videoFiles" :key="index" style="list-style: none;" class="my-1">
-                                <v-chip closable>
-                                    {{ file.name }}
-                                </v-chip>
+                    <v-card class="p-3 d-flex gap-2" flat :disabled="videoMalSubmit && videoEngSubmit">
+                        <div>
+                            <input type="file" ref="fileVideo" @change="handleVideo" class="mb-2" accept="video/*" >
+                            <ul>
+                                <li v-for=" (file, index) in videoFiles" :key="index" style="list-style: none;"
+                                class="my-1">
+                            <v-chip closable>
+                                {{ file.name }}
+                            </v-chip>
                             </li>
-                        </ul>
-                        <button @click="submitVideo(fileType.video)" class="btn btn-success mt-2">Submit Video</button>
+                            </ul>
+                            <v-btn @click="submitVideo(fileType.video)" color="#386568" size="large" variant="elevated"
+                                rounded prepend-icon="mdi-video" class="text-capitalize" :disabled="videoLoad"
+                                :loading="videoLoad">Submit
+                                Video</v-btn>
+                        </div>
+                        <div class="d-flex flex-column align-items-end justify-content-center ">
+                            <h6 class="text-success text-end fst-italic mb-0" v-if="videoMalSubmit">*Malayalam video
+                                successfully uploaded.
+                            </h6>
+                            <h6 class="text-success text-end fst-italic mb-0" v-if="videoEngSubmit">*English video
+                                successfully uploaded.
+                            </h6>
+                        </div>
                     </v-card>
-
+                    <div class="d-flex justify-content-end">
+                        <div class="d-flex gap-2">
+                            <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
+                                @click="step--">Back</v-btn>
+                            <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
+                                @click="step++">Next</v-btn>
+                        </div>
+                    </div>
                 </div>
-
             </div>
         </template>
         <template v-else>
             <div style="height: 50vh;" class="my-5 d-flex flex-column justify-content-center align-items-center">
-                <v-btn color="green" class="mb-3" @click="step = 1" size="x-large" append-icon="mdi-step-forward">Add
+                <v-btn color="green" class="mb-3" @click="step = 1" size="x-large" append-icon="mdi-step-forward"
+                    variant="outlined">Add
                     another sub of Subheadings</v-btn>
-                <v-btn color="green" class="mb-3" @click="addNewSub" prepend-icon="mdi-step-backward">Back to add new
+                <v-btn color="green" class="mb-3" @click="addNewSub" prepend-icon="mdi-step-backward"
+                    variant="outlined">Back to add new
                     main
                     Subheadings</v-btn>
-                <v-btn color="green" class="mb-3" @click="addNewTopic" prepend-icon="mdi-step-backward-2">Back to add
-                    new main
-                    topics</v-btn>
+                <v-btn color="green" class="mb-3" @click="addNewTopic" prepend-icon="mdi-step-backward-2"
+                    variant="outlined">Finish & add new main topic</v-btn>
             </div>
 
         </template>
@@ -102,40 +177,61 @@
 <script>
 import axios from 'axios';
 export default {
-    props: ['idmal', 'ideng'],
+    emits: ['add-new-sub', 'add-new-topic', 'back'],
+    props: ['idmal', 'ideng', 'malHeading', 'engHeading'],
     data() {
         return {
-            malSubmit: false,
-            engSubmit: false,
-            step: 1,
             items: [
                 'Sub of Subheading Topic',
                 'Upload Images',
                 'Upload Audio/Video',
                 'Actions'
             ],
+            malSubmit: false,
+            engSubmit: false,
+            imageSubmit: false,
+            videoEngSubmit: false,
+            videoMalSubmit: false,
+            audioEngSubmit: false,
+            audioMalSubmit: false,
+            subhead: false,
+            subload: false,
+            imageLoad: false,
+            videoLoad: false,
+            audioLoad: false,
             images: [],
             imgPreview: [],
             fileTypes: [],
             fileType: {},
-            // idmal: sessionStorage.getItem('subid1'),
-            // ideng: sessionStorage.getItem('subid2'),
-            subidmal: '',
-            subideng: '',
-            heading: null,
+            step: 1,
+            count: 1,
+            videomal: '',
+            audiomal: '',
+            videoeng: '',
+            audioeng: '',
+            malSubHeading: '',
+            engSubHeading: '',
             languages: [],
             title: null,
-            description: null,
-            language: 1,
             titleRules: [v => !!v || '*Title is required'],
+            description: null,
             descriptionRules: [v => !!v || '*Description is required'],
+            language: null,
+            languageAV: null,
             languageRules: [v => !!v || '*Language is required'],
             url: null,
             urlRules: [v => !!v || '*URL is required'],
             audioFiles: [],
             videoFiles: [],
-            audioId: null,
-            videoId: null
+            base_url: 'http://localhost:8086',
+            message: '',
+            loading: false,
+            color: '',
+            icon: '',
+            dialogTopic: false,
+            dialogHead: '',
+            subidmal: this.$store.getters.sub2idmal || '',
+            subideng: this.$store.getters.sub2ideng || '',
         };
     },
     computed: {
@@ -143,26 +239,44 @@ export default {
             if ((this.malSubmit) && (this.engSubmit)) {
                 return false;
             } else return true;
+        },
+        topic() {
+            if (this.language === 1) return 'Malayalam'
+            else if (this.language === 2) return 'English'
+            else return '';
         }
     },
     methods: {
+        back() {
+            this.$emit('back');
+        },
         addNewTopic() {
-            this.$emit('add-new-topic'); // Emitting an event named 'add-new-topic'
+            this.$emit('add-new-topic'); 
         },
         addNewSub() {
-            this.$emit('add-new-sub'); // Emitting an event named 'add-new-topic'
+            this.$emit('add-new-sub'); 
         },
         handleAudio(event) {
-            const selectedFiles = event.target.files;
-            for (let i = 0; i < selectedFiles.length; i++) {
-                this.audioFiles.push(selectedFiles[i]);
-            }
+            const selectedFiles = event.target.files[0];
+            this.audioFiles.push(selectedFiles)
+            // for (let i = 0; i < selectedFiles.length; i++) {
+            //     this.audioFiles.push(selectedFiles[i]);
+            // }
+        },
+        removeAudio(index) {
+            this.audioFiles.splice(index, 1);
+            this.$refs.fileAudio.value = '';
         },
         handleVideo(event) {
-            const selectedFiles = event.target.files;
-            for (let i = 0; i < selectedFiles.length; i++) {
-                this.videoFiles.push(selectedFiles[i]);
-            }
+            const selectedFiles = event.target.files[0];
+            this.videoFiles.push(selectedFiles);
+            // for (let i = 0; i < selectedFiles.length; i++) {
+            //     this.videoFiles.push(selectedFiles[i]);
+            // }
+        },
+        removeVideo(index) {
+            this.videoFiles.splice(index, 1);
+            this.$refs.fileVideo.value = '';
         },
         handleFileUpload(event) {
             const files = event.target.files;
@@ -177,60 +291,65 @@ export default {
             }
         },
         async uploadImages() {
-            console.log('english', this.ideng)
-            console.log('malayalam', this.idmal)
-            console.log('english sub', this.subideng)
-            console.log('malayalam sub', this.subidmal)
+            this.imageLoad = true;
             const formData = new FormData();
             this.images.forEach((image) => {
                 formData.append("files", image);
             });
             try {
-                const response = await axios.post(`http://192.168.1.21:8081/imgData/uploadImg2?englishUId=${this.subideng}&malUid=${this.subidmal}`, formData);
+                const response = await axios.post(`${this.base_url}/imgData/uploadImg2?englishUId=${this.subideng}&malUid=${this.subidmal}`, formData);
                 if (response.status === 200) {
-                    alert('success')
+                    this.imageLoad = false;
+                    this.icon = 'mdi mdi-check-circle-outline'
+                    this.imageSubmit = true;
+                    this.message = 'Image uploaded successfully';
+                    this.dialogHead = 'Success'
+                    this.color = '#2E7D32'
+                    this.dialogTopic = true;
                     this.images = [];
+                    this.imgPreview = [];
+                    this.$refs.imageFile.value = '';
                 }
             } catch (error) {
-                console.error('Error uploading images:', error);
+                this.imageLoad = false;
+                this.icon = 'mdi mdi-alert-outline'
+                this.imageSubmit = false;
+                this.color = '#BA1A1A';
+                this.dialogHead = 'Error';
+                this.message = 'Error uploading images:' + error.message;
+                this.dialogTopic = true;
             }
         },
         async getType() {
             try {
-                const response = await axios.get('http://192.168.1.21:8081/fileType/getFileType');
+                const response = await axios.get(`${this.base_url}/fileType/getFileType`);
                 if (response.status >= 200 && response.status < 300) {
-                    console.log('gettype', response.data)
                     response.data.forEach(item => {
                         this.fileType[item.fileType.toLowerCase()] = item.id;
-                    });
+                    });  
                 }
             }
             catch (err) {
                 console.log(err)
             }
         },
-        removeImage(index) {
-            this.imgPreview.splice(index, 1);
-        },
-
         async getAllLanguages() {
             try {
-                const response = await axios.get('http://192.168.1.21:8081/dataType1/getTalk')
+                const response = await axios.get(`${this.base_url}/dataType1/getTalk`)
                 if (response.status === 200) {
-                    this.languages = response.data
-                    // .map(item => item.talk);
-                    console.log(response.data)
+                    this.languages = response.data;
                 }
             }
             catch (error) {
                 console.error(error)
             }
         },
-        async submitHeading() {
-            console.log('english', this.ideng)
-            console.log('malayalam', this.idmal)
-            console.log('english sub', this.subideng)
-            console.log('malayalam sub', this.subidmal)
+        removeImage(index) {
+            this.imgPreview.splice(index, 1);
+            this.images.splice(index, 1);
+        },
+        async submitHeading() {  
+            this.subload = true;
             let uid = '';
             if (this.language === 1) {
                 uid = this.idmal;
@@ -241,41 +360,56 @@ export default {
             if (valid) {
                 console.log('click')
                 try {
-                    const response = await axios.post(`http://192.168.1.21:8081/DataEntry3/secondSub?uId=${uid}`, {
+                    const response = await axios.post(`${this.base_url}/DataEntry3/secondSub?uId=${uid}`, {
                         "title": this.title,
                         "description": this.description,
                         "referenceURL": this.url
                     });
                     if (response.status >= 200 && response.status < 300) {
-
-                        alert('success');
+                        this.subload = false;
                         if (this.language === 1) {
-                            this.$refs.form.reset();
-                            this.heading = response.data.description;
+                            const language = this.languages.find(lang => lang.dtId === this.language);
+                            this.icon = 'mdi mdi-check-circle-outline'
+                            this.$store.commit('setMalSubHeading', response.data.title)
+                            this.malSubHeading = response.data.title
+                            this.$store.commit('setSubidmal', response.data.fsUid)
+                            this.message = `${this.malHeading} (${language.talk}) subheading added successfully!`;
+                            this.dialogHead = 'Success'
+                            this.color = '#2E7D32'
+                            this.dialogTopic = true;
                             this.malSubmit = true;
-                            sessionStorage.setItem('subsubid1', response.data.ssUid)
-                            this.subidmal = response.data.ssUid
+                            this.$refs.form.reset();
                             this.language = 2;
                         }
                         else {
-                            sessionStorage.setItem('subsubid2', response.data.ssUid)
-                            this.$refs.form.reset();
+                            const language = this.languages.find(lang => lang.dtId === this.language);
+                            this.icon = 'mdi mdi-check-circle-outline'
+                            this.$store.commit('setEngSubHeading', response.data.title)
+                            this.engSubHeading = response.data.title
+                            this.$store.commit('setSubideng', response.data.fsUid)
+                            this.message = `${this.engHeading} (${language.talk}) subheading added successfully!`;
+                            this.dialogHead = 'Success'
+                            this.color = '#2E7D32'
+                            this.dialogTopic = true;
                             this.engSubmit = true;
-                            this.subideng = response.data.ssUid
-                            this.language = 1;
+                            this.$refs.form.reset();
+                            this.language = 2;
                         }
                     }
                 }
                 catch (err) {
+                    this.subload = false;
+                    this.icon = 'mdi mdi-alert-outline'
+                    this.color = '#BA1A1A';
+                    this.dialogHead = 'Error';
+                    this.message = err.message;
+                    this.dialogTopic = true;
                     console.error(err);
                 }
             }
         },
         async submitAudio(id) {
-            console.log('english', this.ideng)
-            console.log('malayalam', this.idmal)
-            console.log('english sub', this.subideng)
-            console.log('malayalam sub', this.subidmal)
+            this.audioLoad = true;
             let uid = '';
             if (this.language === 1) {
                 uid = this.subidmal;
@@ -287,20 +421,38 @@ export default {
                 formData.append("files", file);
             });
             try {
-                const response = await axios.post(`http://192.168.1.21:8081/mediaData/mpData2?uId=${uid}&mtId=${id}`, formData);
+                const response = await axios.post(`${this.base_url}/mediaData/mpData2?uId=${uid}&mtId=${id}`, formData);
                 if (response.status >= 200 && response.status < 300) {
-                    alert('success');
+                    this.icon = 'mdi mdi-check-circle-outline'
+                    this.audioLoad = false;
+                    if (this.languageAV === 1) {
+                        this.message = 'Malayalam audio uploaded successfully';
+                        this.audioMalSubmit = true;
+                        this.languageAV = 2;
+                    }
+                    else {
+                        this.message = 'English audio uploaded successfully';
+                        this.audioEngSubmit = true;
+                        this.languageAV = 1;
+                    }
+                    this.dialogHead = 'Success'
+                    this.color = '#2E7D32'
+                    this.dialogTopic = true;
+                    this.audioFiles = [];
+                    this.$refs.fileAudio.value = '';
                 }
             }
             catch (err) {
-                console.error(err);
+                this.audioLoad = false;
+                this.icon = 'mdi mdi-alert-outline'
+                this.color = '#BA1A1A';
+                this.dialogHead = 'Error';
+                this.message = 'Error uploading audio:' + err.message;
+                this.dialogTopic = true;
             }
         },
         async submitVideo(id) {
-            console.log('english', this.ideng)
-            console.log('malayalam', this.idmal)
-            console.log('english sub', this.subideng)
-            console.log('malayalam sub', this.subidmal)
+            this.videoLoad = true;
             let uid = '';
             if (this.language === 1) {
                 uid = this.subidmal;
@@ -312,13 +464,34 @@ export default {
                 formData.append("files", file);
             });
             try {
-                const response = await axios.post(`http://192.168.1.21:8081/mediaData/mpData2?uId=${uid}&mtId=${id}`, formData);
+                const response = await axios.post(`${this.base_url}/mediaData/mpData2?uId=${uid}&mtId=${id}`, formData);
                 if (response.status >= 200 && response.status < 300) {
-                    alert('success');
+                    this.icon = 'mdi mdi-check-circle-outline'
+                    this.videoLoad = false;
+                    if (this.languageAV === 1) {
+                        this.message = 'Malayalam video uploaded successfully';
+                        this.videoMalSubmit = true;
+                        this.languageAV = 2;
+                    }
+                    else {
+                        this.message = 'English video uploaded successfully';
+                        this.videoEngSubmit = true;
+                        this.languageAV = 1;
+                    }
+                    this.dialogHead = 'Success'
+                    this.color = '#2E7D32'
+                    this.dialogTopic = true;
+                    this.videoFiles = [];
+                    this.$refs.fileVideo.value = '';
                 }
             }
             catch (err) {
-                console.error(err);
+                this.videoLoad = false;
+                this.icon = 'mdi mdi-alert-outline'
+                this.color = '#BA1A1A';
+                this.dialogHead = 'Error';
+                this.message = 'Error uploading video:' + err.message;
+                this.dialogTopic = true;
             }
         }
     },

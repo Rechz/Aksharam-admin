@@ -36,8 +36,12 @@ export default {
   malHeading: (state) => state.malHeading,
   engHeading: (state) => state.engHeading,
   malSubHeading: (state) => state.malSubHeading,
-  engSubHeading: (state) => state.engSubHeading,
+  engSubHeading: (state) => state.engSub2Heading,
+  malSub2Heading: (state) => state.malSub2Heading,
+  engSub2Heading: (state) => state.engSubHeading,
   subidmal: (state) => state.subidmal,
   subideng: (state) => state.subideng,
+  sub2idmal: (state) => state.sub2idmal,
+  sub2ideng: (state) => state.sub2ideng,
 
 }
