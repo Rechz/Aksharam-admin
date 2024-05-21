@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="carousel-wrapper">
-        <v-btn prepend-icon="mdi-pencil" rounded="4" class="mb-3 text-success text-capitalize me-2" size="small">Edit</v-btn>
+        <v-btn prepend-icon="mdi-pencil" rounded="4" class="mb-3 text-success text-capitalize me-2" size="small" @click="openEdit">Edit</v-btn>
         <v-btn prepend-icon="mdi-trash-can" rounded="4" class="mb-3 text-danger text-capitalize" size="small">Delete</v-btn>
         <v-carousel class="sub-carousel" height="100%" hide-delimiters cover :show-arrows="!images.length === 1">
 
@@ -43,11 +43,16 @@
       </v-card>
     </v-dialog>
   </div>
+  <v-dialog v-model="editDialog" width="950" >
+    <edit-form></edit-form>
+  </v-dialog>
 </template>
 
 <script>
+import EditForm from './EditForm.vue';
 
 export default {
+  components: { EditForm },
   props: ['title', 'description','images','video'],
   data() {
     return {
@@ -55,10 +60,14 @@ export default {
       selectedImage: null,
       videoDialog: false,
       videoUrl: '',
+      editDialog: false,
     };
   },
   
   methods: {
+    openEdit() {
+      this.editDialog = true;
+    },
     openDialog(imageSrc) {
       this.selectedImage = imageSrc;
       this.dialog = true;
