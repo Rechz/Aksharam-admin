@@ -12,7 +12,9 @@
                     v-model="description" :rules="descriptionRules" single-line></v-textarea>
                 <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable" class="reference"
                     rows="2" v-model="url" single-line></v-textarea>
-                <div>
+                <div class="d-flex gap-4">
+                    <v-btn color="#386568" size="large" class="text-capitalize" type="submit" 
+                        variant="elevated" rounded @click="backMain">Back</v-btn>
                     <v-btn color="#386568" size="large" class="text-capitalize" type="submit" :disabled="subload"
                         variant="elevated" rounded :loading="subload">Add {{ topic }}
                         topic</v-btn>

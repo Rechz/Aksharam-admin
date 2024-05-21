@@ -25,7 +25,7 @@
         </v-dialog>
         <!-- Add new dialog for displaying details -->
         <!-- <v-dialog v-model="detailsDialog" width="600px"> -->
-          <!-- <v-card style="width: 880px; height:650px; border-radius: 15px;">
+        <!-- <v-card style="width: 880px; height:650px; border-radius: 15px;">
             <v-card-title class="d-flex justify-content-between px-4"
               style="background-color: #216D17; color: #FFFFFF;">
               <h4>Item Heading</h4>
@@ -111,7 +111,7 @@
               </v-container>
             </v-card-text>
           </v-card> -->
-          <!-- <details-view :subTopic="subTopic"></details-view>
+        <!-- <details-view :subTopic="subTopic"></details-view>
         </v-dialog> -->
         <!-- QrDialog -->
         <v-dialog v-model="qrDialog" width="400px">
@@ -128,7 +128,8 @@
             </v-card-text>
             <v-card-text class="px-3 pt-0 mb-3">
               <div class="d-flex justify-content-between">
-                <v-btn class="text-capitalize fw-bolder" color="green-darken-4" width="170" variant="outlined" rounded>
+                <v-btn class="text-capitalize fw-bolder" color="green-darken-4" width="170" variant="outlined" rounded
+                  @click="downloadQR(editedItem.qrCodeUrl)">
                   <v-icon class="mdi mdi-content-save-outline" color="green-darken-4"></v-icon> Save
                 </v-btn>
                 <v-btn class="text-none" color="green-darken-4" width="170" rounded>
@@ -333,6 +334,12 @@
           this.color = '#C62828';
           this.snackbar = true;
         }
+      },
+      downloadQR(qrCodeUrl) {
+        const link = document.createElement('a');
+        link.href = qrCodeUrl;
+        link.download = 'qr_code.png';
+        link.click();
       },
       async update() {
         this.loading = !this.loading
