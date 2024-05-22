@@ -138,9 +138,10 @@
         </v-dialog>
       </template>
       <!-- <template v-slot:item="{ item, index }"> -->
-      <template v-slot:item="{ item }">
+      <template v-slot:item="{ item, index }">
         <tr style="background-color:#FCFDF6; color:black;">
           <!-- <td class="text-center">{{ index + 1 }}</td> -->
+          <td class="text-center">{{ index + 1 }}</td>
           <td class="">{{ item.employeeId }}</td>
           <td class=""><v-img src="@/assets/acc.jpg" alt="employee"
               style="border-radius: 50%; height: 50px; width: 50px;"></v-img>
@@ -176,6 +177,7 @@ export default {
     timeout: 3000,
     image: require('@/assets/acc.jpg'),
     headers: [
+      { title: 'Sl No.', align: 'center', sortable: false },
       { title: 'Emp Id', align: 'start', key: 'employeeId', sortable: false },
       { title: 'Image', align: 'start', key: 'image', sortable: false },
       { title: 'Name', align: 'start', key: 'name', sortable: false },

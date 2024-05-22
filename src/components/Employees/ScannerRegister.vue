@@ -72,8 +72,9 @@
           </v-card>
         </v-dialog>
       </template>
-      <template v-slot:item='{ item}'>
+      <template v-slot:item='{ item,index}'>
         <tr style="background-color: #FCFDF6; color:black;">
+          <td class="text-center">{{ index + 1 }}</td>
           <td>{{ item.employeeId }}</td>
           <td><img :src='item.image' @error="setFallbackImage" alt="employee"
               style="border-radius: 50%; height: 50px;" />
@@ -107,6 +108,7 @@ export default {
     timeout: 3000,
     image: require('@/assets/acc.jpg'),
     headers: [
+      { title: 'Sl No.', align: 'center', sortable: false },
       { title: 'Emp Id', sortable: false, align: 'start', key: 'employeeId' },
       { title: 'Image', key: 'image',sortable: false,align:'start' },
       { title: 'Name ', key: 'name', sortable: false, align: 'start' },
