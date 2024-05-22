@@ -224,6 +224,7 @@ export default {
             audioFiles: [],
             videoFiles: [],
             base_url: 'http://localhost:8086',
+            // base_url: 'http://192.168.193.232:8081',
             message: '',
             loading: false,
             color: '',
@@ -370,9 +371,10 @@ export default {
                         if (this.language === 1) {
                             const language = this.languages.find(lang => lang.dtId === this.language);
                             this.icon = 'mdi mdi-check-circle-outline'
-                            this.$store.commit('setMalSubHeading', response.data.title)
+                            this.$store.commit('setMalSub2Heading', response.data.title)
                             this.malSubHeading = response.data.title
-                            this.$store.commit('setSubidmal', response.data.fsUid)
+                            this.subidmal = response.data.ssUid
+                            this.$store.commit('setSub2idmal', response.data.ssUid)
                             this.message = `${this.malHeading} (${language.talk}) subheading added successfully!`;
                             this.dialogHead = 'Success'
                             this.color = '#2E7D32'
@@ -384,9 +386,10 @@ export default {
                         else {
                             const language = this.languages.find(lang => lang.dtId === this.language);
                             this.icon = 'mdi mdi-check-circle-outline'
-                            this.$store.commit('setEngSubHeading', response.data.title)
+                            this.$store.commit('setEngSub2Heading', response.data.title)
                             this.engSubHeading = response.data.title
-                            this.$store.commit('setSubideng', response.data.fsUid)
+                            this.subideng = response.data.ssUid
+                            this.$store.commit('setSub2ideng', response.data.ssUid)
                             this.message = `${this.engHeading} (${language.talk}) subheading added successfully!`;
                             this.dialogHead = 'Success'
                             this.color = '#2E7D32'
@@ -412,9 +415,9 @@ export default {
             this.audioLoad = true;
             let uid = '';
             if (this.language === 1) {
-                uid = this.subidmal;
+                uid = this.sub2idmal;
             } else {
-                uid = this.subideng;
+                uid = this.sub2ideng;
             }
             const formData = new FormData();
             this.audioFiles.forEach((file) => {
@@ -455,9 +458,9 @@ export default {
             this.videoLoad = true;
             let uid = '';
             if (this.language === 1) {
-                uid = this.subidmal;
+                uid = this.sub2idmal;
             } else {
-                uid = this.subideng;
+                uid = this.sub2ideng;
             }
             const formData = new FormData();
             this.videoFiles.forEach((file) => {

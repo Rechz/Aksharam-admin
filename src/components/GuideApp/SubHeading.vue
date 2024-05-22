@@ -236,6 +236,7 @@ export default {
             audioFiles: [],
             videoFiles: [],
             base_url: 'http://localhost:8086',
+            // base_url: 'http://192.168.193.232:8081',
             message: '',
             loading: false,
             color: '',
@@ -398,6 +399,7 @@ export default {
                             this.icon = 'mdi mdi-check-circle-outline'
                             this.$store.commit('setMalSubHeading', response.data.title)
                             this.malSubHeading = response.data.title
+                            this.subidmal = response.data.fsUid
                             this.$store.commit('setSubidmal', response.data.fsUid)
                             this.message = `${this.malHeading} (${language.talk}) subheading added successfully!`;
                             this.dialogHead = 'Success'
@@ -412,6 +414,7 @@ export default {
                             this.icon = 'mdi mdi-check-circle-outline'
                             this.$store.commit('setEngSubHeading', response.data.title)
                             this.engSubHeading = response.data.title
+                            this.subideng = response.data.fsUid
                             this.$store.commit('setSubideng', response.data.fsUid)
                             this.message = `${this.engHeading} (${language.talk}) subheading added successfully!`;
                             this.dialogHead = 'Success'

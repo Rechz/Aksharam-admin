@@ -82,6 +82,7 @@ export default {
   },
 setDetails(state,payload){
   state.detailTopic = payload;
+  sessionStorage.setItem('detailTopic', JSON.stringify(payload));
   },
  setIdmal(state, payload) {
       state.idmal = payload;

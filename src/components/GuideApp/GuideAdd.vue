@@ -5,7 +5,7 @@
                 <v-card-title class="text-center text-white" :style="{ backgroundColor: color }">{{
                     dialogHead }}</v-card-title>
                 <v-card-text class="px-5 text-center">
-                    <v-icon size="88" class="mdi mdi-check-circle-outline" color="success"></v-icon>
+                    <v-icon size="88" :class="icon" color="success"></v-icon>
                     <h6>{{ message }}</h6>
                 </v-card-text>
                 <v-card-actions>
@@ -30,13 +30,21 @@
                                 v-model="description" :rules="descriptionRules" single-line></v-textarea>
                             <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
                                 class="reference" rows="2" v-model="url" single-line></v-textarea>
-                            <div class="d-flex gap-2">
-                                <v-btn color="#386568" size="large" class="text-capitalize" type="submit"
-                                    :disabled="subload" variant="elevated" rounded :loading="subload">Add {{ topic }}
-                                    topic</v-btn>
-                                <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
-                                    @click="step++">Next</v-btn>
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex gap-2">
+                                    <v-btn color="#386568" size="large" class="text-capitalize" type="submit"
+                                        :disabled="subload" variant="elevated" rounded :loading="subload">Add {{ topic
+                                        }}
+                                        topic</v-btn>
+                                    <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined"
+                                        rounded :disabled="QRLoad" :loading="QRLoading" @click="generateQR">Submit & Proceed</v-btn>
+                                </div>
+                                <div>
+                                    <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined"
+                                        rounded @click="step++">Next</v-btn>
+                                </div>
                             </div>
+
                         </v-form>
                         <div class="d-flex flex-column ">
                             <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malHeading }}
@@ -272,6 +280,7 @@ export default {
                 'Subheadings'
             ],
             action: true,
+            QRLoad: true,
             malSubmit: false,
             engSubmit: false,
             imageSubmit: false,
@@ -289,14 +298,14 @@ export default {
             fileTypes: [],
             fileType: {},
             step: 1,
-            idmal: this.$store.getters.idmal || '',
-            ideng: this.$store.getters.ideng || '',
+            idmal: this.$store.getters.idmal,
+            ideng: this.$store.getters.ideng,
             videomal: '',
             audiomal: '',
             videoeng: '',
             audioeng: '',
-            malHeading: this.$store.getters.malHeading || '',
-            engHeading: this.$store.getters.engHeading || '',
+            malHeading: this.$store.getters.malHeading,
+            engHeading: this.$store.getters.engHeading,
             languages: [],
             title: null,
             titleRules: [v => !!v || '*Title is required'],
@@ -310,6 +319,7 @@ export default {
             audioFiles: [],
             videoFiles: [],
             base_url: 'http://localhost:8086',
+            // base_url: 'http://192.168.193.232:8081',
             message: '',
             loading: false,
             color: '',
@@ -331,7 +341,34 @@ export default {
             else return '';
         }
     },
+   
     methods: {
+        async generateQR() {
+            this.QRLoad = true;
+            this.QRLoading = true;
+            try {
+                const response = await axios.get(`${this.base_url}/qrcode/generate?mMalUid=${this.idmal}&mEngUid=${this.ideng}`);
+                if (response.status >= 200 && response.status < 300) {
+                    this.icon = 'mdi mdi-check-circle-outline'
+                    this.QRLoading = false;
+                    this.message = 'QR code generated successfully. Proceed to next steps.';
+                    this.dialogHead = 'Success'
+                    this.color = '#2E7D32'
+                    this.dialogTopic = true;
+                    this.step++;
+                }
+            } 
+            catch (error) {
+                this.QRLoad = false;
+                this.QRLoading = false;
+                this.icon = 'mdi mdi-alert-outline'
+                this.imageSubmit = false;
+                this.color = '#BA1A1A';
+                this.dialogHead = 'Error';
+                this.message = 'Error uploading images:' + error.message;
+                this.dialogTopic = true;
+          } 
+        },
         finish() {
             sessionStorage.clear();
             this.step = 1
@@ -459,7 +496,8 @@ export default {
                         if (this.language === 1) {
                             const language = this.languages.find(lang => lang.dtId === this.language);
                             this.malHeading = response.data.title
-                            this.$store.commit('setMalHeading', response.data.title)
+                            this.$store.commit('setMalHeading', response.data.title);
+                            this.idmal = response.data.mmalUid
                             this.$store.commit('setIdmal', response.data.mmalUid)
                             this.message = `${this.malHeading} (${language.talk}) added successfully!`;
                             this.dialogHead = 'Success'
@@ -473,6 +511,7 @@ export default {
                             const language = this.languages.find(lang => lang.dtId === this.language);
                             this.$store.commit('setEngHeading', response.data.title)
                             this.engHeading = response.data.title
+                            this.ideng = response.data.mengUid
                             this.$store.commit('setIdeng', response.data.mengUid)
                             this.message = `${response.data.title} (${language.talk}) added successfully!`;
                             this.dialogHead = 'Success'
@@ -596,7 +635,11 @@ export default {
         proceed(newValue) {
             if (!newValue) {
                 this.language = null;
+                this.QRLoad = false
             }
+            // if (newValue) {
+            //     this.QRLoad = false
+            // }
         }
     },
     mounted() {

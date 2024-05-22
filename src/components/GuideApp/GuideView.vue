@@ -230,7 +230,7 @@
     methods: {
       async getTopics() {
       try {
-        const response = await axios.get(`http://192.168.1.12:8081/DataEntry1/getMainComplete?dtId=2`);
+        const response = await axios.get(`http://localhost:8086/DataEntry1/getMainComplete?dtId=2`);
 
         if (response.status === 200) {
           console.log(response.data);
@@ -254,13 +254,14 @@
         }
       },
       async showDetails(item) {
+        
         try {
-        const response = await axios.get(`http://192.168.1.12:8081/qrcode/getScanDetails?dtId=2&commonId=${item.commonId}`);
+          const response = await axios.get(`http://localhost:8086/qrcode/getScanDetails?dtId=2&commonId=${item.commonId}`);
 
         if (response.status === 200) {
           console.log(response.data);
           // this.subTopic = response.data;
-          console.log('item',item);
+          console.log('item',response.data);
           this.$store.commit('setDetails', response.data)
           this.$router.push({name:'guide-edit'})
         }
@@ -348,13 +349,25 @@
         }
       },
       downloadQR(qrCodeUrl) {
-        const link = document.createElement('a');
-        link.href = qrCodeUrl;
-        link.download = 'qr_code.png';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        
+        axios.get(qrCodeUrl, { responseType: 'blob' })
+          .then(response => {
+            const blob = new Blob([response.data], { type: 'application/pdf' })
+            const link = document.createElement('a')
+            link.href = URL.createObjectURL(blob)
+            link.download = 'qr_code.png'
+            link.click()
+            URL.revokeObjectURL(link.href)
+          }).catch(console.error)
       },
+
+      //   const link = document.createElement('a');
+      //   link.href = qrCodeUrl;
+      //   link.download = 'qr_code.png';
+      //   document.body.appendChild(link);
+      //   link.click();
+      //   document.body.removeChild(link);
+      // },
       async update() {
         this.loading = !this.loading
         try {

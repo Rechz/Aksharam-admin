@@ -93,17 +93,17 @@ const router = createRouter({
               name: 'guide-add-main',
               component: () => import('./components/GuideApp/GuideAdd.vue'),
               children: [
-                {
-                  path: '/admin/guide-app/addHeading',
-                  alias: '',
-                  name: 'guide-add-sub',
-                  component: () => import('./components/GuideApp/DummyCard.vue'),
-                },
-                {
-                  path: '/admin/guide-app/addSub',
-                  name: 'guide-add-sub-sub',
-                  component: () => import('./components/GuideApp/GuideSub.vue'),
-                }
+                // {
+                //   path: '/admin/guide-app/addHeading',
+                //   alias: '',
+                //   name: 'guide-add-sub',
+                //   component: () => import('./components/GuideApp/DummyCard.vue'),
+                // },
+                // {
+                //   path: '/admin/guide-app/addSub',
+                //   name: 'guide-add-sub-sub',
+                //   component: () => import('./components/GuideApp/GuideSub.vue'),
+                // }
               ],
             },
             {
@@ -116,11 +116,11 @@ const router = createRouter({
         }
       ]
     },
-    {
-      path: '/admin/add-items',
-      name: 'add-items',
-      component: () => import('./components/GuideApp/ItemsAdd.vue'),
-    },
+    // {
+    //   path: '/admin/add-items',
+    //   name: 'add-items',
+    //   component: () => import('./components/GuideApp/ItemsAdd.vue'),
+    // },
     {
       path: '/admin/guide-app/edit',
       name: 'guide-edit',

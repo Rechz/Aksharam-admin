@@ -1,17 +1,20 @@
 <template>
   <div class="sub-card">
-    <div class="text-card ps-5 py-5">
+    <div class="text-card ps-5 pt-5">
       <div class="details">
         <div class="details-content">
           <h4 class="text-start title">{{ title }}</h4>
-          <p class="desc ">
-            {{ description }}</p>
+          <p class="desc">
+          <pre class="text-wrap">{{ description }}</pre>
+          </p>
         </div>
       </div>
       <div class="carousel-wrapper">
-        <v-btn prepend-icon="mdi-pencil" rounded="4" class="mb-3 text-success text-capitalize me-2" size="small" @click="openEdit">Edit</v-btn>
-        <v-btn prepend-icon="mdi-trash-can" rounded="4" class="mb-3 text-danger text-capitalize" size="small">Delete</v-btn>
-        <v-carousel class="sub-carousel" height="100%" hide-delimiters cover :show-arrows="!images.length === 1">
+        <v-btn prepend-icon="mdi-pencil" rounded="4" class="mb-3 text-success text-capitalize me-2" size="small"
+          @click="openEdit">Edit</v-btn>
+        <v-btn prepend-icon="mdi-trash-can" rounded="4" class="mb-3 text-danger text-capitalize"
+          size="small">Delete</v-btn>
+        <v-carousel class="sub-carousel" height="400" hide-delimiters cover :show-arrows="!images.length === 1">
 
           <v-carousel-item @click="openDialog(image.furl)" cover :src="image.furl" v-for="(image, index) in images"
             :key="index">
@@ -19,9 +22,9 @@
 
 
         </v-carousel>
-        <v-btn class="video-btn  mt-3" rounded="3" @click="openVideoDialog" variant="elevated"><v-icon
-            class="mdi mdi-video" v-if="video.length > 0"></v-icon>Watch
-          Video</v-btn>
+        <v-btn class="video-btn  mt-3" rounded="3" @click="openVideoDialog" variant="elevated"
+          v-if="video.length > 0"><v-icon class="mdi mdi-video"></v-icon>Watch
+          Video {{ video.length }}</v-btn>
       </div>
     </div>
     <v-dialog v-model="dialog" max-width="650">
@@ -43,8 +46,8 @@
       </v-card>
     </v-dialog>
   </div>
-  <v-dialog v-model="editDialog" width="950" >
-    <edit-form></edit-form>
+  <v-dialog v-model="editDialog" width="1000">
+    <edit-form :head="head" :description="description" :images="images" :video="video"></edit-form>
   </v-dialog>
 </template>
 
@@ -53,7 +56,15 @@ import EditForm from './EditForm.vue';
 
 export default {
   components: { EditForm },
-  props: ['title', 'description','images','video'],
+  props: [
+    "title",
+    "head",
+    "description",
+    "images",
+    'video',
+    'url',
+    'commonId'
+  ],
   data() {
     return {
       dialog: false,
@@ -66,7 +77,11 @@ export default {
   
   methods: {
     openEdit() {
-      this.editDialog = true;
+        console.log('Title:', this.title);
+        console.log('Description:', this.description);
+        console.log('Images:', this.images);
+        console.log('Video:', this.video);
+        this.editDialog = true;
     },
     openDialog(imageSrc) {
       this.selectedImage = imageSrc;
@@ -94,6 +109,7 @@ export default {
 .sub-card {
   width: 75%; 
   aspect-ratio: 1676 / 800;
+  height: 36rem;
   background-color: #363A33;
     color: #ffffff;
     border-radius: 0 60px 60px 0;
@@ -104,11 +120,11 @@ export default {
 }
 .text-card {   
   width: 75%;  
-  aspect-ratio: 1107 / 688;  
+  aspect-ratio: 1107 / 600;  
 }
 .carousel-wrapper {
   width: 100%;
-  aspect-ratio: 813/600;
+  aspect-ratio: 813/650;
   position: absolute;
   left: 80%;
   top: 8%;
@@ -137,7 +153,7 @@ export default {
 .details{
 
   width:100%;
-    aspect-ratio: 1107 / 688;
+    aspect-ratio: 1107 / 600;
    /* padding-top: 5%; */
   overflow-y: scroll;
   direction: rtl;
