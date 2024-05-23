@@ -65,7 +65,7 @@
       <v-text-field label="Search" v-model="search" prepend-inner-icon="mdi-magnify" class="search mt-5"
         density="compact" single-line></v-text-field>
     </div>
-    <v-data-table :headers="headers" :items="filteredEmployees" class="mt-3" item-value="employeeId"
+    <v-data-table :headers="headers" :items="filteredEmployees" class="mt-3" item-value="id"
       :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
       <template v-slot:top>
         <v-dialog v-model="dialogDelete" width="400px">
@@ -112,14 +112,16 @@
                     <v-row class="mb-2 mt-2">
                       <div class="col-4">Temporary Address</div>
                       <div class="col-8 d-flex">: <div class="ms-1">
-                          <pre style="font-family: 'Arial', sans-serif;">{{ editedItem.tempAddress }}</pre>
+                          <pre style="font-family: 'Arial', sans-serif; font-size: 14px;"
+                            class="mb-0">{{ editedItem.tempAddress }}</pre>
                         </div>
                       </div>
                     </v-row>
                     <v-row class="mb-2 mt-2">
                       <div class="col-4">Permanent Address</div>
                       <div class="col-8 d-flex">: <div class="ms-1">
-                          <pre style="font-family: 'Arial', sans-serif;">{{ editedItem.permAddress }}</pre>
+                          <pre style="font-family: 'Arial', sans-serif; font-size: 14px;"
+                            class="mb-0">{{ editedItem.permAddress }}</pre>
                         </div>
                       </div>
                     </v-row>
@@ -219,14 +221,23 @@ export default {
   },
   created() {
     this.getDetails();
+    this.getAllDetails();
   },
   methods: {
     setFallbackImage(event) {
         event.target.src = this.image;
     },
-    async getDetails() {
+    async getAllDetails() {
       try {
         await this.$store.dispatch('fetchAllEmployees');
+      }
+      catch (error) {
+        console.error(error.message)
+      }
+    },
+    async getDetails() {
+      try {
+        await this.$store.dispatch('fetchEmployees');
       }
       catch (error) {
         console.error(error.message)

@@ -144,13 +144,33 @@ export default {
   //fetch all employees
   async fetchAllEmployees({ commit, rootGetters }) {
     try {
-      const response = await axios.get(`${rootGetters.getUrl}/api/admin/employees`, {
+      const response = await axios.get(`${rootGetters.getUrl}/api/admin/employees-and-scanners`, {
         headers: {
           Authorization: `Bearer ${rootGetters.getToken}`
         }
       });
       if (response.status === 200) {
         commit('setAllEmployees', response.data);
+        // const employeeid = response.data.map(employee => employee.employeeId);
+        // console.log(employeeid)
+        // commit('setEmployeeId', employeeid)
+        console.log(response.data)
+      }
+    }
+    catch (error) {
+      throw new Error('Error fetching employees: ' + error.message);
+    }
+  },
+  //fetch employees
+  async fetchEmployees({ commit, rootGetters }) {
+    try {
+      const response = await axios.get(`${rootGetters.getUrl}/api/admin/employees`, {
+        headers: {
+          Authorization: `Bearer ${rootGetters.getToken}`
+        }
+      });
+      if (response.status === 200) {
+        // commit('setAllEmployees', response.data);
         const employeeid = response.data.map(employee => employee.employeeId);
         console.log(employeeid)
         commit('setEmployeeId', employeeid)
