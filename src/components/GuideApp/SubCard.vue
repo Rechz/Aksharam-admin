@@ -1,30 +1,35 @@
 <template>
   <div class="sub-card">
     <div class="text-card ps-5 pt-5">
-      <div class="details">
-        <div class="details-content">
-          <h4 class="text-start title">{{ title }}</h4>
-          <p class="desc">
-          <pre class="text-wrap">{{ description }}</pre>
-          </p>
-        </div>
+      <!-- <div class="details pb-2"> -->
+      <div class="details-content">
+        <h4 class="text-start title">{{ title }}</h4>
+        <p class="desc">
+        <pre class="text-wrap desc text-justify ps-2">{{ description }}</pre>
+        </p>
+        <!-- </div> -->
+      </div>
+      <!-- <v-btn @click="console.log(audio)">click</v-btn> -->
+      <div class="d-flex justify-content-center mt-5">
+        <audio controls class="mt-3 mx-3 w-100" v-if="audio.length > 0" :src="audio[0].furl" type="audio/*">
+          Your browser does not support the audio element.
+        </audio>
       </div>
       <div class="carousel-wrapper">
-        <v-btn prepend-icon="mdi-pencil" rounded="4" class="mb-3 text-success text-capitalize me-2" size="small"
-          @click="openEdit">Edit</v-btn>
-        <v-btn prepend-icon="mdi-trash-can" rounded="4" class="mb-3 text-danger text-capitalize"
-          size="small">Delete</v-btn>
-        <v-carousel class="sub-carousel" height="400" hide-delimiters cover :show-arrows="!images.length === 1">
-
+        <div class="d-flex gap-2 mb-3">
+          <v-btn prepend-icon="mdi-pencil" rounded="4" class=" text-success text-capitalize me-2 fw-bold" size="small"
+            @click="openEdit">Edit</v-btn>
+          <v-btn prepend-icon="mdi-trash-can" rounded="4" class=" text-danger text-capitalize fw-bold"
+            size="small">Delete</v-btn>
+        </div>
+        <v-carousel class="sub-carousel" height="400" hide-delimiters cover :show-arrows="images.length > 1">
           <v-carousel-item @click="openDialog(image.furl)" cover :src="image.furl" v-for="(image, index) in images"
-            :key="index">
+            :key="index" class="sub-carousel">
           </v-carousel-item>
-
-
         </v-carousel>
         <v-btn class="video-btn  mt-3" rounded="3" @click="openVideoDialog" variant="elevated"
           v-if="video.length > 0"><v-icon class="mdi mdi-video"></v-icon>Watch
-          Video {{ video.length }}</v-btn>
+          Video</v-btn>
       </div>
     </div>
     <v-dialog v-model="dialog" max-width="650">
@@ -38,8 +43,7 @@
           </v-btn>
         </v-toolbar>
         <v-card-text>
-          <video controls width="100%" v-if="video.length > 0">
-            <source :src="video[0].furl" type="video/mp4">
+          <video controls width="100%" v-if="video.length > 0" :src="video[0].furl" type="video/*">
             Your browser does not support the video tag.
           </video>
         </v-card-text>
@@ -47,7 +51,8 @@
     </v-dialog>
   </div>
   <v-dialog v-model="editDialog" width="1000">
-    <edit-form :head="head" :description="description" :images="images" :video="video"></edit-form>
+    <edit-form :head="head" :description="description" :images="images" :video="video" :url="url" :audio="audio"
+      @finish="editDialog = false"></edit-form>
   </v-dialog>
 </template>
 
@@ -63,7 +68,8 @@ export default {
     "images",
     'video',
     'url',
-    'commonId'
+    'commonId',
+    'audio'
   ],
   data() {
     return {
@@ -77,10 +83,7 @@ export default {
   
   methods: {
     openEdit() {
-        console.log('Title:', this.title);
-        console.log('Description:', this.description);
-        console.log('Images:', this.images);
-        console.log('Video:', this.video);
+        
         this.editDialog = true;
     },
     openDialog(imageSrc) {
@@ -89,7 +92,7 @@ export default {
     },
     openVideoDialog() {
       // Set the video URL to the one you want to display
-      this.videoUrl = 'https://my-new-aks.s3.ap-south-1.amazonaws.com/1715602317290_talking_juracik_park_seed5948811234009426.mp4';
+      // this.videoUrl = 'https://my-new-aks.s3.ap-south-1.amazonaws.com/1715602317290_talking_juracik_park_seed5948811234009426.mp4';
       this.videoDialog = true; // Open the dialog
     },
     closeVideoDialog() {
@@ -109,7 +112,7 @@ export default {
 .sub-card {
   width: 75%; 
   aspect-ratio: 1676 / 800;
-  height: 36rem;
+  height: 40rem;
   background-color: #363A33;
     color: #ffffff;
     border-radius: 0 60px 60px 0;
@@ -121,9 +124,10 @@ export default {
 .text-card {   
   width: 75%;  
   aspect-ratio: 1107 / 600;  
+  /* height: 25rem; */
 }
 .carousel-wrapper {
-  width: 100%;
+  /* width: 100%; */
   aspect-ratio: 813/650;
   position: absolute;
   left: 80%;
@@ -143,21 +147,21 @@ export default {
   left: 75%;
   top: 12%;
 } */
-.desc,.details-content .title{
+.desc,.details-content {
   /* padding-right: 25%; */
-  padding-left: 5%;
-  font-size: 130%;
+  /* padding-left: 5%; */
+  width: 100%;
+  font-size: 110%;
   line-height: 180% ;
-}
-
-.details{
-
-  width:100%;
-    aspect-ratio: 1107 / 600;
-   /* padding-top: 5%; */
-  overflow-y: scroll;
+  height: 25rem;
   direction: rtl;
+  aspect-ratio: 1107 / 600;
 }
+.title{
+  font-size: 140%;
+    line-height: 180%;
+}
+
 .details-content{
   direction: ltr;
 }

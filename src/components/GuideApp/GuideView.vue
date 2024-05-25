@@ -144,18 +144,18 @@
       <template v-slot:item="{ item,index }">
         <tr style="background-color:#FCFDF6; color:black;">
           <!-- <td class="text-center">{{ index + 1 }}</td> -->
-          <td class="">{{ index + 1 }}</td>
+          <td class="text-center">{{ index + 1 }}</td>
           <td class="">{{ item.title }}</td>
           <!-- <td class=""><v-img :src="@/assets/acc.jpg" alt="image"
               style="border-radius: 50%; height: 50px; width: 50px;"></v-img></td> -->
           <td class=""><v-img :src="item.qrCodeUrl" alt="QR" class="qr" style="height: 50px; width: 50px;"
               @click="showQR(item)"></v-img></td>
           <td class="text-center">
-            <v-btn class="text-none" color="#48663f" min-width="100" rounded @click="showDetails(item)">View</v-btn>
+            <v-btn class="text-none" color="#48663f" min-width="100" rounded @click="showDetails(item)">View & Edit</v-btn>
           </td>
           <td class="text-center">
-            <v-icon size="large" color="teal-darken-3" class="me-4 mdi mdi-pencil" @click="editItem(item)"></v-icon>
-            <v-icon size="large" color="danger" class="ms-4 mdi mdi-trash-can" @click="deleteItem(item)"></v-icon>
+            <!-- <v-icon size="large" color="teal-darken-3" class="me-4 mdi mdi-pencil" @click="editItem(item)"></v-icon> -->
+            <v-icon size="large" color="danger" class=" mdi mdi-trash-can" @click="deleteItem(item)"></v-icon>
           </td>
         </tr>
       </template>
@@ -187,11 +187,11 @@
       subTopic:{},
       image: require('@/assets/acc.jpg'),
       headers: [
-        { title: 'Sl.no', align: 'start', sortable: false },
+        { title: 'Sl.no', align: 'center', sortable: false },
         { title: 'Heading', align: 'start', key: 'heading', sortable: false },
         { title: 'QR Code', align: 'start', key: 'QR', sortable: false },
         { title: 'Details', align: 'center' },
-        { title: 'Edit / Delete', align: 'center' },
+        { title: 'Delete', align: 'center' },
       ],
       editedIndex: -1,
       editedItem: {},
@@ -245,14 +245,7 @@
       setFallbackImage(event) {
           event.target.src = this.image;
       },
-      async getDetails() {
-        try {
-          await this.$store.dispatch('fetchAllEmployees');
-        }
-        catch (error) {
-          console.error(error.message)
-        }
-      },
+      
       async showDetails(item) {
         
         try {

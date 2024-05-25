@@ -281,6 +281,7 @@ export default {
             ],
             action: true,
             QRLoad: true,
+            QRLoading: false,
             malSubmit: false,
             engSubmit: false,
             imageSubmit: false,

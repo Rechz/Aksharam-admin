@@ -4,7 +4,7 @@
             <router-link to="/admin/guide-app/view"><v-btn class="home-btn text-capitalize" rounded
                     size="x-large"><v-icon class="mdi mdi-arrow-left"></v-icon>Back</v-btn></router-link>
             <h1 style="color: white; font-size: 360%;" class="text-center">{{subTopic.title}}</h1>
-            <v-btn class="translate-btn text-capitalize" rounded size="x-large">
+            <v-btn class="translate-btn text-capitalize" rounded size="x-large" @click="translate">
                 <svg width="50" height="50" viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g opacity="0.8">
                         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -20,16 +20,24 @@
         <div class="mb-5 ">
             <SubCard :description="subTopic.description" :images="subTopic.imgDataList ? subTopic.imgDataList : []"
                 :video="subTopic.mp4DataList" :head="subTopic.title" :url="subTopic.referenceUrl"
-                :commonId="subTopic.commonId" />
+                :commonId="subTopic.commonId" :audio="subTopic.mp3DataList" />
         </div>
         <div v-for="(topic,index) in subTopic.combinedDataSubList" :key="index" class="my-5">
             <div v-if="index % 2 === 0" class="mt-3 ">
-                <SubReverse :title="topic.title" :description="topic.description"
-                    :images="topic.imgDataList ? topic.imgDataList : []" :video="topic.mp4DataList" />
+                <SubReverse 
+                    :head="topic.title" 
+                    :title="topic.title" 
+                    :description="topic.description"
+                    :images="topic.imgDataList ? topic.imgDataList : []" :video="topic.mp4DataList"
+                    :audio="topic.mp3DataList" />
             </div>
             <div v-else class="my-5">
-                <SubCard :title="topic.title" :description="topic.description"
-                    :images="topic.imgDataList ? topic.imgDataList : []" :video="topic.mp4DataList" />
+                <SubCard 
+                    :head="topic.title" 
+                    :title="topic.title" 
+                    :description="topic.description"
+                    :images="topic.imgDataList ? topic.imgDataList : []" :video="topic.mp4DataList"
+                    :audio="topic.mp3DataList" />
             </div>
         </div>
     </div>
