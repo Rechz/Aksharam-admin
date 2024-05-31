@@ -17,8 +17,10 @@
             <h5 class="text-center mt-4 fw-bolder ">Add Sub Heading - {{ count }} ({{ engHeading }})</h5>
             <p class="text-danger fst-italic mt-1">**Please submit Malayalam & English data before proceeding to next
                 page. Do not refresh the page to avoid data loss.</p>
-            <div class="d-flex">
-                <v-form class="pt-0" ref="form" @submit.prevent="submitHeading">
+
+            <v-form class="pt-0" ref="form" @submit.prevent="submitHeading">
+                <div class="d-flex">
+                    <div>
                     <v-select class="select" label='Select Language' density="comfortable" :items="languages"
                         v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"
                         single-line></v-select>
@@ -28,26 +30,30 @@
                         v-model="description" :rules="descriptionRules" single-line></v-textarea>
                     <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
                         class="reference" rows="2" v-model="url" single-line></v-textarea>
-                    <div class="d-flex justify-content-between  gap-2">
-                        <v-btn color="#386568" size="large" class="text-capitalize" type="submit" :disabled="subload"
-                            variant="elevated" rounded :loading="subload">Add {{ topic }} sub topic</v-btn>
-                        <div class="d-flex gap-2">
-                            <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
-                                @click="back">Back</v-btn>
-                            <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
-                                @click="step++">Next</v-btn>
-                        </div>
                     </div>
-                </v-form>
-                <div class="d-flex flex-column ">
-                    <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malSubHeading }}
-                        (Malayalam) subtopic added.
-                    </h6>
-                    <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engSubHeading }}
-                        (English) subtopic added.
-                    </h6>
+                    <div class="d-flex flex-column ">
+                        <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malSubHeading }}
+                            (Malayalam) subtopic added.
+                        </h6>
+                        <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engSubHeading }}
+                            (English) subtopic added.
+                        </h6>
+                    </div>
+
                 </div>
-            </div>
+                <div class="d-flex justify-content-between  gap-2">
+                    <v-btn color="#386568" size="large" class="text-capitalize" type="submit" :disabled="subload"
+                        variant="elevated" rounded :loading="subload">Add {{ topic }} sub topic</v-btn>
+                    <div class="d-flex gap-2">
+                        <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
+                            @click="back">Back</v-btn>
+                        <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
+                            @click="step++">Skip</v-btn>
+                    </div>
+                </div>
+            </v-form>
+
+
         </template>
         <template v-else-if="step === 2">
             <h5 class="text-center mt-4 fw-bolder ">Subheading Images</h5>
@@ -166,8 +172,8 @@
                 <v-btn color="green" class="mb-3" @click="subhead = true; action = false" size="x-large"
                     variant="outlined" append-icon="mdi-step-forward">Add Sub of Subheading</v-btn>
 
-                <v-btn color="green" class="mb-3" @click="step = 1; count++; subhead = false;"
-                    prepend-icon="mdi-step-backward" variant="outlined">Add New Subheading</v-btn>
+                <v-btn color="green" class="mb-3" @click="finish" prepend-icon="mdi-step-backward"
+                    variant="outlined">Add New Subheading</v-btn>
 
                 <v-btn color="green" class="mb-3" @click="addNewTopic" prepend-icon="mdi-step-backward-2"
                     variant="outlined">Finish & Add New Main Topic</v-btn>
@@ -235,8 +241,8 @@ export default {
             urlRules: [v => !!v || '*URL is required'],
             audioFiles: [],
             videoFiles: [],
-            // base_url: 'http://192.168.1.22:8081',
-            base_url: 'http://192.168.1.22:8081',
+            // base_url: 'http://localhost:8086',
+            base_url: 'http://localhost:8086',
             message: '',
             loading: false,
             color: '',

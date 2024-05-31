@@ -205,7 +205,13 @@ export default {
             formData.append('imgIds', this.imageId); 
             formData.append('commonId', this.commonId);
             try {
-                const response = await axios.put(`${this.base_url}/updateMain/updateUploadImg`, formData);
+                let response;
+                if (this.main == true) {
+                    response = await axios.put(`${this.base_url}/updateMain/updateUploadImg`, formData);
+                }
+                if (this.main == false) {
+                    response = await axios.put(`${this.base_url}/updateFirst/updateUploadImgSubFirst`, formData);
+                }
                 console.log(response);
                 if ((response.status >= 200) || (response.status < 300)) {
                     this.$emit('update');
@@ -267,12 +273,20 @@ export default {
         async handleVideo(event) {
             const files = event.target.files[0];
             this.videoAdd = files;
-            const formData = new FormData();
-            formData.append("uId", this.uId);
-            formData.append("mtId", this.media.video);
-            formData.append("files", this.videoAdd);
+            let response;
+            let formData = new FormData();
+           
             try {
-                const response = await axios.put(`${this.base_url}/updateMain/updateMpData`, formData);
+                if (this.main == true) {
+                    formData.append("uId", this.uId);
+                    formData.append("mtId", this.media.video);
+                    formData.append("files", this.videoAdd);
+                    response = await axios.put(`${this.base_url}/updateMain/updateMpData`, formData);
+                } 
+                if (this.main == false) {
+                    formData.append("files", this.videoAdd);
+                    response = await axios.put(`${this.base_url}/updateFirst/updateMpData1/${this.uId}?mtId=${this.media.video}`, formData);
+                }
                 if (response.status >= 200 && response.status < 300) {
                     this.$emit('update');
                     alert('success')
@@ -309,12 +323,21 @@ export default {
         async handleAudio(event) {
             const files = event.target.files[0];
             this.audioAdd = files;
-            const formData = new FormData();
-            formData.append("uId", this.uId);
-            formData.append("mtId", this.media.audio);
-            formData.append("files", this.audioAdd);
+            let formData = new FormData();
             try {
-                const response = await axios.put(`${this.base_url}/updateMain/updateMpData`, formData);
+                let response;
+                if (this.main == true) {
+                    formData.append("uId", this.uId);
+                    formData.append("mtId", this.media.audio);
+                    formData.append("files", this.audioAdd);
+                    response = await axios.put(`${this.base_url}/updateMain/updateMpData`, formData);
+                }
+                if (this.main == false) {
+                    // formData.append("uId", this.uId);
+                    // formData.append("mtId", this.media.audio);
+                    formData.append("files", this.audioAdd);
+                    response = await axios.put(`${this.base_url}/updateFirst/updateMpData1/${this.uId}?mtId=${this.media.audio}`, formData);
+                }
                 if (response.status >= 200 && response.status < 300) {
                     this.$emit('update');
                     alert('success')

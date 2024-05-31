@@ -19,44 +19,51 @@
                 <p class="text-danger fst-italic mt-1">**Please submit Malayalam & English data before proceeding to
                     next page. Do not refresh the page to avoid data loss.</p>
                 <v-card flat>
-                    <div class="d-flex gap-4">
-                        <v-form class="pt-0" ref="form" @submit.prevent="submitHeading">
-                            <v-select class="select" label='Select Language' density="comfortable" :items="languages"
-                                v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"
-                                single-line></v-select>
-                            <v-text-field v-model="title" :label="language === 1 ? 'തലക്കെട്ട്' : 'Heading'"
-                                density="comfortable" class="select" :rules="titleRules" single-line></v-text-field>
-                            <v-textarea :label="language === 1 ? 'വിവരണം' : 'Description'" class="desc" rows="6"
-                                v-model="description" :rules="descriptionRules" single-line></v-textarea>
-                            <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
-                                class="reference" rows="2" v-model="url" single-line></v-textarea>
-                            <div class="d-flex justify-content-between">
-                                <div class="d-flex gap-2">
-                                    <v-btn color="#386568" size="large" class="text-capitalize" type="submit"
-                                        :disabled="subload" variant="elevated" rounded :loading="subload">Add {{ topic
-                                        }}
-                                        topic</v-btn>
-                                    <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined"
-                                        rounded :disabled="QRLoad" :loading="QRLoading" @click="generateQR">Submit & Proceed</v-btn>
-                                </div>
-                                <div>
-                                    <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined"
-                                        rounded @click="step++">Next</v-btn>
-                                </div>
+
+                    <v-form class="pt-0" ref="form" @submit.prevent="submitHeading">
+                        <div class="d-flex gap-4">
+                            <div>
+                                <v-select class="select" label='Select Language' density="comfortable"
+                                    :items="languages" v-model="language" :rules="languageRules" item-title="talk"
+                                    item-value="dtId" single-line></v-select>
+                                <v-text-field v-model="title" :label="language === 1 ? 'തലക്കെട്ട്' : 'Heading'"
+                                    density="comfortable" class="select" :rules="titleRules" single-line></v-text-field>
+                                <v-textarea :label="language === 1 ? 'വിവരണം' : 'Description'" class="desc" rows="6"
+                                    v-model="description" :rules="descriptionRules" single-line></v-textarea>
+                                <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
+                                    class="reference" rows="2" v-model="url" single-line></v-textarea>
+
+                            </div>
+                            <div class="d-flex flex-column ">
+                                <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malHeading }}
+                                    (Malayalam) topic
+                                    added.
+                                </h6>
+                                <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engHeading }}
+                                    (English) topic
+                                    added.
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <div class="d-flex gap-2">
+                                <v-btn color="#386568" size="large" class="text-capitalize" type="submit"
+                                    :disabled="subload" variant="elevated" rounded :loading="subload" v-if="QRLoad">Add
+                                    {{ topic
+                                    }}
+                                    topic</v-btn>
+                                <v-btn v-else color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
+                                    :disabled="QRLoad" :loading="QRLoading" @click="generateQR">Submit & Proceed</v-btn>
+                            </div>
+                            <div>
+                                <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
+                                    @click="step++">Skip</v-btn>
                             </div>
 
-                        </v-form>
-                        <div class="d-flex flex-column ">
-                            <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malHeading }}
-                                (Malayalam) topic
-                                added.
-                            </h6>
-                            <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engHeading }}
-                                (English) topic
-                                added.
-                            </h6>
                         </div>
-                    </div>
+                    </v-form>
+
+
                 </v-card>
             </template>
             <template v-else-if="step === 2">
@@ -319,7 +326,7 @@ export default {
             urlRules: [v => !!v || '*URL is required'],
             audioFiles: [],
             videoFiles: [],
-            base_url: 'http://192.168.1.22:8081',
+            base_url: 'http://localhost:8086',
             // base_url: 'http://192.168.193.232:8081',
             message: '',
             loading: false,

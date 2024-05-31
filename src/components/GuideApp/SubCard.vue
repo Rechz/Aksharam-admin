@@ -53,7 +53,7 @@
   <v-dialog v-model="editDialog" width="1000" persistent>
     <edit-form :head="head" :description="description" :images="images" :video="video" :url="url" :audio="audio"
       :commonId="commonId" @finish="editDialog = false" :uId="uId" @update="update" :main="main" :malId="malId"
-      :engId="engId"></edit-form>
+      :engId="engId" :subtopic="subtopic"></edit-form>
   </v-dialog>
 </template>
 

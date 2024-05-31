@@ -21,7 +21,7 @@
             <SubCard :description="subTopic.description" :images="subTopic.imgDataList ? subTopic.imgDataList : []"
                 :video="subTopic.mp4DataList" :head="subTopic.title" :url="subTopic.referenceUrl"
                 :commonId="subTopic.commonId" :audio="subTopic.mp3DataList" :uId="subTopic.uId" @update="updateDetails"
-                :main="true" :subtopic="subTopic.combinedDataSubList" />
+                :main="true" :subtopic="subTopic.combinedDataSubList" :malId="subTopic.malId" :engId="subTopic.engId"/>
         </div>
         <div v-for="(topic,index) in subTopic.combinedDataSubList" :key="index" class="my-5">
             <div v-if="index % 2 === 0" class="mt-3 ">

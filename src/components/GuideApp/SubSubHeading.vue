@@ -17,37 +17,43 @@
             <h5 class="text-center mt-4 fw-bolder ">Add Sub of Subheading -{{ count }} ({{ engHeading }})</h5>
             <p class="text-danger fst-italic mt-1">**Please submit Malayalam & English data before proceeding to next
                 page. Do not refresh the page to avoid data loss.</p>
-            <div class="d-flex">
-                <v-form class="pt-0" ref="form" @submit.prevent="submitHeading">
-                    <v-select class="select" label='Select Language' density="comfortable" :items="languages"
-                        v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"
-                        single-line></v-select>
-                    <v-text-field v-model="title" :label="language === 1 ? 'തലക്കെട്ട്' : 'Sub Heading'"
-                        density="comfortable" class="select" :rules="titleRules" single-line></v-text-field>
-                    <v-textarea :label="language === 1 ? 'വിവരണം' : 'Subheading Description'" class="desc" rows="6"
-                        v-model="description" :rules="descriptionRules" single-line></v-textarea>
-                    <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
-                        class="reference" rows="2" v-model="url" single-line></v-textarea>
-                    <div class="d-flex justify-content-between  gap-2">
-                        <v-btn color="#386568" size="large" class="text-capitalize" type="submit" :disabled="subload"
-                            variant="elevated" rounded :loading="subload">Add {{ topic }} sub topic</v-btn>
-                        <div class="d-flex gap-2">
-                            <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
-                                @click="back">Back</v-btn>
-                            <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
-                                @click="step++">Next</v-btn>
-                        </div>
+
+            <v-form class="pt-0" ref="form" @submit.prevent="submitHeading">
+                <div class="d-flex">
+                    <div>
+                        <v-select class="select" label='Select Language' density="comfortable" :items="languages"
+                            v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"
+                            single-line></v-select>
+                        <v-text-field v-model="title" :label="language === 1 ? 'തലക്കെട്ട്' : 'Sub Heading'"
+                            density="comfortable" class="select" :rules="titleRules" single-line></v-text-field>
+                        <v-textarea :label="language === 1 ? 'വിവരണം' : 'Subheading Description'" class="desc" rows="6"
+                            v-model="description" :rules="descriptionRules" single-line></v-textarea>
+                        <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
+                            class="reference" rows="2" v-model="url" single-line></v-textarea>
                     </div>
-                </v-form>
-                <div class="d-flex flex-column ">
-                    <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malSubHeading }}
-                        (Malayalam) subtopic added.
-                    </h6>
-                    <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engSubHeading }}
-                        (English) subtopic added.
-                    </h6>
+                    <div class="d-flex flex-column ">
+                        <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malSubHeading }}
+                            (Malayalam) subtopic added.
+                        </h6>
+                        <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engSubHeading }}
+                            (English) subtopic added.
+                        </h6>
+                    </div>
                 </div>
-            </div>
+                <div class="d-flex justify-content-between  gap-2">
+                    <v-btn color="#386568" size="large" class="text-capitalize" type="submit" :disabled="subload"
+                        variant="elevated" rounded :loading="subload">Add {{ topic }} sub topic</v-btn>
+                    <div class="d-flex gap-2">
+                        <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
+                            @click="back">Back</v-btn>
+                        <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
+                            @click="step++">Next</v-btn>
+                    </div>
+                </div>
+
+            </v-form>
+
+
         </template>
         <template v-else-if="step === 2">
             <h5 class="text-center mt-4 fw-bolder ">Sub of subheading Images</h5>
@@ -122,14 +128,14 @@
                     </v-card>
                     <v-card class="p-3 d-flex gap-2" flat :disabled="videoMalSubmit && videoEngSubmit">
                         <div>
-                            <input type="file" ref="fileVideo" @change="handleVideo" class="mb-2" accept="video/*" >
+                            <input type="file" ref="fileVideo" @change="handleVideo" class="mb-2" accept="video/*">
                             <ul>
                                 <li v-for=" (file, index) in videoFiles" :key="index" style="list-style: none;"
-                                class="my-1">
-                            <v-chip closable>
-                                {{ file.name }}
-                            </v-chip>
-                            </li>
+                                    class="my-1">
+                                    <v-chip closable>
+                                        {{ file.name }}
+                                    </v-chip>
+                                </li>
                             </ul>
                             <v-btn @click="submitVideo(fileType.video)" color="#386568" size="large" variant="elevated"
                                 rounded prepend-icon="mdi-video" class="text-capitalize" :disabled="videoLoad"
@@ -223,8 +229,8 @@ export default {
             urlRules: [v => !!v || '*URL is required'],
             audioFiles: [],
             videoFiles: [],
-            // base_url: 'http://192.168.1.22:8081',
-            base_url: 'http://192.168.1.22:8081',
+            // base_url: 'http://localhost:8086',
+            base_url: 'http://localhost:8086',
             message: '',
             loading: false,
             color: '',
@@ -429,7 +435,7 @@ export default {
         async submitAudio(id) {
             this.audioLoad = true;
             let uid = '';
-            if (this.language === 1) {
+            if (this.languageAV === 1) {
                 uid = this.subidmal;
             } else {
                 uid = this.subideng;
@@ -472,7 +478,7 @@ export default {
         async submitVideo(id) {
             this.videoLoad = true;
             let uid = '';
-            if (this.language === 1) {
+            if (this.languageAV === 1) {
                 uid = this.subidmal;
             } else {
                 uid = this.subideng;
@@ -513,7 +519,13 @@ export default {
             }
         }
     },
-    
+    watch: {
+        proceed(newValue) {
+            if (!newValue) {
+                this.language = null;
+            }
+        }
+    },
     mounted() {
         this.getAllLanguages();
         this.getType();

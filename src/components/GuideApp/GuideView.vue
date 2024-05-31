@@ -88,7 +88,7 @@
     data: () => ({
       dialog: false,
       // overlay: true,
-    
+    base_url: 'http://localhost:8086',
       qrDialog: false,
       dialogDelete: false,
       isHovered: false,
@@ -141,7 +141,7 @@
     methods: {
       async getTopics() {
       try {
-        const response = await axios.get(`http://localhost:8086/DataEntry1/getMainComplete?dtId=${this.language}`);
+        const response = await axios.get(`${this.base_url}/DataEntry1/getMainComplete?dtId=${this.language}`);
         if (response.status === 200) {
           this.$store.commit('setAllTopics', response.data);
         }
@@ -160,7 +160,7 @@
       },
       async showDetails(item) {
         try {
-          const response = await axios.get(`http://localhost:8086/qrcode/getScanDetails?dtId=${this.language}&commonId=${item.commonId}`);
+          const response = await axios.get(`${this.base_url}/qrcode/getScanDetails?dtId=${this.language}&commonId=${item.commonId}`);
         if (response.status === 200) {
           this.$store.commit('setDetails', response.data)
           this.$router.push({name:'guide-edit'})
@@ -178,22 +178,23 @@
       },
 
       deleteItem(item) {
-        this.editedIndex = this.employees.indexOf(item)
+        this.editedIndex = this.mainheadings.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialogDelete = true
       },
       async deleteItemConfirm() {
         this.loading = !this.loading
         try {
-          const id = this.editedItem.employeeId;
-          const success = await this.$store.dispatch('deleteEmployee', id)
-          if (success) {
+          const id = this.editedItem.commonId;
+          const success = await axios.delete(`${this.base_url}/deleteMain/delete/${id}`)
+          if ((success.status >= 200) || (success.status<300)) {
             // this.loading = false
             this.message = 'Heading deleted successfully !!';
             this.color = '#C8E6C9'
             this.closeDelete();
             this.snackbar = true;
-            setInterval(() => { window.location.reload(); }, 2000)
+            this.getTopics();
+            // setInterval(() => { window.location.reload(); }, 2000)
           }
         }
         catch (error) {
