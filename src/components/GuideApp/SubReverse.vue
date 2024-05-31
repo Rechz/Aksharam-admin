@@ -5,9 +5,14 @@
         <!-- <div class="details "> -->
         <div class="details-content">
           <h4 class="text-start title">{{ title }}</h4>
-          <p class="desc text-start">
-          <pre class="text-wrap desc text-justify pe-2">{{ description }}</pre>
-          </p>
+          <div class="desc text-start">
+            <pre class="text-wrap desc text-justify pe-2">
+            {{ description }}
+            <ul v-for="topic in subtopic" :key="topic.uId">
+            <li class="text-capitalize text-start" style="direction: ltr;">{{ topic.title }}</li>
+          </ul>
+          </pre>
+          </div>
           <!-- </div> -->
         </div>
         <!-- <v-btn @click="console.log(audio[0].furl)">click</v-btn> -->

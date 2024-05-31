@@ -14,6 +14,8 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
+
         <v-card-text class="px-5 pb-5">
             <div>
                 <v-form class="pt-0" ref="form" @submit.prevent="editTopic">
@@ -43,9 +45,29 @@
                                     <v-btn icon="mdi-pencil" size="small" color="success"
                                         @click="edit(image.imgID, index)"></v-btn>
                                     <v-btn icon="mdi-delete" size="small" color="error"
-                                        @click="deleteImage(image.imgID)"></v-btn>
+                                        @click="deleteDialogImage = true"></v-btn>
                                 </v-card-actions>
                             </v-card>
+                            <v-dialog v-model="deleteDialogImage" width="400px">
+                                <v-card class="rounded-4 pb-4">
+                                    <v-card-title class="mb-2 text-white ps-4 fs-4"
+                                        style="background-color: #BA1A1A;">Delete Image</v-card-title>
+                                    <v-container class="px-4 d-flex flex-column align-items-center">
+                                        <v-icon color="#BA1A1A" size="80"
+                                            class="mt-2 mdi mdi-trash-can-outline"></v-icon>
+                                        <v-card-text class="mt-1 text-center">Are you sure you want to delete this
+                                            image?</v-card-text>
+                                    </v-container>
+                                    <v-card-actions class="mx-4 d-flex flex-column align-items-center">
+                                        <v-btn block class="rounded-4 text-white mb-3"
+                                            style="background-color: #BA1A1A;" :disabled="imageDelete"
+                                            :loading="imageDelete" @click="deleteImage(image.imgID)">Delete</v-btn>
+                                        <v-btn block variant="text" class="rounded-4 mb-3"
+                                            @click="deleteDialogImage = false">Cancel</v-btn>
+                                    </v-card-actions>
+
+                                </v-card>
+                            </v-dialog>
                         </div>
                         <input type="file" ref="selectImage" @change="handleImage" class="d-none" accept="image/*">
                     </div>
@@ -53,7 +75,8 @@
                     <div class="d-flex justify-content-end">
                         <input type="file" ref="addImage" @change="addImage" class="d-none" accept="image/*" multiple>
                         <v-btn color="#386568" size="large" variant="outlined" rounded prepend-icon="mdi-plus"
-                            class="text-capitalize" @click="add">Add Image</v-btn>
+                            class="text-capitalize" @click="add" :disabled="imageLoad" :loading="imageLoad">Add
+                            Image</v-btn>
                     </div>
                 </v-card-text>
             </v-card>
@@ -69,9 +92,29 @@
                         </video>
                         <v-card-actions class="py-0 d-flex justify-content-end " min-height="0">
                             <v-btn icon="mdi-pencil" size="small" color="success" @click="updateVideo"></v-btn>
-                            <v-btn icon="mdi-delete" size="small" color="error" @click="deleteVideo"></v-btn>
+                            <v-btn icon="mdi-delete" size="small" color="error"
+                                @click="deleteDialogVideo = true;"></v-btn>
                         </v-card-actions>
                         <input type="file" ref="selectVideo" @change="handleVideo" class="d-none" accept="video/*">
+                        <v-dialog v-model="deleteDialogVideo" width="400px">
+                            <v-card class="rounded-4 pb-4">
+                                <v-card-title class="mb-2 text-white ps-4 fs-4"
+                                    style="background-color: #BA1A1A;">Delete Video</v-card-title>
+                                <v-container class="px-4 d-flex flex-column align-items-center">
+                                    <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
+                                    <v-card-text class="mt-1 text-center">Are you sure you want to delete this
+                                        video?</v-card-text>
+                                </v-container>
+                                <v-card-actions class="mx-4 d-flex flex-column align-items-center">
+                                    <v-btn block class="rounded-4 text-white mb-3" style="background-color: #BA1A1A;"
+                                        :disabled="videoDelete" :loading="videoDelete"
+                                        @click="deleteVideo">Delete</v-btn>
+                                    <v-btn block variant="text" class="rounded-4 mb-3"
+                                        @click="deleteDialogVideo = false">Cancel</v-btn>
+                                </v-card-actions>
+
+                            </v-card>
+                        </v-dialog>
                     </v-card>
 
                     <v-card-subtitle v-else class="mb-0 py-0">No video uploaded.</v-card-subtitle>
@@ -96,9 +139,28 @@
                         </audio>
                         <v-card-actions class="py-0 d-flex justify-content-end ">
                             <v-btn icon="mdi-pencil" size="small" color="success" @click="updateAudio"></v-btn>
-                            <v-btn icon="mdi-delete" size="small" color="error" @click="deleteAudio"></v-btn>
+                            <v-btn icon="mdi-delete" size="small" color="error" @click="deleteDialogAudio = true;"></v-btn>
                         </v-card-actions>
                         <input type="file" ref="selectAudio" @change="handleAudio" class="d-none" accept="audio/*">
+                        <v-dialog v-model="deleteDialogAudio" width="400px">
+                            <v-card class="rounded-4 pb-4">
+                                <v-card-title class="mb-2 text-white ps-4 fs-4"
+                                    style="background-color: #BA1A1A;">Delete Audio</v-card-title>
+                                <v-container class="px-4 d-flex flex-column align-items-center">
+                                    <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
+                                    <v-card-text class="mt-1 text-center">Are you sure you want to delete this
+                                        audio?</v-card-text>
+                                </v-container>
+                                <v-card-actions class="mx-4 d-flex flex-column align-items-center">
+                                    <v-btn block class="rounded-4 text-white mb-3" style="background-color: #BA1A1A;"
+                                        :disabled="audioDelete" :loading="audioDelete"
+                                        @click="deleteAudio">Delete</v-btn>
+                                    <v-btn block variant="text" class="rounded-4 mb-3"
+                                        @click="deleteDialogAudio = false;">Cancel</v-btn>
+                                </v-card-actions>
+
+                            </v-card>
+                        </v-dialog>
                     </v-card>
                     <v-card-subtitle v-else class="mb-0 py-0">No audio uploaded.</v-card-subtitle>
                     <div class="d-flex justify-content-end">
@@ -158,11 +220,17 @@ export default {
             videoLoad: false,
             audioLoad: false,
             imageId: null,
-            imageIndex: null,
+           imageIndex: null,
+           imageDelete: false,
+           videoDelete: false,
+            audioDelete: false,
             newImage: null,
             imagesAdd: [],
             videoAdd: null,
-            audioAdd: null,
+           audioAdd: null,
+           deleteDialogImage: false,
+           deleteDialogVideo: false,
+           deleteDialogAudio:false,
             // images: [],
             editImages: this.images,
             editVideo: this.video,
@@ -214,19 +282,29 @@ export default {
                 }
                 console.log(response);
                 if ((response.status >= 200) || (response.status < 300)) {
+                    this.icon = 'mdi mdi-check-circle-outline'
+                    this.message = `Image updated successfully!`;
+                    this.dialogHead = 'Success'
+                    this.color = '#2E7D32'
+                    this.dialogTopic = true;
                     this.$emit('update');
                     this.imageId = null
-                    // this.editImages[this.imageIndex] = response.data;
                     this.imageIndex = null
                 }  
             } catch (error) {
-                console.error('PUT request failed:', error);    
+                this.color = '#BA1A1A';
+                this.icon = 'mdi mdi-alert-outline'
+                this.dialogHead = 'Error';
+                this.message = error.message;
+                this.dialogTopic = true;
+                console.error(error);    
             }
         },
         add() {      
             this.$refs.addImage.click();
         },
         async addImage(event) {
+            
             const files = event.target.files;
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
@@ -237,13 +315,25 @@ export default {
                 formData.append("file", image);
             });         
             try {
+                this.imageLoad = true;
                 const response = await axios.post(`${this.base_url}/imgData/uploadImg?englishUId=${this.engId}&malUid=${this.malId}`, formData);
                 if (response.status === 200) {
+                    this.imageLoad = false;
                     this.imagesAdd = [];
+                    this.icon = 'mdi mdi-check-circle-outline'
+                    this.message = `Image added successfully!`;
+                    this.dialogHead = 'Success'
+                    this.color = '#2E7D32'
+                    this.dialogTopic = true;
                     this.$emit('update');
-                    alert('success')
                 }
             } catch (error) {
+                this.imageLoad = false;
+                this.color = '#BA1A1A';
+                this.icon = 'mdi mdi-alert-outline'
+                this.dialogHead = 'Error';
+                this.message = error.message;
+                this.dialogTopic = true;
                 console.error(error)
             }
         },
@@ -258,12 +348,21 @@ export default {
             try {
                 const response = await axios.post(`${this.base_url}/mediaData/mpData?uId=${this.uId}&mtId=${this.media.video}`, formData);
                 if (response.status >= 200 && response.status < 300) {
+                    this.icon = 'mdi mdi-check-circle-outline'
+                    this.message = `Video added successfully!`;
+                    this.dialogHead = 'Success'
+                    this.color = '#2E7D32'
+                    this.dialogTopic = true;
                     this.$emit('update');
-                    alert('success')
                     this.videoAdd = null
                 }
             }
             catch (err) {
+                this.color = '#BA1A1A';
+                this.icon = 'mdi mdi-alert-outline'
+                this.dialogHead = 'Error';
+                this.message = err.message;
+                this.dialogTopic = true;
                 console.error(err)
             }
         },
@@ -288,12 +387,21 @@ export default {
                     response = await axios.put(`${this.base_url}/updateFirst/updateMpData1/${this.uId}?mtId=${this.media.video}`, formData);
                 }
                 if (response.status >= 200 && response.status < 300) {
+                    this.icon = 'mdi mdi-check-circle-outline'
+                    this.message = `Video updated successfully!`;
+                    this.dialogHead = 'Success'
+                    this.color = '#2E7D32'
+                    this.dialogTopic = true;
                     this.$emit('update');
-                    alert('success')
                     this.videoAdd = null
                 }
             }
             catch (err) {
+                this.color = '#BA1A1A';
+                this.icon = 'mdi mdi-alert-outline'
+                this.dialogHead = 'Error';
+                this.message = err.message;
+                this.dialogTopic = true;
                 console.error(err)
             }
         },
@@ -309,11 +417,20 @@ export default {
                 const response = await axios.post(`${this.base_url}/mediaData/mpData?uId=${this.uId}&mtId=${this.media.audio}`, formData);
                 if (response.status >= 200 && response.status < 300) {
                     this.$emit('update');
-                    alert('success')
+                    this.icon = 'mdi mdi-check-circle-outline'
+                    this.message = `Audio added successfully!`;
+                    this.dialogHead = 'Success'
+                    this.color = '#2E7D32'
+                    this.dialogTopic = true;
                     this.audioAdd = null
                 }
             }
             catch (err) {
+                this.color = '#BA1A1A';
+                this.icon = 'mdi mdi-alert-outline'
+                this.dialogHead = 'Error';
+                this.message = err.message;
+                this.dialogTopic = true;
                 console.error(err)
             }
         },
@@ -333,36 +450,124 @@ export default {
                     response = await axios.put(`${this.base_url}/updateMain/updateMpData`, formData);
                 }
                 if (this.main == false) {
-                    // formData.append("uId", this.uId);
-                    // formData.append("mtId", this.media.audio);
                     formData.append("files", this.audioAdd);
                     response = await axios.put(`${this.base_url}/updateFirst/updateMpData1/${this.uId}?mtId=${this.media.audio}`, formData);
                 }
                 if (response.status >= 200 && response.status < 300) {
                     this.$emit('update');
-                    alert('success')
+                    this.icon = 'mdi mdi-check-circle-outline'
+                    this.message = `Audio updated successfully!`;
+                    this.dialogHead = 'Success'
+                    this.color = '#2E7D32'
+                    this.dialogTopic = true;
                     this.audioAdd = null
                 }
             }
             catch (err) {
+                this.color = '#BA1A1A';
+                this.icon = 'mdi mdi-alert-outline'
+                this.dialogHead = 'Error';
+                this.message = err.message;
+                this.dialogTopic = true;
                 console.error(err)
             }
         },
         async deleteImage(id) {
+            this.imageDelete = true;
+            let response;
             try {
-                const response = await axios.delete(`${this.base_url}/deleteMain/deleteImages?commonId=${this.commonId}&imgIds=${id}`);
-            if ((response.status >= 200) || (response.status < 300)) {
+                if (this.main == true) {
+                    response = await axios.delete(`${this.base_url}/deleteMain/deleteImages?commonId=${this.commonId}&imgIds=${id}`);
+                }
+                if (this.main == false) {
+                    response = await axios.delete(`${this.base_url}/deleteMain/deleteImagesFirst?commonId=${this.commonId}&imgIds=${id}`);
+                }
+                if ((response.status >= 200) || (response.status < 300)) {
+                    this.imageDelete = false;
+                    this.deleteDialogImage = false;
+                this.icon = 'mdi mdi-check-circle-outline'
+                this.message = `Image deleted successfully!`;
+                this.dialogHead = 'Success'
+                this.color = '#2E7D32'
+                this.dialogTopic = true;
                 this.$emit('update');
                 this.imageId = null
                 this.imageIndex = null
             }
             }
             catch (err) {
+                this.imageDelete = false;
+                this.color = '#BA1A1A';
+                this.icon = 'mdi mdi-alert-outline'
+                this.dialogHead = 'Error';
+                this.message = err.message;
+                this.dialogTopic = true;
                 console.error(err)
             }
         },
+        async deleteAudio() {
+            this.audioDelete = true;
+            let response;
+            try {
+                if (this.main == true) {
+                    response = await axios.delete(`${this.base_url}/deleteMain/deleteMp3?dtId=${this.editAudio[0].dtId}`);    
+                }
+                if (this.main == false) {
+                    response = await axios.delete(`${this.base_url}/deleteMain/deleteMp3First?dtId=${this.editAudio[0].dtId}`);   
+                }
+                if ((response.status >= 200) || (response.status < 300)) {
+                    this.audioDelete = false;
+                    this.deleteDialogAudio = false;
+                    this.icon = 'mdi mdi-check-circle-outline'
+                    this.message = `Audio deleted successfully!`;
+                    this.dialogHead = 'Success'
+                    this.color = '#2E7D32'
+                    this.dialogTopic = true;
+                    this.$emit('update')
+                }
+            }
+            catch (error) {
+                this.audioDelete = false;
+                this.color = '#BA1A1A';
+                this.icon = 'mdi mdi-alert-outline'
+                this.dialogHead = 'Error';
+                this.message = error.message;
+                this.dialogTopic = true;
+                console.error(error);
+            }
+        },
+        async deleteVideo() {
+            this.videoDelete = true;
+            let response;
+            try {
+                if (this.main == true) {
+                    response = await axios.delete(`${this.base_url}/deleteMain/deleteMp4?dtId=${this.editVideo[0].dtId}`);
+                }
+                if (this.main == false) {
+                    response = await axios.delete(`${this.base_url}/deleteMain/deleteMp4First?dtId=${this.editVideo[0].dtId}`);
+                }
+                if ((response.status >= 200) || (response.status < 300)) {
+                    this.videoDelete = false;
+                    this.deleteDialogVideo = false;
+                    this.icon = 'mdi mdi-check-circle-outline'
+                    this.message = `Video deleted successfully!`;
+                    this.dialogHead = 'Success'
+                    this.color = '#2E7D32'
+                    this.dialogTopic = true;
+                    this.$emit('update')
+                }
+            }
+            catch (error) {
+                this.videoDelete = false;
+                this.color = '#BA1A1A';
+                this.icon = 'mdi mdi-alert-outline'
+                this.dialogHead = 'Error';
+                this.message = error.message;
+                this.dialogTopic = true;
+                console.error(error);
+            }
+        },
         async editTopic() {
-            console.log('main',this.main)
             const { valid } = await this.$refs.form.validate()
             if (valid) {
                 this.subload = true;
@@ -388,10 +593,10 @@ export default {
                         this.icon = 'mdi mdi-check-circle-outline'
                         this.subload = false;
                         this.message = `Topic updated successfully!`;
-                            this.dialogHead = 'Success'
-                            this.color = '#2E7D32'
-                            this.dialogTopic = true;
-                            this.$emit('update');
+                        this.dialogHead = 'Success'
+                        this.color = '#2E7D32'
+                        this.dialogTopic = true;
+                        this.$emit('update');
                     }
                 }
                 catch (err) {
