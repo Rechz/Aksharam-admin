@@ -174,7 +174,7 @@ export default {
       this.dialog = true
     },
     async addScanner() {
-      this.loading = !this.loading
+      this.loading = true
       try {
         const res = await this.$store.dispatch('addScanner', {
           id: this.id,
@@ -185,7 +185,7 @@ export default {
           this.color = '#C8E6C9'
           this.snackbar = true;
           this.loading = false;
-          setInterval(() => { window.location.reload(); }, 2000)
+          setInterval(() => { this.getScanner(); }, 1000)
         }
       }
       catch (err) {
@@ -196,7 +196,7 @@ export default {
       }
     },
     async update() {
-      this.loading = !this.loading
+      this.loading = true;
       try {
         const success = await this.$store.dispatch('updateScannerPassword', {
           id: this.editedItem.employeeId,
@@ -210,8 +210,7 @@ export default {
           this.message = 'Password updated!!';
           this.color = '#C8E6C9'
           this.snackbar = true;
-         
-          setInterval(() => { window.location.reload(); }, 2000)
+          setInterval(() => { this.getScanner(); }, 1000)
         }
       }
       catch (error) {
@@ -235,7 +234,7 @@ export default {
           this.message = 'Scanner deleted successfully !!';
           this.color = '#C8E6C9'
           this.snackbar = true;
-          setInterval(() => { window.location.reload(); }, 2000)
+          setInterval(() => {this.getScanner(); }, 1000)
         }
       }    
       catch (error) {

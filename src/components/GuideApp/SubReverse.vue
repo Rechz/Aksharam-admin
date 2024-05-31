@@ -55,7 +55,8 @@
   </div>
   <v-dialog v-model="editDialog" width="1000">
     <edit-form :head="head" :description="description" :images="images" :video="video" :url="url" :audio="audio"
-      @finish="editDialog = false"></edit-form>
+      @finish="editDialog = false" :commonId="commonId" :uId="uId" @update="update" :main="main" :malId="malId"
+      :engId="engId"></edit-form>
   </v-dialog>
 </template>
 
@@ -72,6 +73,7 @@ export default {
       editDialog: false,
     };
   },
+  emits: ['update'],
   props: [
     "title",
     "head",
@@ -80,9 +82,17 @@ export default {
     'video',
     'url',
     'commonId',
-    'audio'
+    'audio',
+    'uId',
+    'main',
+    'subtopic',
+    'malId',
+    'engId'
   ],
   methods: {
+    update() {
+      this.$emit('update');
+    },
     openEdit() {
       this.editDialog = true;
     },

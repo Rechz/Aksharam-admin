@@ -1,7 +1,12 @@
 <template>
 
   <v-container class="py-8 px-0" fluid>
-    <div class="d-flex justify-content-between mb-4">
+    <div class="d-flex justify-content-end mb-4">
+      <v-btn-toggle rounded="xl" color="green-lighten-5" v-model="lang" density="compact">
+        <v-btn value="English" @click="translate" size="small">English</v-btn>
+        <v-btn value="Malayalam" @click="translate" size="small">Malayalam</v-btn>
+
+      </v-btn-toggle>
     </div>
     <v-data-table :headers="headers" :items="mainheadings" class="mt-3"
       :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
@@ -23,97 +28,7 @@
 
           </v-card>
         </v-dialog>
-        <!-- Add new dialog for displaying details -->
-        <!-- <v-dialog v-model="detailsDialog" width="600px"> -->
-        <!-- <v-card style="width: 880px; height:650px; border-radius: 15px;">
-            <v-card-title class="d-flex justify-content-between px-4"
-              style="background-color: #216D17; color: #FFFFFF;">
-              <h4>Item Heading</h4>
-              <v-icon @click="closeDetails" class="mdi mdi-window-close"></v-icon>
-            </v-card-title>
-            <v-card-text class="mb-0  ms-1 py-4 px-4">
-              <v-container class="py-0 d-flex flex-column">
-                <div class="row emp-details">
-                  <div class="d-flex">
-                    <v-sheet :elevation="2" :height="540" :width="256" border color="#FCFDF6" class="me-2 px-2 py-2">
-                      <div class="d-flex justify-content-center align-items-center flex-wrap">
-                        <v-img src='@/assets/acc.jpg' alt="image" class="mb-3"
-                          style=" height: 150px; width: 150px;"></v-img>
-                        <v-img src='@/assets/Qr.png' alt="QR" style=" height: 150px; width: 150px;"></v-img>
-                        <div class="d-flex justify-content-between">
-                          <v-btn class="text-none me-5" min-width="50" variant="outlined" rounded>
-                            <v-icon class="mdi mdi-content-save-outline" color="green-darken-4"></v-icon>
-                          </v-btn>
-                          <v-btn class="text-none" color="green-darken-4" min-width="50" rounded>
-                            <v-icon class="mdi mdi-printer"></v-icon>
-                          </v-btn>
-                        </div>
-                      </div>
-                    </v-sheet>
-                    <v-sheet :elevation="2" :height="540" :width="528" border color="#FCFDF6">
-                      <div class="d-flex justify-content-between align-items-center mt-3 mx-3">
-                        <h3>Heading</h3>
-                        <v-btn class="text-none" color="#546E7A" min-width="100" rounded> Translate </v-btn>
-                      </div>
-                      <div class="d-flex justify-content-center">
-                        <audio controls class="mt-3 mx-3 w-100 ">
-                          <source src="horse.ogg" type="audio/ogg">
-                          <source src="horse.mp3" type="audio/mpeg">
-                          Your browser does not support the audio element.
-                        </audio>
-                      </div>
 
-                      <p class="desc mt-4 custom-scroll mx-3 text-justify">Lorem ipsum dolor sit, amet consectetur
-                        adipisicing elit. Reprehenderit iusto, tenetur qui quaerat vero laboriosam suscipit atque fuga
-                        doloribus error magnam deleniti repudiandae iure assumenda itaque a ab expedita pariatur
-                        aspernatur quam necessitatibus eveniet id! Ex libero alias non dicta ut voluptate saepe
-                        praesentium, quod natus magnam soluta obcaecati inventore error nobis. Totam eligendi voluptatum
-                        quae, doloremque aperiam soluta non nisi vitae, distinctio autem dolore vero aspernatur
-                        consequuntur consequatur? Totam maiores dicta officia accusantium voluptate eaque ipsum, a sed,
-                        numquam neque incidunt ut nulla dolores eligendi perferendis. Facere, delectus commodi quia
-                        dicta aspernatur ullam sapiente vitae deserunt perferendis itaque. Illo molestiae dolores
-                        deserunt! Incidunt a temporibus explicabo quaerat doloremque molestiae accusamus magni corporis
-                        quod nisi provident veritatis, adipisci mollitia fuga doloribus, sint neque asperiores pariatur
-                        quia porro quam? Nemo eos voluptatum quibusdam, dolorum, quidem alias accusamus aut illum veniam
-                        aliquam eligendi architecto sit odit dignissimos! Alias nesciunt ducimus delectus obcaecati
-                        fugit sit accusantium nostrum beatae dignissimos rem, repudiandae culpa perferendis, ipsa
-                        mollitia amet maxime, temporibus adipisci! Temporibus reiciendis recusandae eius optio sit
-                        animi, amet quasi fuga pariatur, quod fugiat delectus omnis. Impedit architecto harum
-                        accusantium rem quos, quisquam aliquam quae ratione hic libero sapiente facere nobis voluptas
-                        eveniet beatae error ipsum voluptates ullam vero. Omnis dolore a tempore libero, facilis unde.
-                        Recusandae mollitia, dolor tenetur quam iusto maxime amet quis eligendi necessitatibus earum
-                        ipsa optio quia corrupti deserunt consequatur nisi, animi quod magnam iure dignissimos
-                        repudiandae illo ab odit beatae? Aliquam sit, ducimus eos mollitia assumenda non distinctio nisi
-                        suscipit! Sunt optio nesciunt quo, quas delectus sit dolore dicta natus, ad suscipit saepe
-                        beatae, voluptatem ipsa tempore provident magnam nobis. Architecto voluptates dolorem vel
-                        accusamus est labore minima alias atque. Natus, reiciendis quas. Labore necessitatibus similique
-                        eum, quibusdam officia fuga molestias eos cum dolore, ut mollitia fugit, odio veritatis possimus
-                        sequi! Quidem nulla tenetur, quos eius expedita, temporibus sit consectetur fugiat minus iure
-                        unde dolore architecto at aliquam maiores similique quae ratione. Eveniet perferendis eos
-                        commodi autem possimus numquam neque voluptate expedita, beatae assumenda quis ipsum, dolore
-                        necessitatibus. Eligendi repellat dolores consequuntur, quibusdam exercitationem tempora dolorem
-                        dolorum, minus id expedita porro. Labore molestiae sequi vero! Veritatis corrupti ut maxime,
-                        vero ad exercitationem porro, vel, impedit sunt tempore doloribus. Eum eaque ipsam illum quam ad
-                        culpa, commodi dolorum nam fuga minus repellendus, quo assumenda, hic quis amet explicabo.
-                        Doloremque obcaecati, ad mollitia voluptate adipisci quo nisi reiciendis ipsum, non commodi
-                        voluptatem est odio neque dignissimos fugiat eos dolor! Ducimus natus culpa officia cumque magni
-                        consequuntur, sunt molestias a illum ab ipsam excepturi, dolorum laudantium impedit eveniet,
-                        porro sapiente eaque rem! Saepe facere totam molestiae unde ea qui magnam expedita officiis ut
-                        sequi, esse consequuntur amet commodi officia dolorum modi sit voluptatem reprehenderit quis
-                        dignissimos labore magni. Odit debitis magnam assumenda est porro consequatur fugit consequuntur
-                        quisquam tenetur quas, fuga rem doloremque, recusandae quibusdam minima quam dignissimos quod
-                        ratione, voluptas perspiciatis maxime temporibus a! Modi illum ut delectus officia consectetur
-                        nam ex nobis, vel maiores neque explicabo! Ipsam odio ad eveniet consequatur?</p>
-
-                    </v-sheet>
-                  </div>
-                </div>
-              </v-container>
-            </v-card-text>
-          </v-card> -->
-        <!-- <details-view :subTopic="subTopic"></details-view>
-        </v-dialog> -->
-        <!-- QrDialog -->
         <v-dialog v-model="qrDialog" width="400px">
           <v-card style="width: 400px; height:auto; border-radius: 15px;">
             <v-card-title class="d-flex justify-content-between px-4"
@@ -151,7 +66,8 @@
           <td class=""><v-img :src="item.qrCodeUrl" alt="QR" class="qr" style="height: 50px; width: 50px;"
               @click="showQR(item)"></v-img></td>
           <td class="text-center">
-            <v-btn class="text-none" color="#48663f" min-width="100" rounded @click="showDetails(item)">View & Edit</v-btn>
+            <v-btn class="text-none" color="#48663f" min-width="100" rounded @click="showDetails(item)">View &
+              Edit</v-btn>
           </td>
           <td class="text-center">
             <!-- <v-icon size="large" color="teal-darken-3" class="me-4 mdi mdi-pencil" @click="editItem(item)"></v-icon> -->
@@ -168,13 +84,11 @@
   import axios from 'axios';
   import { mapGetters } from 'vuex';
   export default {
-    // components: {
-    //   DetailsView
-    // },
+
     data: () => ({
       dialog: false,
       // overlay: true,
-      detailsDialog: false,
+    
       qrDialog: false,
       dialogDelete: false,
       isHovered: false,
@@ -193,9 +107,7 @@
         { title: 'Details', align: 'center' },
         { title: 'Delete', align: 'center' },
       ],
-      editedIndex: -1,
-      editedItem: {},
-      defaultItem: {},
+
     }),
   
     computed: {
@@ -203,14 +115,15 @@
     mainheadings() {
       return this.getData;
     },
-      formTitle() {
-        return this.editedIndex === -1 ? 'Add Employee' : 'Edit Employee'
+      language() {
+        return this.$store.getters.getLanguage;
       },
-      formButton() {
-        return this.editedIndex === -1 ? 'Add' : 'Update'
-      },
-      employees() {
-        return this.$store.getters.getAllEmployees;
+      lang() {
+        if (this.language === 2) {
+          return 'English';
+        } else {
+          return 'Malayalam';
+        }
       }
     },
     watch: {
@@ -221,50 +134,40 @@
         val || this.closeDelete()
       },
     },
-    created() {
-      this.getDetails();
-    },
+
     mounted() {
       this.getTopics();
     },
     methods: {
       async getTopics() {
       try {
-        const response = await axios.get(`http://localhost:8086/DataEntry1/getMainComplete?dtId=2`);
-
+        const response = await axios.get(`http://localhost:8086/DataEntry1/getMainComplete?dtId=${this.language}`);
         if (response.status === 200) {
-          console.log(response.data);
-          // this.subTopic = response.data;
           this.$store.commit('setAllTopics', response.data);
         }
       } catch (error) {
-        console.log(error.message);
         console.error(error);
       }
     },
-      setFallbackImage(event) {
-          event.target.src = this.image;
-      },
-      
-      async showDetails(item) {
-        
-        try {
-          const response = await axios.get(`http://localhost:8086/qrcode/getScanDetails?dtId=2&commonId=${item.commonId}`);
 
+      translate() {
+        if (this.language === 1) {
+          this.$store.commit('setLanguage', 2);
+        } else {
+          this.$store.commit('setLanguage', 1);
+        }
+        this.getTopics()
+      },
+      async showDetails(item) {
+        try {
+          const response = await axios.get(`http://localhost:8086/qrcode/getScanDetails?dtId=${this.language}&commonId=${item.commonId}`);
         if (response.status === 200) {
-          console.log(response.data);
-          // this.subTopic = response.data;
-          console.log('item',response.data);
           this.$store.commit('setDetails', response.data)
           this.$router.push({name:'guide-edit'})
         }
       } catch (error) {
-        console.log(error.message);
         console.error(error);
       }
-        
-        // this.subTopic = Object.assign({}, item);
-        // this.detailsDialog = true;
       },
       showQR(item) {
         this.editedItem = Object.assign({}, item);
@@ -273,9 +176,7 @@
       closeQR() {
         this.qrDialog = false;
       },
-      closeDetails() {
-        this.detailsDialog = false;
-      },
+
       deleteItem(item) {
         this.editedIndex = this.employees.indexOf(item)
         this.editedItem = Object.assign({}, item)
@@ -310,37 +211,8 @@
           this.editedIndex = -1
         })
       },
-      editItem(item) {
-        this.editedIndex = this.employees.indexOf(item)
-        this.editedItem = Object.assign({}, item)
-        this.dialog = true
-      },
-      async add() {
-        this.loading = !this.loading
-        try {
-          const success = await this.$store.dispatch('addEmployees', {
-            email: this.editedItem.email,
-            name: this.editedItem.name,
-            mobile: this.editedItem.phoneNo,
-            temporary: this.editedItem.tempAddress,
-            permanent: this.editedItem.permAddress,
-            photo: "photo"
-          });
-          if (success) {
-            this.close();
-            this.message = 'Heading added successfully !!';
-            this.color = '#C8E6C9'
-            this.snackbar = true;
-            setInterval(()=>{window.location.reload();}, 2000)
-          }
-        }
-        catch (error) {
-          this.loading = false
-          this.message = error.message + '!!';
-          this.color = '#C62828';
-          this.snackbar = true;
-        }
-      },
+
+      
       downloadQR(qrCodeUrl) {
         
         axios.get(qrCodeUrl, { responseType: 'blob' })
@@ -361,40 +233,8 @@
       //   link.click();
       //   document.body.removeChild(link);
       // },
-      async update() {
-        this.loading = !this.loading
-        try {
-          const success = await this.$store.dispatch('editEmployees', {
-            id: this.editedItem.employeeId,
-            email: this.editedItem.email,
-            name: this.editedItem.name,
-            mobile: this.editedItem.phoneNo,
-            temporary: this.editedItem.tempAddress,
-            permanent: this.editedItem.permAddress,
-            photo: "photo"
-          });
-          if (success) {
-            this.close();
-            this.message = 'Heading details updated !!';
-            this.color = '#C8E6C9'
-            this.snackbar = true;
-            setInterval(() => { window.location.reload(); }, 2000)
-          }
-        }
-        catch (error) {
-          this.loading = false
-          this.message = error.message + '!!';
-          this.color = '#C62828';
-          this.snackbar = true;
-        }
-      },
-      close() {
-        this.dialog = false
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
-        })
-      },
+      
+      
     },
   };
   </script>

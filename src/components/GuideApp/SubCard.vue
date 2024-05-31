@@ -50,9 +50,10 @@
       </v-card>
     </v-dialog>
   </div>
-  <v-dialog v-model="editDialog" width="1000">
+  <v-dialog v-model="editDialog" width="1000" persistent>
     <edit-form :head="head" :description="description" :images="images" :video="video" :url="url" :audio="audio"
-      @finish="editDialog = false"></edit-form>
+      :commonId="commonId" @finish="editDialog = false" :uId="uId" @update="update" :main="main" :malId="malId"
+      :engId="engId"></edit-form>
   </v-dialog>
 </template>
 
@@ -60,6 +61,7 @@
 import EditForm from './EditForm.vue';
 
 export default {
+  emits:['update'],
   components: { EditForm },
   props: [
     "title",
@@ -69,7 +71,12 @@ export default {
     'video',
     'url',
     'commonId',
-    'audio'
+    'audio',
+    'uId',
+    'main',
+    'subtopic',
+    'malId',
+    'engId'
   ],
   data() {
     return {
@@ -82,22 +89,21 @@ export default {
   },
   
   methods: {
-    openEdit() {
-        
-        this.editDialog = true;
+    update() {
+      this.$emit('update');
+    },
+    openEdit() { 
+      this.editDialog = true;
     },
     openDialog(imageSrc) {
       this.selectedImage = imageSrc;
       this.dialog = true;
     },
     openVideoDialog() {
-      // Set the video URL to the one you want to display
-      // this.videoUrl = 'https://my-new-aks.s3.ap-south-1.amazonaws.com/1715602317290_talking_juracik_park_seed5948811234009426.mp4';
-      this.videoDialog = true; // Open the dialog
+      this.videoDialog = true; 
     },
     closeVideoDialog() {
-      this.videoDialog = false; // Close the dialog
-      // Optionally, pause the video when dialog closes
+      this.videoDialog = false; 
       const videoElement = this.$refs.videoPlayer;
       if (videoElement) {
         videoElement.pause();

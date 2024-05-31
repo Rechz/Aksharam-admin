@@ -553,6 +553,7 @@ try {
         const url = rootGetters.getUrl;
         const response = await axios.get(`${url}/api/stime/getSlot`);
         if (response.status === 200) {
+          console.log(response.data)
           commit('setSlots', response.data);
           return true;
         }

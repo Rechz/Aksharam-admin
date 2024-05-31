@@ -132,5 +132,13 @@ setDetails(state,payload){
     setSub2ideng(state, payload) {
       state.sub2ideng = payload;
       sessionStorage.setItem('subideng', payload);
-    },
+  },
+    setLanguage(state, payload) {
+      state.language = payload;
+      sessionStorage.setItem('language', payload);
+  },
+    setMedia(state, payload) {
+      state.mediaType = payload;
+      sessionStorage.setItem('mediaType', payload);
+  },
 };

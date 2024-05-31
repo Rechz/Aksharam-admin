@@ -158,7 +158,7 @@
         </template>
         <template v-else>
             <div style="height: 50vh;" class="my-5 d-flex flex-column justify-content-center align-items-center">
-                <v-btn color="green" class="mb-3" @click="step = 1" size="x-large" append-icon="mdi-step-forward"
+                <v-btn color="green" class="mb-3" @click="finish" size="x-large" append-icon="mdi-step-forward"
                     variant="outlined">Add
                     another sub of Subheadings</v-btn>
                 <v-btn color="green" class="mb-3" @click="addNewSub" prepend-icon="mdi-step-backward"
@@ -223,8 +223,8 @@ export default {
             urlRules: [v => !!v || '*URL is required'],
             audioFiles: [],
             videoFiles: [],
-            base_url: 'http://localhost:8086',
-            // base_url: 'http://192.168.193.232:8081',
+            // base_url: 'http://192.168.1.22:8081',
+            base_url: 'http://192.168.1.22:8081',
             message: '',
             loading: false,
             color: '',
@@ -248,6 +248,21 @@ export default {
         }
     },
     methods: {
+        finish() {
+            sessionStorage.clear();
+            this.step = 1
+            this.malSubHeading = ''
+            this.engSubHeading = ''
+            this.subhead = false;
+            this.malSubmit = false;
+            this.engSubmit = false;
+            this.audioEngSubmit = false;
+            this.audioMalSubmit = false;
+            this.videoEngSubmit = false;
+            this.videoMalSubmit = false;
+            this.imageSubmit = false;
+            this.languageAV = null;
+        },
         back() {
             this.$emit('back');
         },
@@ -415,9 +430,9 @@ export default {
             this.audioLoad = true;
             let uid = '';
             if (this.language === 1) {
-                uid = this.sub2idmal;
+                uid = this.subidmal;
             } else {
-                uid = this.sub2ideng;
+                uid = this.subideng;
             }
             const formData = new FormData();
             this.audioFiles.forEach((file) => {
@@ -431,12 +446,12 @@ export default {
                     if (this.languageAV === 1) {
                         this.message = 'Malayalam audio uploaded successfully';
                         this.audioMalSubmit = true;
-                        this.languageAV = 2;
+                        
                     }
                     else {
                         this.message = 'English audio uploaded successfully';
                         this.audioEngSubmit = true;
-                        this.languageAV = 1;
+                        
                     }
                     this.dialogHead = 'Success'
                     this.color = '#2E7D32'
@@ -458,9 +473,9 @@ export default {
             this.videoLoad = true;
             let uid = '';
             if (this.language === 1) {
-                uid = this.sub2idmal;
+                uid = this.subidmal;
             } else {
-                uid = this.sub2ideng;
+                uid = this.subideng;
             }
             const formData = new FormData();
             this.videoFiles.forEach((file) => {
@@ -474,12 +489,12 @@ export default {
                     if (this.languageAV === 1) {
                         this.message = 'Malayalam video uploaded successfully';
                         this.videoMalSubmit = true;
-                        this.languageAV = 2;
+                       
                     }
                     else {
                         this.message = 'English video uploaded successfully';
                         this.videoEngSubmit = true;
-                        this.languageAV = 1;
+                        
                     }
                     this.dialogHead = 'Success'
                     this.color = '#2E7D32'

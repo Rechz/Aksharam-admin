@@ -319,7 +319,7 @@ export default {
             urlRules: [v => !!v || '*URL is required'],
             audioFiles: [],
             videoFiles: [],
-            base_url: 'http://localhost:8086',
+            base_url: 'http://192.168.1.22:8081',
             // base_url: 'http://192.168.193.232:8081',
             message: '',
             loading: false,
@@ -558,13 +558,11 @@ export default {
                     this.audioLoad = false;
                     if (this.languageAV === 1) {
                         this.message = 'Malayalam audio uploaded successfully';
-                        this.audioMalSubmit = true;
-                        this.languageAV = 2;
+                        this.audioMalSubmit = true;   
                     }
                     else {
                         this.message = 'English audio uploaded successfully';
-                        this.audioEngSubmit = true;
-                        this.languageAV = 1;
+                        this.audioEngSubmit = true;   
                     }
                     this.dialogHead = 'Success'
                     this.color = '#2E7D32'
@@ -603,12 +601,12 @@ export default {
                     if (this.languageAV === 1) {
                         this.message = 'Malayalam video uploaded successfully';
                         this.videoMalSubmit = true;
-                        this.languageAV = 2;
+                        
                     }
                     else {
                         this.message = 'English video uploaded successfully';
                         this.videoEngSubmit = true;
-                        this.languageAV = 1;
+                        
                     }
                     this.dialogHead = 'Success'
                     this.color = '#2E7D32'

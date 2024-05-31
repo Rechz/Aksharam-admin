@@ -20,30 +20,28 @@
         <div class="mb-5 ">
             <SubCard :description="subTopic.description" :images="subTopic.imgDataList ? subTopic.imgDataList : []"
                 :video="subTopic.mp4DataList" :head="subTopic.title" :url="subTopic.referenceUrl"
-                :commonId="subTopic.commonId" :audio="subTopic.mp3DataList" />
+                :commonId="subTopic.commonId" :audio="subTopic.mp3DataList" :uId="subTopic.uId" @update="updateDetails"
+                :main="true" :subtopic="subTopic.combinedDataSubList" />
         </div>
         <div v-for="(topic,index) in subTopic.combinedDataSubList" :key="index" class="my-5">
             <div v-if="index % 2 === 0" class="mt-3 ">
-                <SubReverse 
-                    :head="topic.title" 
-                    :title="topic.title" 
-                    :description="topic.description"
+                <SubReverse :head="topic.title" :title="topic.title" :description="topic.description"
                     :images="topic.imgDataList ? topic.imgDataList : []" :video="topic.mp4DataList"
-                    :audio="topic.mp3DataList" />
+                    :url="topic.referenceUrl" :audio="topic.mp3DataList" :commonId="subTopic.commonId" :uId="topic.uId"
+                    :main="false" @update="updateDetails" :subtopic="topic.combinedDataSubSubList" />
             </div>
-            <div v-else class="my-5">
-                <SubCard 
-                    :head="topic.title" 
-                    :title="topic.title" 
-                    :description="topic.description"
+            <div v-else class=" my-5">
+                <SubCard :head="topic.title" :title="topic.title" :description="topic.description"
                     :images="topic.imgDataList ? topic.imgDataList : []" :video="topic.mp4DataList"
-                    :audio="topic.mp3DataList" />
+                    :url="topic.referenceUrl" :audio="topic.mp3DataList" :commonId="subTopic.commonId" :uId="topic.uId"
+                    :main="false" @update="updateDetails" :subtopic="topic.combinedDataSubSubList" />
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import axios from 'axios'
 import SubCard from './SubCard.vue';
 import SubReverse from './SubReverse.vue'
 export default {
@@ -51,14 +49,62 @@ export default {
         SubCard,
         SubReverse
     },
-    
+    data() {
+        return {
+        base_url: 'http://localhost:8086'
+      }  
+    },
+    methods: {
+        async getType() {
+            try {
+                const response = await axios.get(`${this.base_url}/fileType/getFileType`);
+                if (response.status >= 200 && response.status < 300) {
+                    // this.fileTypes = response.data;
+                    const fileType = {};
+                    response.data.forEach(item => {
+                        fileType[item.fileType.toLowerCase()] = item.id;
+                    });
+                    this.$store.commit('setMedia', fileType);
+                }
+            }
+            catch (err) {
+                console.log(err)
+            }
+        },
+        async updateDetails() {
+            try {
+                const response = await axios.get(`${this.base_url}/qrcode/getScanDetails?dtId=${this.language}&commonId=${this.subTopic.commonId}`);
+
+                if (response.status === 200) {
+                    this.$store.commit('setDetails', response.data)
+                }
+            } catch (error) {
+                console.log(error.message);
+                console.error(error);
+            }
+        },
+        translate() {
+            if (this.language === 1) {
+                this.$store.commit('setLanguage', 2);
+            } else {
+                this.$store.commit('setLanguage', 1);
+            }
+            this.updateDetails()
+        }
+        // this.subTopic = Object.assign({}, item);
+        // this.detailsDialog = true;
+   
+    },
     computed: {
         subTopic() {
             return this.$store.getters.getDetail[0];
         },
+        language() {
+            return this.$store.getters.getLanguage;
+        }
     },
     mounted() {
-        console.log(this.$store.getters.getDetail)
+        this.getType();
         document.body.style.backgroundImage = 'linear-gradient(to bottom,#0B0F0A,#56754E)';
     },
     beforeUnmount() {

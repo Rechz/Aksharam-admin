@@ -65,81 +65,77 @@
       <v-text-field label="Search" v-model="search" prepend-inner-icon="mdi-magnify" class="search mt-5"
         density="compact" single-line></v-text-field>
     </div>
+    <v-dialog v-model="dialogDelete" width="400px">
+      <v-card class="rounded-4 pb-4">
+        <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
+          Employee</v-card-title>
+        <v-container class="px-4 d-flex flex-column align-items-center">
+          <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
+          <v-card-text class="mt-1 text-center">Are you sure you want to delete?</v-card-text>
+        </v-container>
+        <v-card-actions class="mx-4 d-flex flex-column align-items-center">
+          <v-btn block class="rounded-4 text-white mb-3" style="background-color: #BA1A1A;"
+            @click="deleteItemConfirm">Delete</v-btn>
+          <v-btn block variant="text" class="rounded-4 mb-3" @click="closeDelete">Cancel</v-btn>
+
+        </v-card-actions>
+
+      </v-card>
+    </v-dialog>
+    <!-- Add new dialog for displaying details -->
+    <v-dialog v-model="detailsDialog" width="400px">
+      <v-card style="width: 680px; height:auto; border-radius: 15px;">
+        <v-card-title class="d-flex justify-content-between px-4" style="background-color: #216D17; color: #FFFFFF;">
+          <h4>Employee Details</h4>
+          <v-icon @click="closeDetails" class="mdi mdi-window-close"></v-icon>
+        </v-card-title>
+        <v-card-text class="mb-0  ms-1 pt-2 pb-4">
+          <v-container class="py-0 d-flex flex-column">
+            <div class="row emp-details">
+              <div class="col-8">
+                <v-row class="mb-2 mt-2">
+                  <div class="col-4">Emp ID</div>
+                  <div class="col-8">: {{ editedItem.employeeId }}</div>
+                </v-row>
+                <v-row class="mb-2">
+                  <div class="col-4">Name</div>
+                  <div class="col-8">: {{ editedItem.name }}</div>
+                </v-row>
+                <v-row class="mb-2">
+                  <div class="col-4">Contact</div>
+                  <div class="col-8">: {{ editedItem.phoneNo }}</div>
+                </v-row>
+                <v-row class="mb-2 mt-2">
+                  <div class="col-4">Temporary Address</div>
+                  <div class="col-8 d-flex">: <div class="ms-1">
+                      <pre style="font-family: 'Arial', sans-serif; font-size: 14px;"
+                        class="mb-0">{{ editedItem.tempAddress }}</pre>
+                    </div>
+                  </div>
+                </v-row>
+                <v-row class="mb-2 mt-2">
+                  <div class="col-4">Permanent Address</div>
+                  <div class="col-8 d-flex">: <div class="ms-1">
+                      <pre style="font-family: 'Arial', sans-serif; font-size: 14px;"
+                        class="mb-0">{{ editedItem.permAddress }}</pre>
+                    </div>
+                  </div>
+                </v-row>
+                <v-row class="mb-2">
+                  <div class="col-4">Email</div>
+                  <div class="col-8">: {{ editedItem.email }}</div>
+                </v-row>
+              </div>
+              <div class="col-4 d-flex justify-content-center align-items-center">
+                <v-img src='@/assets/acc.jpg' alt="employee" style="height: 184px;"></v-img>
+              </div>
+            </div>
+          </v-container>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
     <v-data-table :headers="headers" :items="filteredEmployees" class="mt-3" item-value="id"
       :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
-      <template v-slot:top>
-        <v-dialog v-model="dialogDelete" width="400px">
-          <v-card class="rounded-4 pb-4">
-            <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
-              Employee</v-card-title>
-            <v-container class="px-4 d-flex flex-column align-items-center">
-              <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
-              <v-card-text class="mt-1 text-center">Are you sure you want to delete?</v-card-text>
-            </v-container>
-            <v-card-actions class="mx-4 d-flex flex-column align-items-center">
-              <v-btn block class="rounded-4 text-white mb-3" style="background-color: #BA1A1A;"
-                @click="deleteItemConfirm">Delete</v-btn>
-              <v-btn block variant="text" class="rounded-4 mb-3" @click="closeDelete">Cancel</v-btn>
-
-            </v-card-actions>
-
-          </v-card>
-        </v-dialog>
-        <!-- Add new dialog for displaying details -->
-        <v-dialog v-model="detailsDialog" width="400px">
-          <v-card style="width: 680px; height:auto; border-radius: 15px;">
-            <v-card-title class="d-flex justify-content-between px-4"
-              style="background-color: #216D17; color: #FFFFFF;">
-              <h4>Employee Details</h4>
-              <v-icon @click="closeDetails" class="mdi mdi-window-close"></v-icon>
-            </v-card-title>
-            <v-card-text class="mb-0  ms-1 pt-2 pb-4">
-              <v-container class="py-0 d-flex flex-column">
-                <div class="row emp-details">
-                  <div class="col-8">
-                    <v-row class="mb-2 mt-2">
-                      <div class="col-4">Emp ID</div>
-                      <div class="col-8">: {{ editedItem.employeeId }}</div>
-                    </v-row>
-                    <v-row class="mb-2">
-                      <div class="col-4">Name</div>
-                      <div class="col-8">: {{ editedItem.name }}</div>
-                    </v-row>
-                    <v-row class="mb-2">
-                      <div class="col-4">Contact</div>
-                      <div class="col-8">: {{ editedItem.phoneNo }}</div>
-                    </v-row>
-                    <v-row class="mb-2 mt-2">
-                      <div class="col-4">Temporary Address</div>
-                      <div class="col-8 d-flex">: <div class="ms-1">
-                          <pre style="font-family: 'Arial', sans-serif; font-size: 14px;"
-                            class="mb-0">{{ editedItem.tempAddress }}</pre>
-                        </div>
-                      </div>
-                    </v-row>
-                    <v-row class="mb-2 mt-2">
-                      <div class="col-4">Permanent Address</div>
-                      <div class="col-8 d-flex">: <div class="ms-1">
-                          <pre style="font-family: 'Arial', sans-serif; font-size: 14px;"
-                            class="mb-0">{{ editedItem.permAddress }}</pre>
-                        </div>
-                      </div>
-                    </v-row>
-                    <v-row class="mb-2">
-                      <div class="col-4">Email</div>
-                      <div class="col-8">: {{ editedItem.email }}</div>
-                    </v-row>
-                  </div>
-                  <div class="col-4 d-flex justify-content-center align-items-center">
-                    <v-img src='@/assets/acc.jpg' alt="employee" style="height: 184px;"></v-img>
-                  </div>
-                </div>
-              </v-container>
-            </v-card-text>
-          </v-card>
-        </v-dialog>
-      </template>
-      <!-- <template v-slot:item="{ item, index }"> -->
       <template v-slot:item="{ item, index }">
         <tr style="background-color:#FCFDF6; color:black;">
           <!-- <td class="text-center">{{ index + 1 }}</td> -->
@@ -256,7 +252,7 @@ export default {
       this.dialogDelete = true
     },
     async deleteItemConfirm() {
-      this.loading = !this.loading
+      this.loading = true;
       try {
         const id = this.editedItem.employeeId;
         const success = await this.$store.dispatch('deleteEmployee', id)
@@ -266,7 +262,7 @@ export default {
           this.color = '#C8E6C9'
           this.closeDelete();
           this.snackbar = true;
-          setInterval(() => { window.location.reload(); }, 2000)
+          setInterval(() => { this.getAllDetails(); this.getDetails(); }, 1000)
         }
       }
       catch (error) {
@@ -290,7 +286,7 @@ export default {
       this.dialog = true
     },
     async add() {
-      this.loading = !this.loading
+      this.loading = true;
       try {
         const success = await this.$store.dispatch('addEmployees', {
           email: this.editedItem.email,
@@ -301,11 +297,12 @@ export default {
           photo: "photo"
         });
         if (success) {
+          this.loading = false;
           this.close();
           this.message = 'Employee added successfully !!';
           this.color = '#C8E6C9'
           this.snackbar = true;
-          setInterval(()=>{window.location.reload();}, 2000)
+          setInterval(() => { this.getAllDetails(); this.getDetails(); }, 1000)
         }
       }
       catch (error) {
@@ -316,7 +313,7 @@ export default {
       }
     },
     async update() {
-      this.loading = !this.loading
+      this.loading = true;
       try {
         const success = await this.$store.dispatch('editEmployees', {
           id: this.editedItem.employeeId,
@@ -328,11 +325,12 @@ export default {
           photo: "photo"
         });
         if (success) {
+          this.loading = false;
           this.close();
           this.message = 'Employee details updated !!';
           this.color = '#C8E6C9'
           this.snackbar = true;
-          setInterval(() => { window.location.reload(); }, 2000)
+          setInterval(() => { this.getAllDetails(); this.getDetails(); }, 1000)
         }
       }
       catch (error) {
