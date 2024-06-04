@@ -57,7 +57,7 @@
                             </div>
                             <div>
                                 <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
-                                    @click="step++">Skip</v-btn>
+                                    @click="step++" v-if="!proceed && qrGenerated">Skip</v-btn>
                             </div>
 
                         </div>
@@ -326,14 +326,15 @@ export default {
             urlRules: [v => !!v || '*URL is required'],
             audioFiles: [],
             videoFiles: [],
-            base_url: 'http://localhost:8086',
-            // base_url: 'http://192.168.193.232:8081',
+            // base_url: 'http://localhost:8086',
+            base_url: 'http://localhost:8081',
             message: '',
             loading: false,
             color: '',
             icon:'',
             dialogTopic: false,
             dialogHead: '',  
+            qrGenerated: false 
             
         };
     },
@@ -352,7 +353,7 @@ export default {
    
     methods: {
         async generateQR() {
-            this.QRLoad = true;
+            // this.QRLoad = true;
             this.QRLoading = true;
             try {
                 const response = await axios.get(`${this.base_url}/qrcode/generate?mMalUid=${this.idmal}&mEngUid=${this.ideng}`);
@@ -363,6 +364,8 @@ export default {
                     this.dialogHead = 'Success'
                     this.color = '#2E7D32'
                     this.dialogTopic = true;
+                    this.qrGenerated = true;
+                    this.QRLoad = true;
                     this.step++;
                 }
             } 
