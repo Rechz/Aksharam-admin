@@ -21,15 +21,15 @@
             <v-form class="pt-0" ref="form" @submit.prevent="submitHeading">
                 <div class="d-flex">
                     <div>
-                    <v-select class="select" label='Select Language' density="comfortable" :items="languages"
-                        v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"
-                        single-line></v-select>
-                    <v-text-field v-model="title" :label="language === 1 ? 'തലക്കെട്ട്' : 'Sub Heading'"
-                        density="comfortable" class="select" :rules="titleRules" single-line></v-text-field>
-                    <v-textarea :label="language === 1 ? 'വിവരണം' : 'Subheading Description'" class="desc" rows="6"
-                        v-model="description" :rules="descriptionRules" single-line></v-textarea>
-                    <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
-                        class="reference" rows="2" v-model="url" single-line></v-textarea>
+                        <v-select class="select" label='Select Language' density="comfortable" :items="languages"
+                            v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"
+                            single-line></v-select>
+                        <v-text-field v-model="title" :label="language === 1 ? 'തലക്കെട്ട്' : 'Sub Heading'"
+                            density="comfortable" class="select" :rules="titleRules" single-line></v-text-field>
+                        <v-textarea :label="language === 1 ? 'വിവരണം' : 'Subheading Description'" class="desc" rows="6"
+                            v-model="description" :rules="descriptionRules" single-line></v-textarea>
+                        <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
+                            class="reference" rows="2" v-model="url" single-line></v-textarea>
                     </div>
                     <div class="d-flex flex-column ">
                         <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malSubHeading }}
@@ -42,13 +42,18 @@
 
                 </div>
                 <div class="d-flex justify-content-between  gap-2">
-                    <v-btn color="#386568" size="large" class="text-capitalize" type="submit" :disabled="subload"
-                        variant="elevated" rounded :loading="subload">Add {{ topic }} sub topic</v-btn>
+                    <div class="d-flex gap-2">
+                        <v-btn v-if="QRLoad" color="#386568" size="large" class="text-capitalize" type="submit"
+                            :disabled="subload" variant="elevated" rounded :loading="subload">Add {{ topic }} sub
+                            topic</v-btn>
+                        <v-btn v-else color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
+                            :disabled="QRLoad" :loading="QRLoading" @click="generateQR">Submit & Proceed</v-btn>
+                    </div>
                     <div class="d-flex gap-2">
                         <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
                             @click="back">Back</v-btn>
                         <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
-                            @click="step++">Skip</v-btn>
+                            v-if="!proceed && qrGenerated" @click="step++">Skip</v-btn>
                     </div>
                 </div>
             </v-form>
@@ -242,7 +247,7 @@ export default {
             audioFiles: [],
             videoFiles: [],
             // base_url: 'http://localhost:8086',
-            base_url: 'http://localhost:8086',
+            base_url: 'http://localhost:8081',
             message: '',
             loading: false,
             color: '',
@@ -251,6 +256,9 @@ export default {
             dialogHead: '',  
             subidmal: this.$store.getters.subidmal ||'',
             subideng: this.$store.getters.subideng || '',
+            qrGenerated: false,
+            QRLoad: true,
+            QRLoading: false,
         };
     },
     computed: {
@@ -266,6 +274,34 @@ export default {
         }
     },
     methods: {
+        async generateQR() {
+            // this.QRLoad = true;
+            this.QRLoading = true;
+            try {
+                const response = await axios.get(`${this.base_url}/DataEntry2/genCommonId?engId=${this.subideng}&malId=${this.subidmal}`);
+                if (response.status >= 200 && response.status < 300) {
+                    this.icon = 'mdi mdi-check-circle-outline'
+                    this.QRLoading = false;
+                    this.message = 'QR code generated successfully. Proceed to next steps.';
+                    this.dialogHead = 'Success'
+                    this.color = '#2E7D32'
+                    this.dialogTopic = true;
+                    this.qrGenerated = true;
+                    this.QRLoad = true;
+                    this.step++;
+                }
+            }
+            catch (error) {
+                this.QRLoad = false;
+                this.QRLoading = false;
+                this.icon = 'mdi mdi-alert-outline'
+                this.imageSubmit = false;
+                this.color = '#BA1A1A';
+                this.dialogHead = 'Error';
+                this.message = 'Error uploading images:' + error.message;
+                this.dialogTopic = true;
+            }
+        },
         finish() {
             sessionStorage.clear();
             this.step = 1
@@ -534,6 +570,7 @@ export default {
         proceed(newValue) {
             if (!newValue) {
                 this.language = null;
+                this.QRLoad = false
             }
         }
     },

@@ -51,7 +51,8 @@ export default {
     },
     data() {
         return {
-        base_url: 'http://localhost:8086'
+            // base_url: 'http://localhost:8086'
+            base_url: 'http://localhost:8081'
       }  
     },
     methods: {

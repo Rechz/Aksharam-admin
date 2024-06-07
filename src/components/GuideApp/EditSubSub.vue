@@ -224,7 +224,7 @@ export default {
             audioFiles: [],
             videoFiles: [],
             // base_url: 'http://localhost:8086',
-            base_url: 'http://localhost:8086',
+            base_url: 'http://localhost:8081',
             message: '',
             loading: false,
             color: '',

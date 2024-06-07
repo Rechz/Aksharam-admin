@@ -4,10 +4,20 @@
       <div class="text-card pe-5 pt-5 mb-5">
         <!-- <div class="details "> -->
         <div class="details-content">
-          <h4 class="text-start title">{{ title }}</h4>
-          <p class="desc text-start">
-          <pre class="text-wrap desc text-justify pe-2">{{ description }}</pre>
-          </p>
+          <div class="d-flex gap-3 align-items-center">
+            <v-icon class="mdi mdi-arrow-right text-white"
+              v-if="title && subtopic.length && subtopic.length > 0"></v-icon>
+            <h4 class="text-start title my-0">{{ title }}</h4>
+
+          </div>
+          <div class="desc text-start">
+            <pre class="text-wrap desc text-justify pe-2">
+            {{ description }}
+            <ul v-for="topic in subtopic" :key="topic.uId">
+            <li class="text-capitalize text-start" style="direction: ltr;">{{ topic.title }}</li>
+          </ul>
+          </pre>
+          </div>
           <!-- </div> -->
         </div>
         <!-- <v-btn @click="console.log(audio[0].furl)">click</v-btn> -->

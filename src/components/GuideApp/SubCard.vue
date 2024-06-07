@@ -1,15 +1,22 @@
 <template>
   <div class="sub-card">
     <div class="text-card ps-5 pt-5">
-      <!-- <div class="details pb-2"> -->
       <div class="details-content">
-        <h4 class="text-start title">{{ title }}</h4>
+        <div class="d-flex gap-3 align-items-center">
+          <h4 class="text-start title my-0">{{ title }}</h4>
+          <v-icon class="mdi mdi-arrow-right text-white" v-if="title && subtopic.length && subtopic.length>0" ></v-icon>
+        </div>
         <p class="desc">
-        <pre class="text-wrap desc text-justify ps-2">{{ description }}</pre>
+        <pre class="text-wrap desc text-justify text-start ps-3">
+            {{ description }}
+            <ul v-for="topic in subtopic" :key="topic.uId">
+            <li class="text-capitalize text-start" style="direction: ltr;">{{ topic.title }}</li>
+          </ul>
+          </pre>
+
         </p>
-        <!-- </div> -->
+
       </div>
-      <!-- <v-btn @click="console.log(audio)">click</v-btn> -->
       <div class="d-flex justify-content-center mt-5">
         <audio controls class="mt-3 mx-3 w-100" v-if="audio.length > 0" :src="audio[0].furl" type="audio/*">
           Your browser does not support the audio element.

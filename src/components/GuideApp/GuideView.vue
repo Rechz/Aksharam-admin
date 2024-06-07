@@ -3,8 +3,8 @@
   <v-container class="py-8 px-0" fluid>
     <div class="d-flex justify-content-end mb-4">
       <v-btn-toggle rounded="xl" color="green-lighten-5" v-model="lang" density="compact">
-        <v-btn value="English" @click="translate" size="small">English</v-btn>
-        <v-btn value="Malayalam" @click="translate" size="small">Malayalam</v-btn>
+        <v-btn value="English" @click="translate(2)" size="small">English</v-btn>
+        <v-btn value="Malayalam" @click="translate(1)" size="small">Malayalam</v-btn>
 
       </v-btn-toggle>
     </div>
@@ -88,7 +88,8 @@
     data: () => ({
       dialog: false,
       // overlay: true,
-    base_url: 'http://localhost:8086',
+      // base_url: 'http://localhost:8086',
+      base_url: 'http://localhost:8081',
       qrDialog: false,
       dialogDelete: false,
       isHovered: false,
@@ -121,9 +122,11 @@
       lang() {
         if (this.language === 2) {
           return 'English';
-        } else {
+        }
+        if (this.language === 1) {
           return 'Malayalam';
         }
+        return '';
       }
     },
     watch: {
@@ -150,12 +153,13 @@
       }
     },
 
-      translate() {
-        if (this.language === 1) {
-          this.$store.commit('setLanguage', 2);
-        } else {
-          this.$store.commit('setLanguage', 1);
-        }
+      translate(language) {
+        this.$store.commit('setLanguage', language);
+        // if (this.language === 1) {
+        //   this.$store.commit('setLanguage', 2);
+        // } else {
+        //   this.$store.commit('setLanguage', 1);
+        // }
         this.getTopics()
       },
       async showDetails(item) {

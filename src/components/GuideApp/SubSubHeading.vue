@@ -41,13 +41,18 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-between  gap-2">
-                    <v-btn color="#386568" size="large" class="text-capitalize" type="submit" :disabled="subload"
-                        variant="elevated" rounded :loading="subload">Add {{ topic }} sub topic</v-btn>
+                    <div class="d-flex gap-2">
+                        <v-btn v-if="QRLoad" color="#386568" size="large" class="text-capitalize" type="submit"
+                            :disabled="subload" variant="elevated" rounded :loading="subload">Add {{ topic }} sub
+                            topic</v-btn>
+                        <v-btn v-else color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
+                            :disabled="QRLoad" :loading="QRLoading" @click="generateQR">Submit & Proceed</v-btn>
+                    </div>
                     <div class="d-flex gap-2">
                         <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
                             @click="back">Back</v-btn>
                         <v-btn color="#386568" size="large" class="text-capitalize" variant="outlined" rounded
-                            @click="step++">Next</v-btn>
+                            v-if="!proceed && qrGenerated" @click="step++">Skip</v-btn>
                     </div>
                 </div>
 
@@ -230,7 +235,7 @@ export default {
             audioFiles: [],
             videoFiles: [],
             // base_url: 'http://localhost:8086',
-            base_url: 'http://localhost:8086',
+            base_url: 'http://localhost:8081',
             message: '',
             loading: false,
             color: '',
@@ -239,6 +244,9 @@ export default {
             dialogHead: '',
             subidmal: this.$store.getters.sub2idmal || '',
             subideng: this.$store.getters.sub2ideng || '',
+            qrGenerated: false,
+            QRLoad: true,
+            QRLoading: false,
         };
     },
     computed: {
@@ -254,6 +262,34 @@ export default {
         }
     },
     methods: {
+        async generateQR() {
+            // this.QRLoad = true;
+            this.QRLoading = true;
+            try {
+                const response = await axios.get(`${this.base_url}/DataEntry3/generateSSid?englishId=${this.subideng}&malId=${this.subidmal}`);
+                if (response.status >= 200 && response.status < 300) {
+                    this.icon = 'mdi mdi-check-circle-outline'
+                    this.QRLoading = false;
+                    this.message = 'QR code generated successfully. Proceed to next steps.';
+                    this.dialogHead = 'Success'
+                    this.color = '#2E7D32'
+                    this.dialogTopic = true;
+                    this.qrGenerated = true;
+                    this.QRLoad = true;
+                    this.step++;
+                }
+            }
+            catch (error) {
+                this.QRLoad = false;
+                this.QRLoading = false;
+                this.icon = 'mdi mdi-alert-outline'
+                this.imageSubmit = false;
+                this.color = '#BA1A1A';
+                this.dialogHead = 'Error';
+                this.message = 'Error uploading images:' + error.message;
+                this.dialogTopic = true;
+            }
+        },
         finish() {
             sessionStorage.clear();
             this.step = 1
@@ -523,6 +559,7 @@ export default {
         proceed(newValue) {
             if (!newValue) {
                 this.language = null;
+                this.QRLoad = false;
             }
         }
     },
