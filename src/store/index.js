@@ -5,9 +5,9 @@ import rootGetters from './getters.js';
 const store = createStore({
   state() {
     return {
-      base_url: 'http://localhost:8448',
+      // base_url: 'http://localhost:8448',
       // base_url: 'http://192.168.1.17:5000',
-      // base_url: 'https://aksharammuseum.com',
+      base_url: 'https://aksharammuseum.com',
       token: sessionStorage.getItem('token') || '',
       language: sessionStorage.getItem('language') || 2,
       mediaType: sessionStorage.getItem('mediaType') || {},

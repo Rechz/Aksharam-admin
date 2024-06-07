@@ -130,7 +130,7 @@ export default {
         referenceUrl: this.url,
         fsCommonId: this.commonId,
         mp3DataList: this.audio,
-        uId: this.uid,
+        uId: this.uId,
         combinedDataSubSubList: this.subtopic,
         fsMalId: this.malId,
         fsEngId: this.engId

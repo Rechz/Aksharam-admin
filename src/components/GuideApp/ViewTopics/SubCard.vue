@@ -4,7 +4,8 @@
       <div class="details-content">
         <div class="d-flex gap-3 align-items-center">
           <h4 class="text-start title my-0">{{ title }}</h4>
-          <v-icon class="mdi mdi-arrow-right text-white" v-if="title && subtopic.length && subtopic.length>0" @click="displaySub"></v-icon>
+          <v-icon class="mdi mdi-arrow-right text-white" v-if="title && subtopic.length && subtopic.length>0"
+            @click="displaySub"></v-icon>
         </div>
         <p class="desc">
         <pre class="text-wrap desc text-justify text-start ps-3">
@@ -62,6 +63,21 @@
       :commonId="commonId" @finish="editDialog = false" :uId="uId" @update="update" :main="main" :malId="malId"
       :engId="engId" :subtopic="subtopic"></edit-form>
   </v-dialog>
+  <v-dialog v-model="dialogDelete" width="400px">
+    <v-card class="rounded-4 pb-4">
+      <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
+        Heading</v-card-title>
+      <v-container class="px-4 d-flex flex-column align-items-center">
+        <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
+        <v-card-text class="mt-1 text-center">Are you sure you want to delete?</v-card-text>
+      </v-container>
+      <v-card-actions class="mx-4 d-flex flex-column align-items-center">
+        <v-btn block class="rounded-4 text-white mb-3" style="background-color: #BA1A1A;"
+          @click="deleteItemConfirm">Delete</v-btn>
+        <v-btn block variant="text" class="rounded-4 mb-3" @click="closeDelete">Cancel</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -88,6 +104,7 @@ export default {
   data() {
     return {
       dialog: false,
+      dialogDelete: false,
       selectedImage: null,
       videoDialog: false,
       videoUrl: '',
@@ -126,7 +143,7 @@ export default {
         referenceUrl: this.url,
         fsCommonId: this.commonId,
         mp3DataList: this.audio,
-        uId: this.uid,
+        uId: this.uId,
         combinedDataSubSubList: this.subtopic,
         fsMalId: this.malId,
         fsEngId: this.engId
