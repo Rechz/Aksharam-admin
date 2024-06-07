@@ -45,5 +45,6 @@ export default {
   sub2ideng: (state) => state.sub2ideng,
   getSlots: (state) => state.slots,
   getLanguage: (state) => state.language,
-  getMedia:(state) => state.mediaType
+  getMedia: (state) => state.mediaType,
+  getFirstSubData: (state) => state.firstSubData
 }

@@ -263,7 +263,7 @@
                         prepend-icon="mdi-step-backward">Finish & Add New Topic</v-btn>
                 </div>
                 <SubHeading v-else @add-new-topic="finish" :malHeading="malHeading" :engHeading="engHeading"
-                    @back-main="finish" :idmal="idmal" :ideng="ideng" @back="step = 1; subhead = false;" />
+                    @back-main="finish" :idmal="idmal" :ideng="ideng" @back="step = 4; subhead = false;" />
             </template>
         </v-stepper>
     </v-container>
@@ -328,6 +328,7 @@ export default {
             videoFiles: [],
             // base_url: 'http://localhost:8086',
             base_url: 'http://localhost:8081',
+            // base_url: 'http://192.168.1.32:8081',
             message: '',
             loading: false,
             color: '',

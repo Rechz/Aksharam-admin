@@ -88,7 +88,7 @@
     data: () => ({
       dialog: false,
       // overlay: true,
-      // base_url: 'http://localhost:8086',
+      // base_url: 'http://192.168.1.32:8081',
       base_url: 'http://localhost:8081',
       qrDialog: false,
       dialogDelete: false,

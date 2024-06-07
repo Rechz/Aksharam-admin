@@ -4,7 +4,7 @@
       <div class="details-content">
         <div class="d-flex gap-3 align-items-center">
           <h4 class="text-start title my-0">{{ title }}</h4>
-          <v-icon class="mdi mdi-arrow-right text-white" v-if="title && subtopic.length && subtopic.length>0" ></v-icon>
+          <v-icon class="mdi mdi-arrow-right text-white" v-if="title && subtopic.length && subtopic.length>0" @click="displaySub"></v-icon>
         </div>
         <p class="desc">
         <pre class="text-wrap desc text-justify text-start ps-3">
@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import EditForm from './EditForm.vue';
+import EditForm from '../MainTopicEdit/EditForm.vue';
 
 export default {
   emits:['update'],
@@ -116,6 +116,25 @@ export default {
         videoElement.pause();
       }
     },
+    displaySub() {
+      const props = {
+        title: this.title,
+        head: this.title,
+        description: this.description,
+        imgDataList: this.images,
+        mp4DataList: this.video,
+        referenceUrl: this.url,
+        fsCommonId: this.commonId,
+        mp3DataList: this.audio,
+        uId: this.uid,
+        combinedDataSubSubList: this.subtopic,
+        fsMalId: this.malId,
+        fsEngId: this.engId
+      }
+      this.$store.commit('setFirstSubData',props)
+      this.$router.push({ name: 'guide-sub-view' })
+      console.log('sub',props)
+    }
   },
 };
 </script>
@@ -153,16 +172,9 @@ export default {
   width: 100%;  
   height: 100%;
 }
-/* .sub-image {
-  width: 50%;  
-  aspect-ratio: 271 / 200; 
-  position: absolute;
-  left: 75%;
-  top: 12%;
-} */
+
 .desc,.details-content {
-  /* padding-right: 25%; */
-  /* padding-left: 5%; */
+
   width: 100%;
   font-size: 110%;
   line-height: 180% ;

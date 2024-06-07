@@ -21,20 +21,22 @@
             <SubCard :description="subTopic.description" :images="subTopic.imgDataList ? subTopic.imgDataList : []"
                 :video="subTopic.mp4DataList" :head="subTopic.title" :url="subTopic.referenceUrl"
                 :commonId="subTopic.commonId" :audio="subTopic.mp3DataList" :uId="subTopic.uId" @update="updateDetails"
-                :main="true" :subtopic="subTopic.combinedDataSubList" :malId="subTopic.malId" :engId="subTopic.engId"/>
+                :main="true" :subtopic="subTopic.combinedDataSubList" :malId="subTopic.malId" :engId="subTopic.engId" />
         </div>
         <div v-for="(topic,index) in subTopic.combinedDataSubList" :key="index" class="my-5">
             <div v-if="index % 2 === 0" class="mt-3 ">
                 <SubReverse :head="topic.title" :title="topic.title" :description="topic.description"
                     :images="topic.imgDataList ? topic.imgDataList : []" :video="topic.mp4DataList"
-                    :url="topic.referenceUrl" :audio="topic.mp3DataList" :commonId="subTopic.commonId" :uId="topic.uId"
-                    :main="false" @update="updateDetails" :subtopic="topic.combinedDataSubSubList" />
+                    :url="topic.referenceUrl" :audio="topic.mp3DataList" :commonId="topic.fsCommonId" :uId="topic.uId"
+                    :main="false" @update="updateDetails" :subtopic="topic.combinedDataSubSubList"
+                    :malId="topic.fsMalId" :engId="topic.fsEngId" />
             </div>
             <div v-else class=" my-5">
                 <SubCard :head="topic.title" :title="topic.title" :description="topic.description"
                     :images="topic.imgDataList ? topic.imgDataList : []" :video="topic.mp4DataList"
-                    :url="topic.referenceUrl" :audio="topic.mp3DataList" :commonId="subTopic.commonId" :uId="topic.uId"
-                    :main="false" @update="updateDetails" :subtopic="topic.combinedDataSubSubList" />
+                    :url="topic.referenceUrl" :audio="topic.mp3DataList" :commonId="topic.fsCommonId" :uId="topic.uId"
+                    :main="false" @update="updateDetails" :subtopic="topic.combinedDataSubSubList"
+                    :malId="topic.fsMalId" :engId="topic.fsEngId" />
             </div>
         </div>
     </div>
@@ -51,7 +53,7 @@ export default {
     },
     data() {
         return {
-            // base_url: 'http://localhost:8086'
+            // base_url: 'http://192.168.1.32:8081',
             base_url: 'http://localhost:8081'
       }  
     },
@@ -105,6 +107,7 @@ export default {
         }
     },
     mounted() {
+        console.log(this.$store.getters.getDetail[0])
         this.getType();
         document.body.style.backgroundImage = 'linear-gradient(to bottom,#0B0F0A,#56754E)';
     },

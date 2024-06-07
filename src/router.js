@@ -91,51 +91,42 @@ const router = createRouter({
               path: '/admin/guide-app/add',
               alias: '',
               name: 'guide-add-main',
-              component: () => import('./components/GuideApp/GuideAdd.vue'),
-              children: [
-                // {
-                //   path: '/admin/guide-app/addHeading',
-                //   alias: '',
-                //   name: 'guide-add-sub',
-                //   component: () => import('./components/GuideApp/DummyCard.vue'),
-                // },
-                // {
-                //   path: '/admin/guide-app/addSub',
-                //   name: 'guide-add-sub-sub',
-                //   component: () => import('./components/GuideApp/GuideSub.vue'),
-                // }
-              ],
+              component: () => import('./components/GuideApp/AddTopics/GuideAdd.vue'),
             },
             {
               path: '/admin/guide-app/view',
               name: 'guide-view',
-              component: () => import('./components/GuideApp/GuideView.vue'),
-            },
-            
+              component: () => import('./components/GuideApp/ViewTopics/GuideView.vue'),
+            },        
           ]
         }
       ]
     },
-    // {
-    //   path: '/admin/add-items',
-    //   name: 'add-items',
-    //   component: () => import('./components/GuideApp/ItemsAdd.vue'),
-    // },
     {
       path: '/admin/guide-app/edit',
       name: 'guide-edit',
-      component: () => import('./components/GuideApp/DetailsView.vue'),
+      component: () => import('./components/GuideApp/ViewTopics/DetailsView.vue'),
+    },
+    {
+      path: '/admin/guide-app/subheading-view',
+      name: 'guide-sub-view',
+      component: () => import('./components/GuideApp/SubCardEdit/SubDetails.vue'),
     },
     {
       path: '/admin/guide-app/editForm',
       name: 'guide-editForm',
-      component: () => import('./components/GuideApp/EditForm.vue'),
+      component: () => import('./components/GuideApp/MainTopicEdit/EditForm.vue'),
     },
     
-  ]
+  ],
+  scrollBehavior(_, _2, savedPosition) {
+      if (savedPosition) {
+        return savedPosition;
+      }
+      return {left: 0, top: 0};
+  },
 });
 router.beforeEach((to, _ , next) => {
-
   if (to.meta.requiresAuth) {
     console.log('authenticated', to.meta.requiresAuth)
     const isAuthenticated = store.getters.getStatus;

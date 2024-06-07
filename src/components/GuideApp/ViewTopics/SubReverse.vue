@@ -5,8 +5,8 @@
         <!-- <div class="details "> -->
         <div class="details-content">
           <div class="d-flex gap-3 align-items-center">
-            <v-icon class="mdi mdi-arrow-right text-white"
-              v-if="title && subtopic.length && subtopic.length > 0"></v-icon>
+            <v-icon class="mdi mdi-arrow-right text-white" v-if="title && subtopic.length && subtopic.length > 0"
+              @click="displaySub"></v-icon>
             <h4 class="text-start title my-0">{{ title }}</h4>
 
           </div>
@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import EditForm from './EditForm.vue';
+import EditForm from '../MainTopicEdit/EditForm.vue';
 export default {
   components: { EditForm },
   data() {
@@ -111,18 +111,34 @@ export default {
       this.dialog = true;
     },
     openVideoDialog() {
-      // Set the video URL to the one you want to display
-      // this.videoUrl = 'https://my-new-aks.s3.ap-south-1.amazonaws.com/1715602317290_talking_juracik_park_seed5948811234009426.mp4';
-      this.videoDialog = true; // Open the dialog
+      this.videoDialog = true; 
     },
     closeVideoDialog() {
-      this.videoDialog = false; // Close the dialog
-      // Optionally, pause the video when dialog closes
+      this.videoDialog = false;
       const videoElement = this.$refs.videoPlayer;
       if (videoElement) {
         videoElement.pause();
       }
     },
+    displaySub() {
+      const props = {
+        title: this.title,
+        head: this.title,
+        description: this.description,
+        imgDataList: this.images,
+        mp4DataList: this.video,
+        referenceUrl: this.url,
+        fsCommonId: this.commonId,
+        mp3DataList: this.audio,
+        uId: this.uid,
+        combinedDataSubSubList: this.subtopic,
+        fsMalId: this.malId,
+        fsEngId: this.engId
+      }
+      this.$store.commit('setFirstSubData', props)
+      this.$router.push({ name: 'guide-sub-view' })
+      console.log('sub', props)
+    }
   },
 };
 </script>

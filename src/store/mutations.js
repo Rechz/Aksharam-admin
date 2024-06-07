@@ -141,4 +141,8 @@ setDetails(state,payload){
       state.mediaType = payload;
       sessionStorage.setItem('mediaType', payload);
   },
+  setFirstSubData(state, payload) {
+    state.firstSubData = payload;
+    sessionStorage.setItem('firstData', JSON.stringify(payload));
+  }
 };

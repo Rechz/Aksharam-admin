@@ -12,17 +12,14 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-
     <v-sheet>
-
         <v-card-title class="text-center fw-bolder text-white" style="background-color: #2C7721;">Add Sub
             Heading</v-card-title>
-        <v-card flat :disabled="!proceed">
+        <v-card flat :disabled="!proceed && qrGenerated">
             <v-card-text class="px-5">
                 <p class="text-danger fst-italic mt-1">**Please submit Malayalam & English data before proceeding to
                     upload
                     media. Do not refresh the page to avoid data loss.</p>
-
                 <v-form class="pt-0 " ref="form" @submit.prevent="submitHeading">
                     <div class="d-flex">
                         <div>
@@ -46,31 +43,24 @@
                                 (English) subtopic added.
                             </h6>
                         </div>
-
                     </div>
-
                     <div class="d-flex justify-content-end">
-                        <v-btn color="#386568" size="large" class="text-capitalize" type="submit" :disabled="subload"
-                            variant="outlined" rounded :loading="subload" prepend-icon="mdi-plus">Add {{ topic }} sub
-                            topic</v-btn>
-
+                        <div class="d-flex gap-2">
+                            <v-btn v-if="QRLoad" color="#386568" size="large" class="text-capitalize" type="submit"
+                                :disabled="subload" variant="elevated" rounded :loading="subload">Add {{ topic }} sub
+                                topic</v-btn>
+                            <v-btn v-else color="#386568" size="large" class="text-capitalize" variant="outlined"
+                                rounded :disabled="QRLoad" :loading="QRLoading" @click="generateQR">Submit &
+                                Proceed</v-btn>
+                        </div>
                     </div>
                 </v-form>
-
-
             </v-card-text>
-
         </v-card>
-
-
-
         <v-divider class="mx-5"></v-divider>
-
-
-        <v-card flat class="px-5" :disabled="proceed">
+        <v-card flat class="px-5" :disabled="!qrGenerated">
             <v-card-title class="bg-blue-grey-lighten-5 mb-3">Subheading Images</v-card-title>
             <v-card-text class="d-flex gap-3 ">
-
                 <input type="file" ref="imageFile" multiple @change="handleFileUpload" class="mb-1" accept="image/*">
                 <div class="d-flex gap-4 flex-wrap ">
                     <div v-for="(image, index) in imgPreview" :key="index" elevation="4" style="position: relative;">
@@ -82,7 +72,6 @@
                             style="position:absolute; top: -16%; right:-6%" color="green-lighten-1"></v-icon>
                     </div>
                 </div>
-
                 <div class="d-flex flex-column align-items-end justify-content-center ">
                     <h6 class="text-success text-end fst-italic mb-0" v-if="imageSubmit">*Image successfully
                         uploaded.
@@ -93,21 +82,14 @@
                 <v-btn @click="uploadImages" color="#386568" size="large" variant="outlined" rounded
                     :disabled="imageLoad" :loading="imageLoad" prepend-icon="mdi-upload" class="text-capitalize">Upload
                     Images</v-btn>
-
             </div>
         </v-card>
-
-
         <v-divider class="mx-5"></v-divider>
-
-        <v-card flat class="px-5" :disabled="proceed">
+        <v-card flat class="px-5" :disabled="!qrGenerated">
             <v-card-title class="bg-blue-grey-lighten-5 mb-3">SubHeading Audio/Video</v-card-title>
-
-
             <v-select class="select mb-3" label="Select Language" density="comfortable" :items="languages"
                 v-model="languageAV" :rules="languageRules" item-title="talk" item-value="dtId"
                 variant="outlined"></v-select>
-
             <v-sheet class="p-3" flat :disabled="audioMalSubmit && audioEngSubmit">
                 <div class="d-flex flex-column gap-2">
                     <div>
@@ -137,9 +119,6 @@
                         prepend-icon="mdi-music" class="text-capitalize" :disabled="audioLoad"
                         :loading="audioLoad">Submit Audio</v-btn>
                 </div>
-
-
-
             </v-sheet>
             <v-sheet class="p-3" flat :disabled="videoMalSubmit && videoEngSubmit">
                 <div class="d-flex flex-column gap-2">
@@ -163,7 +142,6 @@
                             uploaded.
                         </h6>
                     </div>
-
                 </div>
                 <div class="d-flex justify-content-end">
                     <v-btn @click="submitVideo(fileType.video)" color="#386568" size="large" variant="outlined" rounded
@@ -171,42 +149,24 @@
                         :loading="videoLoad">Submit
                         Video</v-btn>
                 </div>
-
-
             </v-sheet>
-
-
-
-
-
-
-
-
-
-
-
         </v-card>
         <div class="my-5 d-flex justify-content-end align-items-center gap-2 px-5">
-            <v-btn color="#2C7721" size="large" variant="elevated" prepend-icon="mdi-step-backward" @click="back">Finish
-                &
-                Return</v-btn>
-            <v-btn color="#2C7721" size="large" variant="elevated" append-icon="mdi-step-forward" @click="finish">Add
-                New
-                Subheading</v-btn>
+            <v-btn color="#2C7721" size="large" variant="elevated" prepend-icon="mdi-step-backward" @click="back">Finish & Return</v-btn>
+            <v-btn color="#2C7721" size="large" variant="elevated" append-icon="mdi-step-forward" @click="finish">Add New Subheading</v-btn>
         </div>
     </v-sheet>
 </template>
 
 <script>
-
 import axios from 'axios';
 export default {
-
     emits: ['back','update'],
     props: ['idmal', 'ideng'],
     data() {
         return {
-            action: true,
+            qrGenerated: false,
+            QRLoad: true,
             malSubmit: false,
             engSubmit: false,
             imageSubmit: false,
@@ -214,7 +174,6 @@ export default {
             videoMalSubmit: false,
             audioEngSubmit: false,
             audioMalSubmit: false,
-            subhead: false,
             subload: false,
             imageLoad: false,
             videoLoad: false,
@@ -223,8 +182,6 @@ export default {
             imgPreview: [],
             fileTypes: [],
             fileType: {},
-            step: 1,
-            count: 1,
             videomal: '',
             audiomal: '',
             videoeng: '',
@@ -244,7 +201,7 @@ export default {
             audioFiles: [],
             videoFiles: [],
             base_url: 'http://localhost:8081',
-            // base_url: 'http://localhost:8086',
+            // base_url: 'http://192.168.1.32:8081',
             message: '',
             loading: false,
             color: '',
@@ -268,8 +225,39 @@ export default {
         }
     },
     methods: {
+        async generateQR() {
+            this.QRLoading = true;
+            try {
+                let response;
+                if (this.main == true) {
+                   response = await axios.get(`${this.base_url}/DataEntry2/genCommonId?engId=${this.subideng}&malId=${this.subidmal}`); 
+                }
+                
+                if (response.status >= 200 && response.status < 300) {
+                    this.icon = 'mdi mdi-check-circle-outline'
+                    this.QRLoading = false;
+                    this.message = 'QR code generated successfully. Proceed to next steps.';
+                    this.dialogHead = 'Success'
+                    this.color = '#2E7D32'
+                    this.dialogTopic = true;
+                    this.qrGenerated = true;
+                    this.QRLoad = true;
+                }
+            }
+            catch (error) {
+                this.QRLoad = false;
+                this.QRLoading = false;
+                this.icon = 'mdi mdi-alert-outline'
+                this.imageSubmit = false;
+                this.color = '#BA1A1A';
+                this.dialogHead = 'Error';
+                this.message = 'Error uploading images:' + error.message;
+                this.dialogTopic = true;
+            }
+        },
         finish() {
             sessionStorage.clear();
+            this.qrGenerated = false;
             this.malSubHeading = ''
             this.engSubHeading = ''
             this.subhead = false;
@@ -457,12 +445,10 @@ export default {
                     if (this.languageAV === 1) {
                         this.message = 'Malayalam audio uploaded successfully';
                         this.audioMalSubmit = true;
-                        this.languageAV = 2;
                     }
                     else {
                         this.message = 'English audio uploaded successfully';
                         this.audioEngSubmit = true;
-                        this.languageAV = 1;
                     }
                     this.dialogHead = 'Success'
                     this.color = '#2E7D32'
@@ -501,12 +487,10 @@ export default {
                     if (this.languageAV === 1) {
                         this.message = 'Malayalam video uploaded successfully';
                         this.videoMalSubmit = true;
-                        this.languageAV = 2;
                     }
                     else {
                         this.message = 'English video uploaded successfully';
                         this.videoEngSubmit = true;
-                        this.languageAV = 1;
                     }
                     this.dialogHead = 'Success'
                     this.color = '#2E7D32'
@@ -530,6 +514,7 @@ export default {
         proceed(newValue) {
             if (!newValue) {
                 this.language = null;
+                this.QRLoad = false;
             }
         }
     },
@@ -544,38 +529,25 @@ export default {
         min-height: 10px;
 }
 :deep(.select .v-input__control) {
-    /* border-bottom: 2px solid #216D17; */
     width: 400px !important;
 }
-
 :deep(.desc .v-input__control) {
-    /* border-bottom: 2px solid #216D17; */
     width: 700px !important;
 }
-
 :deep(.guide .v-input__control) {
     width: 250px !important;
-    /* height: 45px !important; */
 }
-
 :deep(.v-input__details) {
     padding-top: 1px;
 }
-
 :deep(.v-input--outlined .v-input__control .guide .desc) {
-    /* border-bottom: 1px solid #48663f; */
-    /* Default border color */
     border-top: none;
     border-left: none;
     border-right: none;
     transition: border-color 0.2s ease-in-out;
-    /* Transition for border color change */
 }
-
-/* When focused, change the bottom border color */
 :deep(.v-input--outlined.v-input--is-focused .v-input__control .guide .desc) {
     border-bottom-color: #48663f;
-    /* Focus border color */
 }
 
 </style>
