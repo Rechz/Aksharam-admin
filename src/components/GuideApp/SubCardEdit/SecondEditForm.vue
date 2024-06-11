@@ -351,6 +351,7 @@ export default {
     async addVideo(event) {
       const files = event.target.files[0];
       this.videoAdd = files;
+      console.log(this.videoAdd)
       let message;
       const formData = new FormData();
       formData.append("files", this.videoAdd);
@@ -363,10 +364,10 @@ export default {
         this.videoLoad = true;
         let response;
         if (this.main == true) {
-          response = this.$store.dispatch('guide/submitSubMedia', payload) 
+          response =await this.$store.dispatch('guide/submitSubMedia', payload) 
         }
         if (this.main == false) {
-          response = this.$store.dispatch('guide/submitSub2Media', payload);
+          response =await this.$store.dispatch('guide/submitSub2Media', payload);
         }
         if (response) {
           this.videoLoad = false;
@@ -444,10 +445,10 @@ export default {
           formData: formData
         }
         if (this.main == true) {
-          response = this.$store.dispatch('guide/submitSubMedia', payload);   
+          response = await this.$store.dispatch('guide/submitSubMedia', payload);   
         }
         if (this.main == false) {
-          response = this.$store.dispatch('guide/submitSub2Media', payload)
+          response = await this.$store.dispatch('guide/submitSub2Media', payload)
         }
         if (response) {
            this.audioLoad = false; 
@@ -468,6 +469,7 @@ export default {
     },
     async handleAudio(event) {
       const files = event.target.files[0];
+      console.log(this.uId)
       this.editAudio[0].isEdit = true;
       this.audioAdd = files;
       let message;
@@ -517,10 +519,10 @@ export default {
       };
       try {
         if (this.main == true) {
-          response = await await this.$store.dispatch('guide/deleteSubImage', payload);
+          response = await this.$store.dispatch('guide/deleteSubImage', payload);
         }
         if (this.main == false) {
-          response = await await this.$store.dispatch('guide/deleteSub2Image', payload);
+          response = await this.$store.dispatch('guide/deleteSub2Image', payload);
         }
         if (response) {
           this.imageDelete = false;
@@ -574,7 +576,7 @@ export default {
         if (this.main == false) {
           response = await this.$store.dispatch('guide/deleteSub2Video', this.editVideo[0].dtId);
         }
-        if ((response.status >= 200) || (response.status < 300)) {
+        if (response) {
           this.videoDelete = false;
           this.deleteDialogVideo = false;
           message = `Video deleted successfully!`;
@@ -591,7 +593,7 @@ export default {
   },
   computed: {
     media() {
-      return this.$store.getters.getMedia;
+      return this.$store.getters['guide/getMedia'];
     },
     editImages() {
       return this.images;

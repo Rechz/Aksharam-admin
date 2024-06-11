@@ -30,7 +30,13 @@ export default {
     //submit main topic text details
     async submitHeading({ rootGetters, commit }, payload) {
       try {
-        const response = await axios.post(`${rootGetters.getUrl}/DataEntry1/mainT?dId=${payload.language}`, payload.data);
+        const response = await axios.post(`${rootGetters.getUrl}/DataEntry1/mainT?dId=${payload.language}`, payload.data,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );
         if (response.status >= 200 && response.status < 300) {
           if (payload.language === 1) {
             commit('setMalHeading', response.data.title);
@@ -51,7 +57,13 @@ export default {
     //QR generation
     async generateQR({ rootGetters }, payload) {
       try {
-        const response = await axios.get(`${rootGetters.getUrl}/qrcode/generate?mMalUid=${payload.idmal}&mEngUid=${payload.ideng}`);
+        const response = await axios.get(`${rootGetters.getUrl}/qrcode/generate?mMalUid=${payload.idmal}&mEngUid=${payload.ideng}`,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+          //  }
+        );
         if (response.status >= 200 && response.status < 300) {
           return true;
         }
@@ -63,7 +75,13 @@ export default {
     //image upload maintopic
     async uploadImages({ rootGetters }, payload) {
       try{
-        const response = await axios.post(`${rootGetters.getUrl}/imgData/uploadImg?englishUId=${payload.ideng}&malUid=${payload.idmal}`, payload.formData);
+        const response = await axios.post(`${rootGetters.getUrl}/imgData/uploadImg?englishUId=${payload.ideng}&malUid=${payload.idmal}`, payload.formData,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );
         if (response.status === 200) {
           return true;
         }
@@ -74,7 +92,13 @@ export default {
     //audio/video upload maintopic
     async submitMedia({ rootGetters }, payload) {
       try {
-        const response = await axios.post(`${rootGetters.getUrl}/mediaData/mpData?uId=${payload.uid}&mtId=${payload.id}`, payload.formData);
+        const response = await axios.post(`${rootGetters.getUrl}/mediaData/mpData?uId=${payload.uid}&mtId=${payload.id}`, payload.formData,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );
         if (response.status >= 200 && response.status < 300) {
           return true;
         }
@@ -86,7 +110,13 @@ export default {
     //submit details subheading
     async submitSubHead({ rootGetters, commit }, payload) {    
       try {
-        const response = await axios.post(`${rootGetters.getUrl}/DataEntry2/firstSub?uId=${payload.uid}`, payload.data);
+        const response = await axios.post(`${rootGetters.getUrl}/DataEntry2/firstSub?uId=${payload.uid}`, payload.data,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );
         if (response.status >= 200 && response.status < 300) {
           if (payload.lang === 1) {
             commit('setMalSubHeading', response.data.title);
@@ -107,7 +137,13 @@ export default {
     //generate commonid subheading
     async generateQRSub({ rootGetters}, payload) {
       try {
-        const response = await axios.get(`${rootGetters.getUrl}/DataEntry2/genCommonId?engId=${payload.subideng}&malId=${payload.subidmal}`);
+        const response = await axios.get(`${rootGetters.getUrl}/DataEntry2/genCommonId?engId=${payload.subideng}&malId=${payload.subidmal}`,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );
         if (response.status >= 200 && response.status < 300) {
           return true;
         }
@@ -119,7 +155,13 @@ export default {
     //submit image subheading
     async uploadSubImages({ rootGetters}, payload) {
       try {
-        const response = await axios.post(`${rootGetters.getUrl}/imgData/uploadImg1?englishUId=${payload.subideng}&malUid=${payload.subidmal}`, payload.formData);
+        const response = await axios.post(`${rootGetters.getUrl}/imgData/uploadImg1?englishUId=${payload.subideng}&malUid=${payload.subidmal}`, payload.formData,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );
         if (response.status >= 200 && response.status < 300) {
           return true;
         }
@@ -130,7 +172,13 @@ export default {
     //submit audio/video subheading
     async submitSubMedia({ rootGetters}, payload) {
       try {
-        const response = await axios.post(`${rootGetters.getUrl}/mediaData/mpData1?uId=${payload.uid}&mtId=${payload.id}`, payload.formData);
+        const response = await axios.post(`${rootGetters.getUrl}/mediaData/mpData1?uId=${payload.uid}&mtId=${payload.id}`, payload.formData,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );
         if (response.status >= 200 && response.status < 300) {
           return true;
         }
@@ -142,7 +190,13 @@ export default {
     //submit details subheading2
     async submitSub2Head({ rootGetters, commit,getters }, payload) {  
       try {
-        const response = await axios.post(`${rootGetters.getUrl}/DataEntry3/secondSub?uId=${payload.uid}`, payload.data);
+        const response = await axios.post(`${rootGetters.getUrl}/DataEntry3/secondSub?uId=${payload.uid}`, payload.data,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );
         if (response.status >= 200 && response.status < 300) {
           if (payload.lang === 1) {
             commit('setMalSub2Heading', response.data.title)
@@ -167,7 +221,13 @@ export default {
     //generate commonid sub2 heading
     async generateQRSub2({ rootGetters}, payload) {
       try {
-        const response = await axios.get(`${rootGetters.getUrl}/DataEntry3/generateSSid?englishId=${payload.subideng}&malId=${payload.subidmal}`);
+        const response = await axios.get(`${rootGetters.getUrl}/DataEntry3/generateSSid?englishId=${payload.subideng}&malId=${payload.subidmal}`,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );
         if (response.status >= 200 && response.status < 300) {
           return true;
         }
@@ -179,7 +239,13 @@ export default {
     //submit image subheading2
     async uploadSub2Images({ rootGetters}, payload) {
       try {
-        const response = await axios.post(`${rootGetters.getUrl}/imgData/uploadImg2?englishUId=${payload.subideng}&malUid=${payload.subidmal}`, payload.formData);
+        const response = await axios.post(`${rootGetters.getUrl}/imgData/uploadImg2?englishUId=${payload.subideng}&malUid=${payload.subidmal}`, payload.formData,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );
         if (response.status >= 200 && response.status < 300) {
           return true;
         }
@@ -191,7 +257,13 @@ export default {
     //submit audio/video subheading2
     async submitSub2Media({ rootGetters}, payload) {
       try {
-        const response = await axios.post(`${rootGetters.getUrl}/mediaData/mpData2?uId=${payload.uid}&mtId=${payload.id}`, payload.formData);
+        const response = await axios.post(`${rootGetters.getUrl}/mediaData/mpData2?uId=${payload.uid}&mtId=${payload.id}`, payload.formData,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );
         if (response.status >= 200 && response.status < 300) {
           return true;
         }
@@ -240,7 +312,13 @@ export default {
     //update main topic details
     async updateTopic({ rootGetters}, payload) {
       try {
-        const response = await axios.put(`${rootGetters.getUrl}/updateMain/stringUpdate/${payload.uId}`, payload.data);
+        const response = await axios.put(`${rootGetters.getUrl}/updateMain/stringUpdate/${payload.uId}`, payload.data,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );
           if (response.status >= 200 && response.status < 300) {
             return true;
           }
@@ -252,7 +330,13 @@ export default {
     //update sub topic details
     async updateSubTopic({ rootGetters}, payload) {
       try {
-        const response = await axios.put(`${rootGetters.getUrl}/updateFirst/updateFirstData/${payload.uId}`, payload.data);
+        const response = await axios.put(`${rootGetters.getUrl}/updateFirst/updateFirstData/${payload.uId}`, payload.data,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );
           if (response.status >= 200 && response.status < 300) {
             return true;
           }
@@ -264,7 +348,13 @@ export default {
     //update sub2 topic details
     async updateSub2Topic({ rootGetters}, payload) {
       try {
-        const response = await axios.put(`${rootGetters.getUrl}/updateSecondSub/updateSecondData/${payload.uId}`, payload.data);
+        const response = await axios.put(`${rootGetters.getUrl}/updateSecondSub/updateSecondData/${payload.uId}`, payload.data,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );
           if (response.status >= 200 && response.status < 300) {
             return true;
           }
@@ -276,7 +366,13 @@ export default {
     //update main images
     async updateMainImage({ rootGetters}, payload) {
       try {
-        const response = await axios.put(`${rootGetters.getUrl}/updateMain/updateUploadImg`, payload);
+        const response = await axios.put(`${rootGetters.getUrl}/updateMain/updateUploadImg`, payload,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );
         if ((response.status >= 200) || (response.status < 300)) {
           return true;
         }  
@@ -288,7 +384,13 @@ export default {
     //update sub images
     async updateSubImage({ rootGetters }, payload) {
       try {
-        const response = await axios.put(`${rootGetters.getUrl}/updateFirst/updateUploadImgSubFirst`, payload);
+        const response = await axios.put(`${rootGetters.getUrl}/updateFirst/updateUploadImgSubFirst`, payload,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );
         if ((response.status >= 200) || (response.status < 300)) {
           return true;
         }  
@@ -300,7 +402,13 @@ export default {
     //update sub2 images
     async updateSub2Image({ rootGetters }, payload) {
       try {
-        const response = await axios.put(`${rootGetters.getUrl}/updateSecondSub/updateUploadImg2`, payload);
+        const response = await axios.put(`${rootGetters.getUrl}/updateSecondSub/updateUploadImg2`, payload,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );
         if ((response.status >= 200) || (response.status < 300)) {
           return true;
         }  
@@ -312,7 +420,13 @@ export default {
     //update main audio/video
     async updateMedia({ rootGetters }, payload) {
       try {
-        const response = await axios.put(`${rootGetters.getUrl}/updateMain/updateMpData`, payload);
+        const response = await axios.put(`${rootGetters.getUrl}/updateMain/updateMpData`, payload,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );
         if (response.status >= 200 && response.status < 300) {
           return true;
         }
@@ -324,7 +438,13 @@ export default {
     //update sub audio/video
     async updateSubMedia({ rootGetters }, payload) {
       try {
-        const response = await axios.put(`${rootGetters.getUrl}/updateFirst/updateMpData1/${payload.uId}?mtId=${payload.id}`, payload.data);
+        const response = await axios.put(`${rootGetters.getUrl}/updateFirst/updateMpData1/${payload.uId}?mtId=${payload.id}`, payload.data,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );
         if (response.status >= 200 && response.status < 300) {
           return true;
         }
@@ -336,7 +456,13 @@ export default {
     //update sub2 audio/video
     async updateSub2Media({ rootGetters }, payload) {
       try {
-        const response = await axios.put(`${rootGetters.getUrl}/updateSecondSub/updateMpData2/${payload.uId}`, payload.data);
+        const response = await axios.put(`${rootGetters.getUrl}/updateSecondSub/updateMpData2/${payload.uId}`, payload.data,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );
         if (response.status >= 200 && response.status < 300) {
           return true;
         }
@@ -348,7 +474,13 @@ export default {
     //delete topic with main commonid
     async deleteMain({ rootGetters}, id) {
       try {
-        const success = await axios.delete(`${rootGetters.getUrl}/deleteMain/delete/${id}`)
+        const success = await axios.delete(`${rootGetters.getUrl}/deleteMain/delete/${id}`,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        )
         if ((success.status >= 200) || (success.status<300)) {
           return true;
         }
@@ -360,7 +492,13 @@ export default {
     //delete subtopic by commonid
     async deleteSub({ rootGetters}, id) {
       try {
-        const success = await axios.delete(`${rootGetters.getUrl}/deleteByFirstSub/commonIdAll/${id}`)
+        const success = await axios.delete(`${rootGetters.getUrl}/deleteByFirstSub/commonIdAll/${id}`,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        )
         if ((success.status >= 200) || (success.status<300)) {
           return true;
         }
@@ -373,7 +511,13 @@ export default {
   async deleteSub2({ rootGetters }, id) {
    
       try {
-        const success = await axios.delete(`${rootGetters.getUrl}/deleteSecond/commonIdSecond/${id}`)
+        const success = await axios.delete(`${rootGetters.getUrl}/deleteSecond/commonIdSecond/${id}`,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        )
         if ((success.status >= 200) || (success.status<300)) {
           return true;
         }
@@ -385,7 +529,13 @@ export default {
     //delete main image by id
     async deleteImage({ rootGetters}, payload) {
       try {
-        const response = await axios.delete(`${rootGetters.getUrl}/deleteMain/deleteImages?commonId=${payload.commonId}&imgIds=${payload.id}`);
+        const response = await axios.delete(`${rootGetters.getUrl}/deleteMain/deleteImages?commonId=${payload.commonId}&imgIds=${payload.id}`,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );
          if ((response.status >= 200) || (response.status < 300)) {
             return true;        
           }
@@ -397,7 +547,13 @@ export default {
     //delete sub image by id
     async deleteSubImage({ rootGetters}, payload) {
       try {
-        const response = await axios.delete(`${rootGetters.getUrl}/deleteMain/deleteImagesFirst?commonId=${payload.commonId}&imgIds=${payload.id}`);
+        const response = await axios.delete(`${rootGetters.getUrl}/deleteMain/deleteImagesFirst?commonId=${payload.commonId}&imgIds=${payload.id}`,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );
         if ((response.status >= 200) || (response.status < 300)) {
           return true;         
         }
@@ -409,7 +565,13 @@ export default {
     // delete sub2 image by id
     async deleteSub2Image({ rootGetters}, payload) {
       try {
-        const response = await axios.delete(`${rootGetters.getUrl}/deleteMain/deleteImagesSecond?commonId=${payload.commonId}&imgIds=${payload.id}`);
+        const response = await axios.delete(`${rootGetters.getUrl}/deleteMain/deleteImagesSecond?commonId=${payload.commonId}&imgIds=${payload.id}`,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }    
+        );
         if ((response.status >= 200) || (response.status < 300)) {
           return true;         
         }
@@ -421,7 +583,13 @@ export default {
     //delete main audio
     async deleteAudio({ rootGetters}, dtId) {
       try {
-        const response = await axios.delete(`${rootGetters.getUrl}/deleteMain/deleteMp3?dtId=${dtId}`);    
+        const response = await axios.delete(`${rootGetters.getUrl}/deleteMain/deleteMp3?dtId=${dtId}`,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );    
         if ((response.status >= 200) || (response.status < 300)) {
           return true;
         }
@@ -433,7 +601,13 @@ export default {
     //delete sub audio
     async deleteSubAudio({ rootGetters}, dtId) {  
       try {
-        const response = await axios.delete(`${rootGetters.getUrl}/deleteMain/deleteMp3First?dtId=${dtId}`);   
+        const response = await axios.delete(`${rootGetters.getUrl}/deleteMain/deleteMp3First?dtId=${dtId}`,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );   
         if ((response.status >= 200) || (response.status < 300)) {
           return true;
         }
@@ -445,7 +619,13 @@ export default {
     //delete sub2 audio
     async deleteSub2Audio({ rootGetters}, dtId) {
       try {
-        const response = await axios.delete(`${rootGetters.getUrl}/deleteMain/deleteMp3Second?dtId=${dtId}`);   
+        const response = await axios.delete(`${rootGetters.getUrl}/deleteMain/deleteMp3Second?dtId=${dtId}`,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );   
         if ((response.status >= 200) || (response.status < 300)) {
           return true;
         }
@@ -457,7 +637,13 @@ export default {
     //delete main audio
     async deleteVideo({ rootGetters}, dtId) {
       try {
-        const response = await axios.delete(`${rootGetters.getUrl}/deleteMain/deleteMp4?dtId=${dtId}`);    
+        const response = await axios.delete(`${rootGetters.getUrl}/deleteMain/deleteMp4?dtId=${dtId}`,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );    
         if ((response.status >= 200) || (response.status < 300)) {
           return true;
         }
@@ -469,7 +655,13 @@ export default {
     //delete sub video
     async deleteSubVideo({ rootGetters}, dtId) {  
       try {
-        const response = await axios.delete(`${rootGetters.getUrl}/deleteMain/deleteMp4First?dtId=${dtId}`);   
+        const response = await axios.delete(`${rootGetters.getUrl}/deleteMain/deleteMp4First?dtId=${dtId}`,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );   
         if ((response.status >= 200) || (response.status < 300)) {
           return true;
         }
@@ -481,7 +673,13 @@ export default {
     //delete sub2 audio
     async deleteSub2Video({ rootGetters}, dtId) {
       try {
-        const response = await axios.delete(`${rootGetters.getUrl}/deleteMain/deleteMp4Second?dtId=${dtId}`);   
+        const response = await axios.delete(`${rootGetters.getUrl}/deleteMain/deleteMp4Second?dtId=${dtId}`,
+      //   {
+      //   headers: {
+      //     Authorization: `Bearer ${rootGetters.getToken}`
+      //   }
+      //  }
+        );   
         if ((response.status >= 200) || (response.status < 300)) {
           return true;
         }
