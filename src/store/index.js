@@ -2,15 +2,18 @@ import { createStore } from 'vuex';
 import rootMutations from './mutations.js';
 import rootActions from './actions.js';
 import rootGetters from './getters.js';
+import guideModule from './modules/guide/index.js'
 const store = createStore({
+  modules: {
+    guide: guideModule
+  },
   state() {
     return {
-      // base_url: 'http://localhost:8448',
+      // base_url: 'http://localhost:8081',
       // base_url: 'http://192.168.1.17:5000',
       base_url: 'https://aksharammuseum.com',
       token: sessionStorage.getItem('token') || '',
-      language: sessionStorage.getItem('language') || 2,
-      mediaType: sessionStorage.getItem('mediaType') || {},
+      
       status: JSON.parse(sessionStorage.getItem('status')) || false,
       user: JSON.parse(sessionStorage.getItem('user')) || {},
       slots: JSON.parse(sessionStorage.getItem('slots')) || [],
@@ -33,21 +36,7 @@ const store = createStore({
       dailyTickets: sessionStorage.getItem('dailyTickets') || 0,
       priceList: {},
       holidays: JSON.parse(sessionStorage.getItem('holidays')) || [],
-      maintopics: [],
-      detailTopic: JSON.parse(sessionStorage.getItem('detailTopic')) || [],
-      idmal: '',
-      ideng: '',
-      malHeading: sessionStorage.getItem('malHeading') || '',
-      engHeading: sessionStorage.getItem('engHeading') ||'',
-      malSubHeading: sessionStorage.getItem('malSubHeading') ||'',
-      engSubHeading: sessionStorage.getItem('engSubHeading') ||'',
-      malSub2Heading: sessionStorage.getItem('malSub2Heading') ||'',
-      engSub2Heading: sessionStorage.getItem('engSub2Heading') ||'',
-      subidmal: '',
-      subideng: '',
-      sub2idmal: '',
-      sub2ideng: '',
-      firstSubData: sessionStorage.getItem('firstData') || null,
+      
     };
   },
   mutations: rootMutations,

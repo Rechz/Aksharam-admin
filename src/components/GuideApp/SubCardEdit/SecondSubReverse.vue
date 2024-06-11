@@ -4,7 +4,7 @@
             <div class="text-card pe-5 pt-5 mb-5">
                 <!-- <div class="details "> -->
                 <div class="details-content">
-                    <div class="d-flex gap-3 align-items-center">   
+                    <div class="d-flex gap-3 align-items-center">
                         <h4 class="text-start title my-0">{{ title }}</h4>
                     </div>
                     <div class="desc text-start">
@@ -14,9 +14,9 @@
             <li class="text-capitalize text-start" style="direction: ltr;">{{ topic.title }}</li>
           </ul>
           </pre>
-        </div>
-    </div>
-        
+                    </div>
+                </div>
+
                 <div class="d-flex justify-content-center mt-5 pt-3">
 
                     <audio controls class="mt-3 mx-3 w-100" v-if="audio.length > 0" :src="audio[0].furl" type="audio/*">
@@ -28,8 +28,8 @@
                         <v-btn prepend-icon="mdi-pencil" rounded="4"
                             class="mb-3 text-success text-capitalize me-2 fw-bold" size="small"
                             @click="openEdit">Edit</v-btn>
-                        <v-btn prepend-icon="mdi-trash-can" rounded="4" class="mb-3 text-danger text-capitalize fw-bold"
-                            size="small">Delete</v-btn>
+                        <v-btn prepend-icon="mdi-trash-can" rounded="4" class=" text-danger text-capitalize fw-bold"
+                            @click="deleteItem" size="small">Delete</v-btn>
                     </div>
                     <v-carousel class="sub-carousel" height="400" hide-delimiters cover
                         :show-arrows="images.length > 1">
@@ -63,9 +63,26 @@
         </div>
     </div>
     <v-dialog v-model="editDialog" width="1000">
-        <second-edit-form :head="head" :description="description" :images="images" :video="video" :url="url" :audio="audio"
-            @finish="editDialog = false" :commonId="commonId" :uId="uId" @update="update" :main="main" :malId="malId"
-            :engId="engId" :subtopic="subtopic"></second-edit-form>
+        <second-edit-form :head="head" :description="description" :images="images" :video="video" :url="url"
+            :audio="audio" @finish="editDialog = false" :commonId="commonId" :uId="uId" @update="update" :main="main"
+            :malId="malId" :engId="engId" :subtopic="subtopic"></second-edit-form>
+    </v-dialog>
+    <v-dialog v-model="dialogDelete" width="400px">
+        <v-card class="rounded-4 pb-4">
+            <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
+                Topic</v-card-title>
+            <v-container class="px-4 d-flex flex-column align-items-center">
+                <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
+                <v-card-text class="mt-1 text-center fs-6">Are you sure you want to delete this topic and everything
+                    related to
+                    this topic?</v-card-text>
+            </v-container>
+            <v-card-actions class="mx-4 d-flex flex-column align-items-center">
+                <v-btn block class="rounded-4 text-white mb-3" style="background-color: #BA1A1A;" :loading="loading"
+                    :disabled="loading" @click="deleteItemConfirm">Delete</v-btn>
+                <v-btn block variant="text" class="rounded-4 mb-3" @click="closeDelete">Cancel</v-btn>
+            </v-card-actions>
+        </v-card>
     </v-dialog>
 </template>
 
@@ -76,10 +93,17 @@ export default {
     data() {
         return {
             dialog: false,
+            dialogDelete: false,
+            dialogTopic: false,
+            dialogHead: '',
+            icon: '',
+            color: '',
+            message: '',
             selectedImage: null,
             videoDialog: false,
             videoUrl: '',
             editDialog: false,
+            loading: false,
         };
     },
     emits: ['update'],
@@ -99,6 +123,20 @@ export default {
         'engId'
     ],
     methods: {
+        success(message) {
+            this.icon = 'mdi mdi-check-circle-outline'
+            this.message = message;
+            this.dialogHead = 'Success'
+            this.color = '#2E7D32'
+            this.dialogTopic = true;
+        },
+        error(message) {
+            this.color = '#BA1A1A';
+            this.icon = 'mdi mdi-alert-outline'
+            this.dialogHead = 'Error';
+            this.message = message;
+            this.dialogTopic = true;
+        },
         update() {
             this.$emit('update');
         },
@@ -118,6 +156,44 @@ export default {
             if (videoElement) {
                 videoElement.pause();
             }
+        },
+        deleteItem() {
+            this.dialogDelete = true
+        },
+        async deleteItemConfirm() {
+            this.loading = true;
+            try {
+                let response;
+                if (this.main == true) {
+                    response = await this.$store.dispatch('guide/deleteSub', this.commonId)
+                }
+                if (this.main == false) {
+                    response = await this.$store.dispatch('guide/deleteSub2', this.commonId)
+                }
+                if (response) {
+                    this.loading = false
+                    let message = 'Topic and details deleted successfully !!';
+                    this.closeDelete();
+                    this.success(message);
+                    
+                    if (this.main == true) {
+                        this.$router.push({ name: 'guide-edit' })
+                    } this.update();
+                    
+                }
+            }
+            catch (error) {
+                let message = error.message + '!!';
+                this.loading = false
+                this.error(message);
+            }
+        },
+        closeDelete() {
+            this.dialogDelete = false
+            this.$nextTick(() => {
+                this.editedItem = Object.assign({}, this.defaultItem)
+                this.editedIndex = -1
+            })
         },
     },
 };

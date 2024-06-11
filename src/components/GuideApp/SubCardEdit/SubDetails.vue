@@ -1,7 +1,7 @@
 <template>
     <div class="full-page">
         <div class="d-flex justify-content-between align-items-center nav mx-5 pt-5 pb-3">
-            <router-link to="/admin/guide-app/view"><v-btn class="home-btn text-capitalize" rounded
+            <router-link to="/admin/guide-app/edit"><v-btn class="home-btn text-capitalize" rounded
                     size="x-large"><v-icon class="mdi mdi-arrow-left"></v-icon>Back</v-btn></router-link>
             <h1 style="color: white; font-size: 360%;" class="text-center">{{ subTopic.title }}</h1>
             <v-btn class="translate-btn text-capitalize" rounded size="x-large" @click="translate">
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+
 import SecondSubCard from './SecondSubCard.vue';
 import SecondSubReverse from './SecondSubReverse.vue'
 export default {
@@ -50,68 +50,49 @@ export default {
         SecondSubCard,
         SecondSubReverse
     },
-    data() {
-        return {
-            // base_url: 'http://192.168.1.32:8081',
-            base_url: 'http://localhost:8081'
-        }
-    },
     methods: {
-        async getType() {
-            try {
-                const response = await axios.get(`${this.base_url}/fileType/getFileType`);
-                if (response.status >= 200 && response.status < 300) {
-                    // this.fileTypes = response.data;
-                    const fileType = {};
-                    response.data.forEach(item => {
-                        fileType[item.fileType.toLowerCase()] = item.id;
-                    });
-                    this.$store.commit('setMedia', fileType);
-                }
-            }
-            catch (err) {
-                console.log(err)
-            }
-        },
         async updateDetails() {
+            
             try {
-                const response = await axios.get(`${this.base_url}/DataEntry2/getAllByCommonId/${this.subTopic.fsCommonId}?dtId=${this.language}`);
-                if (response.status === 200) {
-                    console.log(response.data[0])
-                    this.$store.commit('setFirstSubData', response.data[0])
-                }
-            } catch (error) {
-                console.log(error.message);
+                await this.$store.dispatch('guide/showSubDetails', {
+                    language: this.language,
+                    id: this.subTopic.fsCommonId
+                });
+            }
+            catch (error) {
+                console.error(error);
+            }
+            try {
+                console.log('main update')
+                await this.$store.dispatch('guide/showDetails', { language: this.language, commonId: sessionStorage.getItem('id') })
+            }
+            catch (error) {
                 console.error(error);
             }
         },
     
-        translate() {
+        async translate() {
+            console.log('clicked')
             if (this.language === 1) {
-                this.$store.commit('setLanguage', 2);
+                this.$store.commit('guide/setLanguage', 2);
             } else {
-                this.$store.commit('setLanguage', 1);
+                this.$store.commit('guide/setLanguage', 1);
             }
             this.updateDetails()
+            await this.$store.dispatch('guide/showDetails', {language: this.language, commonId: sessionStorage.getItem('id')})
         }
 
     },
     computed: {
         subTopic() {
-            return this.$store.getters.getFirstSubData;
+          return this.$store.getters['guide/getFirstSubData'];
         },
         language() {
-            return this.$store.getters.getLanguage;
+          return this.$store.getters['guide/getLanguage'];
         }
     },
-    mounted() {
-        console.log(this.subTopic)
-        this.getType();
+    mounted() { 
         document.body.style.backgroundImage = 'linear-gradient(to bottom,#0B0F0A,#56754E)';
-    },
-    created() {
-        
-        console.log(this.subTopic)
     },
     beforeUnmount() {
         document.body.style.backgroundImage = '';
