@@ -139,7 +139,7 @@ export default {
                     this.color = '#C8E6C9'
                     this.closeDelete();
                     this.snackbar = true;
-                    setInterval(() => { window.location.reload(); }, 2000)
+                    setTimeout(() => { window.location.reload(); }, 2000)
                 }
             }
             catch (error) {

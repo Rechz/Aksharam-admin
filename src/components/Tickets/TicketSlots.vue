@@ -209,7 +209,7 @@ export default {
           this.message = 'Employee added successfully !!';
           this.color = '#C8E6C9'
           this.snackbar = true;
-          setInterval(() => { this.getAllDetails(); this.getDetails(); }, 1000)
+          setTimeout(() => { this.getAllDetails(); this.getDetails(); }, 1000)
         }
       }
       catch (error) {
@@ -237,7 +237,7 @@ export default {
           this.message = 'Employee details updated !!';
           this.color = '#C8E6C9'
           this.snackbar = true;
-          setInterval(() => { this.getAllDetails(); this.getDetails(); }, 1000)
+          setTimeout(() => { this.getAllDetails(); this.getDetails(); }, 1000)
         }
       }
       catch (error) {

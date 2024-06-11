@@ -185,7 +185,7 @@ export default {
           this.color = '#C8E6C9'
           this.snackbar = true;
           this.loading = false;
-          setInterval(() => { this.getScanner(); }, 1000)
+          setTimeout(() => { this.getScanner(); }, 1000)
         }
       }
       catch (err) {
@@ -210,7 +210,7 @@ export default {
           this.message = 'Password updated!!';
           this.color = '#C8E6C9'
           this.snackbar = true;
-          setInterval(() => { this.getScanner(); }, 1000)
+          setTimeout(() => { this.getScanner(); }, 1000)
         }
       }
       catch (error) {
@@ -234,7 +234,7 @@ export default {
           this.message = 'Scanner deleted successfully !!';
           this.color = '#C8E6C9'
           this.snackbar = true;
-          setInterval(() => {this.getScanner(); }, 1000)
+          setTimeout(() => {this.getScanner(); }, 1000)
         }
       }    
       catch (error) {
