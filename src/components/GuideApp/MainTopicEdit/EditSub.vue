@@ -159,7 +159,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { mapGetters } from 'vuex';
 export default {
     emits: ['back','update'],
     props: ['idmal', 'ideng'],
@@ -167,6 +167,7 @@ export default {
         return {
             qrGenerated: false,
             QRLoad: true,
+            QRLoading: false,
             malSubmit: false,
             engSubmit: false,
             imageSubmit: false,
@@ -180,15 +181,6 @@ export default {
             audioLoad: false,
             images: [],
             imgPreview: [],
-            fileTypes: [],
-            fileType: {},
-            videomal: '',
-            audiomal: '',
-            videoeng: '',
-            audioeng: '',
-            malSubHeading: '',
-            engSubHeading: '',
-            languages: [],
             title: null,
             titleRules: [v => !!v || '*Title is required'],
             description: null,
@@ -200,19 +192,16 @@ export default {
             urlRules: [v => !!v || '*URL is required'],
             audioFiles: [],
             videoFiles: [],
-            base_url: 'http://localhost:8081',
-            // base_url: 'http://192.168.1.32:8081',
             message: '',
             loading: false,
             color: '',
             icon: '',
             dialogTopic: false,
-            dialogHead: '',
-            subidmal: '',
-            subideng: '',
+            dialogHead: '',  
         };
     },
     computed: {
+        ...mapGetters('guide', ['getLanguageList', 'getFileTypes', 'getMedia', 'getsubidmal', 'getsubideng', 'getmalSubHeading', 'getengSubHeading']),
         proceed() {
             if ((this.malSubmit) && (this.engSubmit)) {
                 return false;
@@ -222,74 +211,119 @@ export default {
             if (this.language === 1) return 'Malayalam'
             else if (this.language === 2) return 'English'
             else return '';
-        }
+        },
+        languages() {
+            return this.getLanguageList;
+        },
+        fileTypes() {
+            return this.getFileTypes;
+        },
+        fileType() {
+            return this.getMedia;
+        },
+        subidmal() {
+            return this.getsubidmal;
+        },
+        subideng() {
+            return this.getsubideng;
+        },
+        malSubHeading() {
+            return this.getmalSubHeading;
+        },
+        engSubHeading() {
+            return this.getengSubHeading;
+        }  
     },
     methods: {
-        async generateQR() {
-            this.QRLoading = true;
-            try {
-                let response;
-                if (this.main == true) {
-                   response = await axios.get(`${this.base_url}/DataEntry2/genCommonId?engId=${this.subideng}&malId=${this.subidmal}`); 
+        back() {
+            this.$emit('back');
+        },
+        success(message) {
+            this.icon = 'mdi mdi-check-circle-outline'
+            this.message = message;
+            this.dialogHead = 'Success'
+            this.color = '#2E7D32'
+            this.dialogTopic = true;
+        },
+        error(message) {
+            this.color = '#BA1A1A';
+            this.icon = 'mdi mdi-alert-outline'
+            this.dialogHead = 'Error';
+            this.message = message;
+            this.dialogTopic = true;
+        },
+        async submitHeading() {
+            this.subload = true;
+            let uid = this.language === 1 ? this.idmal : this.ideng;
+            const language = this.language;
+            const data = {
+                "title": this.title,
+                "description": this.description,
+                "referenceURL": this.url
+            };
+            const payload = {
+                uid: uid,
+                lang: language,
+                data: data
+            }
+            const { valid } = await this.$refs.form.validate()
+            if (valid) {
+                try {
+                    const response = await this.$store.dispatch('guide/submitSubHead', payload);
+                    if (response) {
+                        this.subload = false;
+                        let language = this.languages.find(lang => lang.dtId === this.language);
+                        let message;
+                        if (this.language === 1) {
+                            message = `${this.malSubHeading} (${language.talk}) subheading added successfully!`;
+                            this.success(message);
+                            this.malSubmit = true;
+                            this.$refs.form.reset();
+                            this.language = 2;
+                        }
+                        else {
+                            message = `${this.engSubHeading} (${language.talk}) subheading added successfully!`;
+                            this.success(message);
+                            this.engSubmit = true;
+                            this.$refs.form.reset();
+                            this.language = 1;
+                        }
+                        this.$emit('update');
+                    }
                 }
-                
-                if (response.status >= 200 && response.status < 300) {
-                    this.icon = 'mdi mdi-check-circle-outline'
+                catch (err) {
+                    this.subload = false;
+                    let message = err.message;
+                    this.error(message);
+                    console.error(err);
+                }
+            }
+        },
+        async generateQR() {
+            let message;
+            this.QRLoading = true;
+            const payload = {
+                subideng: this.subideng,
+                subidmal: this.subidmal
+            }
+            try {
+                const response = await this.$store.dispatch('guide/generateQRSub', payload);
+                if (response) {
                     this.QRLoading = false;
-                    this.message = 'QR code generated successfully. Proceed to next steps.';
-                    this.dialogHead = 'Success'
-                    this.color = '#2E7D32'
-                    this.dialogTopic = true;
+                    message = 'Proceed to next steps.';
                     this.qrGenerated = true;
                     this.QRLoad = true;
+                    this.success(message);
+                    this.$emit('update');
                 }
             }
             catch (error) {
                 this.QRLoad = false;
                 this.QRLoading = false;
-                this.icon = 'mdi mdi-alert-outline'
                 this.imageSubmit = false;
-                this.color = '#BA1A1A';
-                this.dialogHead = 'Error';
-                this.message = 'Error uploading images:' + error.message;
-                this.dialogTopic = true;
+                message = 'Error uploading images:' + error.message;
+                this.error(message);
             }
-        },
-        finish() {
-            sessionStorage.clear();
-            this.qrGenerated = false;
-            this.malSubHeading = ''
-            this.engSubHeading = ''
-            this.subhead = false;
-            this.malSubmit = false;
-            this.engSubmit = false;
-            this.audioEngSubmit = false;
-            this.audioMalSubmit = false;
-            this.videoEngSubmit = false;
-            this.videoMalSubmit = false;
-            this.imageSubmit = false;
-            this.languageAV = null;
-            this.subideng = '';
-            this.subidmal =''
-        },
-        back() {
-            this.$emit('back');
-        },
-        handleAudio(event) {
-            const selectedFiles = event.target.files[0];
-            this.audioFiles.push(selectedFiles)
-        },
-        removeAudio(index) {
-            this.audioFiles.splice(index, 1);
-            this.$refs.fileAudio.value = '';
-        },
-        handleVideo(event) {
-            const selectedFiles = event.target.files[0];
-            this.videoFiles.push(selectedFiles);
-        },
-        removeVideo(index) {
-            this.videoFiles.splice(index, 1);
-            this.$refs.fileVideo.value = '';
         },
         handleFileUpload(event) {
             const files = event.target.files;
@@ -304,155 +338,72 @@ export default {
             }
         },
         async uploadImages() {
+            let message;
             this.imageLoad = true;
             const formData = new FormData();
             this.images.forEach((image) => {
                 formData.append("files", image);
             });
+            const payload = {
+                subideng: this.subideng,
+                subidmal: this.subidmal,
+                formData: formData
+            }
             try {
-                const response = await axios.post(`${this.base_url}/imgData/uploadImg1?englishUId=${this.subideng}&malUid=${this.subidmal}`, formData);
-                if (response.status === 200) {
+                const response = await this.$store.dispatch('guide/uploadSubImages', payload);
+                if (response) {
                     this.imageLoad = false;
-                    this.icon = 'mdi mdi-check-circle-outline'
                     this.imageSubmit = true;
-                    this.message = 'Image uploaded successfully';
-                    this.dialogHead = 'Success'
-                    this.color = '#2E7D32'
-                    this.dialogTopic = true;
+                    message = 'Image uploaded successfully';
+                    this.success(message);
                     this.images = [];
                     this.imgPreview = [];
-                    this.$emit('update');
                     this.$refs.imageFile.value = '';
+                    this.$emit('update');
                 }
             } catch (error) {
                 this.imageLoad = false;
-                this.icon = 'mdi mdi-alert-outline'
                 this.imageSubmit = false;
-                this.color = '#BA1A1A';
-                this.dialogHead = 'Error';
-                this.message = 'Error uploading images:' + error.message;
-                this.dialogTopic = true;
-            }
-        },
-        async getType() {
-            try {
-                const response = await axios.get(`${this.base_url}/fileType/getFileType`);
-                if (response.status >= 200 && response.status < 300) {
-                    response.data.forEach(item => {
-                        this.fileType[item.fileType.toLowerCase()] = item.id;
-                    });
-                }
-            }
-            catch (err) {
-                console.log(err)
-            }
-        },
-        async getAllLanguages() {
-            try {
-                const response = await axios.get(`${this.base_url}/dataType1/getTalk`)
-                if (response.status === 200) {
-                    this.languages = response.data;
-                }
-            }
-            catch (error) {
-                console.error(error)
+                message = 'Error uploading images:' + error.message;
+                this.error(message);
             }
         },
         removeImage(index) {
             this.imgPreview.splice(index, 1);
             this.images.splice(index, 1);
         },
-        async submitHeading() {
-            this.subload = true;
-            let uid = '';
-            if (this.language === 1) {
-                uid = this.idmal;
-            } else {
-                uid = this.ideng;
-            }
-            const { valid } = await this.$refs.form.validate()
-            if (valid) {
-                try {
-                    const response = await axios.post(`${this.base_url}/DataEntry2/firstSub?uId=${uid}`, {
-                        "title": this.title,
-                        "description": this.description,
-                        "referenceURL": this.url
-                    });
-                    if (response.status >= 200 && response.status < 300) {
-                        this.subload = false;
-                        if (this.language === 1) {
-                            const language = this.languages.find(lang => lang.dtId === this.language);
-                            this.icon = 'mdi mdi-check-circle-outline'
-                            this.$store.commit('setMalSubHeading', response.data.title)
-                            this.malSubHeading = response.data.title
-                            this.subidmal = response.data.fsUid
-                            this.$store.commit('setSubidmal', response.data.fsUid)
-                            this.message = `${language.talk} subheading added successfully!`;
-                            this.dialogHead = 'Success'
-                            this.color = '#2E7D32'
-                            this.dialogTopic = true;
-                            this.malSubmit = true;
-                            this.$emit('update');
-                            this.$refs.form.reset();
-                            this.language = 2;
-                        }
-                        else {
-                            const language = this.languages.find(lang => lang.dtId === this.language);
-                            this.icon = 'mdi mdi-check-circle-outline'
-                            this.$store.commit('setEngSubHeading', response.data.title)
-                            this.engSubHeading = response.data.title
-                            this.subideng = response.data.fsUid
-                            this.$store.commit('setSubideng', response.data.fsUid)
-                            this.message = `${language.talk} subheading added successfully!`;
-                            this.dialogHead = 'Success'
-                            this.color = '#2E7D32'
-                            this.dialogTopic = true;
-                            this.engSubmit = true;
-                            this.$refs.form.reset();
-                            this.$emit('update');
-                            this.language = 1;
-                        }
-                    }
-                }
-                catch (err) {
-                    this.subload = false;
-                    this.icon = 'mdi mdi-alert-outline'
-                    this.color = '#BA1A1A';
-                    this.dialogHead = 'Error';
-                    this.message = err.message;
-                    this.dialogTopic = true;
-                    console.error(err);
-                }
-            }
+        handleAudio(event) {
+            const selectedFiles = event.target.files[0];
+            this.audioFiles.push(selectedFiles)
+        },
+        removeAudio(index) {
+            this.audioFiles.splice(index, 1);
+            this.$refs.fileAudio.value = '';
         },
         async submitAudio(id) {
             this.audioLoad = true;
-            let uid = '';
-            if (this.languageAV === 1) {
-                uid = this.subidmal;
-            } else {
-                uid = this.subideng;
-            }
+            let message;
+            let uid = this.languageAV === 1 ? this.subidmal : this.subideng;
             const formData = new FormData();
-            this.audioFiles.forEach((file) => {
-                formData.append("files", file);
-            });
+            this.audioFiles.forEach((file) => { formData.append("files", file); });
+            const payload = {
+                uid: uid,
+                id: id,
+                formData: formData
+            }
             try {
-                const response = await axios.post(`${this.base_url}/mediaData/mpData1?uId=${uid}&mtId=${id}`, formData);
-                if (response.status >= 200 && response.status < 300) {
-                    this.icon = 'mdi mdi-check-circle-outline'
+                const response = await this.$store.dispatch('guide/submitSubMedia', payload);
+                if (response) {
                     this.audioLoad = false;
                     if (this.languageAV === 1) {
-                        this.message = 'Malayalam audio uploaded successfully';
+                        message = 'Malayalam audio uploaded successfully';
                         this.audioMalSubmit = true;
                     }
                     else {
-                        this.message = 'English audio uploaded successfully';
+                        message = 'English audio uploaded successfully';
                         this.audioEngSubmit = true;
                     }
-                    this.dialogHead = 'Success'
-                    this.color = '#2E7D32'
-                    this.dialogTopic = true;
+                    this.success(message);
                     this.audioFiles = [];
                     this.$refs.fileAudio.value = '';
                     this.$emit('update');
@@ -460,41 +411,42 @@ export default {
             }
             catch (err) {
                 this.audioLoad = false;
-                this.icon = 'mdi mdi-alert-outline'
-                this.color = '#BA1A1A';
-                this.dialogHead = 'Error';
-                this.message = 'Error uploading audio:' + err.message;
-                this.dialogTopic = true;
+                message = 'Error uploading audio:' + err.message;
+                this.error(message);
             }
         },
+        handleVideo(event) {
+            const selectedFiles = event.target.files[0];
+            this.videoFiles.push(selectedFiles);
+        },
+        removeVideo(index) {
+            this.videoFiles.splice(index, 1);
+            this.$refs.fileVideo.value = '';
+        },
         async submitVideo(id) {
+            let message;
             this.videoLoad = true;
-            let uid = '';
-            if (this.languageAV === 1) {
-                uid = this.subidmal;
-            } else {
-                uid = this.subideng;
-            }
+            let uid = this.languageAV === 1 ? this.subidmal : this.subideng;
             const formData = new FormData();
-            this.videoFiles.forEach((file) => {
-                formData.append("files", file);
-            });
+            this.videoFiles.forEach((file) => { formData.append("files", file); });
+            const payload = {
+                uid: uid,
+                id: id,
+                formData: formData
+            }
             try {
-                const response = await axios.post(`${this.base_url}/mediaData/mpData1?uId=${uid}&mtId=${id}`, formData);
-                if (response.status >= 200 && response.status < 300) {
-                    this.icon = 'mdi mdi-check-circle-outline'
+                const response = await this.$store.dispatch('guide/submitSubMedia', payload);
+                if (response) {
                     this.videoLoad = false;
                     if (this.languageAV === 1) {
-                        this.message = 'Malayalam video uploaded successfully';
+                        message = 'Malayalam video uploaded successfully';
                         this.videoMalSubmit = true;
                     }
                     else {
-                        this.message = 'English video uploaded successfully';
+                        message = 'English video uploaded successfully';
                         this.videoEngSubmit = true;
                     }
-                    this.dialogHead = 'Success'
-                    this.color = '#2E7D32'
-                    this.dialogTopic = true;
+                    this.success(message);
                     this.videoFiles = [];
                     this.$refs.fileVideo.value = '';
                     this.$emit('update');
@@ -502,13 +454,28 @@ export default {
             }
             catch (err) {
                 this.videoLoad = false;
-                this.icon = 'mdi mdi-alert-outline'
-                this.color = '#BA1A1A';
-                this.dialogHead = 'Error';
-                this.message = 'Error uploading video:' + err.message;
-                this.dialogTopic = true;
+                message = 'Error uploading video:' + err.message;
+                this.error(message);
             }
-        }
+        },
+        finish() {
+            // sessionStorage.clear();
+           
+            this.$store.commit('guide/setMalSubHeading', '');
+            this.$store.commit('guide/setEngSubHeading', '');
+            this.$store.commit('guide/setSubidmal', '');
+            this.$store.commit('guide/setSubideng', '');
+            this.subhead = false;
+            this.malSubmit = false;
+            this.engSubmit = false;
+            this.audioEngSubmit = false;
+            this.audioMalSubmit = false;
+            this.videoEngSubmit = false;
+            this.videoMalSubmit = false;
+            this.imageSubmit = false;
+            this.languageAV = null;
+            this.qrGenerated = false;
+        },
     },
     watch: {
         proceed(newValue) {
@@ -518,10 +485,7 @@ export default {
             }
         }
     },
-    mounted() {
-        this.getAllLanguages();
-        this.getType();
-    },
+
 };
 </script>
 <style scoped>

@@ -1,27 +1,40 @@
 <template>
 
   <v-container class="py-8 px-0" fluid>
+    <v-dialog width="600" max-width="600" v-model="dialogTopic">
+      <v-card width="600" rounded="3">
+        <v-card-title class="text-center text-white" :style="{ backgroundColor: color }">{{ dialogHead }}</v-card-title>
+        <v-card-text class="px-5 text-center">
+          <v-icon size="88" :class="icon" :color="color"></v-icon>
+          <h6>{{ message }}</h6>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="dialogTopic = !dialogTopic" :color="color">Okay</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <div class="d-flex justify-content-end mb-4">
       <v-btn-toggle rounded="xl" color="green-lighten-5" v-model="lang" density="compact">
-        <v-btn value="English" @click="translate(2)" size="small">English</v-btn>
-        <v-btn value="Malayalam" @click="translate(1)" size="small">Malayalam</v-btn>
-
+        <v-btn :value="'English'" @click="translate(2)" size="small">English</v-btn>
+        <v-btn :value="'Malayalam'" @click="translate(1)" size="small">Malayalam</v-btn>
       </v-btn-toggle>
     </div>
     <v-data-table :headers="headers" :items="mainheadings" class="mt-3"
       :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
       <template v-slot:top>
-        <v-dialog v-model="dialogDelete" width="400px">
+        <v-dialog v-model="dialogDelete" width="500px">
           <v-card class="rounded-4 pb-4">
-            <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
-              Heading</v-card-title>
+            <v-card-title class="mb-2 text-white ps-4 fs-4 text-center" style="background-color: #BA1A1A;">Delete
+              Topic</v-card-title>
             <v-container class="px-4 d-flex flex-column align-items-center">
               <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
-              <v-card-text class="mt-1 text-center">Are you sure you want to delete?</v-card-text>
+              <v-card-text class="mt-1 text-center fs-6">
+                Are you sure you want to delete this topic and all details related to this topic?
+              </v-card-text>
             </v-container>
             <v-card-actions class="mx-4 d-flex flex-column align-items-center">
               <v-btn block class="rounded-4 text-white mb-3" style="background-color: #BA1A1A;"
-                @click="deleteItemConfirm">Delete</v-btn>
+                @click="deleteItemConfirm" :loading="loading" :disabled="loading">Delete</v-btn>
               <v-btn block variant="text" class="rounded-4 mb-3" @click="closeDelete">Cancel</v-btn>
 
             </v-card-actions>
@@ -80,29 +93,22 @@
 </template>
   
   <script>
-  // import DetailsView from './DetailsView.vue';
   import axios from 'axios';
   import { mapGetters } from 'vuex';
   export default {
-
     data: () => ({
-      dialog: false,
-      // overlay: true,
-      // base_url: 'http://192.168.1.32:8081',
-      base_url: 'http://localhost:8081',
       qrDialog: false,
       dialogDelete: false,
-      isHovered: false,
-      search: '',
       message: '',
       loading: false,
-      snackbar: false,
+      dialogTopic: false,
       color: '#E8F5E9',
-      timeout: 3000,
+      dialogHead: '',
+      icon:'',
       subTopic:{},
       image: require('@/assets/acc.jpg'),
       headers: [
-        { title: 'Sl.no', align: 'center', sortable: false },
+        { title: 'Sl.no', align: 'start', sortable: false },
         { title: 'Heading', align: 'start', key: 'heading', sortable: false },
         { title: 'QR Code', align: 'start', key: 'QR', sortable: false },
         { title: 'Details', align: 'center' },
@@ -110,14 +116,13 @@
       ],
 
     }),
-  
     computed: {
-      ...mapGetters(['getData']),
-    mainheadings() {
-      return this.getData;
-    },
+      ...mapGetters('guide', ['getData','getLanguage']),
+      mainheadings() {
+        return this.getData;
+      },
       language() {
-        return this.$store.getters.getLanguage;
+        return this.getLanguage;
       },
       lang() {
         if (this.language === 2) {
@@ -130,48 +135,55 @@
       }
     },
     watch: {
-      dialog(val) {
-        val || this.close()
-      },
       dialogDelete(val) {
         val || this.closeDelete()
       },
     },
-
     mounted() {
       this.getTopics();
+      this.getType();
+      this.getAllLanguages();
     },
     methods: {
+      success(message) {
+        this.icon = 'mdi mdi-check-circle-outline'
+        this.message = message;
+        this.dialogHead = 'Success'
+        this.color = '#2E7D32'
+        this.dialogTopic = true;
+      },
+      error(message) {
+        this.color = '#BA1A1A';
+        this.icon = 'mdi mdi-alert-outline'
+        this.dialogHead = 'Error';
+        this.message = message;
+        this.dialogTopic = true;
+      },
       async getTopics() {
-      try {
-        const response = await axios.get(`${this.base_url}/DataEntry1/getMainComplete?dtId=${this.language}`);
-        if (response.status === 200) {
-          this.$store.commit('setAllTopics', response.data);
+        try {
+          await this.$store.dispatch('guide/getTopics');
         }
-      } catch (error) {
-        console.error(error);
-      }
-    },
-
+        catch (error) {
+          console.error(error);
+        }
+      },
       translate(language) {
-        this.$store.commit('setLanguage', language);
-        // if (this.language === 1) {
-        //   this.$store.commit('setLanguage', 2);
-        // } else {
-        //   this.$store.commit('setLanguage', 1);
-        // }
+        this.$store.commit('guide/setLanguage', language);
         this.getTopics()
       },
       async showDetails(item) {
         try {
-          const response = await axios.get(`${this.base_url}/qrcode/getScanDetails?dtId=${this.language}&commonId=${item.commonId}`);
-        if (response.status === 200) {
-          this.$store.commit('setDetails', response.data)
-          this.$router.push({name:'guide-edit'})
+          const response = await this.$store.dispatch('guide/showDetails', {
+            language: this.language,
+            commonId: item.commonId
+          });
+          if (response) {
+            this.$router.push({name:'guide-edit'})
+          }
         }
-      } catch (error) {
-        console.error(error);
-      }
+        catch (error) {
+          console.error(error);
+        }
       },
       showQR(item) {
         this.editedItem = Object.assign({}, item);
@@ -187,26 +199,22 @@
         this.dialogDelete = true
       },
       async deleteItemConfirm() {
-        this.loading = !this.loading
+        this.loading = true;
         try {
           const id = this.editedItem.commonId;
-          const success = await axios.delete(`${this.base_url}/deleteMain/delete/${id}`)
-          if ((success.status >= 200) || (success.status<300)) {
-            // this.loading = false
-            this.message = 'Heading deleted successfully !!';
-            this.color = '#C8E6C9'
+          const success = await this.$store.dispatch('guide/deleteMain', id)
+          if (success) {
+            this.loading = false;
+            let message = 'All details related to the topic deleted successfully !!';
             this.closeDelete();
-            this.snackbar = true;
+            this.success(message);
             this.getTopics();
-            // setInterval(() => { window.location.reload(); }, 2000)
           }
         }
         catch (error) {
-          
-          this.message = error.message + '!!';
-          this.color = '#C62828';
+          let message = error.message + '!!';
           this.loading = false
-          this.snackbar = true;
+          this.error(message);
         }
       },
       closeDelete() {
@@ -216,10 +224,7 @@
           this.editedIndex = -1
         })
       },
-
-      
       downloadQR(qrCodeUrl) {
-        
         axios.get(qrCodeUrl, { responseType: 'blob' })
           .then(response => {
             const blob = new Blob([response.data], { type: 'application/pdf' })
@@ -230,38 +235,33 @@
             URL.revokeObjectURL(link.href)
           }).catch(console.error)
       },
-
+      async getType() {
+        try {
+          await this.$store.dispatch('guide/getType');
+        }
+        catch (err) {
+          console.log(err)
+        }
+      },
+      async getAllLanguages() {
+        try {
+          await this.$store.dispatch('guide/getAllLanguages');
+        }
+        catch (error) {
+          console.error(error)
+        }
+      },
       //   const link = document.createElement('a');
       //   link.href = qrCodeUrl;
       //   link.download = 'qr_code.png';
       //   document.body.appendChild(link);
       //   link.click();
       //   document.body.removeChild(link);
-      // },
-      
-      
+      // }, 
     },
   };
-  </script>
-  
-  <style scoped>
-  /* .v-table {
-    width: 76vw;
-  } */
-  :deep(.search .v-input__details) {
-    display: none;
-  }
-  :deep(.search .v-input__control) {
-    border-bottom: 2px solid #216D17;
-    width: 200px !important;
-    height: 40px !important;
-    background-color: #DFE4D7 !important;
-  }
-  :deep(.emp-add .v-input__control) {
-    border-bottom: 2px solid #216D17;
-    background-color: #DFE4D7 !important;
-    /* margin-bottom: 15px; */
-  }
+</script> 
+<style scoped>
   :deep(.v-btn--variant-elevated){
     background: none;
   }
@@ -273,77 +273,10 @@
   :deep(.v-pagination__list .v-btn--disabled) {
     opacity: 0.4;
   }
-  .emp-details div{
-    font-size: 14px;
+  .qr:hover {
+    cursor: pointer;
   }
-  :deep(.v-input__prepend,
-  .v-input__append) {
-    display: none;
-  }
-  :deep(.search.v-input) {
-    display: flex;
-    justify-content: end;
-  }
-  
-  .desc{
-    height: 360px; 
-    overflow: auto;
-  }
-
-  /* Define scrollbar styles */
-::-webkit-scrollbar {
-    width: 8px; /* Width of the scrollbar */
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-    background-color: darkgrey; /* Color of the scrollbar handle */
-    border-radius: 10px; /* Rounded corners of the handle */
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-    background: #f1f1f1; /* Color of the scrollbar track */
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: #555; /* Color of the handle when hovered */
-}
-
-
-    /* Scrollbar styles */
-    .custom-scroll {
-        overflow-y: scroll; /* Enable vertical scrollbar */
-        max-height: 380px; /* Max height to enable scrolling */
-        padding-right: 16px; 
-    }
-
-    /* Define scrollbar styles */
-    .custom-scroll::-webkit-scrollbar {
-        width: 8px; /* Width of the scrollbar */
-    }
-
-    /* Handle */
-    .custom-scroll::-webkit-scrollbar-thumb {
-        background-color: darkgrey; /* Color of the scrollbar handle */
-        border-radius: 10px; /* Rounded corners of the handle */
-    }
-
-    /* Track */
-    .custom-scroll::-webkit-scrollbar-track {
-        background: #f1f1f1; /* Color of the scrollbar track */
-    }
-
-    /* Handle on hover */
-    .custom-scroll::-webkit-scrollbar-thumb:hover {
-        background: #555; /* Color of the handle when hovered */
-    }
-    .qr:hover {
-        cursor: pointer;
-    }
 </style>
-
 
   
  
