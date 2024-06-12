@@ -1,6 +1,7 @@
 <template>
 
-  <v-container class="py-8 px-0" fluid>
+  <v-container class="pb-8 px-0" fluid>
+
     <!-- <v-container class="py-0">
       <p class="text-danger text-caption mb-2"><i>*Enter time in 24 hour format (hh:mm:ss) format. eg:-5.30 pm should be
           entered as
@@ -20,30 +21,36 @@
     </v-container> -->
     <v-dialog v-model="dialog" max-width="500px">
       <template v-slot:activator="{ props }">
-        <v-btn color="#2C7721" size="large" v-bind="props" class="mb-4 text-capitalize"
+        <div class="d-flex justify-content-end">
+          <v-btn color="#2C7721" size="large" v-bind="props" class="text-capitalize mb-3"
           style="font-size: 16px; font-weight: 600;"> + Add
           Slot
         </v-btn>
+        </div>
+
       </template>
       <v-card style="width: 500px; height:auto; border-radius: 15px;">
         <v-card-title class="d-flex justify-content-between px-4" style="background-color: #216D17; color: #FFFFFF;">
           <h4>{{formTitle}}</h4>
           <v-icon @click="close" class="mdi mdi-window-close"></v-icon>
         </v-card-title>
-        <v-card-text class="pb-0">
+        <v-card-subtitle class="text-danger text-center my-1" v-if="editedIndex === -1">
+          <i>*Enter time in 24 hour format (hh:mm:ss) format.</i>
+        </v-card-subtitle>
+        <v-card-text class="py-0">
           <v-container>
             <v-row>
               <v-col cols="12" sm="12" md="12" class="py-0">
-                <v-text-field v-model="editedItem.startTime" label="Time IN" density="comfortable"
-                  class="slot"></v-text-field>
+                <v-text-field v-model="editedItem.startTime" label="Time IN (hh:mm:ss)" density="comfortable"
+                  class="slot" variant="outlined"></v-text-field>
               </v-col>
               <v-col cols="12" sm="12" md="12" class="py-0">
-                <v-text-field v-model="editedItem.endTime" label="Time OUT" density="comfortable"
-                  class="slot"></v-text-field>
+                <v-text-field v-model="editedItem.endTime" label="Time OUT (hh:mm:ss)" density="comfortable"
+                  class="slot" variant="outlined"></v-text-field>
               </v-col>
               <v-col cols="12" sm="12" md="12" class="py-0">
-                <v-text-field v-model="editedItem.capacity" label="Capacity" density="comfortable"
-                  class="slot"></v-text-field>
+                <v-text-field v-model="editedItem.capacity" label="Capacity" density="comfortable" class="slot"
+                  variant="outlined"></v-text-field>
               </v-col>
               <v-col cols="12" sm="12" md="12" class="py-0" v-if="editedIndex !== -1">
                 <div class="d-flex gap-2">
@@ -144,9 +151,9 @@ export default {
     dialog(val) {
       val || this.close()
     },
-    dialogDelete(val) {
-      val || this.closeDelete()
-    },
+    // dialogDelete(val) {
+    //   val || this.closeDelete()
+    // },
   },
 
   methods: {
@@ -156,16 +163,16 @@ export default {
       this.dialog = true
     },
 
-    deleteItem(item) {
-      this.editedIndex = this.slots.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialogDelete = true
-    },
+    // deleteItem(item) {
+    //   this.editedIndex = this.slots.indexOf(item)
+    //   this.editedItem = Object.assign({}, item)
+    //   this.dialogDelete = true
+    // },
 
-    deleteItemConfirm() {
-      this.slots.splice(this.editedIndex, 1)
-      this.closeDelete()
-    },
+    // deleteItemConfirm() {
+    //   this.slots.splice(this.editedIndex, 1)
+    //   this.closeDelete()
+    // },
 
     close() {
       this.dialog = false
@@ -175,13 +182,13 @@ export default {
       })
     },
 
-    closeDelete() {
-      this.dialogDelete = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
-    },
+    // closeDelete() {
+    //   this.dialogDelete = false
+    //   this.$nextTick(() => {
+    //     this.editedItem = Object.assign({}, this.defaultItem)
+    //     this.editedIndex = -1
+    //   })
+    // },
     async getSlot() {
       await this.$store.dispatch('getSlots')
     },
@@ -226,7 +233,7 @@ export default {
         const success = await this.$store.dispatch('editSlot', { id: this.editedItem.id, data: {
           "startTime": this.editedItem.startTime,
           "spotCapacity": this.editedItem.capacity,
-          "status": true,
+          "status": this.editedItem.status,
           "totalCapacity": this.editedItem.capacity,
           "endTime": this.editedItem.endTime,
           "capacity": this.editedItem.capacity
@@ -256,17 +263,17 @@ export default {
 
 <style>
 
-.slot .v-input__control {
+/* .slot .v-input__control {
   background-color: #DFE4D7 !important;
-}
+} */
 
 .v-table__wrapper>table>thead {
-  background-color: #236726;
+  /* background-color: #236726; */
   color: white;
 }
 :deep(.slot .v-input__control) {
-  border-bottom: 2px solid #216D17;
-  background-color: #DFE4D7 !important;
+  /* border-bottom: 2px solid #216D17; */
+  /* background-color: #DFE4D7 !important; */
   width: 400px !important;
 }
 :deep(.slot .v-input--horizontal) {

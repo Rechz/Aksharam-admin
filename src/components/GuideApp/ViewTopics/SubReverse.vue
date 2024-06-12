@@ -75,7 +75,7 @@
       </v-dialog>
     </div>
   </div>
-  <v-dialog v-model="editDialog" width="1000">
+  <v-dialog v-model="editDialog" width="1000" persistent>
     <edit-form :head="head" :description="description" :images="images" :video="video" :url="url" :audio="audio"
       @finish="editDialog = false" :commonId="commonId" :uId="uId" @update="update" :main="main" :malId="malId"
       :engId="engId" :subtopic="subtopic"></edit-form>

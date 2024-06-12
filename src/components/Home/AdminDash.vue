@@ -83,6 +83,7 @@ export default {
   },
   methods: {
     logout() {
+      sessionStorage.clear();
       this.$router.push({ name: 'admin-login' });
     },
     navigate(route) {
