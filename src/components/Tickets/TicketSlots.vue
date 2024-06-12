@@ -89,14 +89,15 @@
           <td class="text-center">{{ formatTime(item.startTime) }}</td>
           <td class="text-center">{{ formatTime(item.endTime) }}</td>
           <td class="text-center">{{ item.capacity }}</td>
-          <td class="text-center">{{ item.status?'Active':'Inactive' }}</td>
+          <td class="text-center"><v-chip :color="item.status ? 'green' : 'red'">{{
+              item.status?'Active':'Inactive' }}</v-chip></td>
           <td class="text-center">
             <v-icon size="large" color="teal-darken-3" class="me-4" @click="editItem(item)">
               mdi-pencil
             </v-icon>
-            <v-icon size="large" color="danger" class="ms-4" @click="deleteItem(item)">
+            <!-- <v-icon size="large" color="danger" class="ms-4" @click="deleteItem(item)">
               mdi-trash-can
-            </v-icon>
+            </v-icon> -->
           </td>
         </tr>
       </template>
@@ -122,7 +123,7 @@ export default {
         { title: 'Time Out', key: 'endTime', sortable: false, align: 'center' },
         { title: 'No.of Tickets', key: 'capacity', sortable: false, align: 'center' },
         { title: 'Status', key: 'status', sortable: false, align: 'center' },
-        { title: 'Edit / Delete', key: 'actions', sortable: false, align: 'center' },
+        { title: 'Edit', key: 'actions', sortable: false, align: 'center' },
       ],
       editedIndex: -1,
       editedItem: {},
@@ -195,21 +196,21 @@ export default {
     async add() {
       this.loading = true;
       try {
-        const success = await this.$store.dispatch('addEmployees', {
-          email: this.editedItem.email,
-          name: this.editedItem.name,
-          mobile: this.editedItem.phoneNo,
-          temporary: this.editedItem.tempAddress,
-          permanent: this.editedItem.permAddress,
-          photo: "photo"
+        const success = await this.$store.dispatch('addSlot', {
+          "startTime": this.editedItem.startTime,
+          "spotCapacity": this.editedItem.capacity,
+          "status": true,
+          "totalCapacity": this.editedItem.capacity,
+          "endTime": this.editedItem.endTime,
+          "capacity": this.editedItem.capacity
         });
         if (success) {
           this.loading = false;
           this.close();
-          this.message = 'Employee added successfully !!';
+          this.message = 'Slot added successfully !!';
           this.color = '#C8E6C9'
           this.snackbar = true;
-          setTimeout(() => { this.getAllDetails(); this.getDetails(); }, 1000)
+          this.getSlot();
         }
       }
       catch (error) {
@@ -222,22 +223,21 @@ export default {
     async update() {
       this.loading = true;
       try {
-        const success = await this.$store.dispatch('editEmployees', {
-          id: this.editedItem.employeeId,
-          email: this.editedItem.email,
-          name: this.editedItem.name,
-          mobile: this.editedItem.phoneNo,
-          temporary: this.editedItem.tempAddress,
-          permanent: this.editedItem.permAddress,
-          photo: "photo"
-        });
+        const success = await this.$store.dispatch('editSlot', { id: this.editedItem.id, data: {
+          "startTime": this.editedItem.startTime,
+          "spotCapacity": this.editedItem.capacity,
+          "status": true,
+          "totalCapacity": this.editedItem.capacity,
+          "endTime": this.editedItem.endTime,
+          "capacity": this.editedItem.capacity
+        }});
         if (success) {
           this.loading = false;
           this.close();
-          this.message = 'Employee details updated !!';
+          this.message = 'Slot details updated !!';
           this.color = '#C8E6C9'
           this.snackbar = true;
-          setTimeout(() => { this.getAllDetails(); this.getDetails(); }, 1000)
+          this.getSlot();
         }
       }
       catch (error) {

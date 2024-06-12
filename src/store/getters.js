@@ -21,4 +21,5 @@ export default {
   getEmployeeId: (state) => state.employeeId,
   getPriceList: (state) => state.priceList,
   getHoliday: (state) => state.holidays,
+  getSlots: (state) => state.slots
 }

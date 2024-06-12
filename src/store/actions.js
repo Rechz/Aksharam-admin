@@ -547,19 +547,57 @@ try {
       return true;
     }
   },
-    //getslots
-    async getSlots({ rootGetters, commit }) {
-      try {
-        const url = rootGetters.getUrl;
-        const response = await axios.get(`${url}/api/stime/getSlot`);
-        if (response.status === 200) {
-          console.log(response.data)
-          commit('setSlots', response.data);
-          return true;
-        }
+  //getslots
+  async getSlots({ rootGetters, commit }) {
+    try {
+      const url = rootGetters.getUrl;
+      const response = await axios.get(`${url}/api/stime/getSlot`);
+      if (response.status === 200) {
+        console.log(response.data)
+        commit('setSlots', response.data);
+        return true;
       }
-      catch (error) {
-        console.error(error)
-      }
+    }
+    catch (error) {
+      console.error(error)
+    }
   },
+  //addslots
+  async addSlot({ rootGetters }, payload) {
+    try {
+      const url = rootGetters.getUrl;
+      const response = await axios.post(`${url}/api/stime/addstime`, payload,
+        {
+          headers: {
+            Authorization: `Bearer ${rootGetters.getToken}`
+          }
+        }
+      );
+      if (response.status === 200) {
+        return true;
+      }
+    }
+    catch (error) {
+      throw Error(error)
+    }
+  },
+  //editslots
+  async editSlot({ rootGetters }, payload) {
+    try {
+      const url = rootGetters.getUrl;
+      const response = await axios.put(`${url}/api/stime/updateShow/${payload.id}`, payload.data,
+        {
+          headers: {
+            Authorization: `Bearer ${rootGetters.getToken}`
+          }
+        }
+      );
+      if (response.status === 200) {
+        return true;
+      }
+    }
+    catch (error) {
+      throw Error(error)
+    }
+  }
 }
