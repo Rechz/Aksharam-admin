@@ -40,7 +40,7 @@
           </audio>
         </div>
         <div class="carousel-wrapper d-flex flex-column align-items-end">
-          <div class="d-flex gap-2">
+          <div class="d-flex gap-2 mb-3">
             <v-btn prepend-icon="mdi-pencil" rounded="4" class=" text-success text-capitalize me-2 fw-bold" size="small"
               @click="openEdit">Edit</v-btn>
             <v-btn prepend-icon="mdi-trash-can" rounded="4" class=" text-danger text-capitalize fw-bold"

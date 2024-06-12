@@ -9,9 +9,9 @@ const store = createStore({
   },
   state() {
     return {
-      // base_url: 'http://localhost:8081',
+      base_url: 'http://localhost:8448',
       // base_url: 'http://192.168.1.17:5000',
-      base_url: 'https://aksharammuseum.com',
+      // base_url: 'https://aksharammuseum.com',
       token: sessionStorage.getItem('token') || '',
       status: JSON.parse(sessionStorage.getItem('status')) || false,
       user: JSON.parse(sessionStorage.getItem('user')) || {},
