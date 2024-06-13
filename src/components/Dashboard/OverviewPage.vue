@@ -5,5 +5,6 @@
  fgffgfg
  gffgfg
  gffgfg
- fgfgfgf -->
+ fgfgfgf --><!-- Abcd -->
+  adminpage
 </template>
