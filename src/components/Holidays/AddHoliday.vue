@@ -3,14 +3,18 @@
     <v-snackbar v-model="snackbar" :color="color" :timeout="timeout" location="top">
       <div class="text-center">{{ message }}</div>
     </v-snackbar>
-    <div class="d-flex justify-content-start gap-5  mt-5">
-      <v-date-picker width="450" v-model="date" color="#2C7721">
+    <div class="d-flex justify-content-start align-items-center gap-5 ">
+      <v-date-picker width="350" v-model="date" color="#2C7721">
       </v-date-picker>
-      <div class="px-1">
-        <v-text-field v-model="selectedDate" label="Selected Date" density="comfortable" class="portal"></v-text-field>
-        <v-text-field v-model="holiday" label="Holiday Purpose" density="comfortable" class="portal"></v-text-field>
-        <v-btn @click="sendHoliday" block color="#2C7721" class="">Add Holiday</v-btn>
-      </div>
+      <v-card flat width="350" height="300" class=" p-3 d-flex align-items-center">
+        <div class="px-1">
+          <v-text-field v-model="selectedDate" label="Selected Date" density="comfortable" class="portal"
+            variant="outlined"></v-text-field>
+          <v-text-field v-model="holiday" label="Holiday Purpose" density="comfortable" class="portal"
+            variant="outlined"></v-text-field>
+          <v-btn @click="sendHoliday" block color="#2C7721" class="">Add Holiday</v-btn>
+        </div>
+      </v-card>
     </div>
   </v-container>
 </template>
@@ -72,11 +76,10 @@ export default {
 
 <style scoped>
 .portal {
-  width: 300px;
+  width: 310px;
 }
-:deep(.v-input__control) {
+/* :deep(.v-input__control) {
   border-bottom: 2px solid #216D17;
   background-color: #DFE4D7 !important;
-  /* margin-bottom: 15px; */
-}
+  /* margin-bottom: 15px; }*/ 
 </style>
