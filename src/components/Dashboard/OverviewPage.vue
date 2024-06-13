@@ -1,3 +1,4 @@
 <template>
-  
+  <!-- Abcd -->
+  adminpage
 </template>
