@@ -68,14 +68,10 @@
           </v-card>
         </v-dialog>
       </template>
-      <!-- <template v-slot:item="{ item, index }"> -->
       <template v-slot:item="{ item,index }">
         <tr style="background-color:#FCFDF6; color:black;">
-          <!-- <td class="text-center">{{ index + 1 }}</td> -->
           <td class="text-center">{{ index + 1 }}</td>
           <td class="">{{ item.title }}</td>
-          <!-- <td class=""><v-img :src="@/assets/acc.jpg" alt="image"
-              style="border-radius: 50%; height: 50px; width: 50px;"></v-img></td> -->
           <td class=""><v-img :src="item.qrCodeUrl" alt="QR" class="qr" style="height: 50px; width: 50px;"
               @click="showQR(item)"></v-img></td>
           <td class="text-center">
@@ -83,7 +79,6 @@
               Edit</v-btn>
           </td>
           <td class="text-center">
-            <!-- <v-icon size="large" color="teal-darken-3" class="me-4 mdi mdi-pencil" @click="editItem(item)"></v-icon> -->
             <v-icon size="large" color="danger" class=" mdi mdi-trash-can" @click="deleteItem(item)"></v-icon>
           </td>
         </tr>
@@ -232,7 +227,7 @@
           const blob = new Blob([response.data], { type: response.data.type });
           const link = document.createElement('a');
           link.href = window.URL.createObjectURL(blob);
-          link.download = this.editedItem.title + '.jpeg'; 
+          link.download = this.editedItem.title + '.png'; 
           link.click();
           URL.revokeObjectURL(link.href); 
         } catch (error) {
@@ -254,14 +249,7 @@
         catch (error) {
           console.error(error)
         }
-      },
-      //   const link = document.createElement('a');
-      //   link.href = qrCodeUrl;
-      //   link.download = 'qr_code.png';
-      //   document.body.appendChild(link);
-      //   link.click();
-      //   document.body.removeChild(link);
-      // }, 
+      }, 
     },
   };
 </script> 

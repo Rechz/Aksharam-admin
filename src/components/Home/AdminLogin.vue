@@ -65,7 +65,6 @@ export default {
           password: this.password
         });
         if (success) {
-          console.log('admin')
           this.$router.push({name: 'dashboard'});
         }
       }
