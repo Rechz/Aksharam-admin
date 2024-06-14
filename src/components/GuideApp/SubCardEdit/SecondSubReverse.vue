@@ -241,7 +241,7 @@ export default {
 .details-content {
     /* padding-right: 25%; */
     width: 100%;
-    font-size: 110%;
+    font-size: 100%;
     aspect-ratio: 1107 / 600;
     line-height: 180%;
     height: 24rem;
@@ -249,7 +249,7 @@ export default {
 }
 
 .title {
-    font-size: 140%;
+    font-size: 110%;
     line-height: 180%;
 }
 

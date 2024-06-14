@@ -259,14 +259,14 @@ export default {
 .desc,
 .details-content {
   width: 100%;
-  font-size: 110%;
+  font-size: 100%;
   aspect-ratio: 1107 / 600;
   line-height: 180%;
   height: 24rem;
   direction: ltr;
 }
 .title{
-  font-size: 140%;
+  font-size: 110%;
   line-height: 180%;
 }
 .details-content{

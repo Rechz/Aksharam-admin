@@ -55,14 +55,14 @@
               </v-container>
             </v-card-text>
             <v-card-text class="px-3 pt-0 mb-3">
-              <div class="d-flex justify-content-between">
+              <div class="d-flex justify-content-end me-3">
                 <v-btn class="text-capitalize fw-bolder" color="green-darken-4" width="170" variant="outlined" rounded
-                  @click="downloadQR(editedItem.qrCodeUrl)">
-                  <v-icon class="mdi mdi-content-save-outline" color="green-darken-4"></v-icon> Save
+                  @click="downloadQRCode(editedItem.qrCodeUrl)">
+                  <v-icon class="mdi mdi-content-save-outline" color="green-darken-4"></v-icon> download
                 </v-btn>
-                <v-btn class="text-none" color="green-darken-4" width="170" rounded>
+                <!-- <v-btn class="text-none" color="green-darken-4" width="170" rounded>
                   <v-icon class="mdi mdi-printer"></v-icon> Print
-                </v-btn>
+                </v-btn> -->
               </div>
             </v-card-text>
           </v-card>
@@ -224,16 +224,20 @@
           this.editedIndex = -1
         })
       },
-      downloadQR(qrCodeUrl) {
-        axios.get(qrCodeUrl, { responseType: 'blob' })
-          .then(response => {
-            const blob = new Blob([response.data], { type: 'application/pdf' })
-            const link = document.createElement('a')
-            link.href = URL.createObjectURL(blob)
-            link.download = 'qr_code.png'
-            link.click()
-            URL.revokeObjectURL(link.href)
-          }).catch(console.error)
+      async downloadQRCode(qr) {
+        try {
+          const response = await axios.get(qr, {
+            responseType: 'blob', 
+          });
+          const blob = new Blob([response.data], { type: response.data.type });
+          const link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = this.editedItem.title + '.jpeg'; 
+          link.click();
+          URL.revokeObjectURL(link.href); 
+        } catch (error) {
+          console.error('Failed to download QR code:', error);
+        }
       },
       async getType() {
         try {

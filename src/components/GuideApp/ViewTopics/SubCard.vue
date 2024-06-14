@@ -223,7 +223,6 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 .sub-card {
   width: 75%; 
@@ -252,15 +251,15 @@ export default {
 }
 .desc,.details-content {
   width: 100%;
-  font-size: 110%;
+  font-size: 100%;
   line-height: 180% ;
   height: 25rem;
   direction: rtl;
   aspect-ratio: 1107 / 600;
 }
 .title{
-  font-size: 140%;
-    line-height: 180%;
+  font-size: 110%;
+  line-height: 180%;
 }
 .details-content{
   direction: ltr;
@@ -273,7 +272,7 @@ export default {
   background: #272B25;
 }
 ::-webkit-scrollbar-thumb {
-background: #8D9387;
+  background: #8D9387;
   border-radius: 30px;
 }
 ::-webkit-scrollbar-thumb:hover {

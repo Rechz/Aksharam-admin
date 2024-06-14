@@ -240,7 +240,7 @@ export default {
     /* padding-right: 25%; */
     /* padding-left: 5%; */
     width: 100%;
-    font-size: 110%;
+    font-size: 100%;
     line-height: 180%;
     height: 25rem;
     direction: rtl;
@@ -248,7 +248,7 @@ export default {
 }
 
 .title {
-    font-size: 140%;
+    font-size: 110%;
     line-height: 180%;
 }
 

@@ -437,7 +437,7 @@ export default {
             }
             try {
                 const response = await this.$store.dispatch('guide/submitSub2Media', payload);
-                if (response.status >= 200 && response.status < 300) {
+                if (response) {
                     this.videoLoad = false;
                     if (this.languageAV === 1) {
                         message = 'Malayalam video uploaded successfully';
