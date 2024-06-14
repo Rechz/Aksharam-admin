@@ -351,7 +351,6 @@ export default {
     async addVideo(event) {
       const files = event.target.files[0];
       this.videoAdd = files;
-      console.log(this.videoAdd)
       let message;
       const formData = new FormData();
       formData.append("files", this.videoAdd);
@@ -469,7 +468,6 @@ export default {
     },
     async handleAudio(event) {
       const files = event.target.files[0];
-      console.log(this.uId)
       this.editAudio[0].isEdit = true;
       this.audioAdd = files;
       let message;

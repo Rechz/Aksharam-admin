@@ -392,7 +392,6 @@ export default {
         this.$refs.selectVideo.click(); 
       },
       async handleVideo(event) {
-        console.log(this.media.video)
         const files = event.target.files[0];
         this.editVideo[0].isEdit = true;
         this.videoAdd = files;

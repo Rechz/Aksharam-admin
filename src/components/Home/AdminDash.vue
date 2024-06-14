@@ -92,31 +92,11 @@ export default {
       }
     },
   },
-  watch: {
-    selectedRoute(newRoute) {
-      let selectedItem = null;
-      for (let i = 0; i < this.navItems.length; i++) {
-        if (newRoute.startsWith(this.navItems[i].route)) {
-          selectedItem = this.navItems[i];
-          break;
-        }
-      }
-      if (selectedItem) {
-        this.selectedNavItem = selectedItem.text;
-      }
-    }
-  }
 };
 </script>
 <style scoped>
 .green-background {
-  /* height: 80px;
-  width: 100%; */
   background-color: #216D17;
- 
-  /* display: flex;
-  justify-content: space-between;
-  align-items: center; */
 }
 .image {
   height: 80px;

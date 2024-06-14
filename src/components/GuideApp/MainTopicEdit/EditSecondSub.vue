@@ -273,7 +273,7 @@ export default {
                 }
                 catch (err) {
                     this.subload = false;
-                    message = err.message;
+                    message = err;
                     this.error(message);
                 }
             }
@@ -433,6 +433,7 @@ export default {
                 }
             }
             catch (err) {
+               
                 this.videoLoad = false;
                 message = 'Error uploading video:' + err.message;
                 this.error(message);

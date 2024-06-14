@@ -63,7 +63,6 @@ export default {
                 console.error(error);
             }
             try {
-                console.log('main update')
                 await this.$store.dispatch('guide/showDetails', { language: this.language, commonId: sessionStorage.getItem('id') })
             }
             catch (error) {
@@ -72,7 +71,6 @@ export default {
         },
     
         async translate() {
-            console.log('clicked')
             if (this.language === 1) {
                 this.$store.commit('guide/setLanguage', 2);
             } else {

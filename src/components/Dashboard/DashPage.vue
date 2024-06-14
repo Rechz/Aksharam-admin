@@ -290,7 +290,6 @@ export default {
     async fetchIncomeDate() {
       try {
         const formattedDate = `${this.currentYear}-${this.currentMonth}-${this.currentDay}`;
-        console.log('date income',formattedDate);
         await this.$store.dispatch('fetchIncomeByDate', formattedDate)
       }
       catch (error) {
@@ -305,7 +304,6 @@ export default {
           year: this.currentYear,
           month: month
         }
-        console.log(payload)
         await this.$store.dispatch('fetchIncomeByMonth', payload);
       }
       catch (error) {
@@ -325,8 +323,6 @@ export default {
       try {
         const index = parseInt(this.currentMonth, 10);
         const month = this.monthNames[index - 1];
-        console.log('month', month)
-        console.log('year', this.currentYear)
         await this.$store.dispatch('fetchTicketByMonth', {
           year: this.currentYear,
           month: month

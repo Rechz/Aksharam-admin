@@ -9,6 +9,16 @@ const router = createRouter({
       component: () => import('./components/Home/AdminLogin.vue')
     },
     {
+      path: '/forbidden',
+      name: 'forbid',
+      component: () => import('./components/Home/ForbiddenPage.vue')
+    },
+    {
+      path: '/:notFound(.*)',
+      name: 'notfound',
+      component: () => import('./components/Home/NotFound.vue')
+    },
+    {
       path: '/admin/dashboard',
       component: () => import('./components/Home/AdminDash.vue'),
        name: 'overview',
@@ -86,6 +96,7 @@ const router = createRouter({
           path: '/admin/guide-app',
           name: 'guide-app',
           component: () => import('./components/GuideApp/GuideNav.vue'),
+          meta: { requiresAuth: true, role: 'employee' },
           children: [
             {
               path: '/admin/guide-app/add',
@@ -126,18 +137,31 @@ const router = createRouter({
       return {left: 0, top: 0};
   },
 });
-router.beforeEach((to, _ , next) => {
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = store.getters.getStatus; // true for admin, false for employee
+  const token = store.getters.getToken; // true if logged in
   if (to.meta.requiresAuth) {
-    console.log('authenticated', to.meta.requiresAuth)
-    const isAuthenticated = store.getters.getStatus;
-    console.log('status', isAuthenticated)
-    if (isAuthenticated ) {
-        next();
+    // console.log('Authenticated route, requiresAuth:', to.meta.requiresAuth);
+    if (isAuthenticated && token) {
+      next(); // Allow access for admin
+    } else if (!isAuthenticated && token) {
+      // console.log('Employee logged in, redirecting to guide-add-main');
+      if (to.name !== 'guide-add-main') {
+        next({ name: 'guide-add-main' }); // Redirect employee to guide-add-main
+      } else {
+        next(); // Allow navigation to guide-add-main
+      }
     } else {
-        next({ name: 'guide-add-main' });
+      // console.log('Not authenticated, redirecting to forbid');
+      if (to.name !== 'forbid') {
+        next({ name: 'forbid' }); // Redirect unauthenticated users to forbid
+      } else {
+        next(); // Allow navigation to forbid
+      }
     }
   } else {
-    next();
+    // console.log('Route does not require authentication');
+    next(); // Allow access to public routes
   }
 });
 

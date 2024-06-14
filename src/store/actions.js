@@ -12,7 +12,6 @@ export default {
       if (response.status === 200) {
         commit('setToken', response.data.token);
         commit('setStatus', response.data.admin);
-        console.log(response.data.token);
         return true;
       }
   },
@@ -23,7 +22,6 @@ export default {
             const response = await axios.get(`${url}/api/details/loadPrice`);
             if (response.status === 200) {
                 const ctg = response.data;
-              console.log('price details', ctg)
               const groupedItems = ctg.reduce((acc, item) => {
                 if (!acc[item.category]) {
                   acc[item.category] = [];
@@ -37,8 +35,7 @@ export default {
         groupedItems[category].sort((a, b) => a.id - b.id);
     }
 }
-            console.log(groupedItems);
-              commit('setPriceList', groupedItems);
+    commit('setPriceList', groupedItems);
             }
         }
         catch (error) {
@@ -64,7 +61,6 @@ export default {
   //edit price details
   async editPrice({rootGetters}, payload) {
     try {
-      console.log('edit clicked')
       const response = await axios.put(`${rootGetters.getUrl}/api/admin/updatePrice/${payload.id}`,payload.body,
       {
         headers: {
@@ -94,7 +90,6 @@ export default {
   //fetch all tickets
   async fetchAllTickets({ commit, rootGetters }) {
     try {
-      console.log('all tickets')
       const response = await axios.get(`${rootGetters.getUrl}/api/admin/allTickets`, {
         headers: {
           Authorization: `Bearer ${rootGetters.getToken}`
@@ -115,9 +110,7 @@ export default {
     }
     return 0;
 });
-
         commit('setAllTickets', ticket);
-        console.log(ticket)
       }
     }
     catch (error) {
@@ -134,7 +127,6 @@ export default {
       });
       if (response.status === 200) {
         commit('setCurrentTickets', response.data);
-        console.log('current ticket',response.data)
       }
     }
     catch (error) {
@@ -151,10 +143,6 @@ export default {
       });
       if (response.status === 200) {
         commit('setAllEmployees', response.data);
-        // const employeeid = response.data.map(employee => employee.employeeId);
-        // console.log(employeeid)
-        // commit('setEmployeeId', employeeid)
-        console.log(response.data)
       }
     }
     catch (error) {
@@ -170,11 +158,8 @@ export default {
         }
       });
       if (response.status === 200) {
-        // commit('setAllEmployees', response.data);
         const employeeid = response.data.map(employee => employee.employeeId);
-        console.log(employeeid)
         commit('setEmployeeId', employeeid)
-        console.log(response.data)
       }
     }
     catch (error) {
@@ -229,7 +214,6 @@ export default {
         },
       })
       if (response.status === 200) {
-        console.log('total visitors upto date',response.data)
         const labels = response.data.map(entry => entry.category);
         const data = response.data.map(entry => entry.totalVisitors);
         const total = data.reduce((accumulator, currentValue) => { return accumulator + currentValue; }, 0);
@@ -312,7 +296,6 @@ export default {
         },
       })
       if (response.status === 200) {
-        console.log('total tickets upto date',response.data)
         const total = response.data.totalTickets;
         commit('setTotalTickets', total);
       }
@@ -330,7 +313,6 @@ export default {
         },
       })
       if (response.status === 200) {
-        console.log('total income upto date',response.data)
         const total = response.data.totalIncome;
         commit('setTotalIncome', total);
       }
@@ -366,7 +348,6 @@ try {
       });
       if (response.status === 200) {
         const income = response.data.totalIncome;
-        console.log(response.data)
         commit('setDailyIncome', income);
       }
     }
@@ -401,7 +382,6 @@ try {
       });
       if (response.status === 200) {
         const tickets = response.data.totalTickets;
-        console.log(response.data)
         commit('setDailyTickets', tickets);
       }
     }
@@ -553,7 +533,6 @@ try {
       const url = rootGetters.getUrl;
       const response = await axios.get(`${url}/api/stime/getSlot`);
       if (response.status === 200) {
-        console.log(response.data)
         commit('setSlots', response.data);
         return true;
       }
