@@ -278,6 +278,7 @@ export default {
         const response = await axios.get(`${rootGetters.getUrl}/DataEntry1/getMainComplete?dtId=${getters.getLanguage}`);
         if (response.status >= 200 && response.status < 300) {
           commit('setAllTopics', response.data);
+          return true;
         }
       } catch (error) {
         console.error(error);

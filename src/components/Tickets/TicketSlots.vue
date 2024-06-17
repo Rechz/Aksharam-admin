@@ -1,5 +1,5 @@
 <template>
-
+  <v-skeleton-loader v-if="skeleton" type="table"></v-skeleton-loader>
   <v-container class="pb-8 px-0" fluid>
 
     <!-- <v-container class="py-0">
@@ -23,9 +23,9 @@
       <template v-slot:activator="{ props }">
         <div class="d-flex justify-content-end">
           <v-btn color="#2C7721" size="large" v-bind="props" class="text-capitalize mb-3"
-          style="font-size: 16px; font-weight: 600;"> + Add
-          Slot
-        </v-btn>
+            style="font-size: 16px; font-weight: 600;"> + Add
+            Slot
+          </v-btn>
         </div>
 
       </template>
@@ -123,6 +123,7 @@ export default {
       color: '#E8F5E9',
       timeout: 3000,
       dialog: false,
+      skeleton : true,
       dialogDelete: false,
       headers: [
         { title: 'Slot No', sortable: false, align: 'center' },
@@ -190,7 +191,15 @@ export default {
     //   })
     // },
     async getSlot() {
-      await this.$store.dispatch('getSlots')
+      try {
+        const res = await this.$store.dispatch('getSlots');
+        if (res) {
+          this.skeleton = false;
+        }
+      }
+      catch (error) {
+        console.log(error)
+      }
     },
     formatTime(timeString) {
       const [hours, minutes] = timeString.split(':');

@@ -41,12 +41,12 @@
               <div class="d-flex flex-column w-100 emp-add">
                 <v-form ref="form">
                   <div>
-                    <v-text-field v-model="editedItem.name" label="Name" :rules="nameRules" prepend-inner-icon="mdi-account-outline"
-                      single-line density="comfortable"></v-text-field>
-                    <v-text-field v-model="editedItem.phoneNo" label="Phone No" :rules="mobRules" prepend-inner-icon="mdi-phone-outline"
-                      density="comfortable" single-line></v-text-field>
-                    <v-text-field v-model="editedItem.email" label="Email ID" :rules="emailRules" prepend-inner-icon="mdi-email-outline"
-                      density="comfortable" single-line></v-text-field>
+                    <v-text-field v-model="editedItem.name" label="Name" :rules="nameRules"
+                      prepend-inner-icon="mdi-account-outline" single-line density="comfortable"></v-text-field>
+                    <v-text-field v-model="editedItem.phoneNo" label="Phone No" :rules="mobRules"
+                      prepend-inner-icon="mdi-phone-outline" density="comfortable" single-line></v-text-field>
+                    <v-text-field v-model="editedItem.email" label="Email ID" :rules="emailRules"
+                      prepend-inner-icon="mdi-email-outline" density="comfortable" single-line></v-text-field>
                     <v-textarea v-model="editedItem.tempAddress" label="Temporary Address" :rules="addressRules"
                       prepend-inner-icon="mdi-map-marker-outline" density="comfortable" single-line></v-textarea>
                     <v-textarea v-model="editedItem.permAddress" label="Permanent Address" :rules="addressRules"
@@ -55,7 +55,8 @@
                   <v-card-actions>
                     <v-btn color="white" block :style="{ backgroundColor: editedIndex === -1 ? '#1B5E20' : '#546E7A' }"
                       style="text-transform: capitalize" class="rounded-5" elevation="4"
-                      @click="editedIndex === -1 ? add() : update()" :disabled="loading" :loading="loading">{{ formButton
+                      @click="editedIndex === -1 ? add() : update()" :disabled="loading" :loading="loading">{{
+                      formButton
                       }}</v-btn>
                   </v-card-actions>
                 </v-form>
@@ -134,8 +135,9 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <v-skeleton-loader v-if="skeleton" type="table"></v-skeleton-loader>
     <v-data-table :headers="headers" :items="filteredEmployees" class="mt-3" item-value="id"
-      :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
+      :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }" v-else>
       <template v-slot:item="{ item, index }">
         <tr style="background-color:#FCFDF6; color:black;">
           <!-- <td class="text-center">{{ index + 1 }}</td> -->
@@ -169,6 +171,7 @@ export default {
     message: '',
     loading: false,
     snackbar: false,
+    skeleton: true,
     color: '#E8F5E9',
     timeout: 3000,
     image: require('@/assets/acc.jpg'),
@@ -248,7 +251,10 @@ export default {
     },
     async getAllDetails() {
       try {
-        await this.$store.dispatch('fetchAllEmployees');
+        const res = await this.$store.dispatch('fetchAllEmployees');
+        if (res) {
+          this.skeleton = false;
+        }
       } catch (error) {
         console.error(error.message);
       }

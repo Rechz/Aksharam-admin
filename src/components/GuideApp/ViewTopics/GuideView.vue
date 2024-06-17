@@ -19,8 +19,9 @@
         <v-btn :value="'Malayalam'" @click="translate(1)" size="small">Malayalam</v-btn>
       </v-btn-toggle>
     </div>
+    <v-skeleton-loader v-if="skeleton" type="table"></v-skeleton-loader>
     <v-data-table :headers="headers" :items="mainheadings" class="mt-3"
-      :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
+      :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }" v-else>
       <template v-slot:top>
         <v-dialog v-model="dialogDelete" width="500px">
           <v-card class="rounded-4 pb-4">
@@ -99,6 +100,7 @@
       dialogTopic: false,
       color: '#E8F5E9',
       dialogHead: '',
+      skeleton: true,
       icon:'',
       subTopic:{},
       image: require('@/assets/acc.jpg'),
@@ -156,7 +158,10 @@
       },
       async getTopics() {
         try {
-          await this.$store.dispatch('guide/getTopics');
+          const res = await this.$store.dispatch('guide/getTopics');
+          if (res) {
+            this.skeleton = false;
+          }
         }
         catch (error) {
           console.error(error);

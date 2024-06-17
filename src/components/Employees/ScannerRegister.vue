@@ -17,8 +17,9 @@
       <v-text-field v-model="search" label="Search" prepend-inner-icon="mdi-magnify" class="search" single-line
         density="compact" hide-details></v-text-field>
     </div>
+    <v-skeleton-loader v-if="skeleton" type="table"></v-skeleton-loader>
     <v-data-table :headers="headers" :items="filteredScanner" style="background-color: #f9faf1; color:black; "
-      item-value="id" class="mt-3" :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
+      item-value="id" class="mt-3" :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }" v-else>
       <template v-slot:top>
         <v-dialog v-model="dialog" max-width="600px">
           <v-card style="width: 400px; height:auto; border-radius: 15px;" class="pb-5">
@@ -102,6 +103,7 @@ export default {
     visible: false,
     password: '',
     newPassword: '',
+    skeleton: true,
     message: '',
     color:'',
     snackbar: false,
@@ -155,7 +157,10 @@ export default {
     },
     async getScanner() {
       try {
-        await this.$store.dispatch('fetchScannerList');
+        const res = await this.$store.dispatch('fetchScannerList');
+        if (res) {
+          this.skeleton = false;
+        }
         }
       catch (error) {
         console.error(error.message);

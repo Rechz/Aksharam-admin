@@ -1,5 +1,6 @@
 <template>
-  <v-container class="py-8 px-0" fluid>
+  <v-skeleton-loader v-if="skeleton" type="table"></v-skeleton-loader>
+  <v-container class="py-8 px-0" fluid v-else>
     <v-snackbar v-model="snackbar" :color="color" :timeout="timeout" location="top">
       <div class="text-center">{{ message }}</div>
     </v-snackbar>
@@ -47,6 +48,7 @@
         dialogDelete: false,
         message: '',
         loading: false,
+        skeleton: true,
         snackbar: false,
         color: '#E8F5E9',
         timeout: 2000,
@@ -106,6 +108,7 @@
                 const response = await this.$store.dispatch('getHoliday');
             if (response) {
               this.holidays = this.$store.getters.getHoliday;
+              this.skeleton = false;
             }
             }
             catch (error) {

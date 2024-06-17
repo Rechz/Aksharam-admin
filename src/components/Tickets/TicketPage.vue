@@ -1,6 +1,6 @@
 <template>
-
-  <v-container class="py-8 px-0" fluid>
+  <v-skeleton-loader v-if="skeleton" type="table"></v-skeleton-loader>
+  <v-container class="py-8 px-0" fluid v-else>
     <div class="d-flex justify-content-between mb-3">
       <v-text-field label="Search" v-model="search" prepend-inner-icon="mdi-magnify" class="search" density="compact"
         @click="search"></v-text-field>
@@ -8,8 +8,8 @@
       <v-select v-model="sortColumn" :items="['All', 'Public', 'Institution', 'Foreigner']" density="compact"
         prepend-inner-icon="mdi-sort-variant" label="Sort by" class="sort"></v-select>
     </div>
-    <v-data-table :headers="headers" :items="filteredTickets" style="background-color: #f9faf1;" max-width="100%" item-value="ticketId"
-       :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
+    <v-data-table :headers="headers" :items="filteredTickets" style="background-color: #f9faf1;" max-width="100%"
+      item-value="ticketId" :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
       <template v-slot:item='{ item, index }'>
         <tr style="background-color:#FCFDF6; color:black;">
           <td class="text-center">
@@ -134,15 +134,15 @@
 export default {
   data() {
     return {
+      skeleton: true,
       dialog: false,
-      sortColumn: '',
+      sortColumn: 'All',
       viewItem: [],
       viewIndex: -1,
       search: '',
       headers: [
         { title: 'Sl No.', sortable: false, align: 'center' },
         { title: 'Ticket ID', align: 'start', sortable: false, key: 'ticketId' },
-        
         { title: 'Entry Date', sortable: true, key: 'visitDate', align: 'start' },
         { title: 'Time', sortable: false, key: 'slotName', align: 'start' },
         { title: 'Category', sortable: false, key: 'type', align: 'start' },
@@ -171,7 +171,10 @@ export default {
     },
     async fetchTickets() {
       try {
-        await this.$store.dispatch('fetchAllTickets');
+        const res = await this.$store.dispatch('fetchAllTickets');
+        if (res) {
+          this.skeleton = false;
+        }
       }
       catch (error) {
         console.error(error.message);

@@ -35,7 +35,8 @@ export default {
         groupedItems[category].sort((a, b) => a.id - b.id);
     }
 }
-    commit('setPriceList', groupedItems);
+              commit('setPriceList', groupedItems);
+              return true;
             }
         }
         catch (error) {
@@ -111,6 +112,7 @@ export default {
     return 0;
 });
         commit('setAllTickets', ticket);
+        return true;
       }
     }
     catch (error) {
@@ -127,6 +129,7 @@ export default {
       });
       if (response.status === 200) {
         commit('setCurrentTickets', response.data);
+        return true;
       }
     }
     catch (error) {
@@ -143,6 +146,7 @@ export default {
       });
       if (response.status === 200) {
         commit('setAllEmployees', response.data);
+        return true;
       }
     }
     catch (error) {
@@ -176,6 +180,7 @@ export default {
       });
       if (response.status === 200) {
         commit('setScannerList', response.data);
+        return true;
       }
     }
     catch (error) {

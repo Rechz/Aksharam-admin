@@ -1,7 +1,8 @@
 <template>
+    <v-skeleton-loader v-if="skeleton" type="table"></v-skeleton-loader>
     <v-data-table-virtual :headers="headers" :items="tickets" max-width="100%" color="grey-darken-3" class="p-3"
         :header-props="{ style: 'background-color: #386568; color: white;' }" height="300" fixed-header
-        item-value="ticketId">
+        item-value="ticketId" v-else>
         <template v-slot:top>
             <v-toolbar flat>
                 <v-toolbar-title>
@@ -39,6 +40,7 @@ export default {
             { title: 'Price', sortable: false, key: 'totalPrice', align: 'start' },
             { title: 'Status', sortable: false, key: 'visitStatus', align: 'start' },
         ],
+        skeleton : true,
     }),
     methods: {
         formatTime(timeString) {
@@ -51,7 +53,10 @@ export default {
         },
         async fetchTickets() {
             try {
-                await this.$store.dispatch('fetchCurrentTickets');
+                const res = await this.$store.dispatch('fetchCurrentTickets');
+                if (res) {
+                    this.skeleton = false;
+                }
             }
             catch (error) {
                 console.error(error.message);
