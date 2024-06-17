@@ -138,31 +138,27 @@ const router = createRouter({
   },
 });
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = store.getters.getStatus; // true for admin, false for employee
-  const token = store.getters.getToken; // true if logged in
-  if (to.meta.requiresAuth) {
-    // console.log('Authenticated route, requiresAuth:', to.meta.requiresAuth);
-    if (isAuthenticated && token) {
-      next(); // Allow access for admin
-    } else if (!isAuthenticated && token) {
-      // console.log('Employee logged in, redirecting to guide-add-main');
-      if (to.name !== 'guide-add-main') {
-        next({ name: 'guide-add-main' }); // Redirect employee to guide-add-main
-      } else {
-        next(); // Allow navigation to guide-add-main
-      }
+    const isAuthenticated = store.getters.getStatus; // true for admin, false for employee
+    const token = store.getters.getToken; // true if logged in
+
+    if (to.meta.requiresAuth) {
+        if (token) {
+            if (isAuthenticated) {
+                next(); // Allow access for admin
+            } else {
+                const isGuideAppRoute = to.matched.some(record => record.path.startsWith('/admin/guide-app'));
+                if (isGuideAppRoute) {
+                    next(); // Allow access to any route within GuideApp for employees
+                } else {
+                    next({ name: 'guide-add-main' }); // Redirect employee to guide-add-main for non-GuideApp routes
+                }
+            }
+        } else {
+            next({ name: 'forbid' }); // Redirect unauthenticated users to forbid
+        }
     } else {
-      // console.log('Not authenticated, redirecting to forbid');
-      if (to.name !== 'forbid') {
-        next({ name: 'forbid' }); // Redirect unauthenticated users to forbid
-      } else {
-        next(); // Allow navigation to forbid
-      }
+        next(); // Allow access to public routes
     }
-  } else {
-    // console.log('Route does not require authentication');
-    next(); // Allow access to public routes
-  }
 });
 
 export default router;
