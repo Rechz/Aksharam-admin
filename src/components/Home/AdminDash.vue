@@ -17,10 +17,7 @@
         <v-list-item value="calendar" class="navlist fs-6" style="border-bottom: 1px solid #E0E0E0;" :disabled="!status"
           @click.prevent="navigate({ name: 'holiday-add' })">Calendar</v-list-item>
       </v-list>
-    </v-navigation-drawer>
-    <!-- <div class="d-flex">
-      <div style="width: 260px;"> -->
-    <!-- <v-layout> -->
+    </v-navigation-drawer>s
     <div class="mt-5">
       <router-view></router-view>
     </div>
@@ -29,23 +26,11 @@
 <v-container fluid class="d-flex justify-content-between align-items-center ps-0 ms-0">
       <h5 class="d-inline mb-0 text-white">{{ selectedNavItem }}</h5>
       
-        <v-btn class="rounded-5 text-capitalize " @click="logout" prepend-icon="mdi-logout" color="#EF3E3E"
+        <v-btn class=" text-capitalize " @click="logout" prepend-icon="mdi-logout" color="#EF3E3E"
           variant="elevated">Logout</v-btn>
     </v-container>
     </v-app-bar>
   </v-app>
-  <!-- </v-layout>
-  </div>
-  <div class="w-100">
-    <nav class="green-background container-fluid w-100">
-      <h4 class="text-white mt-1" style=" font-size: 24px; margin-left: 6.4%;">{{ selectedNavItem }}</h4>
-      <v-btn flat style="background-color: #EF3E3E; margin-right: 30px; text-transform: capitalize; color: white;"
-        class="rounded-5" @click="logout"><v-icon icon="mdi-logout" start></v-icon>Logout</v-btn>
-    </nav>
-
-
-  </div>
-  </div> -->
 </template>
 <script>
 export default {
@@ -54,7 +39,6 @@ export default {
       drawer: true,
       rail: true,
       navItems: [ 
-        // { text: 'Dashboard', route: '/admin/dashboard-page' },
         { text: 'Overview', route: '/admin/dashboard-page' },
         { text: 'Tickets', route: '/admin/tickets' },
         { text: 'Employee', route: '/admin/employee' },
