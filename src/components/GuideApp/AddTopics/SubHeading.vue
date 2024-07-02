@@ -26,7 +26,7 @@
             <v-text-field v-model="title" :label="language === 1 ? 'തലക്കെട്ട്' : 'Sub Heading'" density="comfortable"
               class="select" :rules="titleRules" variant="outlined"></v-text-field>
             <v-textarea :label="language === 1 ? 'വിവരണം' : 'Subheading Description'" class="desc" rows="8"
-              v-model="description" :rules="descriptionRules" variant="outlined"></v-textarea>
+              v-model="description" :rules="descriptionRules" variant="outlined" counter></v-textarea>
             <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable" class="reference"
               rows="2" v-model="url" variant="outlined"></v-textarea>
           </div>
@@ -279,7 +279,7 @@ export default {
         const language = this.language;
         const data = {
           "title": this.title,
-          "description": this.description,
+          "description": '<pre>' + this.description + '</pre>',
           "referenceURL": this.url
         };
         const payload = {

@@ -15,6 +15,12 @@ export default {
         return true;
       }
   },
+  //admin logout
+  logout({ commit }) {
+    commit('clearToken');
+    commit('clearStatus');
+    return true;
+  },
   //load price details
   async loadPrice({ rootGetters, commit }) {
         try {

@@ -290,6 +290,7 @@ export default {
         const response = await axios.get(`${rootGetters.getUrl}/api/qrcode/getScanDetails?dtId=${payload.language}&commonId=${payload.commonId}`);
         if (response.status >= 200 && response.status < 300) {
           commit('setDetails', response.data)
+          console.log(response.data)
           return true;
         }
       }

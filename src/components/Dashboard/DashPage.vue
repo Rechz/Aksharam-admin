@@ -50,7 +50,7 @@
           </v-card>
         </div>
 
-        <div class="d-flex flex-column  flex-wrap gap-3">
+        <div class="d-flex flex-column flex-wrap gap-3">
           <v-card height="72" width="359" class="rounded-3">
             <v-img src="@/assets/Block3.png" class="card-style"></v-img>
             <div style="height: 40px; width: 240px;" class="subcard">
@@ -59,10 +59,10 @@
                   <v-icon class="mdi mdi-cash" size="large" color="white"></v-icon>
                 </div>
                 <div class="d-flex flex-column">
-                  <p class="text-white mb-0"><v-icon class="mdi mdi-currency-inr" size="16"
+                  <p class="text-white mb-0 text-style py-0"><v-icon class="mdi mdi-currency-inr" size="16"
                       color="white"></v-icon>{{cumulativeIncome}}
                   </p>
-                  <p class="text-type mt-0">Cumulative Income</p>
+                  <p class="text-type mt-0 py-0">Cumulative Income</p>
                 </div>
               </div>
             </div>
@@ -75,8 +75,8 @@
                   <v-icon class="mdi mdi-ticket-confirmation" size="large" color="white"></v-icon>
                 </div>
                 <div class="d-flex flex-column">
-                  <p class="text-white mb-0">{{cumulativeTickets}}</p>
-                  <p class="text-type mt-0">Cumulative Bookings</p>
+                  <p class="text-white mb-0 text-style py-0">{{cumulativeTickets}}</p>
+                  <p class="text-type mt-0 py-0">Cumulative Bookings</p>
                 </div>
               </div>
             </div>
@@ -356,9 +356,9 @@ export default {
 </script>
 
 <style scoped>
-body {
+/* body {
   background-color: aqua;
-}
+} */
 
 .card-style {
   position: relative;
@@ -368,7 +368,7 @@ body {
 
 .subcard {
   position: absolute;
-  top: 16px;
+  top: 10px;
   left: 16px;
 }
 

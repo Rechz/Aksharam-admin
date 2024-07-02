@@ -3,10 +3,18 @@ export default {
       state.token = payload;
       sessionStorage.setItem('token', payload);
   },
+    clearToken(state) {
+      state.token = null;
+      sessionStorage.removeItem('token');
+    },
   setStatus(state, payload) {
     state.status = payload;
     sessionStorage.setItem('status', JSON.stringify(payload));
   },
+   clearStatus(state) {
+      state.status = false;
+      sessionStorage.removeItem('status');
+    },
     setAllTickets(state, payload) {
       state.allTickets = payload;
       // sessionStorage.setItem('allTickets', JSON.stringify(payload));

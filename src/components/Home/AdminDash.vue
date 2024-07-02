@@ -66,9 +66,11 @@ export default {
     }
   },
   methods: {
-    logout() {
-      sessionStorage.clear();
-      this.$router.push({ name: 'admin-login' });
+    async logout() {
+      const response = await this.$store.dispatch('logout');
+      if (response) {
+        this.$router.push({ name: 'admin-login' });
+      }
     },
     navigate(route) {
       if (this.status) {

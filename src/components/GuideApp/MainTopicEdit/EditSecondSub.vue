@@ -1,7 +1,8 @@
 <template>
     <v-dialog width="600" max-width="600" v-model="dialogTopic">
         <v-card width="600" rounded="3">
-            <v-card-title class="text-center text-white" :style="{ backgroundColor: color }">{{dialogHead }}</v-card-title>
+            <v-card-title class="text-center text-white" :style="{ backgroundColor: color }">{{dialogHead
+                }}</v-card-title>
             <v-card-text class="px-5 text-center">
                 <v-icon size="88" :class="icon" :color="color"></v-icon>
                 <h6>{{ message }}</h6>
@@ -12,35 +13,44 @@
         </v-card>
     </v-dialog>
     <v-sheet>
-        <v-card-title class="text-center fw-bolder text-white" style="background-color: #2C7721;">Add Sub Heading</v-card-title>
+        <v-card-title class="text-center fw-bolder text-white" style="background-color: #2C7721;">Add Sub
+            Heading</v-card-title>
         <v-card flat :disabled="!proceed && qrGenerated">
             <v-card-text class="px-5">
                 <p class="text-danger fst-italic mt-1">
-                    **Please submit Malayalam & English data before proceeding to upload media. Do not refresh the page to avoid data loss.
+                    **Please submit Malayalam & English data before proceeding to upload media. Do not refresh the page
+                    to avoid data loss.
                 </p>
                 <v-form class="pt-0 " ref="form" @submit.prevent="submitHeading">
                     <div class="d-flex">
                         <div>
-                            <v-select class="select mb-2" label='Select Language' density="comfortable" :items="languages" v-model="language" 
-                            :rules="languageRules" item-title="talk" item-value="dtId" variant="outlined"></v-select>
-                            <v-text-field v-model="title" :label="language === 1 ? 'തലക്കെട്ട്' : 'Sub Heading'" density="comfortable" 
-                            class="select mb-2" :rules="titleRules" variant="outlined"></v-text-field>
-                            <v-textarea :label="language === 1 ? 'വിവരണം' : 'Subheading Description'" class="desc mb-2" rows="6" 
-                            v-model="description" :rules="descriptionRules" variant="outlined"></v-textarea>
+                            <v-select class="select mb-2" label='Select Language' density="comfortable"
+                                :items="languages" v-model="language" :rules="languageRules" item-title="talk"
+                                item-value="dtId" variant="outlined"></v-select>
+                            <v-text-field v-model="title" :label="language === 1 ? 'തലക്കെട്ട്' : 'Sub Heading'"
+                                density="comfortable" class="select mb-2" :rules="titleRules"
+                                variant="outlined"></v-text-field>
+                            <v-textarea :label="language === 1 ? 'വിവരണം' : 'Subheading Description'" class="desc mb-2"
+                                rows="6" v-model="description" :rules="descriptionRules" variant="outlined"
+                                counter></v-textarea>
                             <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
                                 class="reference desc" rows="2" v-model="url" variant="outlined"></v-textarea>
                         </div>
                         <div class="d-flex flex-column ">
-                            <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malSubHeading }} (Malayalam) subtopic added.</h6>
-                            <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engSubHeading }} (English) subtopic added.</h6>
+                            <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malSubHeading }}
+                                (Malayalam) subtopic added.</h6>
+                            <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engSubHeading }}
+                                (English) subtopic added.</h6>
                         </div>
                     </div>
                     <div class="d-flex justify-content-end">
                         <div class="d-flex gap-2">
                             <v-btn v-if="QRLoad" color="#386568" size="large" class="text-capitalize" type="submit"
-                                :disabled="subload" variant="elevated" rounded :loading="subload">Add {{ topic }} sub topic</v-btn>
+                                :disabled="subload" variant="elevated" rounded :loading="subload">Add {{ topic }} sub
+                                topic</v-btn>
                             <v-btn v-else color="#386568" size="large" class="text-capitalize" variant="outlined"
-                                rounded :disabled="QRLoad" :loading="QRLoading" @click="generateQR">Submit & Proceed</v-btn>
+                                rounded :disabled="QRLoad" :loading="QRLoading" @click="generateQR">Submit &
+                                Proceed</v-btn>
                         </div>
                     </div>
                 </v-form>
@@ -62,19 +72,22 @@
                     </div>
                 </div>
                 <div class="d-flex flex-column align-items-end justify-content-center ">
-                    <h6 class="text-success text-end fst-italic mb-0" v-if="imageSubmit">*Image successfully uploaded.</h6>
+                    <h6 class="text-success text-end fst-italic mb-0" v-if="imageSubmit">*Image successfully uploaded.
+                    </h6>
                 </div>
             </v-card-text>
             <div class="d-flex justify-content-end gap-3 my-2 w-100">
                 <v-btn @click="uploadImages" color="#386568" size="large" variant="outlined" rounded
-                    :disabled="imageLoad" :loading="imageLoad" prepend-icon="mdi-upload" class="text-capitalize">Upload Images</v-btn>
+                    :disabled="imageLoad" :loading="imageLoad" prepend-icon="mdi-upload" class="text-capitalize">Upload
+                    Images</v-btn>
             </div>
         </v-card>
         <v-divider class="mx-5"></v-divider>
         <v-card flat class="px-5" :disabled="!qrGenerated">
             <v-card-title class="bg-blue-grey-lighten-5 mb-3">SubHeading Audio/Video</v-card-title>
-            <v-select class="select mb-3" label="Select Language" density="comfortable" :items="languages" v-model="languageAV" 
-            :rules="languageRules" item-title="talk" item-value="dtId" variant="outlined"></v-select>
+            <v-select class="select mb-3" label="Select Language" density="comfortable" :items="languages"
+                v-model="languageAV" :rules="languageRules" item-title="talk" item-value="dtId"
+                variant="outlined"></v-select>
             <v-sheet class="p-3" flat :disabled="audioMalSubmit && audioEngSubmit">
                 <div class="d-flex flex-column gap-2">
                     <div>
@@ -86,13 +99,16 @@
                         </ul>
                     </div>
                     <div class="d-flex flex-column align-items-end justify-content-center ">
-                        <h6 class="text-success text-end fst-italic mb-0" v-if="audioMalSubmit">**Malayalam audio successfully uploaded.</h6>
-                        <h6 class="text-success text-end fst-italic mb-0" v-if="audioEngSubmit">**English audio successfully uploaded.</h6>
+                        <h6 class="text-success text-end fst-italic mb-0" v-if="audioMalSubmit">**Malayalam audio
+                            successfully uploaded.</h6>
+                        <h6 class="text-success text-end fst-italic mb-0" v-if="audioEngSubmit">**English audio
+                            successfully uploaded.</h6>
                     </div>
                 </div>
                 <div class="d-flex justify-content-end">
                     <v-btn @click="submitAudio(fileType.audio)" color="#386568" size="large" variant="outlined" rounded
-                        prepend-icon="mdi-music" class="text-capitalize" :disabled="audioLoad" :loading="audioLoad">Submit Audio</v-btn>
+                        prepend-icon="mdi-music" class="text-capitalize" :disabled="audioLoad"
+                        :loading="audioLoad">Submit Audio</v-btn>
                 </div>
             </v-sheet>
             <v-sheet class="p-3" flat :disabled="videoMalSubmit && videoEngSubmit">
@@ -106,19 +122,24 @@
                         </ul>
                     </div>
                     <div class="d-flex flex-column align-items-end justify-content-center ">
-                        <h6 class="text-success text-end fst-italic mb-0" v-if="videoMalSubmit">*Malayalam video successfully uploaded.</h6>
-                        <h6 class="text-success text-end fst-italic mb-0" v-if="videoEngSubmit">*English video successfully uploaded.</h6>
+                        <h6 class="text-success text-end fst-italic mb-0" v-if="videoMalSubmit">*Malayalam video
+                            successfully uploaded.</h6>
+                        <h6 class="text-success text-end fst-italic mb-0" v-if="videoEngSubmit">*English video
+                            successfully uploaded.</h6>
                     </div>
                 </div>
                 <div class="d-flex justify-content-end">
                     <v-btn @click="submitVideo(fileType.video)" color="#386568" size="large" variant="outlined" rounded
-                        prepend-icon="mdi-video" class="text-capitalize" :disabled="videoLoad" :loading="videoLoad">Submit Video</v-btn>
+                        prepend-icon="mdi-video" class="text-capitalize" :disabled="videoLoad"
+                        :loading="videoLoad">Submit Video</v-btn>
                 </div>
             </v-sheet>
         </v-card>
         <div class="my-5 d-flex justify-content-end align-items-center gap-2 px-5">
-            <v-btn color="#2C7721" size="large" variant="elevated" prepend-icon="mdi-step-backward" @click="back">Finish & Return</v-btn>
-            <v-btn color="#2C7721" size="large" variant="elevated" append-icon="mdi-step-forward" @click="finish">Add New Subheading</v-btn>
+            <v-btn color="#2C7721" size="large" variant="elevated" prepend-icon="mdi-step-backward" @click="back">Finish
+                & Return</v-btn>
+            <v-btn color="#2C7721" size="large" variant="elevated" append-icon="mdi-step-forward" @click="finish">Add
+                New Subheading</v-btn>
         </div>
     </v-sheet>
 </template>
@@ -245,7 +266,7 @@ export default {
                     const payload = {
                         data: {
                             "title": this.title,
-                            "description": this.description,
+                            "description": '<pre>' + this.description + '</pre>',
                             "referenceURL": this.url
                         },
                         uid: uid,

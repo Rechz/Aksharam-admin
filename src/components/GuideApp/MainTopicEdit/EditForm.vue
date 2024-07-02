@@ -19,7 +19,7 @@
           <v-text-field v-model="editTitle" label='Heading' variant="outlined" density="comfortable"
             class="select" :rules="titleRules"></v-text-field>
           <v-textarea label='Description' class="desc" rows="10" v-model="editDescription"
-            :rules="descriptionRules" variant="outlined"></v-textarea>
+            :rules="descriptionRules" variant="outlined" counter></v-textarea>
           <v-textarea label='References' density="comfortable" class="reference" rows="2" v-model="editUrl"
             variant="outlined"></v-textarea>
           <div class="d-flex justify-content-end">

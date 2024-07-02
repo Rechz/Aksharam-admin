@@ -5,14 +5,16 @@
                 <div class="d-flex gap-3 align-items-center">
                     <h4 class="text-start title my-0">{{ title }}</h4>
                 </div>
-                <p class="desc">
-                <pre class="text-wrap desc text-justify text-start ps-3">
-            {{ description }}
-            <ul v-for="topic in subtopic" :key="topic.uId">
-            <li class="text-capitalize text-start" style="direction: ltr;">{{ topic.title }}</li>
-          </ul>
-          </pre>
-                </p>
+                <div class="desc">
+                    <p class="text-wrap text-start ps-3 pre-text" v-html="description"></p>
+                    <ul class="d-flex gap-5">
+                        <li class="text-capitalize text-start" style="direction: ltr; font-size: 120%;"
+                            v-for="topic in subtopic" :key="topic.uId">{{ topic.title }}
+                        </li>
+                    </ul>
+                </div>
+
+
             </div>
             <div class="d-flex justify-content-center mt-5">
                 <audio controls class="mt-3 mx-3 w-100" v-if="audio.length > 0" :src="audio[0].furl" type="audio/*">
@@ -237,45 +239,48 @@ export default {
 } */
 .desc,
 .details-content {
-    /* padding-right: 25%; */
-    /* padding-left: 5%; */
     width: 100%;
     font-size: 100%;
     line-height: 180%;
     height: 25rem;
-    direction: rtl;
     aspect-ratio: 1107 / 600;
 }
-
 .title {
     font-size: 110%;
     line-height: 180%;
 }
-
-.details-content {
+/* .details-content {
     direction: ltr;
-}
-
-::-webkit-scrollbar {
+} */
+::-webkit-scrollbar,
+:deep(::-webkit-scrollbar) {
     width: 4px;
     height: auto;
 
 }
-
-/* Track style */
-::-webkit-scrollbar-track {
+::-webkit-scrollbar-track,
+:deep(::-webkit-scrollbar-track) {
     background: #272B25;
 }
-
-/* Handle style */
-::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb,
+:deep(::-webkit-scrollbar-thumb) {
     background: #8D9387;
     border-radius: 30px;
 }
-
-/* Handle hover style */
-::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover,
+:deep(::-webkit-scrollbar-thumb:hover) {
     background: #f5eded;
     cursor: pointer;
+}
+:deep(pre) {
+    text-wrap: wrap;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: auto;
+    max-height: 25rem;
+    padding-right: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: justify;
+    font-size: 20px;
 }
 </style>

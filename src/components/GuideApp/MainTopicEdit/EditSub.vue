@@ -31,7 +31,7 @@
                                 variant="outlined"></v-text-field>
                             <v-textarea :label="language === 1 ? 'വിവരണം' : 'Subheading Description'" class="desc mb-2"
                                 rows="6" v-model="description" :rules="descriptionRules"
-                                variant="outlined"></v-textarea>
+                                variant="outlined" counter></v-textarea>
                             <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
                                 class="reference desc" rows="2" v-model="url" variant="outlined"></v-textarea>
                         </div>
@@ -258,7 +258,7 @@ export default {
             const language = this.language;
             const data = {
                 "title": this.title,
-                "description": this.description,
+                "description": '<pre>' + this.description + '</pre>',
                 "referenceURL": this.url
             };
             const payload = {
