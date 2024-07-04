@@ -178,6 +178,10 @@ export default {
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
+    clearform() {
+      this.id = null;
+      this.scanPassword = "";
+    },
     async addScanner() {
       this.loading = true
       try {
@@ -187,6 +191,8 @@ export default {
         });
         if (res) {
           this.message = 'Scanner added successfully !!';
+          this.clearform();
+          await this.$store.dispatch('fetchEmployees');
           this.color = '#C8E6C9'
           this.snackbar = true;
           this.loading = false;
