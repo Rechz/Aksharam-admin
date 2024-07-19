@@ -1,20 +1,17 @@
 <template>
-  <v-container class="pb-0 pt-0 px-0" fluid>
+  <v-container class="pb-0 pt-3 px-0" fluid>
     <v-snackbar v-model="snackbar" :color="color" :timeout="timeout" location="top">
       <div class="text-center">{{ message }}</div>
     </v-snackbar>
     <div class="d-flex justify-content-between">
-      <v-dialog v-model="dialog" width="650px">
+      <v-dialog v-model="dialog" width="700px">
         <template v-slot:activator="{ props }">
-          <v-btn color="#2C7721" size="large" v-bind="props" class="mb-4 text-capitalize"
-            style="font-size: 16px; font-weight: 600;"> + Add
-            Employee
-          </v-btn>
+          <v-btn color="#2C7721" size="large" v-bind="props" class="mb-4 text-capitalize"> + Add Employee</v-btn>
         </template>
-        <v-card class="pb-3" style="border-radius: 16px;">
+        <v-card class="pb-1" style="border-radius: 16px;">
           <v-card-title class="d-flex justify-content-between px-4" style="background-color: #216D17; color: white ;">
-            <span class="text-h5 ms-4">{{ formTitle }}</span>
-            <v-icon @click="close" size="24" class="mdi mdi-window-close"></v-icon>
+            <span class="fs-5 ms-4">{{ formTitle }}</span>
+            <v-icon @click="close" size="24" class="mdi mdi-window-close mt-1"></v-icon>
           </v-card-title>
           <v-card-text>
             <v-container class="d-flex gap-2">
@@ -48,13 +45,14 @@
                     <v-text-field v-model="editedItem.email" label="Email ID" :rules="emailRules"
                       prepend-inner-icon="mdi-email-outline" density="comfortable" single-line></v-text-field>
                     <v-textarea v-model="editedItem.tempAddress" label="Temporary Address" :rules="addressRules"
-                      prepend-inner-icon="mdi-map-marker-outline" density="comfortable" single-line></v-textarea>
+                      prepend-inner-icon="mdi-map-marker-outline" density="comfortable" rows="3"
+                      single-line></v-textarea>
                     <v-textarea v-model="editedItem.permAddress" label="Permanent Address" :rules="addressRules"
-                      prepend-inner-icon="mdi-home-map-marker" density="comfortable" single-line></v-textarea>
+                      prepend-inner-icon="mdi-home-map-marker" density="comfortable" rows="3" single-line></v-textarea>
                   </div>
                   <v-card-actions>
                     <v-btn color="white" block :style="{ backgroundColor: editedIndex === -1 ? '#1B5E20' : '#546E7A' }"
-                      style="text-transform: capitalize" class="rounded-5" elevation="4"
+                      style="text-transform: capitalize" elevation="4" size="45"
                       @click="editedIndex === -1 ? add() : update()" :disabled="loading" :loading="loading">{{
                       formButton
                       }}</v-btn>
@@ -70,25 +68,26 @@
     </div>
     <v-dialog v-model="dialogDelete" width="400px">
       <v-card class="rounded-4 pb-4">
-        <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
+        <v-card-title class="mb-2 text-white ps-4 fs-5 text-center" style="background-color: #BA1A1A;">Delete
           Employee</v-card-title>
         <v-container class="px-4 d-flex flex-column align-items-center">
           <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
           <v-card-text class="mt-1 text-center">Are you sure you want to delete?</v-card-text>
         </v-container>
         <v-card-actions class="mx-4 d-flex flex-column align-items-center">
-          <v-btn block class="rounded-4 text-white mb-3" style="background-color: #BA1A1A;"
+          <v-btn block class="text-white mb-3" style="background-color: #BA1A1A;"
             @click="deleteItemConfirm">Delete</v-btn>
-          <v-btn block variant="text" class="rounded-4 mb-3" @click="closeDelete">Cancel</v-btn>
+          <v-btn block variant="text" class=" mb-3" @click="closeDelete">Cancel</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
     <!-- Add new dialog for displaying details -->
     <v-dialog v-model="detailsDialog" width="400px">
       <v-card style="width: 680px; height:auto; border-radius: 15px;">
-        <v-card-title class="d-flex justify-content-between px-4" style="background-color: #216D17; color: #FFFFFF;">
-          <h4>Employee Details</h4>
-          <v-icon @click="closeDetails" class="mdi mdi-window-close"></v-icon>
+        <v-card-title class="d-flex justify-content-between align-items-center px-4"
+          style="background-color: #216D17; color: #FFFFFF;">
+          <h5 class="mt-2">Employee Details</h5>
+          <v-icon @click="closeDetails" class="mdi mdi-window-close" size="24"></v-icon>
         </v-card-title>
         <v-card-text class="mb-0  ms-1 pt-2 pb-4">
           <v-container class="py-0 d-flex flex-column">
@@ -148,11 +147,11 @@
           </td>
           <td class="">{{ item.name }}</td>
           <td class="">{{ item.phoneNo }}</td>
-          <td class="text-center"><v-icon size="large" class="mdi mdi-eye" color="blue-grey-darken-3"
+          <td class="text-center"><v-icon size="default" class="mdi mdi-eye" color="blue-grey-darken-3"
               @click="showDetails(item)"></v-icon></td>
           <td class="text-center">
-            <v-icon size="large" color="teal-darken-3" class="me-4 mdi mdi-pencil" @click="editItem(item)"></v-icon>
-            <v-icon size="large" color="danger" class="ms-4 mdi mdi-trash-can" @click="deleteItem(item)"></v-icon>
+            <v-icon size="default" color="teal-darken-3" class="me-3 mdi mdi-pencil" @click="editItem(item)"></v-icon>
+            <v-icon size="default" color="danger" class="ms-3 mdi mdi-trash-can" @click="deleteItem(item)"></v-icon>
           </td>
         </tr>
       </template>

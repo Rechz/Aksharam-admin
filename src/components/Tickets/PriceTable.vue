@@ -5,17 +5,16 @@
         </v-snackbar>
         <v-dialog v-model="dialogDelete" width="400px">
             <v-card class="rounded-4 pb-4">
-                <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
+                <v-card-title class="mb-2 text-white ps-4 fs-5 text-center" style="background-color: #BA1A1A;">Delete
                     Price Details</v-card-title>
                 <v-container class="px-4 d-flex flex-column align-items-center">
                     <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
                     <v-card-text class="mt-1 text-center">Are you sure you want to delete?</v-card-text>
                 </v-container>
                 <v-card-actions class="mx-4 d-flex flex-column align-items-center">
-                    <v-btn block class="rounded-4 text-white mb-3" style="background-color: #BA1A1A;"
+                    <v-btn block class="text-white mb-3" style="background-color: #BA1A1A;"
                         @click="deleteItemConfirm">Delete</v-btn>
-                    <v-btn block variant="text" class="rounded-4 mb-3" @click="closeDelete">Cancel</v-btn>
-
+                    <v-btn block variant="text" class="mb-1" @click="closeDelete">Cancel</v-btn>
                 </v-card-actions>
 
             </v-card>
@@ -35,7 +34,8 @@
                     <td class="text-center">
                         <p class="my-0">{{ item.type }}</p>
                     </td>
-                    <td class="text-center" style="width: 200px;"> <template v-if="isEditing(index) && !dialogDelete">
+                    <td class="text-center" style="width: 200px;">
+                        <template v-if="isEditing(index) && !dialogDelete">
                             <v-form v-model="form">
                                 <v-text-field v-model="item.price" outlined dense
                                     :rules="[value => !!value || 'Price is required']"
@@ -47,10 +47,10 @@
                     </td>
                     <td class="text-center" style="width: 450px;">
                         <div v-if="!isEditing(index) || dialogDelete">
-                            <v-icon size="20" color="teal-darken-3" class=" mdi mdi-pencil"
+                            <v-icon size="default" color="teal-darken-3" class=" mdi mdi-pencil"
                                 @click="startEditing(index)"></v-icon>
-                            <v-icon @click="deleteItem(item)" :loading="loading" size="20" color="danger"
-                                class=" mdi mdi-trash-can ms-2" :disabled="loading">Submit</v-icon>
+                            <v-icon @click="deleteItem(item)" :loading="loading" size="default" color="danger"
+                                class=" mdi mdi-trash-can ms-4" :disabled="loading">Submit</v-icon>
                         </div>
 
                         <div v-else-if="isEditing(index) && !dialogDelete" class="d-flex gap-1 justify-content-center">

@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pb-0 pt-0 px-0" fluid>
+  <v-container class="pb-0 pt-4 px-0" fluid>
     <v-snackbar v-model="snackbar" :color="color" :timeout="timeout" location="top">
       <h6 class="text-center">{{ message }}</h6>
     </v-snackbar>
@@ -21,16 +21,16 @@
     <v-data-table :headers="headers" :items="filteredScanner" style="background-color: #f9faf1; color:black; "
       item-value="id" class="mt-3" :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }" v-else>
       <template v-slot:top>
-        <v-dialog v-model="dialog" max-width="600px">
-          <v-card style="width: 400px; height:auto; border-radius: 15px;" class="pb-5">
-            <v-card-title class="d-flex justify-content-between px-4"
+        <v-dialog v-model="dialog" max-width="300px">
+          <v-card style="width: 400px; height:auto; border-radius: 15px;" class="pb-4">
+            <v-card-title class="d-flex justify-content-between align-items-center px-4"
               style="background-color: #216D17; color: #FFFFFF;">
-              <h4>Employee Details</h4>
-              <v-icon @click="close" class="mdi mdi-window-close"></v-icon>
+              <h5 class="mt-2">Employee Details</h5>
+              <v-icon @click="close" class="mdi mdi-window-close" size="20"></v-icon>
             </v-card-title>
-            <v-card-text>
-              <v-container>
-                <v-row>
+            <v-card-text class="pb-0">
+              <v-container class="pb-0">
+                <v-row class="pb-0">
                   <v-col cols="12" sm="12" md="12" class="p-0">
                     <v-text-field v-model="editedItem.employeeId" label="Employee ID" disabled class="scanner"
                       single-line density="comfortable"></v-text-field>
@@ -51,24 +51,24 @@
                 </v-row>
               </v-container>
             </v-card-text>
-            <v-card-actions class="mx-4">
-              <v-btn color="white" block style="background-color: #546E7A; text-transform: capitalize" class="rounded-5"
-                elevation="4" size="large" @click="update()">Update</v-btn>
+            <v-card-actions class="mx-4 mt-2">
+              <v-btn color="white" block style="background-color: #546E7A; text-transform: capitalize" elevation="4"
+                size="45" @click="update()">Update</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
         <v-dialog v-model="dialogDelete" width="400px">
           <v-card class="rounded-4 pb-4">
-            <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
+            <v-card-title class="mb-2 text-white ps-4 fs-5 text-center" style="background-color: #BA1A1A;">Delete
               Employee</v-card-title>
             <v-container class="px-4 d-flex flex-column align-items-center">
               <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
               <v-card-text class="mt-1 text-center">Are you sure you want to delete?</v-card-text>
             </v-container>
             <v-card-actions class="mx-4 d-flex flex-column align-items-center">
-              <v-btn block class="rounded-4 text-white mb-3" style="background-color: #BA1A1A;"
+              <v-btn block class="text-white mb-3" style="background-color: #BA1A1A;"
                 @click="deleteItemConfirm">Delete</v-btn>
-              <v-btn block variant="text" class="rounded-4 mb-3" @click="closeDelete">Cancel</v-btn>
+              <v-btn block variant="text" class="mb-1" @click="closeDelete">Cancel</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -82,8 +82,8 @@
           </td>
           <td>{{ item.name }}</td>
           <td class="text-center">
-            <v-icon size="large" color="teal-darken-3" class="me-4 mdi mdi-pencil" @click="editItem(item)"></v-icon>
-            <v-icon size="large" color="danger" class="ms-4 mdi mdi-trash-can" @click="deleteItem(item)"></v-icon>
+            <v-icon size="default" color="teal-darken-3" class="me-3 mdi mdi-pencil" @click="editItem(item)"></v-icon>
+            <v-icon size="default" color="danger" class="ms-3 mdi mdi-trash-can" @click="deleteItem(item)"></v-icon>
           </td>
         </tr>
       </template>

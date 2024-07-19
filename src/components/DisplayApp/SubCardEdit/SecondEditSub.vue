@@ -23,7 +23,7 @@
                 </p>
                 <v-form class="pt-0 " ref="form" @submit.prevent="submitHeading">
                     <div class="d-flex">
-                        <div>
+                        <v-card flat :disabled="!QRLoad">
                             <v-select class="select mb-2" label='Select Language' density="comfortable"
                                 :items="languages" v-model="language" :rules="languageRules" item-title="talk"
                                 item-value="dtId" variant="outlined"></v-select>
@@ -35,13 +35,13 @@
                                 counter></v-textarea>
                             <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
                                 class="reference desc" rows="2" v-model="url" variant="outlined"></v-textarea>
-                        </div>
-                        <div class="d-flex flex-column ">
-                            <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malSubHeading }}
-                                (Malayalam) subtopic added.</h6>
-                            <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engSubHeading }}
-                                (English) subtopic added.</h6>
-                        </div>
+                        </v-card>
+                    <div class="d-flex flex-column ">
+                        <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malSubHeading }}
+                            (Malayalam) subtopic added.</h6>
+                        <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engSubHeading }}
+                            (English) subtopic added.</h6>
+                    </div>
                     </div>
                     <div class="d-flex justify-content-end">
                         <div class="d-flex gap-2">
@@ -188,7 +188,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters('guide', ['getLanguageList', 'getFileTypes', 'getMedia', 'getsub2idmal', 'getsub2ideng', 'getmalSub2Heading', 'getengSub2Heading']),
+        ...mapGetters('display', ['getLanguageList', 'getFileTypes', 'getMedia', 'getsub2idmal', 'getsub2ideng', 'getmalSub2Heading', 'getengSub2Heading']),
         proceed() {
             if ((this.malSubmit) && (this.engSubmit)) {
                 return false;
@@ -224,10 +224,10 @@ export default {
     methods: {
         finish() {
             // sessionStorage.clear();
-            this.$store.commit('guide/setMalSub2Heading', '');
-            this.$store.commit('guide/setEngSub2Heading', '');
-            this.$store.commit('guide/setSub2idmal', '');
-            this.$store.commit('guide/setSub2ideng', '');
+            this.$store.commit('display/setMalSub2Heading', '');
+            this.$store.commit('display/setEngSub2Heading', '');
+            this.$store.commit('display/setSub2idmal', '');
+            this.$store.commit('display/setSub2ideng', '');
             this.subhead = false;
             this.malSubmit = false;
             this.engSubmit = false;
@@ -266,13 +266,13 @@ export default {
                     const payload = {
                         data: {
                             "title": this.title,
-                            "description": '<pre>' + this.description + '</pre>',
+                            "description": this.description,
                             "referenceURL": this.url
                         },
                         uid: uid,
                         lang: this.language
                     };
-                    const response = await this.$store.dispatch('guide/submitSub2Head', payload);
+                    const response = await this.$store.dispatch('display/submitSub2Head', payload);
                     if (response) {
                         this.subload = false;
                         if (this.language === 1) {
@@ -307,7 +307,7 @@ export default {
                 subidmal: this.subidmal
             }
             try {
-                const response = await this.$store.dispatch('guide/generateQRSub2', payload);
+                const response = await this.$store.dispatch('display/generateQRSub2', payload);
                 if (response) {
                     this.QRLoading = false;
                     message = 'Proceed to next steps.';
@@ -350,7 +350,7 @@ export default {
                 formData: formData
             }
             try {
-                const response = await this.$store.dispatch('guide/uploadSub2Images', payload);
+                const response = await this.$store.dispatch('display/uploadSub2Images', payload);
                 if (response) {
                     this.imageLoad = false;
                     this.imageSubmit = true;
@@ -393,7 +393,7 @@ export default {
                 id: id
             }
             try {
-                const response = await this.$store.dispatch('guide/submitSub2Media', payload);
+                const response = await this.$store.dispatch('display/submitSub2Media', payload);
                 if (response) {
                     this.audioLoad = false;
                     if (this.languageAV === 1) {
@@ -436,7 +436,7 @@ export default {
                 id: id
             }
             try {
-                const response = await this.$store.dispatch('guide/submitSub2Media', payload);
+                const response = await this.$store.dispatch('display/submitSub2Media', payload);
                 if (response) {
                     this.videoLoad = false;
                     if (this.languageAV === 1) {

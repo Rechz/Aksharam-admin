@@ -1,6 +1,6 @@
 <template>
   <v-skeleton-loader v-if="skeleton" type="table"></v-skeleton-loader>
-  <v-container class="py-8 px-0" fluid v-else>
+  <v-container class="py-4 px-0" fluid v-else>
     <div class="d-flex justify-content-between mb-3">
       <v-text-field label="Search" v-model="search" prepend-inner-icon="mdi-magnify" class="search" density="compact"
         @click="search"></v-text-field>
@@ -38,10 +38,11 @@
       </template>
     </v-data-table>
     <v-dialog v-model="dialog" width="400px">
-      <v-card style="width: 600px; height:550px; border-radius: 16px;">
-        <v-card-title class="d-flex justify-content-between px-4" style="background-color: #216D17; color: #FFFFFF;">
-          <h4>Ticket Details</h4>
-          <v-icon @click="close" class="mdi mdi-window-close"></v-icon>
+      <v-card style="width: 600px; height:560px; border-radius: 16px;">
+        <v-card-title class="d-flex justify-content-between px-4 align-items-center"
+          style="background-color: #216D17; color: #FFFFFF;">
+          <hs class="mt-2">Ticket Details</hs>
+          <v-icon @click="close" class="mdi mdi-window-close" size="default"></v-icon>
         </v-card-title>
         <v-card-text class="ticket-details">
           <v-row>

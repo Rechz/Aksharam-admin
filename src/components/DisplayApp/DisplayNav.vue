@@ -27,10 +27,10 @@ export default {
     methods: {
         change(item) {
             if (item === 'Add Items') {
-                this.$router.push({ name: 'guide-add-main' })
+                this.$router.push({ name: 'display-add-main' })
             }
             else {
-                this.$router.push({ name: 'guide-view' })
+                this.$router.push({ name: 'display-view' })
             }
             
         }
@@ -38,7 +38,7 @@ export default {
     computed: {
         tab: {
             get() {
-                if ((this.$route.name === 'guide-view')) {
+                if ((this.$route.name === 'display-view')) {
                     return 'Item Details';
                 }
                 else {
@@ -47,10 +47,10 @@ export default {
             },
             set(value) {
                 if (value === 'Item Details') {
-                    this.$router.push({ name: 'guide-view' })
+                    this.$router.push({ name: 'display-view' })
                 }
                 else {
-                    this.$router.push({ name: 'guide-add-main' })
+                    this.$router.push({ name: 'display-add-main' })
                 }
             }
         },

@@ -2,7 +2,7 @@
     <v-main>
         <v-container class="py-8 px-6" fluid>
             <div style="margin-right: 2%; margin-left: 3%;">
-                <div class="" style="width: 500px; display:inline-block; background-color:#FCFDF6;">
+                <div style="width: 500px; display:inline-block; background-color:#FCFDF6;">
                     <v-tabs v-model="tab" color="green-darken-4" grow>
                         <v-tab v-for="item in items" :key="item" :value="item" @click="change(item)"
                             style="text-transform: capitalize; color: #1A1C18;">
@@ -21,36 +21,36 @@ export default {
     data() {
         return {
             // tab: 'Details',
-            items: ['Add Holiday', 'View Holiday'],
+            items: ['Add Topics', 'Topic Details'],
         };
     },
     methods: {
         change(item) {
-            if (item === 'Add Holiday') {
-                this.$router.push({ name: 'holiday-add' })
+            if (item === 'Add Topics') {
+                this.$router.push({ name: 'guide-add-main' })
             }
             else {
-                this.$router.push({ name: 'holiday-view' })
+                this.$router.push({ name: 'guide-view' })
             }
-            
+
         }
     },
     computed: {
         tab: {
             get() {
-                if ((this.$route.name === 'holiday-view')) {
-                    return 'View Holiday';
+                if ((this.$route.name === 'guide-view')) {
+                    return 'Topic Details';
                 }
                 else {
-                    return 'Add Holiday';
+                    return 'Add Topics';
                 }
             },
             set(value) {
-                if (value === 'View Holiday') {
-                    this.$router.push({ name: 'holiday-view' })
+                if (value === 'Topic Details') {
+                    this.$router.push({ name: 'guide-view' })
                 }
                 else {
-                    this.$router.push({ name: 'holiday-add' })
+                    this.$router.push({ name: 'guide-add-main' })
                 }
             }
         },

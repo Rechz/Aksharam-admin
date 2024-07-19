@@ -93,40 +93,68 @@ const router = createRouter({
           ]
         },
         {
+          path: '/admin/display-app',
+          name: 'display-app',
+          component: () => import('./components/DisplayApp/DisplayNav.vue'),
+          meta: { requiresAuth: true, role: 'employee' },
+          children: [
+            {
+              path: '/admin/display-app/add',
+              alias: '',
+              name: 'display-add-main',
+              component: () => import('./components/DisplayApp/AddTopics/DisplayAdd.vue'),
+            },
+            {
+              path: '/admin/display-app/view',
+              name: 'display-view',
+              component: () => import('./components/DisplayApp/ViewTopics/DisplayView.vue'),
+            },        
+          ]
+        },
+        {
           path: '/admin/guide-app',
           name: 'guide-app',
-          component: () => import('./components/GuideApp/GuideNav.vue'),
+          component: () => import('./components/Guide-App/GuideNav.vue'),
           meta: { requiresAuth: true, role: 'employee' },
           children: [
             {
               path: '/admin/guide-app/add',
               alias: '',
               name: 'guide-add-main',
-              component: () => import('./components/GuideApp/AddTopics/GuideAdd.vue'),
+              component: () => import('./components/Guide-App/add/AddTopics.vue'),
             },
             {
               path: '/admin/guide-app/view',
               name: 'guide-view',
-              component: () => import('./components/GuideApp/ViewTopics/GuideView.vue'),
+              component: () => import('./components/Guide-App/view/ViewTopics.vue'),
             },        
           ]
         }
       ]
     },
     {
+      path: '/admin/display-app/edit',
+      name: 'display-edit',
+      meta: { requiresAuth: true, role: 'employee' },
+      component: () => import('./components/DisplayApp/ViewTopics/DetailsView.vue'),
+    },
+    {
       path: '/admin/guide-app/edit',
       name: 'guide-edit',
-      component: () => import('./components/GuideApp/ViewTopics/DetailsView.vue'),
+      meta: { requiresAuth: true, role: 'employee' },
+      component: () => import('./components/Guide-App/view/TopicDetails.vue'),
     },
     {
-      path: '/admin/guide-app/subheading-view',
-      name: 'guide-sub-view',
-      component: () => import('./components/GuideApp/SubCardEdit/SubDetails.vue'),
+      path: '/admin/display-app/subheading-view',
+      name: 'display-sub-view',
+      meta: { requiresAuth: true, role: 'employee' },
+      component: () => import('./components/DisplayApp/SubCardEdit/SubDetails.vue'),
     },
     {
-      path: '/admin/guide-app/editForm',
-      name: 'guide-editForm',
-      component: () => import('./components/GuideApp/MainTopicEdit/EditForm.vue'),
+      path: '/admin/display-app/editForm',
+      name: 'display-editForm',
+      meta: { requiresAuth: true, role: 'employee' },
+      component: () => import('./components/DisplayApp/MainTopicEdit/EditForm.vue'),
     },
     
   ],
@@ -146,11 +174,11 @@ router.beforeEach((to, from, next) => {
             if (isAuthenticated) {
                 next(); // Allow access for admin
             } else {
-                const isGuideAppRoute = to.matched.some(record => record.path.startsWith('/admin/guide-app'));
-                if (isGuideAppRoute) {
-                    next(); // Allow access to any route within GuideApp for employees
+                const isDisplayAppRoute = to.matched.some(record => record.path.startsWith('/admin/display-app'));
+                if (isDisplayAppRoute) {
+                    next(); // Allow access to any route within DisplayApp for employees
                 } else {
-                    next({ name: 'guide-add-main' }); // Redirect employee to guide-add-main for non-GuideApp routes
+                    next({ name: 'display-add-main' }); // Redirect employee to display-add-main for non-displayApp routes
                 }
             }
         } else {

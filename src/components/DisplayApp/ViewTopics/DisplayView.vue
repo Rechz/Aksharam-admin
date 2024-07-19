@@ -1,6 +1,5 @@
 <template>
-
-  <v-container class="py-8 px-0" fluid>
+  <v-container class="py-2 px-0" fluid>
     <v-dialog width="600" max-width="600" v-model="dialogTopic">
       <v-card width="600" rounded="3">
         <v-card-title class="text-center text-white" :style="{ backgroundColor: color }">{{ dialogHead }}</v-card-title>
@@ -13,8 +12,32 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="dialogGenerate" width="800" max-width="800">
+      <v-card rounded="3" v-if="!addTopic">
+        <v-card-title class="text-center text-white fs-6" style="background-color: #2E7D32;">Generate QR</v-card-title>
+        <v-card-text class="px-5 text-justify pb-0">
+          Select topic to be linked with the selected topic '{{ selectedTopic }}'.
+          <v-select v-model="selectedItem" :items="topics" item-text="title" item-value="id" label="Select topic"
+            append-outer-icon="mdi-menu-down" clearable variant="outlined" density="compact" width="400" class="mt-3">
+            <template v-slot:append-item>
+              <v-divider class="my-0 py-0"></v-divider>
+              <v-list-item class="py-0">
+                <v-btn @click="handleButtonClick" class="ps-0 text-capitalize" variant="text" prepend-icon="mdi-plus"
+                  color="success">Add Topic</v-btn>
+              </v-list-item>
+            </template>
+          </v-select>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="#2E7D32" :disabled="!selectedItem || buttonClicked" variant="elevated" class="mb-3 me-3" @click="generateQR">Generate</v-btn>
+        </v-card-actions>
+      </v-card>
+      <v-card v-else>
+        <add-new :languageId="language" :id="topicId" @back="addTopic = false" @exit="addTopic = false; dialogGenerate=false" @update="getTopics"></add-new>
+      </v-card>
+    </v-dialog>
     <div class="d-flex justify-content-end mb-4">
-      <v-btn-toggle rounded="xl" color="green-lighten-5" v-model="lang" density="compact">
+      <v-btn-toggle color="green-lighten-5" v-model="lang" density="compact">
         <v-btn :value="'English'" @click="translate(2)" size="small">English</v-btn>
         <v-btn :value="'Malayalam'" @click="translate(1)" size="small">Malayalam</v-btn>
       </v-btn-toggle>
@@ -24,7 +47,7 @@
       :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }" v-else>
       <template v-slot:top>
         <v-dialog v-model="dialogDelete" width="500px">
-          <v-card class="rounded-4 pb-4">
+          <v-card class="rounded-2 pb-4">
             <v-card-title class="mb-2 text-white ps-4 fs-4 text-center" style="background-color: #BA1A1A;">Delete
               Topic</v-card-title>
             <v-container class="px-4 d-flex flex-column align-items-center">
@@ -34,15 +57,12 @@
               </v-card-text>
             </v-container>
             <v-card-actions class="mx-4 d-flex flex-column align-items-center">
-              <v-btn block class="rounded-4 text-white mb-3" style="background-color: #BA1A1A;"
+              <v-btn block class="rounded-0 text-white mb-3" style="background-color: #BA1A1A;"
                 @click="deleteItemConfirm" :loading="loading" :disabled="loading">Delete</v-btn>
-              <v-btn block variant="text" class="rounded-4 mb-3" @click="closeDelete">Cancel</v-btn>
-
+              <v-btn block variant="text" class="rounded-0 mb-3" @click="closeDelete">Cancel</v-btn>
             </v-card-actions>
-
           </v-card>
         </v-dialog>
-
         <v-dialog v-model="qrDialog" width="400px">
           <v-card style="width: 400px; height:auto; border-radius: 15px;">
             <v-card-title class="d-flex justify-content-between px-4"
@@ -61,9 +81,6 @@
                   @click="downloadQRCode(editedItem.qrCodeUrl)">
                   <v-icon class="mdi mdi-content-save-outline" color="green-darken-4"></v-icon> download
                 </v-btn>
-                <!-- <v-btn class="text-none" color="green-darken-4" width="170" rounded>
-                  <v-icon class="mdi mdi-printer"></v-icon> Print
-                </v-btn> -->
               </div>
             </v-card-text>
           </v-card>
@@ -72,15 +89,19 @@
       <template v-slot:item="{ item,index }">
         <tr style="background-color:#FCFDF6; color:black;">
           <td class="text-center">{{ index + 1 }}</td>
-          <td class="">{{ item.title }}</td>
-          <td class=""><v-img :src="item.qrCodeUrl" alt="QR" class="qr" style="height: 50px; width: 50px;"
-              @click="showQR(item)"></v-img></td>
+          <td class="text-center">{{ item.title }}</td>
+          <td class="text-center d-flex justify-content-center align-items-center"><v-img :src="item.qrCodeUrl" alt="QR"
+              class="qr" style="height: 50px; width: 50px;" v-if="item.commonId" ></v-img>
+            <v-btn variant="text" class="text-capitalize text-decoration-underline" color="#2E7D32" v-else
+              @click="generate(item)" :loading="qrLoad" :disabled="qrLoad">Generate QR</v-btn>
+          </td>
           <td class="text-center">
-            <v-btn class="text-none" color="#48663f" min-width="100" rounded @click="showDetails(item)">View &
+            <v-btn class="text-none" color="#48663f" min-width="100" size="small" @click="showDetails(item)"
+              :disabled="!item.commonId">View &
               Edit</v-btn>
           </td>
           <td class="text-center">
-            <v-icon size="large" color="danger" class=" mdi mdi-trash-can" @click="deleteItem(item)"></v-icon>
+            <v-icon size="default" color="danger" class=" mdi mdi-trash-can" @click="deleteItem(item)"></v-icon>
           </td>
         </tr>
       </template>
@@ -90,8 +111,12 @@
   
   <script>
   import axios from 'axios';
+  import AddNew from './AddNew.vue';
   import { mapGetters } from 'vuex';
   export default {
+    components: {
+      AddNew
+    },
     data: () => ({
       qrDialog: false,
       dialogDelete: false,
@@ -101,20 +126,28 @@
       color: '#E8F5E9',
       dialogHead: '',
       skeleton: true,
-      icon:'',
-      subTopic:{},
+      icon: '',
+      selectedTopic: '',
+      topicId: '',
+      qrLoad: false,
+      dialogGenerate: false,
+      subTopic: {},
+      topics: [],
+      buttonClicked: false,
+      selectedItem: null,
+      addTopic: false,
       image: require('@/assets/acc.jpg'),
       headers: [
-        { title: 'Sl.no', align: 'start', sortable: false },
-        { title: 'Heading', align: 'start', key: 'heading', sortable: false },
-        { title: 'QR Code', align: 'start', key: 'QR', sortable: false },
+        { title: 'Sl.no', align: 'center', sortable: false },
+        { title: 'Heading', align: 'center', key: 'heading', sortable: false },
+        { title: 'QR Code', align: 'center', key: 'QR', sortable: false },
         { title: 'Details', align: 'center' },
         { title: 'Delete', align: 'center' },
       ],
 
     }),
     computed: {
-      ...mapGetters('guide', ['getData','getLanguage']),
+      ...mapGetters('display', ['getData','getLanguage']),
       mainheadings() {
         return this.getData;
       },
@@ -122,13 +155,12 @@
         return this.getLanguage;
       },
       lang() {
-        if (this.language === 2) {
+        if (this.language == 2) {
           return 'English';
         }
-        if (this.language === 1) {
+        else {
           return 'Malayalam';
         }
-        return '';
       }
     },
     watch: {
@@ -142,6 +174,76 @@
       this.getAllLanguages();
     },
     methods: {
+       async generateQR() {
+        if (this.selectedItem && !this.buttonClicked) {
+          var idmal;
+          var ideng; 
+          if (this.language == 1) {
+            idmal = this.topicId;
+            ideng = this.selectedItem
+          }
+          else {
+            idmal = this.selectedItem;
+            ideng = this.topicId;
+          }
+          this.qrLoad = true;
+          try {
+            const response = await this.$store.dispatch('display/generateQR', { idmal: idmal, ideng: ideng });
+            if (response) {
+              this.qrLoad = false;
+              let message = 'Successfully generated QR';
+              this.dialogGenerate = false;
+              this.selectedItem = null;
+              this.success(message);
+              this.getTopics();
+            }
+          }
+          catch (error) {
+            let message = error.message + '!!';
+            this.qrLoad = false;
+            this.error(message);
+          }
+        }
+      },
+      async generate(topic) {
+        this.selectedTopic = topic.title;
+        this.topicId = topic.uId;
+        console.log(this.language)
+        try {
+          let language;
+          if (this.language == 1) {
+            language = 2;
+          } else { language = 1 }
+          console.log('selected ' + language )
+          const response = await axios.get(`${this.$store.getters.getUrl}/api/DataEntry1/getMainComplete?dtId=${language}`, {
+            headers: {
+              Authorization: `Bearer ${this.$store.getters.getToken}`
+            }
+          }
+          );
+          if (response.status >= 200 && response.status < 300) {
+            let filteredResponse = response.data.filter(item => !item.commonId);
+            this.topics = filteredResponse.map((topic) => {
+              if (!topic.commonId) {
+                return {
+                  title: topic.title,
+                  id: topic.uId
+                }
+              }
+            })
+            console.log(this.topics)
+          }
+        }
+        catch (error) {  
+          console.error(error);
+        }
+        
+        this.dialogGenerate = true;
+      },
+      handleButtonClick() {
+        this.buttonClicked = true;
+        this.addTopic = true;
+      },
       success(message) {
         this.icon = 'mdi mdi-check-circle-outline'
         this.message = message;
@@ -158,7 +260,7 @@
       },
       async getTopics() {
         try {
-          const res = await this.$store.dispatch('guide/getTopics');
+          const res = await this.$store.dispatch('display/getTopics');
           if (res) {
             this.skeleton = false;
           }
@@ -168,17 +270,18 @@
         }
       },
       translate(language) {
-        this.$store.commit('guide/setLanguage', language);
+        this.$store.commit('display/setLanguage', language);
+        console.log('set language', this.$store.getters['display/getLanguage'])
         this.getTopics()
       },
       async showDetails(item) {
         try {
-          const response = await this.$store.dispatch('guide/showDetails', {
+          const response = await this.$store.dispatch('display/showDetails', {
             language: this.language,
             commonId: item.commonId
           });
           if (response) {
-            this.$router.push({name:'guide-edit'})
+            this.$router.push({name:'display-edit'})
           }
         }
         catch (error) {
@@ -202,7 +305,7 @@
         this.loading = true;
         try {
           const id = this.editedItem.commonId;
-          const success = await this.$store.dispatch('guide/deleteMain', id)
+          const success = await this.$store.dispatch('display/deleteMain', id)
           if (success) {
             this.loading = false;
             let message = 'All details related to the topic deleted successfully !!';
@@ -241,7 +344,7 @@
       },
       async getType() {
         try {
-          await this.$store.dispatch('guide/getType');
+          await this.$store.dispatch('display/getType');
         }
         catch (err) {
           console.log(err)
@@ -249,7 +352,7 @@
       },
       async getAllLanguages() {
         try {
-          await this.$store.dispatch('guide/getAllLanguages');
+          await this.$store.dispatch('display/getAllLanguages');
         }
         catch (error) {
           console.error(error)
@@ -270,10 +373,10 @@
   :deep(.v-pagination__list .v-btn--disabled) {
     opacity: 0.4;
   }
-  .qr:hover {
+  /* .qr:hover {
     cursor: pointer;
-  }
+  } */
 </style>
 
-  
+ 
  

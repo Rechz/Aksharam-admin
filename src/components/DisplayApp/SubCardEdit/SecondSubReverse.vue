@@ -1,65 +1,69 @@
 <template>
-    <div class="sub-card">
-        <div class="text-card ps-5 pt-5">
-            <div class="details-content">
-                <div class="d-flex gap-3 align-items-center">
-                    <h4 class="text-start title my-0">{{ title }}</h4>
+    <div class="d-flex justify-content-end">
+        <div class="sub-card d-flex justify-content-end">
+            <div class="text-card pe-5 pt-5 mb-5">
+                <!-- <div class="details "> -->
+                <div class="details-content">
+                    <div class="d-flex gap-3 align-items-center">
+                        <h4 class="text-start title my-0">{{ title }}</h4>
+                    </div>
+                    <div style="width: 95%; height:95%; overflow-x:hidden" class="ms-3">
+                        <p class="text-wrap text-start ps-3 text-justify description" v-html="formattedDescription"></p>
+                        <ul class="d-flex gap-5">
+                            <li class="text-capitalize text-start" style="direction: ltr; font-size: 100%;"
+                                v-for="topic in subtopic" :key="topic.uId">
+                                {{ topic.title }}</li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="desc">
-                    <p class="text-wrap text-start ps-3 pre-text" v-html="description"></p>
-                    <ul class="d-flex gap-5">
-                        <li class="text-capitalize text-start" style="direction: ltr; font-size: 120%;"
-                            v-for="topic in subtopic" :key="topic.uId">{{ topic.title }}
-                        </li>
-                    </ul>
+                <div class="d-flex justify-content-center mt-5 pt-3">
+                    <audio controls class="mt-3 mx-3 w-75" v-if="audio.length > 0" :src="audio[0].furl" type="audio/*">
+                        Your browser does not support the audio element.
+                    </audio>
                 </div>
-
-
-            </div>
-            <div class="d-flex justify-content-center mt-5">
-                <audio controls class="mt-3 mx-3 w-100" v-if="audio.length > 0" :src="audio[0].furl" type="audio/*">
-                    Your browser does not support the audio element.
-                </audio>
-            </div>
-            <div class="carousel-wrapper">
-                <div class="d-flex gap-2 mb-3">
-                    <v-btn prepend-icon="mdi-pencil" rounded="4" class=" text-success text-capitalize me-2 fw-bold"
-                        size="small" @click="openEdit">Edit</v-btn>
-                    <v-btn prepend-icon="mdi-trash-can" rounded="4" class=" text-danger text-capitalize fw-bold"
-                        size="small" @click="deleteItem">Delete</v-btn>
+                <div class="d-flex button">
+                    <v-btn prepend-icon="mdi-pencil" rounded="4" class="mb-3 text-success text-capitalize me-2 "
+                        size="x-small" @click="openEdit">Edit</v-btn>
+                    <v-btn prepend-icon="mdi-trash-can" rounded="4" class=" text-danger text-capitalize "
+                        @click="deleteItem" size="x-small">Delete</v-btn>
                 </div>
-                <v-carousel class="sub-carousel" height="400" hide-delimiters cover :show-arrows="images.length > 1">
-                    <v-carousel-item @click="openDialog(image.furl)" cover :src="image.furl"
-                        v-for="(image, index) in images" :key="index" class="sub-carousel">
-                    </v-carousel-item>
-                </v-carousel>
-                <v-btn class="video-btn  mt-3" rounded="3" @click="openVideoDialog" variant="elevated"
-                    v-if="video.length > 0"><v-icon class="mdi mdi-video"></v-icon>Watch
-                    Video</v-btn>
+                <v-btn class="video-btn mt-3" rounded="3" variant="elevated" v-if="video.length > 0"
+                    @click="openVideoDialog">
+                    <v-icon class="mdi mdi-video"></v-icon>Watch Video</v-btn>
+                <div class="carousel-wrapper d-flex flex-column align-items-end">
+                    <v-carousel class="sub-carousel" height="400" hide-delimiters cover
+                        :show-arrows="images.length > 1">
+                        <v-carousel-item @click="openDialog(image.furl)" :src="image.furl" cover
+                            v-for="(image, index) in images" :key="index" class="sub-carousel">
+                        </v-carousel-item>
+                    </v-carousel>
+                </div>
             </div>
+            <v-dialog v-model="dialog" max-width="650">
+                <v-img :src="selectedImage" contain></v-img>
+            </v-dialog>
+            <v-dialog v-model="videoDialog" max-width="800px">
+                <v-card>
+                    <v-toolbar dense>
+                        <v-btn icon dark @click="closeVideoDialog">
+                            <v-icon>mdi-close</v-icon>
+                        </v-btn>
+                        <!-- <v-toolbar-title class="white--text">Video Player</v-toolbar-title>color="rgb(1, 39, 3)" -->
+                    </v-toolbar>
+                    <v-card-text>
+                        <video controls width="100%" v-if="video.length > 0" :src="video[0].furl" type="video/*">
+                            Your browser does not support the video tag.
+                        </video>
+                    </v-card-text>
+                </v-card>
+            </v-dialog>
         </div>
-        <v-dialog v-model="dialog" max-width="650">
-            <v-img :src="selectedImage" contain></v-img>
-        </v-dialog>
-        <v-dialog v-model="videoDialog" max-width="800px">
-            <v-card>
-                <v-toolbar dense>
-                    <v-btn icon dark @click="closeVideoDialog">
-                        <v-icon>mdi-close</v-icon>
-                    </v-btn>
-                </v-toolbar>
-                <v-card-text>
-                    <video controls width="100%" v-if="video.length > 0" :src="video[0].furl" type="video/*">
-                        Your browser does not support the video tag.
-                    </video>
-                </v-card-text>
-            </v-card>
-        </v-dialog>
     </div>
     <v-dialog v-model="editDialog" width="1000" persistent>
         <second-edit-form :head="head" :description="description" :images="images" :video="video" :url="url"
-            :audio="audio" :commonId="commonId" @finish="editDialog = false" :uId="uId" @update="update" :main="main"
-            :malId="malId" :engId="engId" :subtopic="subtopic"></second-edit-form>
+            :audio="audio" @finish="editDialog = false" :commonId="commonId" :uId="uId" @update="update" :main="main"
+            :malId="malId" :engId="engId" :subtopic="subtopic" :bgImage="bgImage" @dialogClose="editDialog = false;"
+            @exit="editDialog = false;"></second-edit-form>
     </v-dialog>
     <v-dialog v-model="dialogDelete" width="400px">
         <v-card class="rounded-4 pb-4">
@@ -82,25 +86,8 @@
 
 <script>
 import SecondEditForm from './SecondEditForm.vue';
-
 export default {
-    emits: ['update'],
     components: { SecondEditForm },
-    props: [
-        "title",
-        "head",
-        "description",
-        "images",
-        'video',
-        'url',
-        'commonId',
-        'audio',
-        'uId',
-        'main',
-        'subtopic',
-        'malId',
-        'engId'
-    ],
     data() {
         return {
             dialog: false,
@@ -117,7 +104,31 @@ export default {
             loading: false,
         };
     },
-
+    emits: ['update'],
+    props: [
+        "title",
+        "head",
+        "description",
+        "images",
+        'video',
+        'url',
+        'commonId',
+        'audio',
+        'uId',
+        'main',
+        'subtopic',
+        'malId',
+        'engId',
+        'bgImage'
+    ],
+    computed: {
+        formattedDescription() {
+            if (this.description) {
+                return this.description.replace(/\n/g, '<br>');
+            }
+            else return '';
+        }
+    },
     methods: {
         success(message) {
             this.icon = 'mdi mdi-check-circle-outline'
@@ -144,10 +155,10 @@ export default {
             this.dialog = true;
         },
         openVideoDialog() {
-            this.videoDialog = true;
+            this.videoDialog = true; 
         },
         closeVideoDialog() {
-            this.videoDialog = false;
+            this.videoDialog = false; 
             const videoElement = this.$refs.videoPlayer;
             if (videoElement) {
                 videoElement.pause();
@@ -161,20 +172,21 @@ export default {
             try {
                 let response;
                 if (this.main == true) {
-                    response = await this.$store.dispatch('guide/deleteSub', this.commonId)
+                    response = await this.$store.dispatch('display/deleteSub', this.commonId)
                 }
                 if (this.main == false) {
-                    response = await this.$store.dispatch('guide/deleteSub2', this.commonId)
+                    response = await this.$store.dispatch('display/deleteSub2', this.commonId)
                 }
                 if (response) {
                     this.loading = false
                     let message = 'Topic and details deleted successfully !!';
                     this.closeDelete();
                     this.success(message);
+                    
                     if (this.main == true) {
-                        
-                        this.$router.push({ name: 'guide-edit' })
+                        this.$router.push({ name: 'display-edit' })
                     } this.update();
+                    
                 }
             }
             catch (error) {
@@ -199,30 +211,31 @@ export default {
     width: 75%;
     aspect-ratio: 1676 / 800;
     height: 40rem;
-    background-color: #363A33;
+    background-color: #40463c;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
     color: #ffffff;
-    border-radius: 0 60px 60px 0;
+    border-radius: 60px 0 0 60px;
     position: relative;
+}
 
-    /* aspect-ratio: 541 / 200;  */
-
+.button {
+    position: absolute;
+    top: 3%;
+    left: 3%;
 }
 
 .text-card {
     width: 75%;
     aspect-ratio: 1107 / 600;
-    /* height: 25rem; */
 }
 
 .carousel-wrapper {
-    /* width: 100%; */
     aspect-ratio: 813/650;
     position: absolute;
-    left: 80%;
-    top: 8%;
+    right: 75%;
+    top: 17%;
     width: 50%;
     aspect-ratio: 271 / 200;
-    /* Define aspect ratio for the wrapper */
 }
 
 .sub-carousel {
@@ -230,48 +243,53 @@ export default {
     height: 100%;
 }
 
-/* .sub-image {
-  width: 50%;  
-  aspect-ratio: 271 / 200; 
-  position: absolute;
-  left: 75%;
-  top: 12%;
-} */
 .desc,
 .details-content {
     width: 100%;
     font-size: 100%;
-    line-height: 180%;
-    height: 25rem;
     aspect-ratio: 1107 / 600;
+    line-height: 180%;
+    height: 24rem;
 }
+
 .title {
-    font-size: 110%;
+    font-size: 160%;
     line-height: 180%;
 }
-/* .details-content {
-    direction: ltr;
-} */
+
+.video-btn {
+    position: absolute;
+    bottom: 12%;
+    left: 11%;
+}
+
+:deep(.carousel-wrapper .v-btn) {
+    background-color: transparent;
+}
+
 ::-webkit-scrollbar,
 :deep(::-webkit-scrollbar) {
     width: 4px;
     height: auto;
-
 }
+
 ::-webkit-scrollbar-track,
 :deep(::-webkit-scrollbar-track) {
     background: #272B25;
 }
+
 ::-webkit-scrollbar-thumb,
 :deep(::-webkit-scrollbar-thumb) {
     background: #8D9387;
     border-radius: 30px;
 }
+
 ::-webkit-scrollbar-thumb:hover,
 :deep(::-webkit-scrollbar-thumb:hover) {
     background: #f5eded;
     cursor: pointer;
 }
+
 :deep(pre) {
     text-wrap: wrap;
     overflow-y: auto;
@@ -282,5 +300,11 @@ export default {
     font-family: Arial, Helvetica, sans-serif;
     text-align: justify;
     font-size: 20px;
+    direction: ltr;
+}
+
+:deep(.description) {
+    font-size: 110%;
+    text-align: justify;
 }
 </style>

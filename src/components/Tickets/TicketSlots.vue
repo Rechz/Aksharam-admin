@@ -1,44 +1,23 @@
 <template>
   <v-skeleton-loader v-if="skeleton" type="table"></v-skeleton-loader>
   <v-container class="pb-8 px-0" fluid>
-
-    <!-- <v-container class="py-0">
-      <p class="text-danger text-caption mb-2"><i>*Enter time in 24 hour format (hh:mm:ss) format. eg:-5.30 pm should be
-          entered as
-          17:30:00.</i></p>
-      <v-form class=" d-flex align-items-start bg-white p-0 pb-3 flex-wrap ms-0 gap-3">
-        <v-text-field label="Start Time (hh:mm:ss) " prepend-inner-icon="mdi-clock-in" density="compact"
-          class="slot ms-0" v-model="startTime" hide-details variant="outlined"></v-text-field>
-        <v-text-field label="End Time (hh:mm:ss) " prepend-inner-icon="mdi-clock-out" density="compact"
-          class="slot ms-0" v-model="startTime" hide-details variant="outlined"></v-text-field>
-        <v-text-field label="Capacity" prepend-inner-icon="mdi-clock-out" density="compact" class="slot ms-0"
-          v-model="startTime" hide-details variant="outlined"></v-text-field>
-        <v-btn size="large"
-          style="background-color: #2C7721 !important; color: white !important; text-transform: capitalize;"
-          @click="addSlot" :disabled="loading" :loading="loading"> +
-          Add Slot </v-btn>
-      </v-form>
-    </v-container> -->
     <v-dialog v-model="dialog" max-width="500px">
       <template v-slot:activator="{ props }">
         <div class="d-flex justify-content-end">
-          <v-btn color="#2C7721" size="large" v-bind="props" class="text-capitalize mb-3"
-            style="font-size: 16px; font-weight: 600;"> + Add
-            Slot
-          </v-btn>
+          <v-btn color="#2C7721" size="large" v-bind="props" class="text-capitalize mb-3"> + Add Slot</v-btn>
         </div>
-
       </template>
       <v-card style="width: 500px; height:auto; border-radius: 15px;">
-        <v-card-title class="d-flex justify-content-between px-4" style="background-color: #216D17; color: #FFFFFF;">
-          <h4>{{formTitle}}</h4>
-          <v-icon @click="close" class="mdi mdi-window-close"></v-icon>
+        <v-card-title class="d-flex justify-content-between px-4 mb-3 align-items-center"
+          style="background-color: #216D17; color: #FFFFFF;">
+          <h5 class="mt-2">{{formTitle}}</h5>
+          <v-icon @click="close" class="mdi mdi-window-close" size="24"></v-icon>
         </v-card-title>
         <v-card-subtitle class="text-danger text-center my-1" v-if="editedIndex === -1">
           <i>*Enter time in 24 hour format (hh:mm:ss) format.</i>
         </v-card-subtitle>
         <v-card-text class="py-0">
-          <v-container>
+          <v-container class="pb-1">
             <v-row>
               <v-col cols="12" sm="12" md="12" class="py-0">
                 <v-text-field v-model="editedItem.startTime" label="Time IN (hh:mm:ss)" density="comfortable"
@@ -63,30 +42,30 @@
           </v-container>
         </v-card-text>
         <v-card-actions class="mb-4 mx-4">
-          <v-btn color="#546E7A" variant="elevated" block rounded="5" style="text-transform: capitalize" elevation="4"
-            size="large" @click="editedIndex === -1 ? add() : update()" :disabled="loading" :loading="loading">
+          <v-btn color="#546E7A" variant="elevated" block style="text-transform: capitalize" elevation="4" size="large"
+            @click="editedIndex === -1 ? add() : update()" :disabled="loading" :loading="loading" class="mb-2">
             {{editedIndex === -1?'Add':'Update'}}
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="dialogDelete" width="420px" height="300px">
-      <v-card class="rounded-4 pb-4">
-        <v-card-title style="background-color: #BA1A1A;" class="mb-2 text-white text-center">Delete
+    <!-- <v-dialog v-model="dialogDelete" width="420px" height="300px">
+      <v-card class="rounded-4 pb-3">
+        <v-card-title style="background-color: #BA1A1A;" class="mb-2 text-white text-center fs-5">Delete
           Slot?</v-card-title>
-        <v-icon color="red-accent-4" size="54" class="align-self-center mt-2">mdi-trash-can</v-icon>
+        <v-icon color="red-accent-4" size="24" class="align-self-center mt-2">mdi-trash-can</v-icon>
         <v-card-text lass="text-center">Are you sure you want to delete this slot?</v-card-text>
         <v-card-actions style="display: block;">
 
-          <v-btn color="black" block class=" rounded-4 text-white" style="background-color: #BA1A1A; "
+          <v-btn color="black" block class="text-white" style="background-color: #BA1A1A; "
             @click="deleteItemConfirm">Delete</v-btn>
-          <v-btn color="black" block variant="text rounded-4" @click="closeDelete">Cancel</v-btn>
+          <v-btn color="black" block variant="text" @click="closeDelete">Cancel</v-btn>
           <v-spacer></v-spacer>
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
 
     <v-data-table :headers="headers" :items="slots"
       :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
@@ -99,7 +78,7 @@
           <td class="text-center"><v-chip :color="item.status ? 'green' : 'red'">{{
               item.status?'Active':'Inactive' }}</v-chip></td>
           <td class="text-center">
-            <v-icon size="large" color="teal-darken-3" class="me-4" @click="editItem(item)">
+            <v-icon size="default" color="teal-darken-3" class="" @click="editItem(item)">
               mdi-pencil
             </v-icon>
             <!-- <v-icon size="large" color="danger" class="ms-4" @click="deleteItem(item)">

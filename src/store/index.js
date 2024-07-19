@@ -3,14 +3,17 @@ import rootMutations from './mutations.js';
 import rootActions from './actions.js';
 import rootGetters from './getters.js';
 import guideModule from './modules/guide/index.js'
+import displayModule from './modules/display/index.js';
 const store = createStore({
   modules: {
-    guide: guideModule
+    guide: guideModule,
+    display : displayModule
   },
   state() {
     return {
       // base_url: 'http://localhost:8448',
-      // base_url: 'http://192.168.1.30:8083',
+      // base_url: 'http://192.168.1.32:8083',
+      //  base_url: 'http://192.168.33.172:8083',
       base_url: 'https://aksharammuseum.com',
       token: sessionStorage.getItem('token') || '',
       status: JSON.parse(sessionStorage.getItem('status')) || false,
@@ -35,7 +38,6 @@ const store = createStore({
       dailyTickets: sessionStorage.getItem('dailyTickets') || 0,
       priceList: {},
       holidays: JSON.parse(sessionStorage.getItem('holidays')) || [],
-      
     };
   },
   mutations: rootMutations,

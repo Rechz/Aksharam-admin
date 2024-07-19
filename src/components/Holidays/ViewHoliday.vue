@@ -1,6 +1,6 @@
 <template>
   <v-skeleton-loader v-if="skeleton" type="table"></v-skeleton-loader>
-  <v-container class="py-8 px-0" fluid v-else>
+  <v-container class="py-2 px-0" fluid v-else>
     <v-snackbar v-model="snackbar" :color="color" :timeout="timeout" location="top">
       <div class="text-center">{{ message }}</div>
     </v-snackbar>
@@ -11,29 +11,27 @@
       <template v-slot:top>
         <v-dialog v-model="dialogDelete" width="400px">
           <v-card class="rounded-4 pb-4">
-            <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
+            <v-card-title class="mb-2 text-white text-center ps-4 fs-5" style="background-color: #BA1A1A;">Delete
               Holiday</v-card-title>
             <v-container class="px-4 d-flex flex-column align-items-center">
               <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
               <v-card-text class="mt-1 text-center">Are you sure you want to delete?</v-card-text>
             </v-container>
             <v-card-actions class="mx-4 d-flex flex-column align-items-center">
-              <v-btn block class="rounded-4 text-white mb-3" style="background-color: #BA1A1A;" :loading="loading"
+              <v-btn block class="text-white mb-3" style="background-color: #BA1A1A;" :loading="loading"
                 :disabled="loading" @click="deleteItemConfirm">Delete</v-btn>
-              <v-btn block variant="text" class="rounded-4 mb-3" @click="closeDelete">Cancel</v-btn>
-
+              <v-btn block variant="text" class="mb-1" @click="closeDelete">Cancel</v-btn>
             </v-card-actions>
-
           </v-card>
         </v-dialog>
       </template>
       <template v-slot:item="{ item,index }">
         <tr style="background-color:#FCFDF6; color:black;">
-          <td class="">{{ index + 1 }}</td>
-          <td class="">{{ item.date }}</td>
-          <td class="">{{ item.name }}</td>
+          <td class="text-center">{{ index + 1 }}</td>
+          <td class="text-center">{{ item.date }}</td>
+          <td class="text-center">{{ item.name }}</td>
           <td class="text-center">
-            <v-icon size="large" color="danger" class="mdi mdi-trash-can" @click="deleteItem(item)"></v-icon>
+            <v-icon size="default" color="danger" class="mdi mdi-trash-can" @click="deleteItem(item)"></v-icon>
           </td>
         </tr>
       </template>
@@ -53,9 +51,9 @@
         color: '#E8F5E9',
         timeout: 2000,
         headers: [
-          { title: 'Sl.no', align: 'start', sortable: false },
-          { title: 'Date', align: 'start', key: 'date', sortable: false },
-          { title: 'Holiday Reason', align: 'start', key: 'name', sortable: false },
+          { title: 'Sl.no', align: 'center', sortable: false },
+          { title: 'Date', align: 'center', key: 'date', sortable: false },
+          { title: 'Holiday Reason', align: 'center', key: 'name', sortable: false },
           { title: 'Delete', align: 'center' },
         ],
         editedIndex: -1,

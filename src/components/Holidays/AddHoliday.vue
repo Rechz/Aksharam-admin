@@ -1,5 +1,5 @@
 <template>
-  <v-container class="py-8 px-0" fluid>
+  <v-container class="py-4 px-0" fluid>
     <v-snackbar v-model="snackbar" :color="color" :timeout="timeout" location="top">
       <div class="text-center">{{ message }}</div>
     </v-snackbar>
@@ -12,7 +12,7 @@
             variant="outlined"></v-text-field>
           <v-text-field v-model="holiday" label="Holiday Purpose" density="comfortable" class="portal"
             variant="outlined"></v-text-field>
-          <v-btn @click="sendHoliday" block color="#2C7721" class="">Add Holiday</v-btn>
+          <v-btn @click="sendHoliday" block color="#2C7721" class="text-capitalize" size="large">Add Holiday</v-btn>
         </div>
       </v-card>
     </div>

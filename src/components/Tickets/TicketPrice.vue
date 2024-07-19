@@ -1,22 +1,21 @@
 <template>
 
-  <v-container class="py-8 ps-0 pe-0" fluid>
+  <v-container class="py-2 ps-0 pe-0" fluid>
     <v-snackbar v-model="snackbar" :color="color" :timeout="timeout" location="top">
       <div class="text-center">{{ message }}</div>
     </v-snackbar>
     <div class="d-flex justify-content-end ">
-      <v-btn class=" text-capitalize" color="#2C7721" size="large" style="font-size: 16px; font-weight: 600;"
-        @click="dialogAdd = true;" variant="outlined" density="comfortable">
+      <v-btn class="text-capitalize" color="#2C7721" @click="dialogAdd = true;" variant="elevated" size="large" density="comfortable">
         + Add Price</v-btn>
     </div>
     <v-dialog width="400" max-width="800" v-model="dialogAdd">
       <v-card style="width: 400px; height:auto; border-radius: 15px;" class="pb-5">
-        <v-card-title class="d-flex justify-content-between px-4" style="background-color: #216D17; color: #FFFFFF;">
-          <h4>Price Details</h4>
-          <v-icon @click="closeDialogAdd" class="mdi mdi-window-close"></v-icon>
+        <v-card-title class="d-flex justify-content-between px-4 align-items-center" style="background-color: #216D17; color: #FFFFFF;">
+          <h5 class="mt-2">Price Details</h5>
+          <v-icon @click="closeDialogAdd" class="mdi mdi-window-close" size="24"></v-icon>
         </v-card-title>
-        <v-card-text>
-          <v-container>
+        <v-card-text class="pb-3">
+          <v-container class="pb-0">
             <v-row>
               <v-col cols="12" sm="12" md="12">
                 <v-select v-model="category" :items="categoryItems" label="Category" class="price" density="comfortable"
@@ -34,8 +33,8 @@
           </v-container>
         </v-card-text>
         <v-card-actions class="mx-4">
-          <v-btn color="white" block style="background-color: #1B5E20; text-transform: capitalize" class="rounded-5"
-            elevation="4" size="large" @click="addPrice" :loading="loadingAdd" :disabled="loadingAdd">Add</v-btn>
+          <v-btn color="white" block style="background-color: #1B5E20; text-transform: capitalize" 
+            elevation="4" size="45" @click="addPrice" :loading="loadingAdd" :disabled="loadingAdd">Add</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

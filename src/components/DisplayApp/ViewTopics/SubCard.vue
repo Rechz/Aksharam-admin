@@ -16,37 +16,38 @@
       <div class="details-content">
         <div class="d-flex gap-3 align-items-center">
           <h4 class="text-start title my-0">{{ title }}</h4>
-          <v-icon class="mdi mdi-arrow-right text-white" v-if="title && subtopic.length && subtopic.length>0"
+          <v-icon class="mdi mdi-arrow-right text-white" v-if="title && subtopic && subtopic.length>0"
             @click="displaySub"></v-icon>
         </div>
-        <div class="desc">
-          <p class="text-wrap text-start ps-3 pre-text" v-html="description"></p>
-          <ul class="d-flex gap-5">
-            <li class="text-capitalize text-start" style="direction: ltr; font-size: 120%;" v-for="topic in subtopic" :key="topic.uId">{{ topic.title }}
+        <div style="width: 95%; height:95%; overflow-x:hidden">
+          <p class="text-wrap text-start" v-html="formattedDescription"></p>
+          <ul class="">
+            <li class="text-capitalize text-start" style="font-size: 100%;" v-for="topic in subtopic" :key="topic.uId">
+              {{ topic.title }}
             </li>
           </ul>
         </div>
       </div>
-      <!-- <div class="d-flex justify-content-center mt-5">
-        <audio controls class="mt-3 mx-3 w-100" v-if="audio.length > 0" :src="audio[0].furl" type="audio/*">
+      <div class="d-flex button">
+        <v-btn prepend-icon="mdi-pencil" class="text-success text-capitalize me-2" @click="openEdit" size="x-small"
+          variant="elevated">Edit</v-btn>
+        <v-btn prepend-icon="mdi-trash-can" class="text-danger text-capitalize" @click="deleteItem" size="x-small"
+          variant="elevated">Delete</v-btn>
+      </div>
+      <div class="d-flex justify-content-center mt-5">
+        <audio controls class="mt-3 me-3 w-100" v-if="audio.length > 0" :src="audio[0].furl" type="audio/*">
           Your browser does not support the audio element.
         </audio>
-      </div> -->
+      </div>
+      <v-btn class="video-btn  mt-3" rounded="3" @click="openVideoDialog" variant="elevated"
+        v-if="video.length > 0"><v-icon class="mdi mdi-video"></v-icon>Watch
+        Video</v-btn>
       <div class="carousel-wrapper">
-        <div class="d-flex gap-2 mb-3">
-          <v-btn prepend-icon="mdi-pencil" rounded="4" class=" text-success text-capitalize me-2 fw-bold" size="small"
-            @click="openEdit">Edit</v-btn>
-          <v-btn prepend-icon="mdi-trash-can" rounded="4" class=" text-danger text-capitalize fw-bold"
-            @click="deleteItem" size="small">Delete</v-btn>
-        </div>
         <v-carousel class="sub-carousel" height="400" hide-delimiters cover :show-arrows="images.length > 1">
-          <v-carousel-item @click="openDialog(image.furl)" cover :src="image.furl" v-for="(image, index) in images"
-            :key="index" class="sub-carousel">
+          <v-carousel-item @click="openDialog(image.furl)" contain :src="image.furl" v-for="image in images"
+            :key="image.furl" class="sub-carousel">
           </v-carousel-item>
         </v-carousel>
-        <v-btn class="video-btn  mt-3" rounded="3" @click="openVideoDialog" variant="elevated"
-          v-if="video.length > 0"><v-icon class="mdi mdi-video"></v-icon>Watch
-          Video</v-btn>
       </div>
     </div>
     <v-dialog v-model="dialog" max-width="650">
@@ -70,7 +71,8 @@
   <v-dialog v-model="editDialog" width="1000" persistent>
     <edit-form :head="head" :description="description" :images="images" :video="video" :url="url" :audio="audio"
       :commonId="commonId" @finish="editDialog = false" :uId="uId" @update="update" :main="main" :malId="malId"
-      :engId="engId" :subtopic="subtopic"></edit-form>
+      :engId="engId" :subtopic="subtopic" @dialogClose="editDialog = false;" @exit="editDialog = false;"
+      :bgImage="bgImage"></edit-form>
   </v-dialog>
   <v-dialog v-model="dialogDelete" width="400px">
     <v-card class="rounded-4 pb-4">
@@ -109,8 +111,16 @@ export default {
     'subtopic',
     'malId',
     'engId',
-    
+    'bgImage'
   ],
+  computed: {
+    formattedDescription() {
+      if (this.description) {
+        return this.description.replace(/\n/g, '<br>');
+      }
+      else return '';
+    }
+  },
   data() {
     return {
       dialog: false,
@@ -180,10 +190,11 @@ export default {
         uId: this.uId,
         combinedDataSubSubList: this.subtopic,
         fsMalId: this.malId,
-        fsEngId: this.engId
+        fsEngId: this.engId,
+        backgroundImgList: this.bgImage
       }
-      this.$store.commit('guide/setFirstSubData',props)
-      this.$router.push({ name: 'guide-sub-view' })
+      this.$store.commit('display/setFirstSubData',props)
+      this.$router.push({ name: 'display-sub-view' })
     },
     deleteItem() {
       this.dialogDelete = true
@@ -193,10 +204,10 @@ export default {
       try {
         let response;
         if (this.main == true) {
-          response = await this.$store.dispatch('guide/deleteMain', this.commonId)
+          response = await this.$store.dispatch('display/deleteMain', this.commonId)
         }
         if (this.main == false) {
-          response = await this.$store.dispatch('guide/deleteSub', this.commonId)
+          response = await this.$store.dispatch('display/deleteSub', this.commonId)
         }
         if (response) {
           this.loading = false
@@ -204,7 +215,7 @@ export default {
           this.closeDelete();
           this.success(message);
           if (this.main == true) {
-            this.$router.push({ name: 'guide-view' })
+            this.$router.push({ name: 'display-view' })
           }
         }
       }
@@ -229,10 +240,16 @@ export default {
   width: 75%; 
   aspect-ratio: 1676 / 800;
   height: 40rem;
-  background-color: #363A33;
+  background-color: #40463c;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
   color: #ffffff;
   border-radius: 0 60px 60px 0;
   position: relative;
+}
+.button{
+  position: absolute;
+  top:3%;
+  right: 3%;
 }
 .text-card {   
   width: 75%;  
@@ -241,8 +258,9 @@ export default {
 .carousel-wrapper {
   aspect-ratio: 813/650;
   position: absolute;
-  left: 80%;
-  top: 8%;
+  left: 75%;
+  top: 17%;
+  
   width: 50%;
   aspect-ratio: 271 / 200; 
 }
@@ -261,6 +279,14 @@ export default {
 .title{
   font-size: 160%;
   line-height: 180%;
+}
+.video-btn{
+  position: absolute;
+  bottom: 12%;
+  right: 11%;
+}
+:deep(.carousel-wrapper .v-btn) {
+  background-color: transparent;
 }
 /* .details-content{
   direction: ltr;
@@ -287,6 +313,7 @@ export default {
   overflow-x: hidden;
   min-height: auto;
   max-height: 25rem;
+  height: 25rem;
   padding-right: 5px;
   font-family:Arial, Helvetica, sans-serif;
   text-align: justify;
