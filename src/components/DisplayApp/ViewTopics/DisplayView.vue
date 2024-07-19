@@ -67,7 +67,7 @@
           <v-card style="width: 400px; height:auto; border-radius: 15px;">
             <v-card-title class="d-flex justify-content-between px-4"
               style="background-color: #216D17; color: #FFFFFF;">
-              <h4>Item Heading</h4>
+              <h4>{{ editedItem.title }}</h4>
               <v-icon @click="closeQR" class="mdi mdi-window-close"></v-icon>
             </v-card-title>
             <v-card-text class="mb-0 px-3 py-0">
