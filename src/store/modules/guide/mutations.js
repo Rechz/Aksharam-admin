@@ -1,18 +1,42 @@
 export default {
-  setLanguage(state, payload) {
-    state.language = payload;
-    sessionStorage.setItem('language', payload);
+  setMalHeading(state,payload){
+    state.malHeading = payload;
+    sessionStorage.setItem('malHeadingGuide', payload);
   },
-  setLanguageList(state, payload) {
-    state.languageList = payload;
-    sessionStorage.setItem('languageList', JSON.stringify(payload));
+  setEngHeading(state, payload){
+    state.engHeading = payload;
+    sessionStorage.setItem('engHeadingGuide', payload);
   },
-  setFileTypes(state, payload) {
-    state.fileTypes = payload;
-    sessionStorage.setItem('fileTypes', JSON.stringify(payload));
+  setIdmal(state, payload){
+    state.idmal = payload;
+    sessionStorage.setItem('idmalGuide', payload);
   },
-  setMedia(state, payload) {
-    state.mediaType = payload;
-    sessionStorage.setItem('mediaType', JSON.stringify(payload));
+  setIdeng(state, payload){
+    state.ideng = payload;
+    sessionStorage.setItem('idengGuide', payload);
+  },
+  setMalParaHeading(state, payload) {
+    state.malParaHeading = payload;
+    sessionStorage.setItem('malParaHeading', payload);
+  },
+  setEngParaHeading(state, payload) {
+    state.engParaHeading = payload;
+    sessionStorage.setItem('engParaHeading', payload);
+  },
+  setParaidmal(state, payload) {
+    state.paraidmal = payload;
+    sessionStorage.setItem('paraidmal', payload);
+  },
+  setParaideng(state, payload) {
+    state.paraideng = payload;
+    sessionStorage.setItem('paraideng', payload);
+  },
+  setCommonIdMain(state, payload) {
+    state.commonIdMain = payload;
+    sessionStorage.setItem('commonIdMainGuide', payload);
+  },
+  setCommonIdPara(state, payload) {
+    state.commonIdPara = payload;
+    sessionStorage.setItem('commonIdPara', payload);
   },
 }

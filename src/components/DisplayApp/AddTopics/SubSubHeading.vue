@@ -398,6 +398,7 @@ export default {
           this.QRLoad = false;
           this.QRLoading = false;
           this.imageSubmit = false;
+          this.bgSubmit = false;
           message = 'Error uploading images:' + error.message;
           this.error(message);
         }
@@ -623,6 +624,7 @@ export default {
         this.videoEngSubmit = false;
         this.videoMalSubmit = false;
         this.imageSubmit = false;
+        this.bgSubmit = false;
         this.languageAV = null;
       }, 
     },

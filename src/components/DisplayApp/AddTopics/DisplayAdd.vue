@@ -381,6 +381,7 @@ export default {
           this.QRLoad = false;
           this.QRLoading = false;
           this.imageSubmit = false;
+          this.bgSubmit = false;
           const message = error.message;
           this.error(message);     
         } 
@@ -607,6 +608,7 @@ export default {
         this.videoEngSubmit = false;
         this.videoMalSubmit = false;
         this.imageSubmit = false;
+        this.bgSubmit = false;
         this.languageAV = null;
       },
       async getType() {

@@ -16,7 +16,6 @@ export default {
     getsubideng: (state) => state.subideng,
     getsub2idmal: (state) => state.sub2idmal,
     getsub2ideng: (state) => state.sub2ideng,
-    getSlots: (state) => state.slots,
     getLanguage: (state) => state.language,
     getLanguageList: (state) => state.languageList,
     getMedia: (state) => state.mediaType,
