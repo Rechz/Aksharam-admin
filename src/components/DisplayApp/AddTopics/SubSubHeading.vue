@@ -58,7 +58,7 @@
     </template>
     <template v-else-if="step === 2">
       <v-card flat class="mt-2" :disabled="bgLoad">
-        <v-card-title class="py-1 bg-blue-grey-lighten-5 mb-3 fs-5">Main Topic Background Image</v-card-title>
+        <v-card-title class="py-1 bg-blue-grey-lighten-5 mb-3 fs-5">Sub of subheading Background Image</v-card-title>
         <v-card flat class="ms-3 my-3">
           <input type="file" ref="imageBg" @change="handleBgImage" class="d-none" accept="image/*">
           <v-btn @click="triggerFileInput" color="blue-grey-darken-4" variant="outlined" size="small"
@@ -88,7 +88,7 @@
         </div>
       </v-card>
       <v-card flat class="mt-2" :disabled="imageLoad">
-        <v-card-title class="py-1 bg-blue-grey-lighten-5 mb-3">Main Topic Images</v-card-title>
+        <v-card-title class="py-1 bg-blue-grey-lighten-5 mb-3">Sub of subheading Images</v-card-title>
         <v-card flat class="ms-3">
           <input type="file" ref="imageFile" multiple @change="handleFileUpload" class="d-none" accept="image/*">
           <v-btn @click="triggerImageInput" color="blue-grey-darken-4" variant="outlined" size="small"

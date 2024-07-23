@@ -251,10 +251,11 @@ export default {
             this.subload = true;
             let uid = this.language === 1 ? this.idmal : this.ideng;
             const language = this.language;
+            console.log('language', this.language)
             const data = {
-                "title": this.title,
-                "description": '<pre>' + this.description + '</pre>',
-                "referenceURL": this.url
+                "topic": this.title,
+                "description": this.description,
+                "refURL": this.url
             };
             const payload = {
                 uid: uid,
@@ -264,10 +265,10 @@ export default {
             const { valid } = await this.$refs.form.validate()
             if (valid) {
                 try {
-                    const response = await this.$store.dispatch('display/submitSubHead', payload);
+                    const response = await this.$store.dispatch('guide/submitHeading', payload);
                     if (response) {
                         this.subload = false;
-                        let language = this.languages.find(lang => lang.dtId === this.language);
+                        let language = this.languages.find(lang => lang.dId === this.language);
                         let message;
                         if (this.language === 1) {
                             message = `${this.malSubHeading} (${language.talk}) subheading added successfully!`;
