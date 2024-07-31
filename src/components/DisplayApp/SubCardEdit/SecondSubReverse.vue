@@ -4,8 +4,8 @@
             <div class="text-card pe-5 pt-5 mb-5">
                 <!-- <div class="details "> -->
                 <div class="details-content">
-                    <div class="d-flex gap-3 align-items-center">
-                        <h4 class="text-start title my-0">{{ title }}</h4>
+                    <div class="d-flex gap-3 align-items-center justify-content-start">
+                        <h4 class="text-start title my-0 ms-4 ps-2 mb-3">{{ title }}</h4>
                     </div>
                     <div style="width: 95%; height:95%; overflow-x:hidden" class="ms-3">
                         <p class="text-wrap text-start ps-3 text-justify description" v-html="formattedDescription"></p>
@@ -254,7 +254,7 @@ export default {
 
 .title {
     font-size: 160%;
-    line-height: 180%;
+    line-height: 120%;
 }
 
 .video-btn {

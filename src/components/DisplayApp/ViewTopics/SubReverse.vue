@@ -16,8 +16,8 @@
       <div class="text-card pe-5 pt-5 mb-5">
         <!-- <div class="details "> -->
         <div class="details-content">
-          <div class="d-flex gap-3 align-items-center justify-content-end">
-            <h4 class="text-start title my-0">{{ title }}</h4>
+          <div class="d-flex gap-3 align-items-center justify-content-start mb-3">
+            <h4 class="text-start title my-0 ms-4 ps-2">{{ title }}</h4>
             <v-icon class="mdi mdi-arrow-right text-white" v-if="title && subtopic.length && subtopic.length > 0"
               @click="displaySub"></v-icon>
           </div>
@@ -37,14 +37,6 @@
           <v-btn prepend-icon="mdi-trash-can" class="text-danger text-capitalize" @click="deleteItem" size="x-small"
             variant="elevated">Delete</v-btn>
         </div>
-        <!-- <v-btn @click="console.log(audio[0].furl)">click</v-btn> -->
-        <div class="d-flex justify-content-center mt-5 pt-3 ms-4">
-          <audio controls class="mt-3 mx-3 w-100" v-if="audio.length > 0" :src="audio[0].furl" type="audio/*">
-            Your browser does not support the audio element.
-          </audio>
-        </div>
-        <v-btn class="video-btn mt-3" rounded="3" variant="elevated" v-if="video.length > 0" @click="openVideoDialog">
-          <v-icon class="mdi mdi-video"></v-icon>Watch Video</v-btn>
         <div class="carousel-wrapper d-flex flex-column align-items-end">
           <v-carousel class="sub-carousel" height="400" hide-delimiters cover :show-arrows="images.length > 1">
             <v-carousel-item @click="openDialog(image.furl)" :src="image.furl" cover v-for="image in images"
@@ -53,23 +45,41 @@
           </v-carousel>
         </div>
       </div>
+      <div class="d-flex video-btn">
+        <v-btn prepend-icon="mdi mdi-volume-high" @click="audioDialog = true;" v-if="audio.length > 0" variant="tonal"
+          class="border border-white me-3" size="small">Listen</v-btn>
+        <v-btn @click="openVideoDialog" variant="tonal" v-if="video.length > 0" prepend-icon="mdi-video"
+          class="border border-white" size="small">Watch</v-btn>
+      </div>
       <v-dialog v-model="dialog" max-width="650">
         <v-img :src="selectedImage" contain></v-img>
       </v-dialog>
-      <v-dialog v-model="videoDialog" max-width="800px">
-        <v-card>
-          <v-toolbar dense>
-            <v-btn icon dark @click="closeVideoDialog">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-            <!-- <v-toolbar-title class="white--text">Video Player</v-toolbar-title>color="rgb(1, 39, 3)" -->
-          </v-toolbar>
-          <v-card-text>
-            <video controls width="100%" v-if="video.length > 0" :src="video[0].furl" type="video/*">
+      <v-dialog v-model="videoDialog" width="800" scrim="#212121" style="background-color: #40463c;" persistent>
+        <v-card width="800">
+          <div class="d-flex justify-content-between align-items-center mx-3 pt-2">
+            <h4 class="mt-2 ps-2">{{ head ?? title }}</h4>
+            <v-btn dark @click="closeVideoDialog" icon="mdi-close" flat></v-btn>
+          </div>
+          <v-card-text class="pt-0">
+            <video controls width="100%" v-if="video.length > 0" :src="video[0].furl" type="video/*" autoplay>
               Your browser does not support the video tag.
             </video>
           </v-card-text>
         </v-card>
+      </v-dialog>
+      <v-dialog v-model="audioDialog" width="800" scrim="#212121" class="bg-blue-grey-darken-4" persistent>
+        <div class="d-flex justify-content-end">
+          <v-icon class="mdi mdi-close" color="white" @click="audioDialog = false"></v-icon>
+        </div>
+        <h4 class="text-white">{{ head ?? title }}</h4>
+        <div class="d-flex justify-content-center mx-3 mb-3">
+          <audio controls class="w-100  mt-2" :src="audio[0].furl" type="audio/*" autoplay>
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+        <div style="width: 100%; height:95%; overflow-x:hidden">
+          <p class="text-wrap text-start" v-html="formattedDescription"></p>
+        </div>
       </v-dialog>
     </div>
   </div>
@@ -133,6 +143,7 @@ export default {
       videoUrl: '',
       editDialog: false,
       loading: false,
+      audioDialog: false
     };
   },
  
@@ -287,7 +298,7 @@ export default {
 .video-btn {
   position: absolute;
   bottom: 12%;
-  left: 11%;
+  right: 6%;
 }
 :deep(.carousel-wrapper .v-btn) {
   background-color: transparent;

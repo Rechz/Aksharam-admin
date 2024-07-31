@@ -30,10 +30,10 @@
                             class="reference desc" rows="2" v-model="url" variant="outlined"></v-textarea>
                     </div>
                     <div class="d-flex flex-column ">
-                        <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malSubHeading }}
+                        <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malHeading }}
                             (Malayalam) added.
                         </h6>
-                        <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engSubHeading }}
+                        <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engHeading }}
                             (English) added.
                         </h6>
                     </div>
@@ -87,7 +87,7 @@
         </div>
     </v-card>
     <v-divider class=""></v-divider>
-    <v-card flat class="ps-0" :disabled="qrGenerated">
+    <v-card flat class="ps-0" :disabled="!qrGenerated">
         <v-card-title class="bg-blue-grey-lighten-5 mb-3">Video</v-card-title>
         <v-card class="" flat :disabled="videoLoad || videoSubmit">
             <div class="mb-3">
@@ -116,7 +116,7 @@
         </v-card>
     </v-card>
     <v-divider></v-divider>
-    <v-card flat>
+    <v-card flat :disabled="!qrGenerated">
         <v-card-title class="bg-blue-grey-lighten-5 mb-3">Audio</v-card-title>
         <v-card class="" flat :disabled="audioLoad || (audioEngSubmit && audioMalSubmit)">
             <v-select class="select mb-2" label="Select Language" density="comfortable" :items="languages"
@@ -158,7 +158,7 @@
 import { mapGetters } from 'vuex';
 export default {
     emits: ['back', 'update'],
-    props: ['idmal', 'ideng'],
+    
     data() {
         return {
             qrGenerated: false,
@@ -196,15 +196,16 @@ export default {
         };
     },
     computed: {
-        ...mapGetters('display', ['getLanguageList', 'getFileTypes', 'getMedia', 'getsubidmal', 'getsubideng', 'getmalSubHeading', 'getengSubHeading']),
+        ...mapGetters('display', ['getLanguageList', 'getFileTypes', 'getMedia']),
+        ...mapGetters('guide', ['getidmal','getideng','getCommonIdMain','getmalHeading','getengHeading']),
         proceed() {
             if ((this.malSubmit) && (this.engSubmit)) {
                 return false;
             } else return true;
         },
         topic() {
-            if (this.language === 1) return 'Malayalam'
-            else if (this.language === 2) return 'English'
+            if (this.language == 1) return 'Malayalam'
+            else if (this.language == 2) return 'English'
             else return '';
         },
         languages() {
@@ -216,17 +217,20 @@ export default {
         fileType() {
             return this.getMedia;
         },
-        subidmal() {
-            return this.getsubidmal;
+        idmal() {
+            return this.getidmal;
         },
-        subideng() {
-            return this.getsubideng;
+        ideng() {
+            return this.getideng;
         },
-        malSubHeading() {
-            return this.getmalSubHeading;
+        commonId() {
+            return this.getCommonIdMain;
         },
-        engSubHeading() {
-            return this.getengSubHeading;
+        malHeading() {
+            return this.getmalHeading;
+        },
+        engHeading() {
+            return this.getengHeading;
         }
     },
     methods: {
@@ -249,9 +253,8 @@ export default {
         },
         async submitHeading() {
             this.subload = true;
-            let uid = this.language === 1 ? this.idmal : this.ideng;
+            let uid = this.language == 1 ? this.idmal : this.ideng;
             const language = this.language;
-            console.log('language', this.language)
             const data = {
                 "topic": this.title,
                 "description": this.description,
@@ -268,23 +271,22 @@ export default {
                     const response = await this.$store.dispatch('guide/submitHeading', payload);
                     if (response) {
                         this.subload = false;
-                        let language = this.languages.find(lang => lang.dId === this.language);
+                        let language = this.languages.find(lang => lang.dtId == this.language);
                         let message;
-                        if (this.language === 1) {
-                            message = `${this.malSubHeading} (${language.talk}) subheading added successfully!`;
+                        if (this.language == 1) {
+                            message = `${this.malHeading} (${language.talk}) added successfully!`;
                             this.success(message);
                             this.malSubmit = true;
                             this.$refs.form.reset();
                             this.language = 2;
                         }
                         else {
-                            message = `${this.engSubHeading} (${language.talk}) subheading added successfully!`;
+                            message = `${this.engHeading} (${language.talk}) added successfully!`;
                             this.success(message);
                             this.engSubmit = true;
                             this.$refs.form.reset();
                             this.language = 1;
                         }
-                        this.$emit('update');
                     }
                 }
                 catch (err) {
@@ -299,14 +301,14 @@ export default {
             let message;
             this.QRLoading = true;
             const payload = {
-                subideng: this.subideng,
-                subidmal: this.subidmal
+                ideng: this.ideng,
+                idmal: this.idmal
             }
             try {
-                const response = await this.$store.dispatch('display/generateQRSub', payload);
+                const response = await this.$store.dispatch('guide/generateCommonId', payload);
                 if (response) {
                     this.QRLoading = false;
-                    message = 'Proceed to next steps.';
+                    message = 'Qr generated successfully. Proceed to next steps.';
                     this.qrGenerated = true;
                     this.QRLoad = true;
                     this.success(message);
@@ -316,8 +318,7 @@ export default {
             catch (error) {
                 this.QRLoad = false;
                 this.QRLoading = false;
-                this.imageSubmit = false;
-                message = 'Error uploading images:' + error.message;
+                message = 'Error generating QR: ' + error.message;
                 this.error(message);
             }
         },
@@ -486,6 +487,26 @@ export default {
             this.languageAV = null;
             this.qrGenerated = false;
         },
+        async getType() {
+            try {
+                await this.$store.dispatch('display/getType');
+            }
+            catch (err) {
+                console.log(err)
+            }
+        },
+        async getAllLanguages() {
+            try {
+                await this.$store.dispatch('display/getAllLanguages');
+            }
+            catch (error) {
+                console.error(error)
+            }
+        },
+    },
+    created() {
+        this.getAllLanguages();
+        this.getType();
     },
     watch: {
         proceed(newValue) {
