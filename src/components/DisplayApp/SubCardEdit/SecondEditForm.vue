@@ -348,7 +348,6 @@ export default {
       this.$refs.selectImage.click();
     },
     editBgImage(id, index) {
-      console.log(index)
       this.bgId = id;
       this.bgIndex = index
       this.$refs.bgImage.click();
@@ -736,7 +735,7 @@ export default {
       return this.video;
     },
     editBg() {
-      return this.bgImage;
+      return this.bgImage || [];
     },
     editAudio() {
       return this.audio;

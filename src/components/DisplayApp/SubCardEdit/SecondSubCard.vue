@@ -250,9 +250,9 @@ export default {
     /* direction: rtl; */
     aspect-ratio: 1107 / 600;
 }
-:deep(.carousel-wrapper .v-btn) {
+/* :deep(.carousel-wrapper .v-btn) {
     background-color: transparent;
-}
+} */
 .title {
     font-size: 160%;
     line-height: 180%;

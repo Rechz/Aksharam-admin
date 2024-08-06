@@ -31,7 +31,7 @@
                 <v-textarea :label="language == 1 ? 'വിവരണം' : 'Description'" class="desc mb-2" rows="8"
                   v-model="description" variant="outlined" counter></v-textarea>
                 <v-textarea :label="language == 1 ? 'റഫറൻസ്' : 'References'" density="comfortable" class="reference "
-                  rows="2" v-model="url" variant="outlined"></v-textarea>
+                  rows="2" v-model="url" variant="outlined" counter></v-textarea>
               </v-card>
               <div class="d-flex flex-column ">
                 <p class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malHeading }} (Malayalam) topic

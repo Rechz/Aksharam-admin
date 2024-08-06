@@ -84,7 +84,7 @@ export default {
     },
     language() {
       return this.getLanguage;
-    }
+    },
   },
   mounted() {
     this.getType();

@@ -22,8 +22,8 @@
         <v-form class="pt-0" ref="form" @submit.prevent="editTopic">
           <v-text-field v-model="editTitle" label='Heading' variant="outlined" density="comfortable" class="select"
             :rules="titleRules"></v-text-field>
-          <v-textarea label='Description' class="desc" rows="10" v-model="editDescription" 
-            variant="outlined" counter></v-textarea>
+          <v-textarea label='Description' class="desc" rows="10" v-model="editDescription" variant="outlined"
+            counter></v-textarea>
           <v-textarea label='References' density="comfortable" class="reference" rows="2" v-model="editUrl"
             variant="outlined"></v-textarea>
           <div class="d-flex justify-content-end">
@@ -32,193 +32,206 @@
           </div>
         </v-form>
       </div>
-      <v-divider></v-divider>
-
-
-      <v-card>
-        <v-card-title class="bg-blue-grey-lighten-5 mb-3">Background Image</v-card-title>
-        <v-card-text>
-          <div class="d-flex gap-3 flex-wrap" v-if="editBg && editBg.length > 0">
-            <div v-for="image in editBg" :key="image.bgName">
-              <v-card>
-                <v-img :src="image.bgUrl" height="150" width="200" cover class="mx-auto"></v-img>
-                <v-card-actions class="py-0 d-flex justify-content-end ">
-                  <v-btn icon="mdi-pencil" size="small" color="success"
-                    @click="editBgImage(image.commonId, image.id)" v-if="!image.isEdit"></v-btn>
-                  <v-progress-circular :width="1" color="success" indeterminate size="x-small"
-                    v-else></v-progress-circular>
-                  <v-btn icon="mdi-delete" size="small" color="error"
-                    @click="bgId = image.commonId; bgIndex = image.id; deleteDialogBg = true"></v-btn>
-                </v-card-actions>
-              </v-card>
-              <v-dialog v-model="deleteDialogBg" width="400px">
-                <v-card class="rounded-4 pb-4">
-                  <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
-                    Background Image</v-card-title>
-                  <v-container class="px-4 d-flex flex-column align-items-center">
-                    <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
-                    <v-card-text class="mt-1 text-center">Are you sure you want to delete this image?</v-card-text>
-                  </v-container>
-                  <v-card-actions class="mx-4 d-flex flex-column align-items-center">
-                    <v-btn block class=" text-white mb-3" style="background-color: #BA1A1A;" :disabled="bgDelete"
-                      :loading="bgDelete" @click="deleteBgImage()">Delete</v-btn>
-                    <v-btn block variant="text" class=" mb-3" @click="deleteDialogBg = false; bgId = null; bgIndex = null;">Cancel</v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-            </div>
-            <input type="file" ref="bgImage" @change="handleBgImage" class="d-none" accept="image/*">
-          </div>
-          <v-card-subtitle v-else class="mb-0 py-0">No background image uploaded.</v-card-subtitle>
-          <div class="d-flex justify-content-end" v-if="editBg && editBg.length === 0">
-            <input type="file" ref="addBg" @change="addBgImage" class="d-none" accept="image/*">
-            <v-btn color="#386568" variant="outlined" rounded prepend-icon="mdi-plus" class="text-capitalize"
-              @click="addBg" :disabled="bgLoad" :loading="bgLoad">Add Background</v-btn>
-          </div>
-        </v-card-text>
-      </v-card>
-
-
-      <v-divider></v-divider>
-      <v-card>
-        <v-card-title class="bg-blue-grey-lighten-5 mb-3">Images</v-card-title>
-        <v-card-text>
-          <div class="d-flex gap-3 flex-wrap" v-if="editImages.length > 0">
-            <div v-for="(image,index) in editImages" :key="image.imgID">
-              <v-card>
-                <v-img :src="image.furl" height="150" width="200" cover class="mx-auto"></v-img>
-                <v-card-actions class="py-0 d-flex justify-content-end ">
-                  <v-btn icon="mdi-pencil" size="small" color="success" @click="edit(image.imgID, index)"
-                    v-if="!image.isEdit"></v-btn>
-                  <v-progress-circular :width="1" color="success" indeterminate size="x-small"
-                    v-else></v-progress-circular>
-                  <v-btn icon="mdi-delete" size="small" color="error"
-                    @click="imageId = image.imgID; deleteDialogImage = true"></v-btn>
-                </v-card-actions>
-              </v-card>
-              <v-dialog v-model="deleteDialogImage" width="400px">
-                <v-card class="rounded-4 pb-4">
-                  <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
-                    Image</v-card-title>
-                  <v-container class="px-4 d-flex flex-column align-items-center">
-                    <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
-                    <v-card-text class="mt-1 text-center">Are you sure you want to delete this image?</v-card-text>
-                  </v-container>
-                  <v-card-actions class="mx-4 d-flex flex-column align-items-center">
-                    <v-btn block class="text-white mb-3" style="background-color: #BA1A1A;" :disabled="imageDelete"
-                      :loading="imageDelete" @click="deleteImage()">Delete</v-btn>
-                    <v-btn block variant="text" class="mb-3" @click="deleteDialogImage = false">Cancel</v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-            </div>
-            <input type="file" ref="selectImage" @change="handleImage" class="d-none" accept="image/*">
-          </div>
-          <v-card-subtitle v-else class="mb-0 py-0">No images uploaded.</v-card-subtitle>
-          <div class="d-flex justify-content-end">
-            <input type="file" ref="addImage" @change="addImage" class="d-none" accept="image/*" multiple>
-            <v-btn color="#386568" variant="outlined" rounded prepend-icon="mdi-plus" class="text-capitalize"
-              @click="add" :disabled="imageLoad" :loading="imageLoad">Add Image</v-btn>
-          </div>
-        </v-card-text>
-      </v-card>
-      <v-divider></v-divider>
-      <v-card>
-        <v-card-title class="bg-blue-grey-lighten-5 mb-3">Video</v-card-title>
-        <v-card-text>
-          <v-card class="py-0" v-if="editVideo.length > 0" width="200">
-            <video controls width="200" :src="editVideo[0].furl" type="video/*" cover>
-              Your browser does not support the video tag.
-            </video>
-            <v-card-actions class="py-0 d-flex justify-content-end " min-height="0">
-              <v-btn icon="mdi-pencil" size="small" color="success" @click="updateVideo"
-                v-if="!editVideo[0].isEdit"></v-btn>
-              <v-progress-circular :width="1" color="success" indeterminate size="x-small" v-else></v-progress-circular>
-              <v-btn icon="mdi-delete" size="small" color="error" @click="deleteDialogVideo = true;"></v-btn>
-            </v-card-actions>
-            <input type="file" ref="selectVideo" @change="handleVideo" class="d-none" accept="video/*">
-            <v-dialog v-model="deleteDialogVideo" width="400px">
-              <v-card class="rounded-4 pb-4">
-                <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
-                  Video</v-card-title>
-                <v-container class="px-4 d-flex flex-column align-items-center">
-                  <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
-                  <v-card-text class="mt-1 text-center">Are you sure you want to delete this video?</v-card-text>
-                </v-container>
-                <v-card-actions class="mx-4 d-flex flex-column align-items-center">
-                  <v-btn block class="text-white mb-3" style="background-color: #BA1A1A;" :disabled="videoDelete"
-                    :loading="videoDelete" @click="deleteVideo">Delete</v-btn>
-                  <v-btn block variant="text" class="mb-3" @click="deleteDialogVideo = false">Cancel</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-card>
-          <v-card-subtitle v-else class="mb-0 py-0">No video uploaded.</v-card-subtitle>
-          <div class="d-flex justify-content-end">
-            <input type="file" ref="addVideo" @change="addVideo" class="d-none" accept="video/*">
-            <v-btn color="#386568" variant="outlined" rounded prepend-icon="mdi-plus" class="text-capitalize"
-              @click="addVid" v-if="editVideo.length === 0" :disabled="videoLoad" :loading="videoLoad">Add Video</v-btn>
-          </div>
-        </v-card-text>
-      </v-card>
-      <v-divider></v-divider>
-      <v-card>
-        <v-card-title class="bg-blue-grey-lighten-5 mb-3">Audio</v-card-title>
-        <v-card-text>
-          <v-card v-if="editAudio.length > 0" width="320" class="pt-2 px-2">
-            <audio controls :src="editAudio[0].furl" type="audio/*" width="200">
-              Your browser does not support the audio element.
-            </audio>
-            <v-card-actions class="py-0 d-flex justify-content-end ">
-              <v-btn icon="mdi-pencil" size="small" color="success" @click="updateAudio"
-                v-if="!editAudio[0].isEdit"></v-btn>
-              <v-progress-circular :width="1" color="success" indeterminate size="x-small" v-else></v-progress-circular>
-              <v-btn icon="mdi-delete" size="small" color="error" @click="deleteDialogAudio = true;"></v-btn>
-            </v-card-actions>
-            <input type="file" ref="selectAudio" @change="handleAudio" class="d-none" accept="audio/*">
-            <v-dialog v-model="deleteDialogAudio" width="400px">
-              <v-card class="rounded-4 pb-4">
-                <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
-                  Audio</v-card-title>
-                <v-container class="px-4 d-flex flex-column align-items-center">
-                  <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
-                  <v-card-text class="mt-1 text-center">Are you sure you want to delete this audio?</v-card-text>
-                </v-container>
-                <v-card-actions class="mx-4 d-flex flex-column align-items-center">
-                  <v-btn block class="text-white mb-3" style="background-color: #BA1A1A;" :disabled="audioDelete"
-                    :loading="audioDelete" @click="deleteAudio">Delete</v-btn>
-                  <v-btn block variant="text" class="mb-3" @click="deleteDialogAudio = false;">Cancel</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-card>
-          <v-card-subtitle v-else class="mb-0 py-0">No audio uploaded.</v-card-subtitle>
-          <div class="d-flex justify-content-end">
-            <input type="file" ref="addAudio" @change="addAudio" class="d-none" accept="audio/*">
-            <v-btn color="#386568" variant="outlined" rounded prepend-icon="mdi-plus" class="text-capitalize"
-              @click="addAud" :disabled="audioLoad" :loading="audioLoad" v-if="editAudio.length === 0">Add Audio</v-btn>
-          </div>
-        </v-card-text>
+      <v-card v-if="!topicAddBtn" flat>
         <v-divider></v-divider>
-        <v-card>
-          <v-card-title class="bg-blue-grey-lighten-5 mb-3">SubHeadings</v-card-title>
+        
+
+      </v-card>
+
+      <div v-if="commonId">
+        <v-divider></v-divider>
+        <v-card :disabled="!commonId">
+          <v-card-title class="bg-blue-grey-lighten-5 mb-3">Background Image</v-card-title>
           <v-card-text>
-            <div v-if="subHeads && subHeads.length > 0">
-              <v-list lines="one">
-                <v-list-item v-for="(topic, index) in subHeads" :key="index"
-                  :title="index+1 + '.' + topic.title"></v-list-item>
-              </v-list>
+            <div class="d-flex gap-3 flex-wrap" v-if="editBg && editBg.length > 0">
+              <div v-for="image in editBg" :key="image.bgName">
+                <v-card>
+                  <v-img :src="image.bgUrl" height="150" width="200" cover class="mx-auto"></v-img>
+                  <v-card-actions class="py-0 d-flex justify-content-end ">
+                    <v-btn icon="mdi-pencil" size="small" color="success" @click="editBgImage(image.commonId, image.id)"
+                      v-if="!image.isEdit"></v-btn>
+                    <v-progress-circular :width="1" color="success" indeterminate size="x-small"
+                      v-else></v-progress-circular>
+                    <v-btn icon="mdi-delete" size="small" color="error"
+                      @click="bgId = image.commonId; bgIndex = image.id; deleteDialogBg = true"></v-btn>
+                  </v-card-actions>
+                </v-card>
+                <v-dialog v-model="deleteDialogBg" width="400px">
+                  <v-card class="rounded-4 pb-4">
+                    <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
+                      Background Image</v-card-title>
+                    <v-container class="px-4 d-flex flex-column align-items-center">
+                      <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
+                      <v-card-text class="mt-1 text-center">Are you sure you want to delete this image?</v-card-text>
+                    </v-container>
+                    <v-card-actions class="mx-4 d-flex flex-column align-items-center">
+                      <v-btn block class=" text-white mb-3" style="background-color: #BA1A1A;" :disabled="bgDelete"
+                        :loading="bgDelete" @click="deleteBgImage()">Delete</v-btn>
+                      <v-btn block variant="text" class=" mb-3"
+                        @click="deleteDialogBg = false; bgId = null; bgIndex = null;">Cancel</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </div>
+              <input type="file" ref="bgImage" @change="handleBgImage" class="d-none" accept="image/*">
             </div>
-            <v-card-subtitle v-else class="mb-0 py-0">No Subtitles added.</v-card-subtitle>
-            <div class="d-flex justify-content-end">
+            <v-card-subtitle v-else class="mb-0 py-0">No background image uploaded.</v-card-subtitle>
+            <div class="d-flex justify-content-end" v-if="editBg && editBg.length === 0">
+              <input type="file" ref="addBg" @change="addBgImage" class="d-none" accept="image/*">
               <v-btn color="#386568" variant="outlined" rounded prepend-icon="mdi-plus" class="text-capitalize"
-                @click="subheading = !subheading">Add Subheading</v-btn>
+                @click="addBg" :disabled="bgLoad" :loading="bgLoad">Add Background</v-btn>
             </div>
           </v-card-text>
         </v-card>
-      </v-card>
+
+
+        <v-divider></v-divider>
+        <v-card :disabled="!commonId">
+          <v-card-title class="bg-blue-grey-lighten-5 mb-3">Images</v-card-title>
+          <v-card-text>
+            <div class="d-flex gap-3 flex-wrap" v-if="editImages.length > 0">
+              <div v-for="(image,index) in editImages" :key="image.imgID">
+                <v-card>
+                  <v-img :src="image.furl" height="150" width="200" cover class="mx-auto"></v-img>
+                  <v-card-actions class="py-0 d-flex justify-content-end ">
+                    <v-btn icon="mdi-pencil" size="small" color="success" @click="edit(image.imgID, index)"
+                      v-if="!image.isEdit"></v-btn>
+                    <v-progress-circular :width="1" color="success" indeterminate size="x-small"
+                      v-else></v-progress-circular>
+                    <v-btn icon="mdi-delete" size="small" color="error"
+                      @click="imageId = image.imgID; deleteDialogImage = true"></v-btn>
+                  </v-card-actions>
+                </v-card>
+                <v-dialog v-model="deleteDialogImage" width="400px">
+                  <v-card class="rounded-4 pb-4">
+                    <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
+                      Image</v-card-title>
+                    <v-container class="px-4 d-flex flex-column align-items-center">
+                      <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
+                      <v-card-text class="mt-1 text-center">Are you sure you want to delete this image?</v-card-text>
+                    </v-container>
+                    <v-card-actions class="mx-4 d-flex flex-column align-items-center">
+                      <v-btn block class="text-white mb-3" style="background-color: #BA1A1A;" :disabled="imageDelete"
+                        :loading="imageDelete" @click="deleteImage()">Delete</v-btn>
+                      <v-btn block variant="text" class="mb-3" @click="deleteDialogImage = false">Cancel</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </div>
+              <input type="file" ref="selectImage" @change="handleImage" class="d-none" accept="image/*">
+            </div>
+            <v-card-subtitle v-else class="mb-0 py-0">No images uploaded.</v-card-subtitle>
+            <div class="d-flex justify-content-end">
+              <input type="file" ref="addImage" @change="addImage" class="d-none" accept="image/*" multiple>
+              <v-btn color="#386568" variant="outlined" rounded prepend-icon="mdi-plus" class="text-capitalize"
+                @click="add" :disabled="imageLoad" :loading="imageLoad">Add Image</v-btn>
+            </div>
+          </v-card-text>
+        </v-card>
+        <v-divider></v-divider>
+        <v-card :disabled="!commonId">
+          <v-card-title class="bg-blue-grey-lighten-5 mb-3">Video</v-card-title>
+          <v-card-text>
+            <v-card class="py-0" v-if="editVideo.length > 0" width="200">
+              <video controls width="200" :src="editVideo[0].furl" type="video/*" cover>
+                Your browser does not support the video tag.
+              </video>
+              <v-card-actions class="py-0 d-flex justify-content-end " min-height="0">
+                <v-btn icon="mdi-pencil" size="small" color="success" @click="updateVideo"
+                  v-if="!editVideo[0].isEdit"></v-btn>
+                <v-progress-circular :width="1" color="success" indeterminate size="x-small"
+                  v-else></v-progress-circular>
+                <v-btn icon="mdi-delete" size="small" color="error" @click="deleteDialogVideo = true;"></v-btn>
+              </v-card-actions>
+              <input type="file" ref="selectVideo" @change="handleVideo" class="d-none" accept="video/*">
+              <v-dialog v-model="deleteDialogVideo" width="400px">
+                <v-card class="rounded-4 pb-4">
+                  <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
+                    Video</v-card-title>
+                  <v-container class="px-4 d-flex flex-column align-items-center">
+                    <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
+                    <v-card-text class="mt-1 text-center">Are you sure you want to delete this video?</v-card-text>
+                  </v-container>
+                  <v-card-actions class="mx-4 d-flex flex-column align-items-center">
+                    <v-btn block class="text-white mb-3" style="background-color: #BA1A1A;" :disabled="videoDelete"
+                      :loading="videoDelete" @click="deleteVideo">Delete</v-btn>
+                    <v-btn block variant="text" class="mb-3" @click="deleteDialogVideo = false">Cancel</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </v-card>
+            <v-card-subtitle v-else class="mb-0 py-0">No video uploaded.</v-card-subtitle>
+            <div class="d-flex justify-content-end">
+              <input type="file" ref="addVideo" @change="addVideo" class="d-none" accept="video/*">
+              <v-btn color="#386568" variant="outlined" rounded prepend-icon="mdi-plus" class="text-capitalize"
+                @click="addVid" v-if="editVideo.length === 0" :disabled="videoLoad" :loading="videoLoad">Add
+                Video</v-btn>
+            </div>
+          </v-card-text>
+        </v-card>
+        <v-divider></v-divider>
+        <v-card :disabled="!commonId">
+          <v-card-title class="bg-blue-grey-lighten-5 mb-3">Audio</v-card-title>
+          <v-card-text>
+            <v-card v-if="editAudio.length > 0" width="320" class="pt-2 px-2">
+              <audio controls :src="editAudio[0].furl" type="audio/*" width="200">
+                Your browser does not support the audio element.
+              </audio>
+              <v-card-actions class="py-0 d-flex justify-content-end ">
+                <v-btn icon="mdi-pencil" size="small" color="success" @click="updateAudio"
+                  v-if="!editAudio[0].isEdit"></v-btn>
+                <v-progress-circular :width="1" color="success" indeterminate size="x-small"
+                  v-else></v-progress-circular>
+                <v-btn icon="mdi-delete" size="small" color="error" @click="deleteDialogAudio = true;"></v-btn>
+              </v-card-actions>
+              <input type="file" ref="selectAudio" @change="handleAudio" class="d-none" accept="audio/*">
+              <v-dialog v-model="deleteDialogAudio" width="400px">
+                <v-card class="rounded-4 pb-4">
+                  <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
+                    Audio</v-card-title>
+                  <v-container class="px-4 d-flex flex-column align-items-center">
+                    <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
+                    <v-card-text class="mt-1 text-center">Are you sure you want to delete this audio?</v-card-text>
+                  </v-container>
+                  <v-card-actions class="mx-4 d-flex flex-column align-items-center">
+                    <v-btn block class="text-white mb-3" style="background-color: #BA1A1A;" :disabled="audioDelete"
+                      :loading="audioDelete" @click="deleteAudio">Delete</v-btn>
+                    <v-btn block variant="text" class="mb-3" @click="deleteDialogAudio = false;">Cancel</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </v-card>
+            <v-card-subtitle v-else class="mb-0 py-0">No audio uploaded.</v-card-subtitle>
+            <div class="d-flex justify-content-end">
+              <input type="file" ref="addAudio" @change="addAudio" class="d-none" accept="audio/*">
+              <v-btn color="#386568" variant="outlined" rounded prepend-icon="mdi-plus" class="text-capitalize"
+                @click="addAud" :disabled="audioLoad" :loading="audioLoad" v-if="editAudio.length === 0">Add
+                Audio</v-btn>
+            </div>
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card :disabled="!commonId">
+            <v-card-title class="bg-blue-grey-lighten-5 mb-3">SubHeadings</v-card-title>
+            <v-card-text>
+              <div v-if="subHeads && subHeads.length > 0">
+                <v-list lines="one">
+                  <v-list-item v-for="(topic, index) in subHeads" :key="index"
+                    :title="index+1 + '.' + topic.title"></v-list-item>
+                </v-list>
+              </div>
+              <v-card-subtitle v-else class="mb-0 py-0">No Subheadings added.</v-card-subtitle>
+              <div class="d-flex justify-content-end">
+                <v-btn color="#386568" variant="outlined" rounded prepend-icon="mdi-plus" class="text-capitalize"
+                  @click="subheading = !subheading">Add Subheading</v-btn>
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-card>
+      </div>
       <div class="d-flex justify-content-end mt-3">
-        <v-btn color="#2C7721" size="large" variant="elevated" @click="finish">Finish</v-btn>
+        <v-btn prepend-icon="mdi-plus" class="text-capitalize" color="#2C7721" size="large" variant="elevated"
+          v-if="!commonId" @click="addTranslation">Add Translation</v-btn>
+        <v-btn color="#2C7721" variant="elevated" @click="finish" v-else>Finish</v-btn>
       </div>
     </v-card-text>
   </v-card>
@@ -280,7 +293,8 @@ export default {
         bgId: null, 
         bgIndex: null,
         bgDelete: false,
-        bgLoad: false
+        bgLoad: false,
+        topicAddBtn: false
           
       };  
     },
@@ -310,6 +324,20 @@ export default {
       },
       dialogClose() {
         this.$emit('dialogClose');
+      },
+      async addTranslation() {
+        console.log('language', this.$store.getters['display/getLanguage'])
+        this.topicAddBtn = true;
+        // try {
+        //   if (this.main == true) {
+        //     this.$store.dispatch('display/generateQR', {
+
+        //     })
+        //   }
+        // }
+        // catch (error) {
+        
+        // } 
       },
       async editTopic() {
         const { valid } = await this.$refs.form.validate()
@@ -765,7 +793,7 @@ export default {
         return this.audio;
       },
       editBg() {
-        return this.bgImage;
+        return this.bgImage || [];
       },
       subHeads() {
         if (this.subtopic && this.subtopic.length > 0) {

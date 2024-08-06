@@ -297,9 +297,9 @@ export default {
   bottom: 12%;
   left: 5%;
 }
-:deep(.carousel-wrapper .v-btn) {
+/* :deep(.carousel-wrapper .v-btn) {
   background-color: transparent;
-}
+} */
 /* .details-content{
   direction: ltr;
 } */

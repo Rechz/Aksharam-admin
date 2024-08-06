@@ -275,6 +275,7 @@
         this.getTopics()
       },
       async showDetails(item) {
+        sessionStorage.setItem('id', item.commonId);
         try {
           const response = await this.$store.dispatch('display/showDetails', {
             language: this.language,

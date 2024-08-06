@@ -51,7 +51,7 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
     //QR generation
@@ -72,7 +72,7 @@ export default {
       }
       catch (err) {
         // console.error(err)
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
     //image upload maintopic
@@ -89,7 +89,8 @@ export default {
           return true;
         }
       } catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+
       }
     },
     //audio/video upload maintopic
@@ -107,7 +108,8 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+
       }
     },
     //submit details subheading
@@ -134,7 +136,8 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message)
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+
       }
     },
     //generate commonid subheading
@@ -155,7 +158,8 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+
       }
     },
     //submit image subheading
@@ -172,7 +176,8 @@ export default {
           return true;
         }
       } catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+
       }
     },
     //submit audio/video subheading
@@ -190,7 +195,8 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+
       }
     },
     //submit details subheading2
@@ -221,7 +227,8 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+
       }
     },
     //generate commonid sub2 heading
@@ -240,7 +247,7 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
     //submit image subheading2
@@ -258,7 +265,8 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+
       }
     },
     //submit audio/video subheading2
@@ -276,7 +284,8 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+
       }
     },
     //view topics
@@ -302,7 +311,8 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+
       }
     },
     //show subtopic with commonid
@@ -315,7 +325,8 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+
       }
     },
     //update main topic details
@@ -333,7 +344,8 @@ export default {
           }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);       
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+   
       }
     },
     //update sub topic details
@@ -351,7 +363,8 @@ export default {
           }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);       
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+      
       }
     },
     //update sub2 topic details
@@ -369,7 +382,8 @@ export default {
           }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);       
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+       
       }
     },
     //update main images
@@ -387,7 +401,8 @@ export default {
         }  
       }
       catch(err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+
       }
     },
     //update sub images
@@ -405,7 +420,8 @@ export default {
         }  
       }
       catch(err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+
       }
     },
     //update sub2 images
@@ -423,7 +439,8 @@ export default {
         }  
       }
       catch(err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+
       }
     },
     //update main audio/video
@@ -441,7 +458,8 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+
       }
     },
     //update sub audio/video
@@ -459,7 +477,7 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+       throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
     //update sub2 audio/video
@@ -477,7 +495,7 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
     //delete topic with main commonid
@@ -495,7 +513,7 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
     //delete subtopic by commonid
@@ -513,7 +531,7 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
     //delete sub2topic by commonid
@@ -532,7 +550,7 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
     //delete main image by id
@@ -550,7 +568,7 @@ export default {
           }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
     //delete sub image by id
@@ -568,7 +586,7 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);       
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);   
       }
     },
     // delete sub2 image by id
@@ -586,7 +604,7 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);       
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);      
       }
     },
     //delete main audio
@@ -604,7 +622,7 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
     //delete sub audio
@@ -622,7 +640,7 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
     //delete sub2 audio
@@ -640,7 +658,7 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }   
     },
     //delete main audio
@@ -658,7 +676,7 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
     //delete sub video
@@ -676,7 +694,7 @@ export default {
         }
       }
       catch (err) {
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
     //delete sub2 audio
@@ -694,7 +712,7 @@ export default {
         }
       }
       catch (err) { 
-        throw Error(err.response? err.response.data : err.message);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }   
   },
   // upload background image
@@ -711,7 +729,7 @@ export default {
       }
     }
     catch (err) {
-      throw Error(err.response? err.response.data : err.message);
+      throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
     }
   },
   // update background image
@@ -728,7 +746,7 @@ export default {
       }
     }
     catch (err) {
-      throw Error(err.response? err.response.data : err.message);
+      throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
     }
   },
   //delete background image
@@ -745,7 +763,8 @@ export default {
       }
     }
     catch (err) {
-      throw Error(err.response? err.response.data : err.message);
+      console.log(err)
+      throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
     }
   }
 };

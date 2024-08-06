@@ -34,7 +34,7 @@
                                 rows="6" v-model="description" :rules="descriptionRules" variant="outlined"
                                 counter></v-textarea>
                             <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
-                                class="reference desc" rows="2" v-model="url" variant="outlined"></v-textarea>
+                                class="reference desc" rows="2" v-model="url" variant="outlined" counter></v-textarea>
                         </v-card>
                     <div class="d-flex flex-column ">
                         <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malSubHeading }}

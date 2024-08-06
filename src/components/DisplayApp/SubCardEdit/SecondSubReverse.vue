@@ -263,9 +263,9 @@ export default {
     left: 11%;
 }
 
-:deep(.carousel-wrapper .v-btn) {
+/* :deep(.carousel-wrapper .v-btn) {
     background-color: transparent;
-}
+} */
 
 ::-webkit-scrollbar,
 :deep(::-webkit-scrollbar) {

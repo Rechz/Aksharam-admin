@@ -26,7 +26,7 @@ export default {
            sub2idmal: sessionStorage.getItem('sub2idmal') ||'',
            sub2ideng: sessionStorage.getItem('sub2ideng') || '',
            commonIdSub2: sessionStorage.getItem('commonIdSub2') || '',
-           firstSubData: JSON.parse(sessionStorage.getItem('firstData')) || null,
+           firstSubData: JSON.parse(sessionStorage.getItem('firstData')) || [],
         };
     },
     actions,
