@@ -41,8 +41,8 @@
       <v-card style="width: 600px; height:560px; border-radius: 16px;">
         <v-card-title class="d-flex justify-content-between px-4 align-items-center"
           style="background-color: #216D17; color: #FFFFFF;">
-          <hs class="mt-2">Ticket Details</hs>
-          <v-icon @click="close" class="mdi mdi-window-close" size="default"></v-icon>
+          <h5 class="mt-2">Ticket Details</h5>
+          <v-icon @click="close" class="mdi mdi-window-close" size="20"></v-icon>
         </v-card-title>
         <v-card-text class="ticket-details">
           <v-row>

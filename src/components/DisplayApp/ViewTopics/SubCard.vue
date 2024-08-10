@@ -21,7 +21,7 @@
         </div>
         <div style="width: 95%; height:95%; overflow-x:hidden" class="pe-3">
           <p class="text-wrap text-start" v-html="formattedDescription"></p>
-          <ul class="">
+          <ul>
             <li class="text-capitalize text-start" style="font-size: 100%;" v-for="topic in subtopic" :key="topic.uId">
               {{ topic.title }}
             </li>
@@ -152,7 +152,6 @@ export default {
   
   methods: {
     show(topic) {
-      console.log(topic.title,topic.combinedDataSubSubList);
       return topic.title;
     },
     success(message) {

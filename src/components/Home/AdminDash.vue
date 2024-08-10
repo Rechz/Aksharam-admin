@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer v-model="drawer" elevation="4">
+    <v-navigation-drawer v-model="drawer" elevation="4" class="position-fixed">
       <v-list-item class="d-flex justify-content-center " nav>
         <v-img src="@/assets/logo.png" class="image"></v-img>
       </v-list-item>
@@ -11,11 +11,11 @@
           {{ item.text }}
         </v-list-item>
       </v-list>
-    </v-navigation-drawer>s
+    </v-navigation-drawer>
     <div>
       <router-view></router-view>
     </div>
-    <v-app-bar class="green-background py-1">
+    <v-app-bar class="green-background py-1 position-fixed">
       <v-app-bar-nav-icon @click="drawer = !drawer" color="white"></v-app-bar-nav-icon>
       <v-container fluid class="d-flex justify-content-between align-items-center ps-0 ms-0">
         <h5 class="d-inline mb-0 text-white">{{ selectedNavItem }}</h5>

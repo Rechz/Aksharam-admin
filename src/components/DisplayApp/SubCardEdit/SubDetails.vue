@@ -58,7 +58,6 @@ export default {
     },
     methods: {
         async updateDetails() {
-            console.log('updating', sessionStorage.getItem('id'))
             try {
                 await this.$store.dispatch('display/showSubDetails', {
                     language: this.language,

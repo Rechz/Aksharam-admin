@@ -14,7 +14,6 @@
   <div class="d-flex justify-content-end">
     <div class="sub-card d-flex justify-content-end">
       <div class="text-card pe-5 pt-5 mb-5">
-        <!-- <div class="details "> -->
         <div class="details-content">
           <div class="d-flex gap-3 align-items-center justify-content-start mb-3">
             <h4 class="text-start title my-0 ms-4 ps-2">{{ title }}</h4>
@@ -23,13 +22,12 @@
           </div>
           <div style="width: 95%; height:95%; overflow-x:hidden" class="ms-3">
             <p class="text-wrap text-start ps-3 text-justify description" v-html="formattedDescription"></p>
-            <ul class="d-flex gap-5">
+            <ul>
               <li class="text-capitalize text-start" style="direction: ltr; font-size: 100%;" v-for="topic in subtopic"
                 :key="topic.uId">
                 {{ topic.title }}</li>
             </ul>
           </div>
-          <!-- </div> -->
         </div>
         <div class="d-flex gap-2 mb-3 button">
           <v-btn prepend-icon="mdi-pencil" class="text-success text-capitalize me-2" @click="openEdit" size="x-small"
@@ -198,7 +196,6 @@ export default {
         fsEngId: this.engId,
         backgroundImgList: this.bgImage
       }
-      console.log('props',props)
       this.$store.commit('display/setFirstSubData', props)
       this.$router.push({ name: 'display-sub-view' })
     },
@@ -300,9 +297,6 @@ export default {
   bottom: 12%;
   right: 6%;
 }
-/* :deep(.carousel-wrapper .v-btn) {
-  background-color: transparent;
-} */
 ::-webkit-scrollbar,
 :deep(::-webkit-scrollbar) {
   width: 4px;

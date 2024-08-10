@@ -1,5 +1,24 @@
 import axios from 'axios';
 export default {
+  //view topic of guide data
+  async getGuideData({ rootGetters,commit }, payload) {
+    try {
+      const response = await axios.post(`${rootGetters.getUrl}/api/DataEntry1/getMainComplete?dtId=${payload.lang}`,
+      {
+      headers: {
+        Authorization: `Bearer ${rootGetters.getToken}`
+      }
+     }
+      );
+      if (response.status >= 200 && response.status < 300) {
+        console.log(response.data)
+        commit('mainTopicsGuide', response.data)
+      }
+    }
+    catch (err) {
+      throw Error(err.response? err.response.data : err.message);
+    }
+  },
   //submit main topic text details
   async submitHeading({ rootGetters,commit }, payload) {
     try {
@@ -80,5 +99,6 @@ export default {
       throw Error(err.response? err.response.data : err.message);
     }
   },
- 
+  //submit audio for main
+  
 }

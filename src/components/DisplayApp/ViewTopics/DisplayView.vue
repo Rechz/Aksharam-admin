@@ -44,7 +44,7 @@
     </div>
     <v-skeleton-loader v-if="skeleton" type="table"></v-skeleton-loader>
     <v-data-table :headers="headers" :items="mainheadings" class="mt-3"
-      :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }" v-else>
+      :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }" v-else items-per-page="20">
       <template v-slot:top>
         <v-dialog v-model="dialogDelete" width="500px">
           <v-card class="rounded-2 pb-4">
@@ -208,13 +208,11 @@
       async generate(topic) {
         this.selectedTopic = topic.title;
         this.topicId = topic.uId;
-        console.log(this.language)
         try {
           let language;
           if (this.language == 1) {
             language = 2;
           } else { language = 1 }
-          console.log('selected ' + language )
           const response = await axios.get(`${this.$store.getters.getUrl}/api/DataEntry1/getMainComplete?dtId=${language}`, {
             headers: {
               Authorization: `Bearer ${this.$store.getters.getToken}`
@@ -231,7 +229,6 @@
                 }
               }
             })
-            console.log(this.topics)
           }
         }
         catch (error) {  
@@ -271,7 +268,6 @@
       },
       translate(language) {
         this.$store.commit('display/setLanguage', language);
-        console.log('set language', this.$store.getters['display/getLanguage'])
         this.getTopics()
       },
       async showDetails(item) {

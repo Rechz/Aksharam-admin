@@ -17,15 +17,12 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-card-text class="px-5 pb-5">
+    <v-card-text class="px-5 pb-5 pt-4 mt-5">
       <div>
         <v-form class="pt-0" ref="form" @submit.prevent="editTopic">
-          <v-text-field v-model="editTitle" label='Heading' variant="outlined" density="comfortable" class="select"
-            :rules="titleRules"></v-text-field>
-          <v-textarea label='Description' class="desc" rows="10" v-model="editDescription" :rules="descriptionRules"
-            variant="outlined" counter></v-textarea>
-          <v-textarea label='References' density="comfortable" class="reference" rows="2" v-model="editUrl"
-            variant="outlined"></v-textarea>
+          <v-text-field v-model="editTitle" label='Heading' variant="outlined" density="comfortable" class="select"></v-text-field>
+          <v-textarea label='Description' class="desc" rows="10" v-model="editDescription" variant="outlined" counter></v-textarea>
+          <v-textarea label='References' density="comfortable" class="reference" rows="2" v-model="editUrl" variant="outlined" counter></v-textarea>
           <div class="d-flex justify-content-end">
             <v-btn color="#386568" size="large" class="text-capitalize" type="submit" :disabled="subload"
               variant="outlined" rounded :loading="subload">Update topic</v-btn>
@@ -33,7 +30,7 @@
         </v-form>
       </div>
       <v-divider></v-divider>
-      <v-card>
+      <v-card :disabled="!commonId">
         <v-card-title class="bg-blue-grey-lighten-5 mb-3">Background Image</v-card-title>
         <v-card-text>
           <div class="d-flex gap-3 flex-wrap" v-if="editBg && editBg.length > 0">
@@ -76,11 +73,8 @@
           </div>
         </v-card-text>
       </v-card>
-
-
       <v-divider></v-divider>
-
-      <v-card>
+      <v-card :disabled="!commonId">
         <v-card-title class="bg-blue-grey-lighten-5 mb-3">Images</v-card-title>
         <v-card-text>
           <div class="d-flex gap-3 flex-wrap" v-if="editImages.length > 0">
@@ -123,7 +117,7 @@
         </v-card-text>
       </v-card>
       <v-divider></v-divider>
-      <v-card>
+      <v-card :disabled="!commonId">
         <v-card-title class="bg-blue-grey-lighten-5 mb-3">Video</v-card-title>
         <v-card-text>
           <v-card class="py-0" v-if="editVideo.length > 0" width="200">
@@ -163,7 +157,7 @@
         </v-card-text>
       </v-card>
       <v-divider></v-divider>
-      <v-card>
+      <v-card :disabled="!commonId">
         <v-card-title class="bg-blue-grey-lighten-5 mb-3">Audio</v-card-title>
         <v-card-text>
           <v-card v-if="editAudio.length > 0" width="320" class="pt-2 px-2">
@@ -225,8 +219,8 @@
     </v-card-text>
   </v-card>
   <v-card v-else>
-    <SecondEditSub @back="subheading = !subheading" :idmal="malId" :ideng="engId" @update="update"
-      v-if="main == true" />
+    <SecondEditSub @back="subheading = !subheading" :idmal="malId" :ideng="engId" @update="update" v-if="main == true"
+      @close="dialogClose" />
   </v-card>
 </template>
 
@@ -263,11 +257,11 @@ export default {
       deleteDialogVideo: false,
       deleteDialogAudio: false,
       editTitle: this.head,
-      titleRules: [v => !!v || '*Title is required'],
+      //titleRules: [v => !!v || '*Title is required'],
       editDescription: this.description,
-      descriptionRules: [v => !!v || '*Description is required'],
+      //descriptionRules: [v => !!v || '*Description is required'],
       editUrl: this.url,
-      urlRules: [v => !!v || '*URL is required'],
+      //urlRules: [v => !!v || '*URL is required'],
       audioFiles: [],
       videoFiles: [],
       message: '',
@@ -490,7 +484,7 @@ export default {
       const formData = new FormData();
       formData.append("files", this.videoAdd);
       const payload = {
-        uid: this.uId,
+        uid: this.commonId,
         id: this.media.video,
         formData: formData
       }
@@ -532,7 +526,7 @@ export default {
         if (this.main == true) {
           formData.append("files", this.videoAdd);
           payload= {
-            uId: this.uId,
+            uId: this.commonId,
             id: this.media.video,
             data: formData
           }
@@ -639,6 +633,28 @@ export default {
       catch (err) {
         this.editAudio[0].isEdit = false;
         message = err.message;
+        this.error(message);
+      }
+    },
+    async deleteBgImage() {
+      try {
+        const response = await this.$store.dispatch('display/deleteBackgroundImage', {
+          commonId: this.bgId,
+          id: this.bgIndex
+        });
+        if (response) {
+          this.bgDelete = false;
+          this.deleteDialogBg = false;
+          let message = `Image deleted successfully!`;
+          this.success(message);
+          this.$emit('update');
+          this.bgId = null
+          this.bgIndex = null
+        }
+      }
+      catch (err) {
+        this.bgDelete = false;
+        let message = err.message;
         this.error(message);
       }
     },

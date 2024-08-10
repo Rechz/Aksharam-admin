@@ -1,4 +1,5 @@
 export default {
+    getMainTopics: (state) => state.maintopics,
     getidmal: (state) => state.idmal,
     getideng: (state) => state.ideng,
     getparaidmal: (state) => state.paraidmal,

@@ -25,35 +25,30 @@
                     media. Do not refresh the page to avoid data loss.</p>
                 <v-form class="pt-0 " ref="form" @submit.prevent="submitHeading">
                     <div class="d-flex">
-                        <v-card flat :disabled="!QRLoad">
-                            <v-select class="select mb-2" label='Select Language' density="comfortable"
-                                :items="languages" v-model="language" :rules="languageRules" item-title="talk"
-                                item-value="dtId" variant="outlined"></v-select>
-                            <v-text-field v-model="title" :label="language === 1 ? 'തലക്കെട്ട്' : 'Sub Heading'"
-                                density="comfortable" class="select mb-2" :rules="titleRules"
-                                variant="outlined"></v-text-field>
-                            <v-textarea :label="language === 1 ? 'വിവരണം' : 'Subheading Description'" class="desc mb-2"
+                        <v-card flat :disabled="!QRLoad"> 
+                            <v-select class="select mb-2" label='Select Language' density="comfortable" :rules="languageRules"
+                                :items="languages" v-model="language" item-title="talk" item-value="dtId" variant="outlined"></v-select>
+                            <v-text-field v-model="title" :label="language == 1 ? 'തലക്കെട്ട്' : 'Sub Heading'"
+                                density="comfortable" class="select mb-2" variant="outlined"></v-text-field>
+                            <v-textarea :label="language == 1 ? 'വിവരണം' : 'Subheading Description'" class="desc mb-2"
                                 rows="6" v-model="description" variant="outlined" counter></v-textarea>
-                            <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
+                            <v-textarea :label="language == 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
                                 class="reference desc" rows="2" v-model="url" variant="outlined" counter></v-textarea>
                         </v-card>
                         <div class="d-flex flex-column ">
                             <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malSubHeading }}
-                                (Malayalam) subtopic added.
-                            </h6>
+                                (Malayalam) subtopic added.</h6>
                             <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engSubHeading }}
-                                (English) subtopic added.
-                            </h6>
+                                (English) subtopic added.</h6>
                         </div>
                     </div>
                     <div class="d-flex justify-content-end">
                         <div class="d-flex gap-2">
                             <v-btn v-if="QRLoad" color="#386568" class="text-capitalize" type="submit"
-                                :disabled="subload" variant="elevated" rounded :loading="subload">Add {{ topic }} sub
-                                topic</v-btn>
+                                :disabled="subload" variant="elevated" rounded :loading="subload">Add {{ topic }}
+                                subtopic</v-btn>
                             <v-btn v-else color="#386568" class="text-capitalize" variant="outlined" rounded
-                                :disabled="QRLoad" :loading="QRLoading" @click="generateQR">Submit &
-                                Proceed</v-btn>
+                                :disabled="QRLoad" :loading="QRLoading" @click="generateQR">Submit & Proceed</v-btn>
                         </div>
                     </div>
                 </v-form>
@@ -91,7 +86,7 @@
                 </div>
             </div>
         </v-card>
-
+        <v-divider class="mx-5"></v-divider>
         <v-card flat class="px-5" :disabled="!qrGenerated">
             <v-card-title class="bg-blue-grey-lighten-5 mb-3">Subheading Images</v-card-title>
             <v-card-text class="">
@@ -131,12 +126,12 @@
         </v-card>
         <v-divider class="mx-5"></v-divider>
         <v-card flat class="px-5" :disabled="!qrGenerated">
-            <v-card-title class="bg-blue-grey-lighten-5 mb-3">SubHeading Audio/Video</v-card-title>
-            <v-select class="select mb-3" label="Select Language" density="comfortable" :items="languages"
-                v-model="languageAV" :rules="languageRules" item-title="talk" item-value="dtId"
-                variant="outlined"></v-select>
+            <v-card-title class="bg-blue-grey-lighten-5 mb-3">SubHeading Audio</v-card-title>
             <v-sheet class="p-3" flat :disabled="audioMalSubmit && audioEngSubmit">
                 <div class="d-flex flex-column gap-2">
+                    <v-select class="select mb-3" label="Select Language" density="comfortable" :items="languages"
+                        v-model="languageAV" :rules="languageRules" item-title="talk" item-value="dtId"
+                        variant="outlined"></v-select>
                     <div>
                         <input type="file" ref="fileAudio" @change="handleAudio" class="mb-2 d-none" accept="audio/*">
                         <v-btn @click="triggerAudioInput" color="blue-grey-darken-4" variant="outlined" size="small"
@@ -154,15 +149,10 @@
                         </template>
                     </div>
                     <div class="d-flex flex-column align-items-end justify-content-center ">
-                        <h6 class="text-success text-end fst-italic mb-0" v-if="audioMalSubmit">**Malayalam
-                            audio
-                            successfully
-                            uploaded.
-                        </h6>
+                        <h6 class="text-success text-end fst-italic mb-0" v-if="audioMalSubmit">**Malayalam audio
+                            successfully uploaded.</h6>
                         <h6 class="text-success text-end fst-italic mb-0" v-if="audioEngSubmit">**English audio
-                            successfully
-                            uploaded.
-                        </h6>
+                            successfully uploaded.</h6>
                     </div>
                 </div>
                 <div class="d-flex justify-content-end">
@@ -171,7 +161,8 @@
                         :loading="audioLoad">Submit Audio</v-btn>
                 </div>
             </v-sheet>
-            <v-sheet class="p-3" flat :disabled="videoMalSubmit && videoEngSubmit">
+            <v-card-title class="bg-blue-grey-lighten-5 mb-3">SubHeading Video</v-card-title>
+            <v-sheet class="p-3" flat :disabled="videoSubmit">
                 <div class="d-flex flex-column gap-2">
                     <div>
                         <input type="file" ref="fileVideo" @change="handleVideo" class="mb-2 d-none" accept="video/*">
@@ -183,21 +174,13 @@
                         <template v-else>
                             <div class="mt-2">
                                 <v-chip v-for="file in videoFiles" :key="file.name" closable
-                                    @click:close="removeVideo(file)" class="me-2 mb-1">
-                                    {{ file.name }}
-                                </v-chip>
+                                    @click:close="removeVideo(file)" class="me-2 mb-1">{{ file.name }}</v-chip>
                             </div>
                         </template>
                     </div>
                     <div class="d-flex flex-column align-items-end justify-content-center ">
-                        <h6 class="text-success text-end fst-italic mb-0" v-if="videoMalSubmit">*Malayalam video
-                            successfully
-                            uploaded.
-                        </h6>
-                        <h6 class="text-success text-end fst-italic mb-0" v-if="videoEngSubmit">*English video
-                            successfully
-                            uploaded.
-                        </h6>
+                        <h6 class="text-success text-end fst-italic mb-0" v-if="videoSubmit">*Video successfully
+                            uploaded.</h6>
                     </div>
                 </div>
                 <div class="d-flex justify-content-end">
@@ -209,8 +192,7 @@
         </v-card>
         <div class="my-5 d-flex justify-content-end align-items-center gap-2 px-5">
             <!-- <v-btn color="#2C7721" size="large" variant="elevated" prepend-icon="mdi-step-backward" @click="back">Finish & Return</v-btn> -->
-            <v-btn color="#2C7721" size="large" variant="elevated" append-icon="mdi-step-forward" @click="finish">Add
-                New Subheading</v-btn>
+            <v-btn color="#2C7721" size="large" variant="elevated" append-icon="mdi-step-forward" @click="finish">Add New Subheading</v-btn>
         </div>
     </v-sheet>
 </template>
@@ -228,8 +210,7 @@ export default {
             malSubmit: false,
             engSubmit: false,
             imageSubmit: false,
-            videoEngSubmit: false,
-            videoMalSubmit: false,
+            videoSubmit: false,
             audioEngSubmit: false,
             audioMalSubmit: false,
             subload: false,
@@ -239,14 +220,14 @@ export default {
             images: [],
             imgPreview: [],
             title: null,
-            titleRules: [v => !!v || '*Title is required'],
+            // titleRules: [v => !!v || '*Title is required'],
             description: null,
-            descriptionRules: [v => !!v || '*Description is required'],
+            // descriptionRules: [v => !!v || '*Description is required'],
             language: null,
             languageAV: null,
             languageRules: [v => !!v || '*Language is required'],
             url: null,
-            urlRules: [v => !!v || '*URL is required'],
+            // urlRules: [v => !!v || '*URL is required'],
             audioFiles: [],
             videoFiles: [],
             message: '',
@@ -462,8 +443,6 @@ export default {
                 this.imgPreview.splice(imgIndex, 1);
                 this.images.splice(imgIndex, 1);
             }
-            console.log('image preview', this.imgPreview);
-            console.log('image', this.images);
         },
         async uploadImages() {
             let message;
@@ -496,7 +475,6 @@ export default {
                 this.error(message);
             }
         },
-      
         triggerAudioInput() {
             this.$refs.fileAudio.click();
         },
@@ -512,7 +490,7 @@ export default {
         async submitAudio(id) {
             this.audioLoad = true;
             let message;
-            let uid = this.languageAV === 1 ? this.subidmal : this.subideng;
+            let uid = this.languageAV == 1 ? this.subidmal : this.subideng;
             const formData = new FormData();
             this.audioFiles.forEach((file) => { formData.append("files", file); });
             const payload = {
@@ -524,7 +502,7 @@ export default {
                 const response = await this.$store.dispatch('display/submitSubMedia', payload);
                 if (response) {
                     this.audioLoad = false;
-                    if (this.languageAV === 1) {
+                    if (this.languageAV == 1) {
                         message = 'Malayalam audio uploaded successfully';
                         this.audioMalSubmit = true;
                     }
@@ -559,7 +537,7 @@ export default {
         async submitVideo(id) {
             let message;
             this.videoLoad = true;
-            let uid = this.languageAV === 1 ? this.subidmal : this.subideng;
+            let uid = this.commonId;
             const formData = new FormData();
             this.videoFiles.forEach((file) => { formData.append("files", file); });
             const payload = {
@@ -592,8 +570,6 @@ export default {
             }
         },
         finish() {
-            // sessionStorage.clear();
-           
             this.$store.commit('display/setMalSubHeading', '');
             this.$store.commit('display/setEngSubHeading', '');
             this.$store.commit('display/setSubidmal', '');
@@ -603,8 +579,7 @@ export default {
             this.engSubmit = false;
             this.audioEngSubmit = false;
             this.audioMalSubmit = false;
-            this.videoEngSubmit = false;
-            this.videoMalSubmit = false;
+            this.videoSubmit = false;
             this.imageSubmit = false;
             this.languageAV = null;
             this.qrGenerated = false;
@@ -615,6 +590,11 @@ export default {
             if (!newValue) {
                 this.language = null;
                 this.QRLoad = false;
+            }
+        },
+        audioCheck(newValue) {
+            if (newValue) {
+                this.languageAV = null;
             }
         }
     },

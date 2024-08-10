@@ -20,22 +20,18 @@
     <v-card-text class="px-5 pb-5 pt-4 mt-5">
       <div>
         <v-form class="pt-0" ref="form" @submit.prevent="editTopic">
-          <v-text-field v-model="editTitle" label='Heading' variant="outlined" density="comfortable" class="select"
-            :rules="titleRules"></v-text-field>
-          <v-textarea label='Description' class="desc" rows="10" v-model="editDescription" variant="outlined"
-            counter></v-textarea>
-          <v-textarea label='References' density="comfortable" class="reference" rows="2" v-model="editUrl"
-            variant="outlined"></v-textarea>
+          <v-text-field v-model="editTitle" label='Heading' variant="outlined" density="comfortable" class="select"></v-text-field>
+          <v-textarea label='Description' class="desc" rows="10" v-model="editDescription" variant="outlined" counter></v-textarea>
+          <v-textarea label='References' density="comfortable" class="reference" rows="2" v-model="editUrl" variant="outlined" counter></v-textarea>
           <div class="d-flex justify-content-end">
             <v-btn color="#386568" class="text-capitalize" type="submit" :disabled="subload" variant="outlined" rounded
               :loading="subload">Update topic</v-btn>
           </div>
         </v-form>
       </div>
+
       <v-card v-if="!topicAddBtn" flat>
         <v-divider></v-divider>
-        
-
       </v-card>
 
       <div v-if="commonId">
@@ -83,8 +79,6 @@
             </div>
           </v-card-text>
         </v-card>
-
-
         <v-divider></v-divider>
         <v-card :disabled="!commonId">
           <v-card-title class="bg-blue-grey-lighten-5 mb-3">Images</v-card-title>
@@ -277,11 +271,11 @@ export default {
         deleteDialogVideo: false,
         deleteDialogAudio:false,
         editTitle: this.head,
-        titleRules: [v => !!v || '*Title is required'],
+        // titleRules: [v => !!v || '*Title is required'],
         editDescription: this.description,
-        descriptionRules: [v => !!v || '*Description is required'],
+        // descriptionRules: [v => !!v || '*Description is required'],
         editUrl: this.url,
-        urlRules: [v => !!v || '*URL is required'],
+        // urlRules: [v => !!v || '*URL is required'],
         audioFiles: [],
         videoFiles: [],
         message: '',
@@ -326,7 +320,6 @@ export default {
         this.$emit('dialogClose');
       },
       async addTranslation() {
-        console.log('language', this.$store.getters['display/getLanguage'])
         this.topicAddBtn = true;
         // try {
         //   if (this.main == true) {
@@ -528,7 +521,7 @@ export default {
         const formData = new FormData();
         formData.append("files", this.videoAdd);
         const payload = {
-          uid: this.uId,
+          uid: this.commonId,
           id: this.media.video,
           formData: formData
         }
@@ -567,7 +560,7 @@ export default {
         let formData = new FormData();
         try {
           if (this.main == true) {
-            formData.append("uId", this.uId);
+            formData.append("uId", this.commonId);
             formData.append("mtId", this.media.video);
             formData.append("files", this.videoAdd);
             response = await this.$store.dispatch('display/updateMedia',formData);

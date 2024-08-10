@@ -29,7 +29,7 @@
             <v-textarea :label="language == 1 ? 'വിവരണം' : 'Subheading Description'" class="desc mb-2" rows="8"
               v-model="description" variant="outlined" counter></v-textarea>
             <v-textarea :label="language == 1 ? 'റഫറൻസ്' : 'References'" density="comfortable" class="reference"
-              rows="2" v-model="url" variant="outlined"></v-textarea>
+              rows="2" v-model="url" variant="outlined" counter></v-textarea>
           </v-card>
           <div class="d-flex flex-column ">
             <p class="text-success text-end fst-italic mb-0" v-if="malSubmit">
@@ -134,12 +134,13 @@
     <template v-else-if="step === 3">
       <h6 class="text-center mb-2 fw-bolder ">Subheading Audio/Video</h6>
       <div class="my-3">
-        <v-select class="select mb-2" label="Select Language" density="comfortable" :items="languages"
-          v-model="languageAV" :rules="languageRules" item-title="talk" item-value="dtId" variant="outlined"></v-select>
         <div class="d-flex flex-column gap-2">
           <v-card-title class="py-1 bg-blue-grey-lighten-5">Audio</v-card-title>
           <v-card class="p-3 d-flex gap-2" flat :disabled="audioMalSubmit && audioEngSubmit">
             <div>
+              <v-select class="select mb-2" label="Select Language" density="comfortable" :items="languages"
+                v-model="languageAV" :rules="languageRules" item-title="talk" item-value="dtId"
+                variant="outlined"></v-select>
               <div class="mb-3">
                 <input type="file" ref="fileAudio" @change="handleAudio" class="mb-2 d-none" accept="audio/*">
                 <v-btn @click="triggerAudioInput" color="blue-grey-darken-4" variant="outlined" size="small"
@@ -167,7 +168,7 @@
             </div>
           </v-card>
           <v-card-title class="py-1 bg-blue-grey-lighten-5">Video</v-card-title>
-          <v-card class="p-3 d-flex gap-2" flat :disabled="videoMalSubmit && videoEngSubmit">
+          <v-card class="p-3 d-flex gap-2" flat :disabled="videoSubmit">
             <div>
               <div class="mb-3">
                 <input type="file" ref="fileVideo" @change="handleVideo" class="mb-2 d-none" accept="video/*">
@@ -195,10 +196,7 @@
                 Video</v-btn>
             </div>
             <div class="d-flex flex-column align-items-end justify-content-center ">
-              <h6 class="text-success text-end fst-italic mb-0" v-if="videoMalSubmit">*Malayalam video successfully
-                uploaded.</h6>
-              <h6 class="text-success text-end fst-italic mb-0" v-if="videoEngSubmit">*English video successfully
-                uploaded.</h6>
+              <h6 class="text-success text-end fst-italic mb-0" v-if="videoSubmit">*Video successfully uploaded.</h6>
             </div>
           </v-card>
           <div class="d-flex justify-content-end">
@@ -239,8 +237,7 @@ export default {
         malSubmit: false,
         engSubmit: false,
         imageSubmit: false,
-        videoEngSubmit: false,
-        videoMalSubmit: false,
+        videoSubmit: false,
         audioEngSubmit: false,
         audioMalSubmit: false,
         subhead: false,
@@ -284,6 +281,9 @@ export default {
         if ((this.malSubmit) && (this.engSubmit)) {
           return false;
         } else return true;
+      },
+      audioCheck() {
+        return this.audioEngSubmit && this.audioMalSubmit;
       },
       topic() {
         if (this.language == 1) return 'Malayalam'
@@ -445,8 +445,6 @@ export default {
           this.imgPreview.splice(imgIndex, 1);
           this.images.splice(imgIndex, 1);
         }
-        console.log('image preview', this.imgPreview);
-        console.log('image', this.images);
       },
       async uploadBg() {
         this.bgLoad = true;
@@ -573,11 +571,7 @@ export default {
         let message;
         this.videoLoad = true;
         let uid;
-        if (this.languageAV == 1) {
-          uid = this.subidmal;
-        } if (this.languageAV == 2) {
-          uid = this.subideng;
-        }
+        uid = this.commonId;
         const formData = new FormData();
         this.videoFiles.forEach((file) => { formData.append("files", file);});
         const payload = {
@@ -589,14 +583,8 @@ export default {
           const response = await this.$store.dispatch('display/submitSubMedia', payload);
           if (response) {
             this.videoLoad = false;
-            if (this.languageAV == 1) {
-              message = 'Malayalam video uploaded successfully';
-              this.videoMalSubmit = true;
-            }
-            else {
-              message = 'English video uploaded successfully';
-              this.videoEngSubmit = true;
-            }
+            message = 'Malayalam video uploaded successfully';
+            this.videoSubmit = true;
             this.success(message);
             this.videoFiles = [];
             this.$refs.fileVideo.value = '';
@@ -621,8 +609,7 @@ export default {
         this.engSubmit = false;
         this.audioEngSubmit = false;
         this.audioMalSubmit = false;
-        this.videoEngSubmit = false;
-        this.videoMalSubmit = false;
+        this.videoSubmit = false;
         this.imageSubmit = false;
         this.bgSubmit = false;
         this.languageAV = null;
@@ -645,6 +632,11 @@ export default {
         if (!newValue) {
           this.language = null;
           this.QRLoad = false
+        }
+      },
+      audioCheck(newValue) {
+        if (newValue) {
+          this.languageAV = null;
         }
       }
     },  
