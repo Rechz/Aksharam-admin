@@ -82,26 +82,29 @@
             </v-card>
             <div class="d-flex gap-3 mt-3">
                 <div class="d-flex flex-column align-items-end justify-content-center ">
-                    <h6 class="text-success text-end fst-italic mb-0" v-if="bgSubmit">*Background image successfully uploaded.</h6>
+                    <h6 class="text-success text-end fst-italic mb-0" v-if="bgSubmit">*Background image successfully
+                        uploaded.</h6>
                 </div>
             </div>
         </v-card>
         <v-divider class="mx-5"></v-divider>
         <v-card flat class="px-5" :disabled="!qrGenerated">
             <v-card-title class="bg-blue-grey-lighten-5 mb-3">Subheading Images</v-card-title>
-            <v-card-text class="d-flex gap-3 ">
+            <v-card-text class="d-flex gap-3">
                 <input type="file" ref="imageFile" multiple @change="handleFileUpload" class="mb-1" accept="image/*">
                 <div class="d-flex gap-4 flex-wrap ">
                     <div v-for="(image, index) in imgPreview" :key="index" elevation="4" style="position: relative;">
                         <v-card height="100" width="200">
-                            <img :src="image.url" alt="Uploaded Image" style="max-width: 200px; background-size: cover;">
+                            <img :src="image.url" alt="Uploaded Image"
+                                style="max-width: 200px; background-size: cover;">
                         </v-card>
                         <v-icon class="mdi mdi-close-circle-outline" @click="removeImage(index)" size="32"
                             style="position:absolute; top: -16%; right:-6%" color="green-lighten-1"></v-icon>
                     </div>
                 </div>
                 <div class="d-flex flex-column align-items-end justify-content-center ">
-                    <h6 class="text-success text-end fst-italic mb-0" v-if="imageSubmit">*Image successfully uploaded.</h6>
+                    <h6 class="text-success text-end fst-italic mb-0" v-if="imageSubmit">*Image successfully uploaded.
+                    </h6>
                 </div>
             </v-card-text>
             <div class="d-flex justify-content-end gap-3 my-2 w-100">
@@ -112,7 +115,7 @@
         <v-divider class="mx-5"></v-divider>
         <v-card flat class="px-5" :disabled="!qrGenerated">
             <v-card-title class="bg-blue-grey-lighten-5 mb-3">SubHeading Audio</v-card-title>
-            <v-sheet class="p-3" flat :disabled="audioMalSubmit && audioEngSubmit">
+            <v-card class="p-3" flat :disabled="audioMalSubmit && audioEngSubmit">
                 <div class="d-flex flex-column gap-2">
                     <v-select class="select mb-3" label="Select Language" density="comfortable" :items="languages"
                         v-model="languageAV" :rules="languageRules" item-title="talk" item-value="dtId"
@@ -126,17 +129,20 @@
                         </ul>
                     </div>
                     <div class="d-flex flex-column align-items-end justify-content-center ">
-                        <h6 class="text-success text-end fst-italic mb-0" v-if="audioMalSubmit">**Malayalam audio successfully uploaded.</h6>
-                        <h6 class="text-success text-end fst-italic mb-0" v-if="audioEngSubmit">**English audio successfully uploaded.</h6>
+                        <h6 class="text-success text-end fst-italic mb-0" v-if="audioMalSubmit">**Malayalam audio
+                            successfully uploaded.</h6>
+                        <h6 class="text-success text-end fst-italic mb-0" v-if="audioEngSubmit">**English audio
+                            successfully uploaded.</h6>
                     </div>
                 </div>
                 <div class="d-flex justify-content-end">
                     <v-btn @click="submitAudio(fileType.audio)" color="#386568" variant="outlined" rounded
-                        prepend-icon="mdi-music" class="text-capitalize" :disabled="audioLoad" :loading="audioLoad">Submit Audio</v-btn>
+                        prepend-icon="mdi-music" class="text-capitalize" :disabled="audioLoad"
+                        :loading="audioLoad">Submit Audio</v-btn>
                 </div>
-            </v-sheet>
+            </v-card>
             <v-card-title class="bg-blue-grey-lighten-5 mb-3">SubHeading Video</v-card-title>
-            <v-sheet class="p-3" flat :disabled="videoSubmit">
+            <v-card class="p-3" flat :disabled="videoSubmit">
                 <div class="d-flex flex-column gap-2">
                     <div>
                         <input type="file" ref="fileVideo" @change="handleVideo" class="mb-2" accept="video/*">
@@ -156,7 +162,7 @@
                         prepend-icon="mdi-video" class="text-capitalize" :disabled="videoLoad"
                         :loading="videoLoad">Submit Video</v-btn>
                 </div>
-            </v-sheet>
+            </v-card>
         </v-card>
         <div class="my-5 d-flex justify-content-end align-items-center gap-2 px-5">
             <!-- <v-btn color="#2C7721" size="large" variant="elevated" prepend-icon="mdi-step-backward" @click="back">Finish & Return</v-btn>-->
@@ -213,7 +219,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters('display', ['getLanguageList', 'getFileTypes', 'getMedia', 'getsub2idmal', 'getsub2ideng', 'getmalSub2Heading', 'getengSub2Heading']),
+        ...mapGetters('display', ['getLanguageList', 'getFileTypes', 'getMedia', 'getsub2idmal', 'getsub2ideng', 'getmalSub2Heading', 'getengSub2Heading','getCommonIdSub2']),
         proceed() {
             if ((this.malSubmit) && (this.engSubmit)) {
                 return false;
@@ -384,6 +390,7 @@ export default {
             reader.readAsDataURL(file);
         },
         async uploadBg() {
+            console.log('')
             this.bgLoad = true;
             const formData = new FormData();
             formData.append("bgFile", this.bgFile[0])

@@ -12,8 +12,8 @@ const store = createStore({
   state() {
     return {
       // base_url: 'http://localhost:8448',
-      // base_url: 'http://192.168.1.27:8083',
-      // base_url: 'http://192.168.1.30:5000',
+      // base_url: 'http://192.168.1.31:8083',
+      // base_url: 'http://192.168.1.40:5000',
       //  base_url: 'http://192.168.33.172:8083',
       base_url: 'https://aksharammuseum.com',
       token: sessionStorage.getItem('token') || '',

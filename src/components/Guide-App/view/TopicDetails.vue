@@ -1,6 +1,6 @@
 <template>
     <v-main class="main">
-        <div class="d-flex justify-content-between align-items-start nav mx-5 pt-5 pb-3">
+        <div class="d-flex justify-content-between align-items-start w-100 px-5 pt-5 pb-3 position-fixed">
             <router-link to="/admin/guide-app/view">
                 <v-btn icon="mdi-arrow-left" variant="tonal" color="#3b2404" size="small" elevation="10"
                     class="button"></v-btn>
@@ -17,7 +17,7 @@
                     </g>
                 </svg>Translate</v-btn>
         </div>
-        <h1 class="mx-auto text-wrap w-75 text-center mb-4">{{ subTopic.title }}</h1>
+        <h1 class="mx-auto text-wrap w-75 text-center mb-4 mt-5">{{ subTopic.title }}</h1>
         <div class="w-75 px-5 mx-auto">
             <div>
                 <div class="d-flex justify-content-end px-3">

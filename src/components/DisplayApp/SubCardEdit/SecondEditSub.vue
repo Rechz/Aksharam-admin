@@ -245,7 +245,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters('display', ['getLanguageList', 'getFileTypes', 'getMedia', 'getsub2idmal', 'getsub2ideng', 'getmalSub2Heading', 'getengSub2Heading']),
+        ...mapGetters('display', ['getLanguageList', 'getFileTypes', 'getMedia', 'getsub2idmal', 'getsub2ideng', 'getmalSub2Heading', 'getengSub2Heading','getCommonIdSub2']),
         proceed() {
             if ((this.malSubmit) && (this.engSubmit)) {
                 return false;
@@ -283,7 +283,6 @@ export default {
     },
     methods: {
         finish() {
-            // sessionStorage.clear();
             this.$store.commit('display/setMalSub2Heading', '');
             this.$store.commit('display/setEngSub2Heading', '');
             this.$store.commit('display/setSub2idmal', '');
@@ -517,10 +516,12 @@ export default {
                     if (this.languageAV == 1) {
                         message = 'Malayalam audio uploaded successfully';
                         this.audioMalSubmit = true;
+                        this.languageAV = 2
                     }
                     else {
                         message = 'English audio uploaded successfully';
                         this.audioEngSubmit = true;
+                        this.languageAV = 1
                     }
                     this.success(message);
                     this.audioFiles = [];
@@ -561,14 +562,8 @@ export default {
                 const response = await this.$store.dispatch('display/submitSub2Media', payload);
                 if (response) {
                     this.videoLoad = false;
-                    if (this.languageAV == 1) {
-                        message = 'Malayalam video uploaded successfully';
-                        this.videoMalSubmit = true;
-                    }
-                    else {
-                        message = 'English video uploaded successfully';
-                        this.videoEngSubmit = true;
-                    }
+                    message = 'Malayalam video uploaded successfully';
+                    this.videoSubmit = true;
                     this.success(message);
                     this.videoFiles = [];
                     this.$refs.fileVideo.value = '';

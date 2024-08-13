@@ -57,7 +57,7 @@
         </v-card>
       </template>
       <template v-else-if="step === 2">
-        <v-card flat class="mt-2" :disabled="bgLoad">
+        <v-card flat class="mt-2" :disabled="bgLoad || bgSubmit">
           <v-card-title class="py-1 bg-blue-grey-lighten-5 mb-3 fs-5">Main Topic Background Image</v-card-title>
           <v-card flat class="ms-3 my-3">
             <input type="file" ref="imageBg" @change="handleBgImage" class="d-none" accept="image/*">
@@ -123,7 +123,7 @@
         </v-card>
         <!-- <div class="d-flex justify-content-between gap-3 mt-3 w-100"> -->
 
-        <v-card class="d-flex gap-2 justify-content-end" flat :disabled="imageLoad">
+        <v-card class="d-flex gap-2 justify-content-end" flat :disabled="imageLoad || bgLoad">
           <v-btn color="#386568" class="text-capitalize" variant="outlined" @click="step--">Back</v-btn>
           <v-btn color="#386568" class="text-capitalize" variant="outlined" @click="step++">Next</v-btn>
         </v-card>
@@ -169,7 +169,7 @@
             <v-card class="p-3 d-flex gap-2" flat :disabled="videoSubmit">
               <div>
                 <div class="mb-3">
-                  <input type="file" ref="fileVideo" @change="handleVideo" class="mb-2 d-none" accept="video/*">
+                  <input type="file" ref="fileVideo" @change="handleVideo" class="mb-2 d-none" accept="video/*" multiple>
                   <v-btn @click="triggerVideoInput" color="blue-grey-darken-4" variant="outlined" size="small"
                     class="text-capitalize">Choose Video</v-btn>
                   <template v-if="videoFiles.length === 0">
@@ -391,7 +391,7 @@ export default {
       handleBgImage(event) {
         const file = event.target.files[0];
         if (file) {
-          this.bgFile = [file]; // Only handle one file
+          this.bgFile = [file];
           this.updateImageUrl(file);
         }
       },
@@ -428,10 +428,6 @@ export default {
           this.images.splice(imgIndex, 1);
         }
       },
-      // removeImageIndex(index) {
-      //   this.imgPreview.splice(index, 1);
-      //   this.images.splice(index, 1);
-      // },
       async uploadBg() {
         this.bgLoad = true;
         const formData = new FormData();
@@ -546,8 +542,10 @@ export default {
         this.$refs.fileVideo.click();
       },
       handleVideo(event) {
-        const selectedFiles = event.target.files[0];
-        this.videoFiles.push(selectedFiles);
+        const selectedFiles = event.target.files;
+        for (let i = 0; i < selectedFiles.length; i++) {
+          this.videoFiles.push(selectedFiles[i]);
+        }
       },
       removeVideo(file) {
         const videoIndex = this.videoFiles.findIndex(vid => vid === file);
@@ -600,6 +598,11 @@ export default {
         this.imageSubmit = false;
         this.bgSubmit = false;
         this.languageAV = null;
+        this.images = [];
+        this.imgPreview = [];
+        this.bgFile = [];
+        this.videoFiles = [];
+        this.audioFiles = [];
       },
       async getType() {
         try {
@@ -631,9 +634,14 @@ export default {
         }
       }
     },
-    created() {
-      this.getAllLanguages();
-      this.getType();
+  async created() {
+    try {
+        await this.getAllLanguages();
+        await this.getType();
+      }
+    catch (error) {
+      console.error(error);
+    }
     },
 };
 </script>

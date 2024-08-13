@@ -15,9 +15,7 @@
     <template v-if="step === 1">
       <h6 class="text-center mt-3 fw-bolder">Add Sub Heading - {{ count }} ({{ engHeading }})</h6>
       <p class="text-danger fst-italic mt-1 mb-0" style="font-size: 14px;">
-        **Please submit Malayalam & English data before proceeding to next page. Do not refresh the page to avoid data
-        loss.
-      </p>
+        **Please submit Malayalam & English data before proceeding to next page. Do not refresh the page to avoid data loss.</p>
       <v-form class="pt-0" ref="form" @submit.prevent="submitHeading">
         <div class="d-flex">
           <v-card flat :disabled="!QRLoad" class="p-3 pb-0">
@@ -29,7 +27,7 @@
             <v-textarea :label="language == 1 ? 'വിവരണം' : 'Subheading Description'" class="desc mb-2" rows="8"
               v-model="description" variant="outlined" counter></v-textarea>
             <v-textarea :label="language == 1 ? 'റഫറൻസ്' : 'References'" density="comfortable" class="reference"
-              rows="2" v-model="url" variant="outlined"></v-textarea>
+              rows="2" v-model="url" variant="outlined" counter></v-textarea>
           </v-card>
           <div class="d-flex flex-column ">
             <p class="text-success text-end fst-italic mb-0" v-if="malSubmit">
@@ -57,21 +55,17 @@
       </v-form>
     </template>
     <template v-else-if="step === 2">
-      <v-card flat class="mt-2" :disabled="bgLoad">
+      <v-card flat class="mt-2" :disabled="bgLoad || bgSubmit">
         <v-card-title class="py-1 bg-blue-grey-lighten-5 mb-3 fs-5">Sub of subheading Background Image</v-card-title>
         <v-card flat class="ms-3 my-3">
           <input type="file" ref="imageBg" @change="handleBgImage" class="d-none" accept="image/*">
           <v-btn @click="triggerFileInput" color="blue-grey-darken-4" variant="outlined" size="small"
-            class="text-capitalize">
-            Choose Background
-          </v-btn>
+            class="text-capitalize">Choose Background</v-btn>
           <template v-if="bgFile.length === 0">
             <label for="imageBg" class="ms-2">No background image chosen.</label>
           </template>
           <template v-else>
-            <v-chip v-for="(file, index) in bgFile" :key="index" closable @click:close="removeBg(index)" class="ms-2">
-              {{ file.name }}
-            </v-chip>
+            <v-chip v-for="(file, index) in bgFile" :key="index" closable @click:close="removeBg(index)" class="ms-2">{{ file.name }}</v-chip>
           </template>
           <v-img v-if="imageBg" :src="imageBg" width="200" height="100" class="mt-3" cover
             style="background-position: center; max-width: 200px;"></v-img>
@@ -82,8 +76,7 @@
         </v-card>
         <div class="d-flex gap-3 mt-3">
           <div class="d-flex flex-column align-items-end justify-content-center ">
-            <h6 class="text-success text-end fst-italic mb-0" v-if="bgSubmit">*Background image successfully uploaded.
-            </h6>
+            <h6 class="text-success text-end fst-italic mb-0" v-if="bgSubmit">*Background image successfully uploaded.</h6>
           </div>
         </div>
       </v-card>
@@ -108,8 +101,6 @@
             <div v-for="image in imgPreview" :key="image.url" elevation="4" style="position: relative;">
               <v-img :src="image.url" alt="Uploaded Image" style="max-width: 200px;" width="200" height="100"
                 cover></v-img>
-              <!-- <v-icon class="mdi mdi-close-circle-outline" @click="removeImageIndex(index)" size="32"
-                  style="position:absolute; top: -16%; right:-6%" color="green-lighten-1"></v-icon> -->
             </div>
           </div>
           <div class="mt-3">
@@ -123,12 +114,10 @@
           </div>
         </div>
       </v-card>
-      <!-- <div class="d-flex justify-content-between gap-3 mt-3 w-100"> -->
       <v-card class="d-flex gap-2 justify-content-end" flat :disabled="imageLoad">
         <v-btn color="#386568" class="text-capitalize" variant="outlined" @click="step--">Back</v-btn>
         <v-btn color="#386568" class="text-capitalize" variant="outlined" @click="step++">Next</v-btn>
       </v-card>
-      <!-- </div> -->
     </template>
     <template v-else-if="step === 3">
       <h6 class="text-center mb-2 fw-bolder ">Sub of subheading Audio/Video</h6>
@@ -160,17 +149,15 @@
                 class="text-capitalize" :disabled="audioLoad" :loading="audioLoad">Submit Audio</v-btn>
             </div>
             <div class="d-flex flex-column align-items-end justify-content-center ">
-              <h6 class="text-success text-end fst-italic mb-0" v-if="audioMalSubmit">**Malayalam audio successfully
-                uploaded.</h6>
-              <h6 class="text-success text-end fst-italic mb-0" v-if="audioEngSubmit">**English audio successfully
-                uploaded.</h6>
+              <h6 class="text-success text-end fst-italic mb-0" v-if="audioMalSubmit">**Malayalam audio successfully uploaded.</h6>
+              <h6 class="text-success text-end fst-italic mb-0" v-if="audioEngSubmit">**English audio successfully uploaded.</h6>
             </div>
           </v-card>
           <v-card-title class="py-1 bg-blue-grey-lighten-5">Video</v-card-title>
           <v-card class="p-3 d-flex gap-2" flat :disabled="videoSubmit">
             <div>
               <div class="mb-3">
-                <input type="file" ref="fileVideo" @change="handleVideo" class="mb-2 d-none" accept="video/*">
+                <input type="file" ref="fileVideo" @change="handleVideo" class="mb-2 d-none" accept="video/*" multiple>
                 <v-btn @click="triggerVideoInput" color="blue-grey-darken-4" variant="outlined" size="small"
                   class="text-capitalize">Choose Video</v-btn>
                 <template v-if="videoFiles.length === 0">
@@ -185,21 +172,15 @@
                   </div>
                 </template>
               </div>
-              <!-- <ul>
-                  <li v-for="(file, index) in videoFiles" :key="index" style="list-style: none;" class="my-1">
-                    <v-chip closable> {{ file.name }} </v-chip>
-                  </li>
-                </ul> -->
               <v-btn @click="submitVideo(fileType.video)" color="#386568" variant="elevated" prepend-icon="mdi-video"
-                class="text-capitalize" :disabled="videoLoad" :loading="videoLoad">Submit
-                Video</v-btn>
+                class="text-capitalize" :disabled="videoLoad" :loading="videoLoad">Submit Video</v-btn>
             </div>
             <div class="d-flex flex-column align-items-end justify-content-center ">
               <h6 class="text-success text-end fst-italic mb-0" v-if="videoSubmit">*Video successfully uploaded.</h6>
             </div>
           </v-card>
           <div class="d-flex justify-content-end">
-            <div class="d-flex gap-2">
+            <div class="d-flex gap-2" :disabled="audioLoad || videoLoad">
               <v-btn color="#386568" class="text-capitalize" variant="outlined" @click="step--">Back</v-btn>
               <v-btn color="#386568" class="text-capitalize" variant="outlined" @click="step++">Next</v-btn>
             </div>
@@ -244,14 +225,11 @@ export default {
         step: 1,
         count: 1,
         title: null,
-        titleRules: [v => !!v || '*Title is required'],
         description: null,
-        descriptionRules: [v => !!v || '*Description is required'],
         language: null,
         languageAV: null,
         languageRules: [v => !!v || '*Language is required'],
         url: null,
-        urlRules: [v => !!v || '*URL is required'],
         audioFiles: [],
         videoFiles: [],
         message: '',
@@ -409,7 +387,7 @@ export default {
       handleBgImage(event) {
         const file = event.target.files[0];
         if (file) {
-          this.bgFile = [file]; // Only handle one file
+          this.bgFile = [file]; 
           this.updateImageUrl(file);
         }
       },
@@ -459,7 +437,7 @@ export default {
           if (response) {
             this.bgLoad = false;
             this.bgSubmit = true;
-            const message = 'Image uploaded successfully';
+            const message = 'Background image uploaded successfully';
             this.success(message);
             this.bgFile = [];
             this.imageBg = null;
@@ -561,8 +539,10 @@ export default {
         this.$refs.fileVideo.click();
       },
       handleVideo(event) {
-        const selectedFiles = event.target.files[0];
-        this.videoFiles.push(selectedFiles);
+        const selectedFiles = event.target.files;
+        for (let i = 0; i < selectedFiles.length; i++) {
+          this.videoFiles.push(selectedFiles[i]);
+        }
       },
       removeVideo(file) {
         const videoIndex = this.videoFiles.findIndex(vid => vid === file);
@@ -614,6 +594,11 @@ export default {
         this.imageSubmit = false;
         this.bgSubmit = false;
         this.languageAV = null;
+        this.images = [];
+        this.imgPreview = [];
+        this.bgFile = [];
+        this.videoFiles = [];
+        this.audioFiles = [];
       }, 
     },
     watch: {

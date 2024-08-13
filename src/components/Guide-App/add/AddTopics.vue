@@ -27,22 +27,17 @@
                         <v-textarea :label="language === 1 ? 'വിവരണം' : 'Description'" class="desc mb-2" rows="6"
                             v-model="description" variant="outlined" counter></v-textarea>
                         <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
-                            class="reference desc" rows="2" v-model="url" variant="outlined"></v-textarea>
+                            class="reference desc" rows="2" v-model="url" variant="outlined" counter></v-textarea>
                     </div>
                     <div class="d-flex flex-column ">
-                        <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malHeading }}
-                            (Malayalam) added.
-                        </h6>
-                        <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engHeading }}
-                            (English) added.
-                        </h6>
+                        <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malHeading }} (Malayalam) added.</h6>
+                        <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engHeading }} (English) added.</h6>
                     </div>
                 </div>
                 <div class="d-flex justify-content-end">
                     <div class="d-flex gap-2">
                         <v-btn v-if="QRLoad" color="#386568" class="text-capitalize" type="submit" :disabled="subload"
-                            variant="outlined" rounded :loading="subload" prepend-icon="mdi-plus">Add {{ topic
-                            }}</v-btn>
+                            variant="outlined" rounded :loading="subload" prepend-icon="mdi-plus">Add {{ topic }}</v-btn>
                         <v-btn v-else color="#386568" class="text-capitalize" variant="elevated" rounded
                             :disabled="QRLoad" :loading="QRLoading" @click="generateQR">Submit &
                             Proceed</v-btn>
@@ -150,15 +145,40 @@
             </div>
         </v-card>
     </v-card>
-
+    <v-card flat class="ps-0" :disabled="!qrGenerated">
+        <v-card-title class="bg-blue-grey-lighten-5 mb-3">PDF File</v-card-title>
+        <v-card class="" flat :disabled="pdfLoad || pdfSubmit">
+            <div class="mb-3">
+                <input type="file" ref="filepdf" @change="handlePdf" class="mb-2 d-none" accept="application/pdf">
+                <v-btn @click="triggerPdfInput" color="blue-grey-darken-4" variant="outlined" size="small"
+                    class="text-capitalize">Choose PDF</v-btn>
+                <template v-if="pdfFile.length === 0">
+                    <label for="filePdf" class="ms-2">No PDF uploaded.</label>
+                </template>
+                <template v-else>
+                    <div class="mt-2">
+                        <v-chip v-for="file in pdfFile" :key="file.name" closable @click:close="removePdf(file)"
+                            class="me-2 mb-1">
+                            {{ file.name }}
+                        </v-chip>
+                    </div>
+                </template>
+            </div>
+            <div class="d-flex justify-content-start mt-3 ">
+                <h6 class="text-success text-end fst-italic mb-0" v-if="pdfSubmit">*PDF successfully uploaded.</h6>
+            </div>
+            <div class="d-flex justify-content-end gap-3 my-2 w-100">
+                <v-btn @click="submitPdf" color="#386568" variant="outlined" prepend-icon="mdi-file-pdf-box"
+                    class="text-capitalize rounded-5" :disabled="pdfLoad" :loading="videoLoad">Submit PDF</v-btn>
+            </div>
+        </v-card>
+    </v-card>
 
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
-export default {
-    emits: ['back', 'update'],
-    
+export default {    
     data() {
         return {
             qrGenerated: false,
@@ -177,14 +197,11 @@ export default {
             images: [],
             imgPreview: [],
             title: null,
-            titleRules: [v => !!v || '*Title is required'],
             description: null,
-            descriptionRules: [v => !!v || '*Description is required'],
             language: null,
             languageAV: null,
             languageRules: [v => !!v || '*Language is required'],
             url: null,
-            urlRules: [v => !!v || '*URL is required'],
             audioFiles: [],
             videoFiles: [],
             message: '',
@@ -193,6 +210,9 @@ export default {
             icon: '',
             dialogTopic: false,
             dialogHead: '',
+            pdfFile: [],
+            pdfSubmit: false,
+            pdfLoad: false,
         };
     },
     computed: {
@@ -437,7 +457,7 @@ export default {
         async submitVideo(id) {
             let message;
             this.videoLoad = true;
-            let uid = this.languageAV === 1 ? this.subidmal : this.subideng;
+            let uid = this.commonId;
             const formData = new FormData();
             this.videoFiles.forEach((file) => { formData.append("files", file); });
             const payload = {
@@ -449,14 +469,8 @@ export default {
                 const response = await this.$store.dispatch('display/submitSubMedia', payload);
                 if (response) {
                     this.videoLoad = false;
-                    if (this.languageAV === 1) {
-                        message = 'Malayalam video uploaded successfully';
-                        this.videoMalSubmit = true;
-                    }
-                    else {
-                        message = 'English video uploaded successfully';
-                        this.videoEngSubmit = true;
-                    }
+                    message = 'Video uploaded successfully';
+                    this.videoSubmit = true;
                     this.success(message);
                     this.videoFiles = [];
                     this.$refs.fileVideo.value = '';
@@ -469,9 +483,47 @@ export default {
                 this.error(message);
             }
         },
-        finish() {
-            // sessionStorage.clear();
+        triggerPdfInput() {
+            this.$refs.filepdf.click();
+        },
+        handlePdf(event) {
+            const selectedFiles = event.target.files;
+            if (selectedFiles.length > 0) {
+                this.pdfFile = Array.from(selectedFiles); 
+            }
+        },
+        removePdf(file) {
+            const index = this.pdfFile.findIndex(f => f.name === file.name);
+            if (index !== -1) {
+                this.pdfFile.splice(index, 1); 
+            }
+        },
+        async submitPdf() {
+            if (this.pdfFile.length === 0) return;
+            this.pdfLoad = true;
+            const formData = new FormData();
+            this.pdfFile.forEach((file) => {
+                formData.append('file', file);
+            });
 
+            try {
+                // Make the API request to submit the PDF
+                const response = await ('/api/upload-pdf', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                if (response) {
+                    this.pdfSubmit = true;
+                    this.pdfFile = []; 
+                    this.pdfLoad = false;
+                }
+            } catch (error) {
+                console.error('PDF upload failed:', error);
+                this.pdfLoad = false;
+            }
+        },
+        finish() {
             this.$store.commit('display/setMalSubHeading', '');
             this.$store.commit('display/setEngSubHeading', '');
             this.$store.commit('display/setSubidmal', '');

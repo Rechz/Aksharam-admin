@@ -141,7 +141,7 @@ export default {
       }
     },
     //generate commonid subheading
-    async generateQRSub({ rootGetters,commit,getters}, payload) {
+    async generateQRSub({ rootGetters,commit}, payload) {
       try {
         const response = await axios.get(`${rootGetters.getUrl}/api/DataEntry2/genCommonId?engId=${payload.subideng}&malId=${payload.subidmal}`,
         {
@@ -153,7 +153,7 @@ export default {
         if (response.status >= 200 && response.status < 300) {
           // console.log('commonlap', response.data.fsCommonId)
           commit('setCommonIdSub', response.data.fsCommonId)
-          console.log('common sub', getters.getCommonIdSub)
+          // console.log('common sub', getters.getCommonIdSub)
           return true;
         }
       }
@@ -200,7 +200,7 @@ export default {
       }
     },
     //submit details subheading2
-    async submitSub2Head({ rootGetters, commit,getters }, payload) {  
+    async submitSub2Head({ rootGetters, commit}, payload) {  
       try {
         const response = await axios.post(`${rootGetters.getUrl}/api/DataEntry3/secondSub?uId=${payload.uid}`, payload.data,
         {
@@ -212,16 +212,16 @@ export default {
         if (response.status >= 200 && response.status < 300) {
           if (payload.lang === 1) {
             commit('setMalSub2Heading', response.data.title)
-            console.log(getters.getmalSub2Heading)
+            // console.log(getters.getmalSub2Heading)
             commit('setSub2idmal', response.data.ssUid)
-            console.log(getters.getsub2idmal)
+            // console.log(getters.getsub2idmal)
             return true;
           }
           else {
             commit('setEngSub2Heading', response.data.title)
-            console.log(getters.getengSub2Heading)
+            // console.log(getters.getengSub2Heading)
             commit('setSub2ideng', response.data.ssUid)
-            console.log(getters.getsub2ideng)
+            // console.log(getters.getsub2ideng)
             return true;
           }
         }
@@ -306,7 +306,7 @@ export default {
         const response = await axios.get(`${rootGetters.getUrl}/api/qrcode/getScanDetails?dtId=${payload.language}&commonId=${payload.commonId}`);
         if (response.status >= 200 && response.status < 300) {
           commit('setDetails', response.data)
-          console.log(response.data)
+          // console.log(response.data)
           return true;
         }
       }
