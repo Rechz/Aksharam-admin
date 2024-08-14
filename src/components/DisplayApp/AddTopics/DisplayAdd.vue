@@ -240,7 +240,6 @@ export default {
         imgPreview: [],
         step: 1,
         title: null,
-        titleRules: [v => !!v || '*Title is required'],
         description: null,
         language: null,
         languageAV: null,

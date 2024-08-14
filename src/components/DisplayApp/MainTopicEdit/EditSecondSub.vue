@@ -196,14 +196,11 @@ export default {
             images: [],
             imgPreview: [],
             title: null,
-            // titleRules: [v => !!v || '*Title is required'],
             description: null,
-            // descriptionRules: [v => !!v || '*Description is required'],
             language: null,
             languageAV: null,
             languageRules: [v => !!v || '*Language is required'],
             url: null,
-            // urlRules: [v => !!v || '*URL is required'],
             audioFiles: [],
             videoFiles: [],
             message: '',
@@ -260,7 +257,6 @@ export default {
     },
     methods: {
         finish() {
-            // sessionStorage.clear();
             this.$store.commit('display/setMalSub2Heading', '');
             this.$store.commit('display/setEngSub2Heading', '');
             this.$store.commit('display/setSub2idmal', '');
@@ -301,10 +297,10 @@ export default {
         async submitHeading() {
             let message;
             let language = this.languages.find(lang => lang.dtId === this.language);
-            this.subload = true;
             let uid = this.language === 1 ? this.idmal : this.ideng;
             const { valid } = await this.$refs.form.validate()
             if (valid) {
+                this.subload = true;
                 try {
                     const payload = {
                         data: {

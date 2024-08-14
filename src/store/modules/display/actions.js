@@ -51,6 +51,7 @@ export default {
         }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
@@ -71,7 +72,7 @@ export default {
         }
       }
       catch (err) {
-        // console.error(err)
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
@@ -89,6 +90,7 @@ export default {
           return true;
         }
       } catch (err) {
+          console.error(err)
           throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
 
       }
@@ -108,6 +110,7 @@ export default {
         }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
 
       }
@@ -136,6 +139,7 @@ export default {
         }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
 
       }
@@ -158,6 +162,7 @@ export default {
         }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
 
       }
@@ -176,6 +181,7 @@ export default {
           return true;
         }
       } catch (err) {
+          console.error(err)
           throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
 
       }
@@ -195,6 +201,7 @@ export default {
         }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
 
       }
@@ -212,21 +219,18 @@ export default {
         if (response.status >= 200 && response.status < 300) {
           if (payload.lang === 1) {
             commit('setMalSub2Heading', response.data.title)
-            // console.log(getters.getmalSub2Heading)
             commit('setSub2idmal', response.data.ssUid)
-            // console.log(getters.getsub2idmal)
             return true;
           }
           else {
             commit('setEngSub2Heading', response.data.title)
-            // console.log(getters.getengSub2Heading)
             commit('setSub2ideng', response.data.ssUid)
-            // console.log(getters.getsub2ideng)
             return true;
           }
         }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
 
       }
@@ -247,6 +251,7 @@ export default {
         }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
@@ -265,6 +270,7 @@ export default {
         }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
 
       }
@@ -284,6 +290,7 @@ export default {
         }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
 
       }
@@ -311,6 +318,7 @@ export default {
         }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
 
       }
@@ -325,6 +333,7 @@ export default {
         }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
 
       }
@@ -344,6 +353,7 @@ export default {
           }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
    
       }
@@ -363,6 +373,7 @@ export default {
           }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       
       }
@@ -382,6 +393,7 @@ export default {
           }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
        
       }
@@ -400,7 +412,8 @@ export default {
           return true;
         }  
       }
-      catch(err) {
+      catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
 
       }
@@ -419,7 +432,8 @@ export default {
           return true;
         }  
       }
-      catch(err) {
+      catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
 
       }
@@ -438,7 +452,8 @@ export default {
           return true;
         }  
       }
-      catch(err) {
+      catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
 
       }
@@ -458,6 +473,7 @@ export default {
         }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
 
       }
@@ -477,7 +493,8 @@ export default {
         }
       }
       catch (err) {
-       throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+        console.error(err)
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
     //update sub2 audio/video
@@ -495,6 +512,7 @@ export default {
         }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
@@ -513,6 +531,7 @@ export default {
         }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
@@ -531,6 +550,7 @@ export default {
         }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
@@ -550,6 +570,7 @@ export default {
         }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
@@ -568,6 +589,7 @@ export default {
           }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
@@ -586,6 +608,7 @@ export default {
         }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);   
       }
     },
@@ -604,6 +627,7 @@ export default {
         }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);      
       }
     },
@@ -622,6 +646,7 @@ export default {
         }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
@@ -640,6 +665,7 @@ export default {
         }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
@@ -658,6 +684,7 @@ export default {
         }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }   
     },
@@ -676,6 +703,7 @@ export default {
         }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
@@ -694,6 +722,7 @@ export default {
         }
       }
       catch (err) {
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
@@ -712,6 +741,7 @@ export default {
         }
       }
       catch (err) { 
+        console.error(err)
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }   
   },
@@ -729,6 +759,7 @@ export default {
       }
     }
     catch (err) {
+      console.error(err)
       throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
     }
   },
@@ -746,6 +777,7 @@ export default {
       }
     }
     catch (err) {
+      console.error(err)
       throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
     }
   },

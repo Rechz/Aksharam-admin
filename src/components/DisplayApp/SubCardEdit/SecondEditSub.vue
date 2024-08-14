@@ -319,10 +319,10 @@ export default {
         async submitHeading() {
             let message;
             let language = this.languages.find(lang => lang.dtId === this.language);
-            this.subload = true;
             let uid = this.language == 1 ? this.idmal : this.ideng;
             const { valid } = await this.$refs.form.validate()
             if (valid) {
+                this.subload = true;
                 try {
                     const payload = {
                         data: {

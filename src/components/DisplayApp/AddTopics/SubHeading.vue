@@ -314,7 +314,6 @@ export default {
         this.dialogTopic = true;
       },
       async submitHeading() {
-        this.subload = true;
         let uid = this.language == 1 ? this.idmal : this.ideng;
         const language = this.language;
         const data = {
@@ -329,6 +328,7 @@ export default {
         }
         const { valid } = await this.$refs.form.validate()
         if (valid) {
+          this.subload = true;
           try {
             const response = await this.$store.dispatch('display/submitSubHead',payload);
             if (response) {
