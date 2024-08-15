@@ -30,14 +30,17 @@
                             class="reference desc" rows="2" v-model="url" variant="outlined" counter></v-textarea>
                     </div>
                     <div class="d-flex flex-column ">
-                        <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malHeading }} (Malayalam) added.</h6>
-                        <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engHeading }} (English) added.</h6>
+                        <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malHeading }} (Malayalam)
+                            added.</h6>
+                        <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engHeading }} (English)
+                            added.</h6>
                     </div>
                 </div>
                 <div class="d-flex justify-content-end">
                     <div class="d-flex gap-2">
                         <v-btn v-if="QRLoad" color="#386568" class="text-capitalize" type="submit" :disabled="subload"
-                            variant="outlined" rounded :loading="subload" prepend-icon="mdi-plus">Add {{ topic }}</v-btn>
+                            variant="outlined" rounded :loading="subload" prepend-icon="mdi-plus">Add {{ topic
+                            }}</v-btn>
                         <v-btn v-else color="#386568" class="text-capitalize" variant="elevated" rounded
                             :disabled="QRLoad" :loading="QRLoading" @click="generateQR">Submit &
                             Proceed</v-btn>
@@ -71,9 +74,7 @@
                 </div>
             </div>
             <div class="d-flex justify-content-start mt-3 ">
-                <h6 class="text-success text-end fst-italic mb-0" v-if="imageSubmit">*Image successfully
-                    uploaded.
-                </h6>
+                <h6 class="text-success text-end fst-italic mb-0" v-if="imageSubmit">*Image successfully uploaded.</h6>
             </div>
         </v-card>
         <div class="d-flex justify-content-end gap-3 my-2 w-100">
@@ -95,9 +96,7 @@
                 <template v-else>
                     <div class="mt-2">
                         <v-chip v-for="file in videoFiles" :key="file.name" closable @click:close="removeVideo(file)"
-                            class="me-2 mb-1">
-                            {{ file.name }}
-                        </v-chip>
+                            class="me-2 mb-1">{{ file.name }}</v-chip>
                     </div>
                 </template>
             </div>
@@ -145,6 +144,7 @@
             </div>
         </v-card>
     </v-card>
+    <v-divider></v-divider>
     <v-card flat class="ps-0" :disabled="!qrGenerated">
         <v-card-title class="bg-blue-grey-lighten-5 mb-3">PDF File</v-card-title>
         <v-card class="" flat :disabled="pdfLoad || pdfSubmit">
@@ -173,11 +173,30 @@
             </div>
         </v-card>
     </v-card>
-
+    <v-divider></v-divider>
+    <v-card :disabled="!qrGenerated">
+        <v-card-title class="bg-blue-grey-lighten-5 mb-3">Paragraphs</v-card-title>
+        <v-card-text>
+            <div v-if="subHeads && subHeads.length > 0">
+                <v-list lines="one">
+                    <v-list-item v-for="(topic, index) in subHeads" :key="index" :title="topic.title"></v-list-item>
+                </v-list>
+            </div>
+            <v-card-subtitle v-else class="mb-0 py-0">No paragraphs added.</v-card-subtitle>
+            <div class="d-flex justify-content-end">
+                <v-btn color="#386568" variant="outlined" rounded prepend-icon="mdi-plus" class="text-capitalize"
+                    @click="paraAdd = !paraAdd">Add Paragraph</v-btn>
+            </div>
+        </v-card-text>
+    </v-card>
+    <v-dialog v-model="paraAdd">
+        <add-paragraph :idmal="idmal" :ideng="ideng" ></add-paragraph>
+    </v-dialog>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import AddParagraph from './AddParagraph.vue';
 export default {    
     data() {
         return {
@@ -213,8 +232,10 @@ export default {
             pdfFile: [],
             pdfSubmit: false,
             pdfLoad: false,
+            paraAdd: false
         };
     },
+    components: { AddParagraph},
     computed: {
         ...mapGetters('display', ['getLanguageList', 'getFileTypes', 'getMedia']),
         ...mapGetters('guide', ['getidmal','getideng','getCommonIdMain','getmalHeading','getengHeading']),
@@ -410,19 +431,19 @@ export default {
         async submitAudio(id) {
             this.audioLoad = true;
             let message;
-            let uid = this.languageAV === 1 ? this.subidmal : this.subideng;
+            let uid = this.languageAV == 1 ? this.idmal : this.ideng;
             const formData = new FormData();
             this.audioFiles.forEach((file) => { formData.append("files", file); });
             const payload = {
-                uid: uid,
-                id: id,
+                id: uid,
+                type: id,
                 formData: formData
             }
             try {
-                const response = await this.$store.dispatch('display/submitSubMedia', payload);
+                const response = await this.$store.dispatch('guide/submitMedia', payload);
                 if (response) {
                     this.audioLoad = false;
-                    if (this.languageAV === 1) {
+                    if (this.languageAV == 1) {
                         message = 'Malayalam audio uploaded successfully';
                         this.audioMalSubmit = true;
                     }
@@ -461,12 +482,12 @@ export default {
             const formData = new FormData();
             this.videoFiles.forEach((file) => { formData.append("files", file); });
             const payload = {
-                uid: uid,
-                id: id,
+                id: uid,
+                type: id,
                 formData: formData
             }
             try {
-                const response = await this.$store.dispatch('display/submitSubMedia', payload);
+                const response = await this.$store.dispatch('guide/submitMedia', payload);
                 if (response) {
                     this.videoLoad = false;
                     message = 'Video uploaded successfully';

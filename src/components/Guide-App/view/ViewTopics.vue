@@ -160,12 +160,12 @@
     computed: {
       ...mapGetters('display', ['getLanguage','getData']),
       ...mapGetters('guide', ['getMainTopics']),
-      // mainheadings() {
-      //   return this.getMainTopics;
-      // },
       mainheadings() {
-        return this.getData;
+        return this.getMainTopics;
       },
+      // mainheadings() {
+      //   return this.getData;
+      // },
       language() {
         return this.getLanguage;
       },
@@ -275,13 +275,15 @@
       },
       async getTopics() {
         console.log('hello')
+        this.skeleton = true;
         try {
-          const res = await this.$store.dispatch('display/getTopics',{lang:this.language});
+          const res = await this.$store.dispatch('guide/getGuideData',{lang:this.language});
           if (res) {
             this.skeleton = false;
           }
         }
         catch (error) {
+          this.skeleton = false;
           console.error(error);
         }
       },
