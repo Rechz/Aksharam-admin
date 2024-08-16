@@ -39,8 +39,12 @@ export default {
     state.commonIdPara = payload;
     sessionStorage.setItem('commonIdPara', payload);
   },
-  setMainTopics(state, payload) {
-    state.mainTopics = payload;
-    sessionStorage.setItem('mainTopicsGuide', payload)
+  setMainTopicsGuide(state, payload) {
+    state.mainTopicsGuide = payload;
+    // sessionStorage.setItem('mainTopicsGuide', JSON.stringify(payload))
+  },
+  setGuideTopic(state, payload) {
+    state.guideTopic = payload;
+    sessionStorage.setItem('guideTopic', JSON.stringify(payload))
   }
 }

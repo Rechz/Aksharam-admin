@@ -5,7 +5,8 @@ export default {
     namespaced: true,
     state() {
       return {
-        maintopics: JSON.parse(sessionStorage.getItem('mainTopicsGuide')) || [],
+        mainTopicsGuide: [],
+        guideTopic: JSON.parse(sessionStorage.getItem('guideTopic')) || [],
         detailTopic: JSON.parse(sessionStorage.getItem('detailTopicGuide')) || [],
         idmal: sessionStorage.getItem('idmalGuide') ||'',
         ideng: sessionStorage.getItem('idengGuide') || '',

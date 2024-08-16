@@ -17,7 +17,7 @@
                     </g>
                 </svg>Translate</v-btn>
         </div>
-        <h1 class="mx-auto text-wrap w-75 text-center mb-4 mt-5">{{ subTopic.title }}</h1>
+        <h1 class="mx-auto text-wrap w-75 text-center mb-4 mt-5">{{ subTopic.topic }}</h1>
         <div class="w-75 px-5 mx-auto">
             <div>
                 <div class="d-flex justify-content-end px-3">
@@ -86,7 +86,7 @@
                     </v-card>
                 </div>
                 <div class="paragraphs px-3 mt-4" v-for="topic in subTopic.combinedDataSubList" :key="topic.commonId">
-                    <h5 class="fw-bold my-0">{{ topic.title }}</h5>
+                    <h5 class="fw-bold my-0">{{ topic.topic }}</h5>
                     <div class="d-flex justify-content-end px-3">
                         <v-btn icon="mdi-pen" size="x-small" variant="tonal" class="me-2" elevation="10"></v-btn>
                         <v-btn icon="mdi-trash-can" size="x-small" variant="tonal" elevation="10"></v-btn>
@@ -134,17 +134,18 @@ export default {
     }
   },
   computed: {
-  ...mapGetters('display', ['getDetail', 'getLanguage']),
+      ...mapGetters('display', ['getLanguage']),
+      ...mapGetters('guide', ['getGuideTopic']),
     subTopic() {
-      return this.getDetail[0];
+        return this.getGuideTopic;
     },
     language() {
       return this.getLanguage;
     },
    
     editImages() {
-      if (this.subTopic.imgDataList && this.subTopic.imgDataList.length > 1) {
-        return this.subTopic.imgDataList;
+      if (this.subTopic.imgList && this.subTopic.imgList.length > 1) {
+        return this.subTopic.imgList;
       } else return [];
     }
   },

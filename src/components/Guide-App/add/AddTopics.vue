@@ -174,7 +174,7 @@
         </v-card>
     </v-card>
     <v-divider></v-divider>
-    <v-card :disabled="!qrGenerated">
+    <v-card :disabled="!qrGenerated" flat>
         <v-card-title class="bg-blue-grey-lighten-5 mb-3">Paragraphs</v-card-title>
         <v-card-text>
             <div v-if="subHeads && subHeads.length > 0">
@@ -433,7 +433,7 @@ export default {
             let message;
             let uid = this.languageAV == 1 ? this.idmal : this.ideng;
             const formData = new FormData();
-            this.audioFiles.forEach((file) => { formData.append("files", file); });
+            this.audioFiles.forEach((file) => { formData.append("file", file); });
             const payload = {
                 id: uid,
                 type: id,
@@ -446,10 +446,12 @@ export default {
                     if (this.languageAV == 1) {
                         message = 'Malayalam audio uploaded successfully';
                         this.audioMalSubmit = true;
+                        this.languageAV == 2;
                     }
                     else {
                         message = 'English audio uploaded successfully';
                         this.audioEngSubmit = true;
+                        this.languageAV == 1
                     }
                     this.success(message);
                     this.audioFiles = [];
@@ -480,7 +482,7 @@ export default {
             this.videoLoad = true;
             let uid = this.commonId;
             const formData = new FormData();
-            this.videoFiles.forEach((file) => { formData.append("files", file); });
+            this.videoFiles.forEach((file) => { formData.append("file", file); });
             const payload = {
                 id: uid,
                 type: id,

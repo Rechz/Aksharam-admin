@@ -12,7 +12,7 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <v-sheet>
+    <v-sheet ref="dialogContent">
         <v-card-title class="text-center text-white d-flex justify-content-between px-4 fixed-top"
             style="background-color: #2C7721;"><v-icon size="24" color="white" @click="close">mdi-arrow-left</v-icon>
             <h5>Add Paragraphs</h5>
@@ -20,14 +20,15 @@
         </v-card-title>
         <v-card flat :disabled="!proceed && qrGenerated">
             <v-card-text class="px-5 pt-5 mt-4">
-                <p class="text-danger fst-italic mt-1">**Please submit Malayalam & English data before proceeding to upload media. Do not refresh the page to avoid data loss.</p>
+                <p class="text-danger fst-italic mt-1">**Please submit Malayalam & English data before proceeding to
+                    upload media. Do not refresh the page to avoid data loss.</p>
                 <v-form class="pt-0 " ref="form" @submit.prevent="submitHeading">
                     <div class="d-flex">
                         <v-card flat :disabled="!QRLoad">
                             <v-select class="select mb-2" label='Select Language' density="comfortable"
                                 :rules="languageRules" :items="languages" v-model="language" item-title="talk"
                                 item-value="dtId" variant="outlined"></v-select>
-                            <v-text-field v-model="title" :label="language == 1 ? 'തലക്കെട്ട്' : 'Paragraph'"
+                            <v-text-field v-model="title" :label="language == 1 ? 'തലക്കെട്ട്' : 'Paragraph title'"
                                 density="comfortable" class="select mb-2" variant="outlined"></v-text-field>
                             <v-textarea :label="language == 1 ? 'വിവരണം' : 'Paragraph Description'" class="desc mb-2"
                                 rows="6" v-model="description" variant="outlined" counter></v-textarea>
@@ -42,7 +43,8 @@
                     <div class="d-flex justify-content-end">
                         <div class="d-flex gap-2">
                             <v-btn v-if="QRLoad" color="#386568" class="text-capitalize" type="submit"
-                                :disabled="subload" variant="outlined" rounded :loading="subload" prepend-icon="mdi-plus">Add {{ topic }}</v-btn>
+                                :disabled="subload" variant="outlined" rounded :loading="subload"
+                                prepend-icon="mdi-plus">Add {{ topic }}</v-btn>
                             <v-btn v-else color="#386568" class="text-capitalize" variant="elevated" rounded
                                 :disabled="QRLoad" :loading="QRLoading" @click="generateQR">Submit & Proceed</v-btn>
                         </div>
@@ -83,7 +85,8 @@
             </div>
         </v-card>
         <div class="my-5 d-flex justify-content-end align-items-center gap-2 px-5">
-            <v-btn color="#2C7721" size="large" variant="elevated" append-icon="mdi-step-forward" prepend-icon="mdi-plus" @click="finish">Add New</v-btn>
+            <v-btn color="#2C7721" size="large" variant="elevated" append-icon="mdi-step-forward"
+                prepend-icon="mdi-plus" @click="finish">Add New</v-btn>
         </div>
     </v-sheet>
 </template>
@@ -321,25 +324,18 @@ export default {
         },
         
         finish() {
-            this.$store.commit('display/setMalSubHeading', '');
-            this.$store.commit('display/setEngSubHeading', '');
-            this.$store.commit('display/setSubidmal', '');
-            this.$store.commit('display/setSubideng', '');
+            this.$store.commit('guide/setMalParaHeading', '');
+            this.$store.commit('guide/setEngParaHeading', '');
+            this.$store.commit('guide/setParaidmal', '');
+            this.$store.commit('guide/setParaideng', '');
             this.subhead = false;
             this.malSubmit = false;
             this.engSubmit = false;
-            this.audioEngSubmit = false;
-            this.audioMalSubmit = false;
-            this.videoSubmit = false;
             this.imageSubmit = false;
-            this.languageAV = null;
-            this.bgSubmit = false;
             this.qrGenerated = false;
-            this.bgFile = [];
-            this.audioFiles = [];
-            this.videoFiles = [];
             this.images = [];
             this.imgPreview = [];
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         },
     },
     watch: {

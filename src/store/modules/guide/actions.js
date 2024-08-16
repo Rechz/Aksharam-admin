@@ -3,21 +3,30 @@ export default {
   //view topic of guide data
   async getGuideData({ rootGetters, commit }, payload) {
     try {
-      const response = await axios.post(`${rootGetters.getUrl}/api/guideAppQR/getAllDetailsByDataType?dtId=${payload.lang}`,
-        {
-          headers: {
-            Authorization: `Bearer ${rootGetters.getToken}`
-          }
-        }
-      );
+      const response = await axios.get(`${rootGetters.getUrl}/api/guideAppQR/getAllDetailsByDataType?dtId=${payload.lang}`);
       if (response.status >= 200 && response.status < 300) {
         console.log(response.data)
-        commit('mainTopicsGuide', response.data)
+        commit('setMainTopicsGuide', response.data);
+        return true;
       }
     }
     catch (err) {
       console.error(err);
       throw Error(err.response ? err.response.data : err.message);
+    }
+  },
+  //view topic using common id
+  async getGuideTopic({ rootGetters, commit }, payload) { 
+    try {
+      const response = await axios.get(`${rootGetters.getUrl}/api/guideAppQR/getScanDetails?dtId=${payload.lang}&commonId=${payload.id}`);
+      if (response.status >= 200 && response.status < 300) {
+        console.log(response.data)
+        commit('setGuideTopic', response.data[0]);
+        return true;
+      }
+    }
+    catch (error) {
+      console.error(error);
     }
   },
   //submit main topic text details
@@ -116,12 +125,10 @@ export default {
       );
       if (response.status >= 200 || response.status < 300) {
         if (payload.lang == 1) {
-          // commit('setMalHeading', response.data.topic);
           commit('setParaidmal', response.data.fsUid);
           return true;
         }
         else {
-          // commit('setEngHeading', response.data.topic);
           commit('setParaideng', response.data.fsUid);
           return true;
         }
@@ -150,5 +157,62 @@ export default {
       console.error(err);
       throw Error(err.response ? err.response.data : err.message);
     }
-  }
+  },
+  //delete topics
+  async deleteGuideTopic({ rootGetters}, payload) { 
+    try {
+      const response = await axios.delete(`${rootGetters.getUrl}/api/guideApp/deleteByCommonId/${payload.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${rootGetters.getToken}`
+          }
+        }
+      );
+      if (response.status >= 200 && response.status < 300) {
+        return true;
+      }
+    }
+    catch (err) {
+      console.error(err);
+      throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+    }
+  },
+  //delete paragraphs
+  async deleteGuidePara({ rootGetters}, payload) { 
+    try {
+      const response = await axios.delete(`${rootGetters.getUrl}/api/guideApp/deleteSubByCommonId/${payload.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${rootGetters.getToken}`
+          }
+        }
+      );
+      if (response.status >= 200 && response.status < 300) {
+        return true;
+      }
+    }
+    catch (err) {
+      console.error(err);
+      throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+    }
+  },
+  //delete media
+  async deleteMedia({ rootGetters}, payload) { 
+    try {
+      const response = await axios.delete(`${rootGetters.getUrl}/api/mediaTypeData/deleteMediaPlayer/${payload.id}?mtId=${payload.type}&dType=${payload.lang}`,
+        {
+          headers: {
+            Authorization: `Bearer ${rootGetters.getToken}`
+          }
+        }
+      );
+      if (response.status >= 200 && response.status < 300) {
+        return true;
+      }
+    }
+    catch (err) {
+      console.error(err);
+      throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+    }
+  },
 }

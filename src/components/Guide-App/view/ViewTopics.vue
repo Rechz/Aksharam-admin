@@ -1,123 +1,119 @@
 
     <template>
-        <v-container class="py-2 px-0" fluid>
-            <v-dialog width="600" max-width="600" v-model="dialogTopic">
-                <v-card width="600" rounded="3">
-                    <v-card-title class="text-center text-white" :style="{ backgroundColor: color }">{{ dialogHead
-                        }}</v-card-title>
-                    <v-card-text class="px-5 text-center">
-                        <v-icon size="88" :class="icon" :color="color"></v-icon>
-                        <h6>{{ message }}</h6>
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-btn @click="dialogTopic = !dialogTopic" :color="color">Okay</v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
-            <v-dialog v-model="dialogGenerate" width="800" max-width="800">
-                <v-card rounded="3" v-if="!addTopic">
-                    <v-card-title class="text-center text-white fs-6" style="background-color: #2E7D32;">Generate
-                        QR</v-card-title>
-                    <v-card-text class="px-5 text-justify pb-0">
-                        Select topic to be linked with the selected topic '{{ selectedTopic }}'.
-                        <v-select v-model="selectedItem" :items="topics" item-text="title" item-value="id"
-                            label="Select topic" append-outer-icon="mdi-menu-down" clearable variant="outlined"
-                            density="compact" width="400" class="mt-3">
-                            <template v-slot:append-item>
-                                <v-divider class="my-0 py-0"></v-divider>
-                                <v-list-item class="py-0">
-                                    <v-btn @click="handleButtonClick" class="ps-0 text-capitalize" variant="text"
-                                        prepend-icon="mdi-plus" color="success">Add Topic</v-btn>
-                                </v-list-item>
-                            </template>
-                        </v-select>
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-btn color="#2E7D32" :disabled="!selectedItem || buttonClicked" variant="elevated"
-                            class="mb-3 me-3" @click="generateQR">Generate</v-btn>
-                    </v-card-actions>
-                </v-card>
-                <v-card v-else>
-                    <add-new :languageId="language" :id="topicId" @back="addTopic = false"
-                        @exit="addTopic = false; dialogGenerate = false" @update="getTopics"></add-new>
-                </v-card>
-            </v-dialog>
-            <div class="d-flex justify-content-end mb-4">
-                <v-btn-toggle color="green-lighten-5" v-model="lang" density="compact">
-                    <v-btn :value="'English'" @click="translate(2)" size="small">English</v-btn>
-                    <v-btn :value="'Malayalam'" @click="translate(1)" size="small">Malayalam</v-btn>
-                </v-btn-toggle>
-            </div>
-            <v-skeleton-loader v-if="skeleton" type="table"></v-skeleton-loader>
-            <v-data-table :headers="headers" :items="mainheadings" class="mt-3"
-                :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }" v-else>
-                <template v-slot:top>
-                    <v-dialog v-model="dialogDelete" width="500px">
-                        <v-card class="rounded-2 pb-4">
-                            <v-card-title class="mb-2 text-white ps-4 fs-4 text-center"
-                                style="background-color: #BA1A1A;">Delete
-                                Topic</v-card-title>
-                            <v-container class="px-4 d-flex flex-column align-items-center">
-                                <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
-                                <v-card-text class="mt-1 text-center fs-6">
-                                    Are you sure you want to delete this topic and all details related to this topic?
-                                </v-card-text>
-                            </v-container>
-                            <v-card-actions class="mx-4 d-flex flex-column align-items-center">
-                                <v-btn block class="rounded-0 text-white mb-3" style="background-color: #BA1A1A;"
-                                    @click="deleteItemConfirm" :loading="loading" :disabled="loading">Delete</v-btn>
-                                <v-btn block variant="text" class="rounded-0 mb-3" @click="closeDelete">Cancel</v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                    <v-dialog v-model="qrDialog" width="400px">
-                        <v-card style="width: 400px; height:auto; border-radius: 15px;">
-                            <v-card-title class="d-flex justify-content-between  align-items-center px-4"
-                                style="background-color: #216D17; color: #FFFFFF;">
-                                <h5 class="mt-2">QR Code</h5>
-                                <v-icon @click="closeQR" class="mdi mdi-window-close" size="20"></v-icon>
-                            </v-card-title>
-                            <v-card-text class="mb-0 px-3 py-0">
-                                <v-container class="py-0">
-                                    <v-img :src='editedItem.qrCodeUrl' alt="QR"
-                                        style=" height: 400px; width: 400px;"></v-img>
-                                </v-container>
-                            </v-card-text>
-                            <v-card-text class="px-3 pt-0 mb-3">
-                                <div class="d-flex justify-content-end me-3">
-                                    <v-btn class="text-capitalize fw-bolder" color="green-darken-4" width="170"
-                                        variant="outlined" rounded @click="downloadQRCodeImage(editedItem.qrCodeImage, editedItem.title)">
-                                        <v-icon class="mdi mdi-content-save-outline" color="green-darken-4"></v-icon>
-                                        download
-                                    </v-btn>
-                                </div>
-                            </v-card-text>
-                        </v-card>
-                    </v-dialog>
+      <v-container class="py-2 px-0" fluid>
+        <v-dialog width="600" max-width="600" v-model="dialogTopic">
+          <v-card width="600" rounded="3">
+            <v-card-title class="text-center text-white" :style="{ backgroundColor: color }">{{ dialogHead
+              }}</v-card-title>
+            <v-card-text class="px-5 text-center">
+              <v-icon size="88" :class="icon" :color="color"></v-icon>
+              <h6>{{ message }}</h6>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn @click="dialogTopic = !dialogTopic" :color="color">Okay</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <v-dialog v-model="dialogGenerate" width="800" max-width="800">
+          <v-card rounded="3" v-if="!addTopic">
+            <v-card-title class="text-center text-white fs-6" style="background-color: #2E7D32;">Generate
+              QR</v-card-title>
+            <v-card-text class="px-5 text-justify pb-0">
+              Select topic to be linked with the selected topic '{{ selectedTopic }}'.
+              <v-select v-model="selectedItem" :items="topics" item-text="title" item-value="id" label="Select topic"
+                append-outer-icon="mdi-menu-down" clearable variant="outlined" density="compact" width="400"
+                class="mt-3">
+                <template v-slot:append-item>
+                  <v-divider class="my-0 py-0"></v-divider>
+                  <v-list-item class="py-0">
+                    <v-btn @click="handleButtonClick" class="ps-0 text-capitalize" variant="text"
+                      prepend-icon="mdi-plus" color="success">Add Topic</v-btn>
+                  </v-list-item>
                 </template>
-                <template v-slot:item="{ item, index }">
-                    <tr style="background-color:#FCFDF6; color:black;">
-                        <td class="text-center">{{ index + 1 }}</td>
-                        <td class="text-center">{{ item.title }}</td>
-                        <td class="text-center d-flex justify-content-center align-items-center"><v-img
-                                :src="item.qrCodeUrl" alt="QR" class="qr" style="height: 50px; width: 50px;"
-                                v-if="item.commonId" @click="showQR(item)"></v-img>
-                            <v-btn variant="text" class="text-capitalize text-decoration-underline" color="#2E7D32"
-                                v-else @click="generate(item)" :loading="qrLoad" :disabled="qrLoad">Generate QR</v-btn>
-                        </td>
-                        <td class="text-center">
-                            <v-btn class="text-none" color="#48663f" min-width="100" size="small"
-                                @click="showDetails(item)" :disabled="!item.commonId">View &
-                                Edit</v-btn>
-                        </td>
-                        <td class="text-center">
-                            <v-icon size="default" color="danger" class=" mdi mdi-trash-can"
-                                @click="deleteItem(item)"></v-icon>
-                        </td>
-                    </tr>
-                </template>
-            </v-data-table>
-        </v-container>
+              </v-select>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn color="#2E7D32" :disabled="!selectedItem || buttonClicked" variant="elevated" class="mb-3 me-3"
+                @click="generateQR">Generate</v-btn>
+            </v-card-actions>
+          </v-card>
+          <v-card v-else>
+            <add-new :languageId="language" :id="topicId" @back="addTopic = false"
+              @exit="addTopic = false; dialogGenerate = false" @update="getTopics"></add-new>
+          </v-card>
+        </v-dialog>
+        <div class="d-flex justify-content-end mb-4">
+          <v-btn-toggle color="green-lighten-5" v-model="lang" density="compact">
+            <v-btn :value="'English'" @click="translate(2)" size="small">English</v-btn>
+            <v-btn :value="'Malayalam'" @click="translate(1)" size="small">Malayalam</v-btn>
+          </v-btn-toggle>
+        </div>
+        <v-skeleton-loader v-if="skeleton" type="table"></v-skeleton-loader>
+        <v-data-table :headers="headers" :items="mainheadings" class="mt-3"
+          :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }" v-else>
+          <template v-slot:top>
+            <v-dialog v-model="dialogDelete" width="500px">
+              <v-card class="rounded-2 pb-4">
+                <v-card-title class="mb-2 text-white ps-4 fs-4 text-center" style="background-color: #BA1A1A;">Delete
+                  Topic</v-card-title>
+                <v-container class="px-4 d-flex flex-column align-items-center">
+                  <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
+                  <v-card-text class="mt-1 text-center fs-6">
+                    Are you sure you want to delete this topic and all details related to this topic?
+                  </v-card-text>
+                </v-container>
+                <v-card-actions class="mx-4 d-flex flex-column align-items-center">
+                  <v-btn block class="rounded-0 text-white mb-3" style="background-color: #BA1A1A;"
+                    @click="deleteItemConfirm" :loading="loading" :disabled="loading">Delete</v-btn>
+                  <v-btn block variant="text" class="rounded-0 mb-3" @click="closeDelete">Cancel</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+            <v-dialog v-model="qrDialog" width="400px">
+              <v-card style="width: 400px; height:auto; border-radius: 15px;">
+                <v-card-title class="d-flex justify-content-between  align-items-center px-4"
+                  style="background-color: #216D17; color: #FFFFFF;">
+                  <h5 class="mt-2">QR Code</h5>
+                  <v-icon @click="closeQR" class="mdi mdi-window-close" size="20"></v-icon>
+                </v-card-title>
+                <v-card-text class="mb-0 px-3 py-0">
+                  <v-container class="py-0">
+                    <v-img :src='editedItem.qrCodeUrl' alt="QR" style=" height: 400px; width: 400px;"></v-img>
+                  </v-container>
+                </v-card-text>
+                <v-card-text class="px-3 pt-0 mb-3">
+                  <div class="d-flex justify-content-end me-3">
+                    <v-btn class="text-capitalize fw-bolder" color="green-darken-4" width="170" variant="outlined"
+                      rounded @click="downloadQRCodeImage(editedItem.qrCodeImage, editedItem.topic)">
+                      <v-icon class="mdi mdi-content-save-outline" color="green-darken-4"></v-icon>
+                      download
+                    </v-btn>
+                  </div>
+                </v-card-text>
+              </v-card>
+            </v-dialog>
+          </template>
+          <template v-slot:item="{ item, index }">
+            <tr style="background-color:#FCFDF6; color:black;">
+              <td class="text-center">{{ index + 1 }}</td>
+              <td class="text-center">{{ item.topic }}</td>
+              <td class="text-center d-flex justify-content-center align-items-center"><v-img :src="item.qrCodeUrl"
+                  alt="QR" class="qr" style="height: 50px; width: 50px;" v-if="item.mainCommonId"
+                  @click="showQR(item)"></v-img>
+                <v-btn variant="text" class="text-capitalize text-decoration-underline" color="#2E7D32" v-else
+                  @click="generate(item)" :loading="qrLoad" :disabled="qrLoad">Generate QR</v-btn>
+              </td>
+              <td class="text-center">
+                <v-btn class="text-none" color="#48663f" min-width="100" size="small" @click="showDetails(item)"
+                  :disabled="!item.mainCommonId">View & Edit</v-btn>
+              </td>
+              <td class="text-center">
+                <v-icon size="default" color="danger" class=" mdi mdi-trash-can" @click="deleteItem(item)"></v-icon>
+              </td>
+            </tr>
+          </template>
+        </v-data-table>
+      </v-container>
     </template>
 
     <script>
@@ -150,7 +146,7 @@
       image: require('@/assets/acc.jpg'),
       headers: [
         { title: 'Sl.no', align: 'center', sortable: false },
-        { title: 'Topics', align: 'center', key: 'heading', sortable: false },
+        { title: 'Topics', align: 'center', key: 'topic', sortable: false },
         { title: 'QR Code', align: 'center', key: 'QR', sortable: false },
         { title: 'Details', align: 'center' },
         { title: 'Delete', align: 'center' },
@@ -163,9 +159,6 @@
       mainheadings() {
         return this.getMainTopics;
       },
-      // mainheadings() {
-      //   return this.getData;
-      // },
       language() {
         return this.getLanguage;
       },
@@ -183,7 +176,8 @@
         val || this.closeDelete()
       },
     },
-    mounted() {
+      mounted() {
+      console.log('get',this.mainheadings)
       this.getTopics();
       this.getType();
       this.getAllLanguages();
@@ -203,7 +197,7 @@
           }
           this.qrLoad = true;
           try {
-            const response = await this.$store.dispatch('display/generateQR', { idmal: idmal, ideng: ideng });
+            const response = await this.$store.dispatch('guide/generateQR', { idmal: idmal, ideng: ideng });
             if (response) {
               this.qrLoad = false;
               let message = 'Successfully generated QR';
@@ -274,7 +268,6 @@
         this.dialogTopic = true;
       },
       async getTopics() {
-        console.log('hello')
         this.skeleton = true;
         try {
           const res = await this.$store.dispatch('guide/getGuideData',{lang:this.language});
@@ -294,9 +287,9 @@
       },
       async showDetails(item) {
         try {
-          const response = await this.$store.dispatch('display/showDetails', {
-            language: this.language,
-            commonId: item.commonId
+          const response = await this.$store.dispatch('guide/getGuideTopic', {
+            lang: this.language,
+            id: item.mainCommonId
           });
           if (response) {
             this.$router.push({name:'guide-edit'})
@@ -322,8 +315,8 @@
       async deleteItemConfirm() {
         this.loading = true;
         try {
-          const id = this.editedItem.commonId;
-          const success = await this.$store.dispatch('display/deleteMain', id)
+          const id = this.editedItem.mainCommonId;
+          const success = await this.$store.dispatch('guide/deleteGuideTopic', { id:id })
           if (success) {
             this.loading = false;
             let message = 'All details related to the topic deleted successfully !!';
