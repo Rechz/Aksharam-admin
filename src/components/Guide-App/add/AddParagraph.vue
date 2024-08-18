@@ -12,12 +12,13 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <v-sheet ref="dialogContent">
+    <v-sheet>
         <v-card-title class="text-center text-white d-flex justify-content-between px-4 fixed-top"
-            style="background-color: #2C7721;"><v-icon size="24" color="white" @click="close">mdi-arrow-left</v-icon>
+            style="background-color: #2C7721;">
             <h5>Add Paragraphs</h5>
-            <v-icon size="24" color="white" @click="exit">mdi-close</v-icon>
+            <v-icon size="24" color="white" @click="back">mdi-close</v-icon>
         </v-card-title>
+        <div ref="dialogContent"></div>
         <v-card flat :disabled="!proceed && qrGenerated">
             <v-card-text class="px-5 pt-5 mt-4">
                 <p class="text-danger fst-italic mt-1">**Please submit Malayalam & English data before proceeding to
@@ -27,7 +28,7 @@
                         <v-card flat :disabled="!QRLoad">
                             <v-select class="select mb-2" label='Select Language' density="comfortable"
                                 :rules="languageRules" :items="languages" v-model="language" item-title="talk"
-                                item-value="dtId" variant="outlined"></v-select>
+                                item-value="dtId" variant="outlined" :disabled="malSubmit || engSubmit"></v-select>
                             <v-text-field v-model="title" :label="language == 1 ? 'തലക്കെട്ട്' : 'Paragraph title'"
                                 density="comfortable" class="select mb-2" variant="outlined"></v-text-field>
                             <v-textarea :label="language == 1 ? 'വിവരണം' : 'Paragraph Description'" class="desc mb-2"
@@ -85,8 +86,8 @@
             </div>
         </v-card>
         <div class="my-5 d-flex justify-content-end align-items-center gap-2 px-5">
-            <v-btn color="#2C7721" size="large" variant="elevated" append-icon="mdi-step-forward"
-                prepend-icon="mdi-plus" @click="finish">Add New</v-btn>
+            <v-btn color="#2C7721" variant="elevated" prepend-icon="mdi-arrow-left" @click="back">Back</v-btn>
+            <v-btn color="#2C7721" variant="elevated" prepend-icon="mdi-plus" @click="finish">Add New</v-btn>
         </div>
     </v-sheet>
 </template>
@@ -94,7 +95,7 @@
 <script>
 import { mapGetters } from 'vuex';
 export default {
-    emits: ['back', 'update', 'close', 'exit'],
+    emits: ['exit'],
     props: ['idmal', 'ideng'],
     data() {
         return {
@@ -172,14 +173,12 @@ export default {
         }
     },
     methods: {
-        back() {
-            this.$emit('back');
-        },
         exit() {
             this.$emit('exit');
         },
-        close() {
-            this.$emit('close');
+        back() {
+            this.finish();
+            this.exit();
         },
         success(message) {
             this.icon = 'mdi mdi-check-circle-outline'
@@ -299,12 +298,11 @@ export default {
                 formData.append("files", image);
             });
             const payload = {
-                subideng: this.subideng,
-                subidmal: this.subidmal,
+                commonId: this.commonId,
                 formData: formData
             }
             try {
-                const response = await this.$store.dispatch('display/uploadSubImages', payload);
+                const response = await this.$store.dispatch('guide/submitImage', payload);
                 if (response) {
                     this.imageLoad = false;
                     this.imageSubmit = true;
@@ -329,13 +327,15 @@ export default {
             this.$store.commit('guide/setParaidmal', '');
             this.$store.commit('guide/setParaideng', '');
             this.subhead = false;
+            this.language = null;
             this.malSubmit = false;
             this.engSubmit = false;
             this.imageSubmit = false;
             this.qrGenerated = false;
             this.images = [];
             this.imgPreview = [];
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // this.$emit('add')
+            this.$refs.dialogContent.scrollIntoView({ behavior: 'smooth' });
         },
     },
     watch: {

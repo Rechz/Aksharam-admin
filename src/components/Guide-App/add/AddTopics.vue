@@ -12,6 +12,7 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
+
     <v-card flat :disabled="!proceed && qrGenerated">
         <v-card-text class="ps-0">
             <p class="text-danger fst-italic mt-1">**Please submit Malayalam & English data before proceeding to
@@ -21,7 +22,7 @@
                     <div>
                         <v-select class="select mb-2" label='Select Language' density="comfortable" :items="languages"
                             v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"
-                            variant="outlined"></v-select>
+                            variant="outlined" :disabled="malSubmit || engSubmit"></v-select>
                         <v-text-field v-model="title" :label="language === 1 ? 'തലക്കെട്ട്' : 'Heading'"
                             density="comfortable" class="select mb-2" variant="outlined"></v-text-field>
                         <v-textarea :label="language === 1 ? 'വിവരണം' : 'Description'" class="desc mb-2" rows="6"
@@ -42,13 +43,14 @@
                             variant="outlined" rounded :loading="subload" prepend-icon="mdi-plus">Add {{ topic
                             }}</v-btn>
                         <v-btn v-else color="#386568" class="text-capitalize" variant="elevated" rounded
-                            :disabled="QRLoad" :loading="QRLoading" @click="generateQR">Submit &
-                            Proceed</v-btn>
+                            :disabled="QRLoad" :loading="QRLoading" @click="generateQR">Submit & Proceed</v-btn>
                     </div>
+                    <div ref="proceed"></div>
                 </div>
             </v-form>
         </v-card-text>
     </v-card>
+
     <v-divider class=""></v-divider>
     <v-card flat class="ps-0" :disabled="!qrGenerated">
         <v-card-title class="bg-blue-grey-lighten-5 mb-3">Images</v-card-title>
@@ -114,8 +116,8 @@
         <v-card-title class="bg-blue-grey-lighten-5 mb-3">Audio</v-card-title>
         <v-card class="" flat :disabled="audioLoad || (audioEngSubmit && audioMalSubmit)">
             <v-select class="select mb-2" label="Select Language" density="comfortable" :items="languages"
-                v-model="languageAV" :rules="languageRules" item-title="talk" item-value="dtId"
-                variant="outlined"></v-select>
+                v-model="languageAV" :rules="languageRules" item-title="talk" item-value="dtId" variant="outlined"
+                :disabled="audioEngSubmit || audioMalSubmit"></v-select>
             <div class="mb-3">
                 <input type="file" ref="fileAudio" @change="handleAudio" class="mb-2 d-none" accept="audio/*">
                 <v-btn @click="triggerAudioInput" color="blue-grey-darken-4" variant="outlined" size="small"
@@ -175,22 +177,24 @@
     </v-card>
     <v-divider></v-divider>
     <v-card :disabled="!qrGenerated" flat>
-        <v-card-title class="bg-blue-grey-lighten-5 mb-3">Paragraphs</v-card-title>
+        <!-- <v-card-title class="bg-blue-grey-lighten-5 mb-3">Paragraphs</v-card-title> -->
         <v-card-text>
-            <div v-if="subHeads && subHeads.length > 0">
+            <!-- <div v-if="subHeads && subHeads.length > 0">
                 <v-list lines="one">
                     <v-list-item v-for="(topic, index) in subHeads" :key="index" :title="topic.title"></v-list-item>
                 </v-list>
-            </div>
-            <v-card-subtitle v-else class="mb-0 py-0">No paragraphs added.</v-card-subtitle>
-            <div class="d-flex justify-content-end">
-                <v-btn color="#386568" variant="outlined" rounded prepend-icon="mdi-plus" class="text-capitalize"
+            </div> -->
+            <!-- <v-card-subtitle v-else class="mb-0 py-0">No paragraphs added.</v-card-subtitle> -->
+            <div class="d-flex justify-content-end gap-3">
+                <v-btn color="#2C7721" variant="outlined" prepend-icon="mdi-plus" class="text-capitalize"
                     @click="paraAdd = !paraAdd">Add Paragraph</v-btn>
+                <v-btn color="#2C7721" variant="elevated" prepend-icon="mdi-check" class="text-capitalize"
+                    @click="finish">Finish</v-btn>
             </div>
         </v-card-text>
     </v-card>
-    <v-dialog v-model="paraAdd">
-        <add-paragraph :idmal="idmal" :ideng="ideng" ></add-paragraph>
+    <v-dialog v-model="paraAdd" scrollable ref="dialogContent" transition="dialog-bottom-transition" fullscreen>
+        <add-paragraph :idmal="idmal" :ideng="ideng" @exit="paraAdd=false"></add-paragraph>
     </v-dialog>
 </template>
 
@@ -275,8 +279,26 @@ export default {
         }
     },
     methods: {
-        back() {
-            this.$emit('back');
+        addNew() {
+            this.$nextTick(() => {
+                const dialogContent = this.$refs.dialogContent;
+                console.log('Dialog Content Ref:', dialogContent);
+                if (dialogContent) {
+                    const contentHeight = dialogContent.scrollHeight;
+                    const visibleHeight = dialogContent.clientHeight;
+
+                    console.log('Content Height:', contentHeight);
+                    console.log('Visible Height:', visibleHeight);
+
+                    if (contentHeight > visibleHeight) {
+                        console.log('Content is scrollable');
+                    } else {
+                        console.log('Content is not scrollable');
+                    }
+                } else {
+                    console.log('dialogContent ref is not defined');
+                }
+            });   
         },
         success(message) {
             this.icon = 'mdi mdi-check-circle-outline'
@@ -292,6 +314,7 @@ export default {
             this.message = message;
             this.dialogTopic = true;
         },
+        
         async submitHeading() {
             this.subload = true;
             let uid = this.language == 1 ? this.idmal : this.ideng;
@@ -353,7 +376,6 @@ export default {
                     this.qrGenerated = true;
                     this.QRLoad = true;
                     this.success(message);
-                    this.$emit('update');
                 }
             }
             catch (error) {
@@ -393,12 +415,11 @@ export default {
                 formData.append("files", image);
             });
             const payload = {
-                subideng: this.subideng,
-                subidmal: this.subidmal,
+                commonId: this.commonId,
                 formData: formData
             }
             try {
-                const response = await this.$store.dispatch('display/uploadSubImages', payload);
+                const response = await this.$store.dispatch('guide/submitImage', payload);
                 if (response) {
                     this.imageLoad = false;
                     this.imageSubmit = true;
@@ -407,7 +428,6 @@ export default {
                     this.images = [];
                     this.imgPreview = [];
                     this.$refs.imageFile.value = '';
-                    this.$emit('update');
                 }
             } catch (error) {
                 this.imageLoad = false;
@@ -446,17 +466,19 @@ export default {
                     if (this.languageAV == 1) {
                         message = 'Malayalam audio uploaded successfully';
                         this.audioMalSubmit = true;
-                        this.languageAV == 2;
+                        this.languageAV = 2;
                     }
                     else {
                         message = 'English audio uploaded successfully';
                         this.audioEngSubmit = true;
-                        this.languageAV == 1
+                        this.languageAV = 1
+                    }
+                    if (this.audioEngSubmit && this.audioMalSubmit) {
+                        this.languageAV = null;
                     }
                     this.success(message);
                     this.audioFiles = [];
                     this.$refs.fileAudio.value = '';
-                    this.$emit('update');
                 }
             }
             catch (err) {
@@ -497,7 +519,6 @@ export default {
                     this.success(message);
                     this.videoFiles = [];
                     this.$refs.fileVideo.value = '';
-                    this.$emit('update');
                 }
             }
             catch (err) {
@@ -547,20 +568,25 @@ export default {
             }
         },
         finish() {
-            this.$store.commit('display/setMalSubHeading', '');
-            this.$store.commit('display/setEngSubHeading', '');
-            this.$store.commit('display/setSubidmal', '');
-            this.$store.commit('display/setSubideng', '');
-            this.subhead = false;
+            this.$store.commit('guide/setMalHeading', '');
+            this.$store.commit('guide/setEngHeading', '');
+            this.$store.commit('guide/setIdmal', '');
+            this.$store.commit('guide/setIdeng', '');
+            // this.subhead = false;
             this.malSubmit = false;
             this.engSubmit = false;
             this.audioEngSubmit = false;
             this.audioMalSubmit = false;
-            this.videoEngSubmit = false;
-            this.videoMalSubmit = false;
+            this.videoSubmit = false;
             this.imageSubmit = false;
             this.languageAV = null;
+            this.images = [];
+            this.imgPreview = [];
+            this.pdfFile = [];
+            this.audioFiles = [];
+            this.videoFiles = [];
             this.qrGenerated = false;
+            this.$router.push({ name: 'guide-add-main' })
         },
         async getType() {
             try {
@@ -588,6 +614,11 @@ export default {
             if (!newValue) {
                 this.language = null;
                 this.QRLoad = false;
+            }
+        },
+        qrGenerated(newValue) {
+            if (newValue) {
+                this.$refs.proceed.scrollIntoView({ behavior: 'smooth' });
             }
         }
     },

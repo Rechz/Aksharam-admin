@@ -74,10 +74,10 @@ export default {
     }
     catch (err) {
       console.error(err);
-      throw Error(err.response ? err.response.data : err.message);
+      throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
     }
   },
-  //submit image for main
+  //submit image for main/paragraph
   async submitImage({ rootGetters }, payload) {
     try {
       const response = await axios.post(`${rootGetters.getUrl}/api/jpgData/jpgUpload?commonId=${payload.commonId}`, payload.formData,
@@ -155,7 +155,7 @@ export default {
     }
     catch (err) {
       console.error(err);
-      throw Error(err.response ? err.response.data : err.message);
+      throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
     }
   },
   //delete topics
@@ -213,6 +213,63 @@ export default {
     catch (err) {
       console.error(err);
       throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+    }
+  },
+  //update topics
+  async updateTopic({ rootGetters }, payload) { 
+    try {
+      const response = await axios.put(`${rootGetters.getUrl}/api/guideApp/updateData/${payload.id}?dType=${payload.lang}`, payload.data,
+        {
+          headers: {
+            Authorization: `Bearer ${rootGetters.getToken}`
+          }
+        }
+      );
+      if (response.status >= 200 && response.status < 300) {
+          return true;
+        }
+    }
+    catch (err) {
+      console.error(err);
+      throw Error(err.response ? err.response.data : err.message);
+    }
+  },
+  //update image
+  async updateImage({ rootGetters }, payload) { 
+    try {
+      const response = await axios.put(`${rootGetters.getUrl}/api/jpgData/updateJPG/${payload.commonId}?imgIds=${payload.id}`, payload.data,
+        {
+          headers: {
+            Authorization: `Bearer ${rootGetters.getToken}`
+          }
+        }
+      );
+      if (response.status >= 200 && response.status < 300) {
+          return true;
+        }
+    }
+    catch (err) {
+      console.error(err);
+      throw Error(err.response ? err.response.data : err.message);
+    }
+  },
+  //update audio/video/pdf
+  async updateMedia({ rootGetters }, payload) { 
+    try {
+      const response = await axios.put(`${rootGetters.getUrl}/api/mediaTypeData/updateMediaPlayer/${payload.id}?mtId=${payload.type}&dType=${payload.lang}`, payload.data,
+        {
+          headers: {
+            Authorization: `Bearer ${rootGetters.getToken}`
+          }
+        }
+      );
+      if (response.status >= 200 && response.status < 300) {
+          return true;
+        }
+    }
+    catch (err) {
+      console.error(err);
+      throw Error(err.response ? err.response.data : err.message);
     }
   },
 }

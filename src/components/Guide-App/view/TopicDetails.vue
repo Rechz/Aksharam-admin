@@ -24,15 +24,33 @@
                     <v-btn icon="mdi-pen" size="x-small" variant="outlined" class="me-2" elevation="10"></v-btn>
                     <v-btn icon="mdi-trash-can" size="x-small" variant="outlined" elevation="10"></v-btn>
                 </div>
+                <div class="my-3 d-flex justify-content-center" v-if="audios && audios.length > 0">
+                    <audio controls :src="audios[0].furl" type="audio/*"
+                        class="w-75 bg-brown-darken-2 p-1 rounded-2">Your browser does not support the audio element.
+                    </audio>
+                </div>
                 <p class="text-wrap text-start ps-3 pre-text" v-html="formattedDescription(subTopic.description)"></p>
+                <div v-if="videos && videos.length > 0">
+                    <div v-for="video in videos" :key="video.furl">
+                        <video controls width="100%" :src="video.furl" type="video/*">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
                 <div class="images">
                     <v-card class="bg-transparent" flat>
                         <v-card-text>
-                            <div class="d-flex gap-3 flex-wrap" v-if="editImages.length > 0">
-                                <div v-for="(image, index) in editImages" :key="image.imgID">
-                                    <v-card class="bg-transparent">
-                                        <v-img :src="image.furl" height="150" width="200" cover class="mx-auto"></v-img>
-                                        <v-card-actions class="py-0 d-flex justify-content-end">
+                            <div class="d-flex gap-3 flex-wrap justify-content-center" v-if="images.length > 0">
+                                <div v-for="(image) in images" :key="image.imgID">
+                                    <v-card class="bg-transparent p-3">
+                                        <v-img :src="image.furl" height="250" width="300" cover
+                                            class="mx-auto mb-1"></v-img>
+                                        <p class="text-center mb-0">This is the image description</p>
+                                        <p class="text-center fst-italic text-caption">Reference: this is the reference
+                                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Provident natus
+                                            sit impedit fuga pariatur illo dolorum repellendus debitis labore, culpa
+                                            reiciendis ipsam illum</p>
+                                        <!-- <v-card-actions class="py-0 d-flex justify-content-end">
                                             <v-btn icon="mdi-pencil" size="x-small" variant="tonal" elevation="10"
                                                 @click="edit(image.imgID, index)" v-if="!image.isEdit"
                                                 color="green-darken-4"></v-btn>
@@ -41,9 +59,9 @@
                                             <v-btn icon="mdi-delete" size="x-small" variant="tonal" elevation="10"
                                                 color="error"
                                                 @click="imageId = image.imgID; deleteDialogImage = true"></v-btn>
-                                        </v-card-actions>
+                                        </v-card-actions> -->
                                     </v-card>
-                                    <v-dialog v-model="deleteDialogImage" width="400px">
+                                    <!-- <v-dialog v-model="deleteDialogImage" width="400px">
                                         <v-card class="rounded-4 pb-4">
                                             <v-card-title class="mb-2 text-white ps-4 fs-4"
                                                 style="background-color: #BA1A1A;">Delete
@@ -62,9 +80,9 @@
                                                     @click="deleteDialogImage = false">Cancel</v-btn>
                                             </v-card-actions>
                                         </v-card>
-                                    </v-dialog>
+                                    </v-dialog> -->
                                 </div>
-                                <div>
+                                <!-- <div>
                                     <input type="file" ref="addImage" @change="addImage" class="d-none" accept="image/*"
                                         multiple>
                                     <v-btn variant="tonal" elevation="10" size="70" class="text-capitalize ms-3 mt-5"
@@ -73,15 +91,15 @@
                                     </v-btn>
                                 </div>
                                 <input type="file" ref="selectImage" @change="handleImage" class="d-none"
-                                    accept="image/*">
+                                    accept="image/*">-->
                             </div>
-                            <div class="d-flex justify-content-end" v-else>
+                            <!-- <div class="d-flex justify-content-end" v-else>
                                 <input type="file" ref="addImage" @change="addImage" class="d-none" accept="image/*"
                                     multiple>
                                 <v-btn class="mb-0 py-0" variant="outlined" size="small" elevation="5" @click="add"
                                     :disabled="imageLoad" :loading="imageLoad">+Upload
                                     Image</v-btn>
-                            </div>
+                            </div> -->
                         </v-card-text>
                     </v-card>
                 </div>
@@ -119,10 +137,10 @@ export default {
     },
     async updateDetails() {
     try {
-    await this.$store.dispatch('display/showDetails', {
-    language: this.language,
-    commonId: this.subTopic.commonId
-    });
+        await this.$store.dispatch('guide/getGuideTopic', {
+          lang: this.language,
+          id: this.subTopic.commonId
+        });
     }
     catch (error) {
     console.error(error);
@@ -142,12 +160,26 @@ export default {
     language() {
       return this.getLanguage;
     },
-   
-    editImages() {
+    images() {
       if (this.subTopic.imgList && this.subTopic.imgList.length > 1) {
         return this.subTopic.imgList;
       } else return [];
-    }
+      },
+    audios() {
+      if (this.subTopic.audioList && this.subTopic.audioList.length >= 1) {
+        return this.subTopic.audioList;
+      } else return [];
+      },
+      videos() {
+          if (this.subTopic.videoList && this.subTopic.videoList.length >= 1) {
+              return this.subTopic.videoList;
+          } else return [];
+      },
+      paragraphs() {
+          if (this.subTopic.combinedDataSubList && this.subTopic.combinedDataSubList.length > 0) {
+              return this.subTopic.combinedDataSubList;
+          } else return [];
+      }
   },
   mounted() {
     this.getType();
