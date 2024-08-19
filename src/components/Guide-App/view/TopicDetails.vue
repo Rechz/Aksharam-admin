@@ -20,8 +20,9 @@
         <h1 class="mx-auto text-wrap w-75 text-center mb-4 mt-5">{{ subTopic.topic }}</h1>
         <div class="w-75 px-5 mx-auto">
             <div>
-                <div class="d-flex justify-content-end px-3">
-                    <v-btn icon="mdi-pen" size="x-small" variant="outlined" class="me-2" elevation="10"></v-btn>
+                <div class="d-flex justify-content-end px-3 mb-3">
+                    <v-btn icon="mdi-pen" size="x-small" variant="outlined" class="me-2" elevation="10"
+                        @click="editTopic"></v-btn>
                     <v-btn icon="mdi-trash-can" size="x-small" variant="outlined" elevation="10"></v-btn>
                 </div>
                 <div class="my-3 d-flex justify-content-center" v-if="audios && audios.length > 0">
@@ -41,7 +42,7 @@
                     <v-card class="bg-transparent" flat>
                         <v-card-text>
                             <div class="d-flex gap-3 flex-wrap justify-content-center" v-if="images.length > 0">
-                                <div v-for="(image) in images" :key="image.imgID">
+                                <div v-for="(image) in images" :key="image.id">
                                     <v-card class="bg-transparent p-3">
                                         <v-img :src="image.furl" height="250" width="300" cover
                                             class="mx-auto mb-1"></v-img>
@@ -105,27 +106,69 @@
                 </div>
                 <div class="paragraphs px-3 mt-4" v-for="topic in subTopic.combinedDataSubList" :key="topic.commonId">
                     <h5 class="fw-bold my-0">{{ topic.topic }}</h5>
-                    <div class="d-flex justify-content-end px-3">
-                        <v-btn icon="mdi-pen" size="x-small" variant="tonal" class="me-2" elevation="10"></v-btn>
-                        <v-btn icon="mdi-trash-can" size="x-small" variant="tonal" elevation="10"></v-btn>
+                    <div class="d-flex justify-content-end px-3 mb-3">
+                        <v-btn icon="mdi-pen" size="x-small" variant="outlined" class="me-2" elevation="10"></v-btn>
+                        <v-btn icon="mdi-trash-can" size="x-small" variant="outlined" elevation="10"></v-btn>
                     </div>
                     <p class="text-wrap text-start pre-text" v-html="formattedDescription(topic.description)"></p>
+                    <div class="images">
+                        <v-card class="bg-transparent" flat>
+                            <v-card-text>
+                                <div class="d-flex gap-3 flex-wrap justify-content-center"
+                                    v-if="topic.imgList.length > 0">
+                                    <div v-for="(image) in topic.imgList" :key="image.id">
+                                        <v-card class="bg-transparent p-3">
+                                            <v-img :src="image.furl" height="250" width="300" cover
+                                                class="mx-auto mb-1"></v-img>
+                                            <p class="text-center mb-0">This is the image description</p>
+                                            <p class="text-center fst-italic text-caption">Reference: this is the
+                                                reference
+                                                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Provident
+                                                natus
+                                                sit impedit fuga pariatur illo dolorum repellendus debitis labore, culpa
+                                                reiciendis ipsam illum</p>
+                                        </v-card>
+                                    </div>
+                                </div>
+                            </v-card-text>
+                        </v-card>
+                    </div>
                 </div>
             </div>
         </div>
-
+        <v-dialog v-model="dialogEdit" scrollable ref="dialogContent" transition="dialog-bottom-transition" fullscreen>
+            <edit-topics @exit="closeDialog" :title="subTopic.topic" :description="subTopic.description"
+                :reference="subTopic.referenceUrl" :commonId="subTopic.commonId" :topicImage="subTopic.imgList"
+                :topicVideo="subTopic.videoList" :topicAudio="subTopic.audioList"
+                :paragraphs="subTopic.combinedDataSubList" @update="updateDetails"></edit-topics>
+        </v-dialog>
     </v-main>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import EditTopics from '../edit/EditTopics.vue';
 export default {
+    components: { EditTopics },
+    data() {
+        return {
+            dialogEdit: false,
+            dialogDelete: false,
+            editItems: {}
+        }  
+    },
     methods: {
         formattedDescription(description) {
             if (description) {
                 return description.replace(/\n/g, '<br>');
             }
             else return '';
+        },
+        editTopic() {
+            this.dialogEdit = true;
+        },
+        closeDialog() {
+            this.dialogEdit = false;
         },
     async getType() {
     try {

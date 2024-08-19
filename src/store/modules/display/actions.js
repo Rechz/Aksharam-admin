@@ -18,9 +18,11 @@ export default {
         const response = await axios.get(`${rootGetters.getUrl}/api/fileType/getFileType`);
         if (response.status >= 200 && response.status < 300) {
           commit('setFileTypes', response.data)
+          console.log('fileType',response.data)
           const fileType = {};
           response.data.forEach(item => { fileType[item.fileType.toLowerCase()] = item.id; });
           commit('setMedia', fileType);
+          console.log('media', fileType)
         }
       }
       catch (err) {

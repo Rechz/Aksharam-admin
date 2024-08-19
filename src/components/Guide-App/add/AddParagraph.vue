@@ -263,7 +263,7 @@ export default {
                 this.QRLoad = false;
                 this.QRLoading = false;
                 this.imageSubmit = false;
-                message = 'Error uploading images:' + error.message;
+                message = 'Error:' + error.message;
                 this.error(message);
             }
         },

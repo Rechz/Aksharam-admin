@@ -256,7 +256,7 @@ export default {
   //update audio/video/pdf
   async updateMedia({ rootGetters }, payload) { 
     try {
-      const response = await axios.put(`${rootGetters.getUrl}/api/mediaTypeData/updateMediaPlayer/${payload.id}?mtId=${payload.type}&dType=${payload.lang}`, payload.data,
+      const response = await axios.put(`${rootGetters.getUrl}/api/mediaTypeData/updateMediaPlayer/${payload.id}?mtId=${payload.type}&dType=${payload.lang}&ids=${payload.index}`, payload.data,
         {
           headers: {
             Authorization: `Bearer ${rootGetters.getToken}`

@@ -149,7 +149,10 @@
     <v-divider></v-divider>
     <v-card flat class="ps-0" :disabled="!qrGenerated">
         <v-card-title class="bg-blue-grey-lighten-5 mb-3">PDF File</v-card-title>
-        <v-card class="" flat :disabled="pdfLoad || pdfSubmit">
+        <v-card class="" flat :disabled="pdfLoad || (pdfMalSubmit && pdfEngSubmit)">
+            <v-select class="select mb-2" label="Select Language" density="comfortable" :items="languages"
+                v-model="languagePdf" :rules="languageRules" item-title="talk" item-value="dtId" variant="outlined"
+                :disabled="pdfMalSubmit || pdfEngSubmit"></v-select>
             <div class="mb-3">
                 <input type="file" ref="filepdf" @change="handlePdf" class="mb-2 d-none" accept="application/pdf">
                 <v-btn @click="triggerPdfInput" color="blue-grey-darken-4" variant="outlined" size="small"
@@ -166,25 +169,22 @@
                     </div>
                 </template>
             </div>
-            <div class="d-flex justify-content-start mt-3 ">
-                <h6 class="text-success text-end fst-italic mb-0" v-if="pdfSubmit">*PDF successfully uploaded.</h6>
+            <div class="d-flex flex-column align-items-start justify-content-center mt-3 ">
+                <h6 class="text-success text-end fst-italic mb-0" v-if="pdfMalSubmit">**Malayalam pdf successfully
+                    uploaded.</h6>
+                <h6 class="text-success text-end fst-italic mb-0" v-if="pdfEngSubmit">**English pdf successfully
+                    uploaded.</h6>
             </div>
             <div class="d-flex justify-content-end gap-3 my-2 w-100">
-                <v-btn @click="submitPdf" color="#386568" variant="outlined" prepend-icon="mdi-file-pdf-box"
-                    class="text-capitalize rounded-5" :disabled="pdfLoad" :loading="videoLoad">Submit PDF</v-btn>
+                <v-btn @click="submitPdf(fileType.pdf)" color="#386568" variant="outlined"
+                    prepend-icon="mdi-file-pdf-box" class="text-capitalize rounded-5" :disabled="pdfLoad"
+                    :loading="pdfLoad">Submit PDF</v-btn>
             </div>
         </v-card>
     </v-card>
     <v-divider></v-divider>
     <v-card :disabled="!qrGenerated" flat>
-        <!-- <v-card-title class="bg-blue-grey-lighten-5 mb-3">Paragraphs</v-card-title> -->
         <v-card-text>
-            <!-- <div v-if="subHeads && subHeads.length > 0">
-                <v-list lines="one">
-                    <v-list-item v-for="(topic, index) in subHeads" :key="index" :title="topic.title"></v-list-item>
-                </v-list>
-            </div> -->
-            <!-- <v-card-subtitle v-else class="mb-0 py-0">No paragraphs added.</v-card-subtitle> -->
             <div class="d-flex justify-content-end gap-3">
                 <v-btn color="#2C7721" variant="outlined" prepend-icon="mdi-plus" class="text-capitalize"
                     @click="paraAdd = !paraAdd">Add Paragraph</v-btn>
@@ -213,6 +213,8 @@ export default {
             videoSubmit: false,
             audioEngSubmit: false,
             audioMalSubmit: false,
+            pdfMalSubmit: false,
+            pdfEngSubmit:false,
             subload: false,
             imageLoad: false,
             videoLoad: false,
@@ -233,6 +235,7 @@ export default {
             icon: '',
             dialogTopic: false,
             dialogHead: '',
+            languagePdf: null,                         
             pdfFile: [],
             pdfSubmit: false,
             pdfLoad: false,
@@ -542,29 +545,43 @@ export default {
                 this.pdfFile.splice(index, 1); 
             }
         },
-        async submitPdf() {
-            if (this.pdfFile.length === 0) return;
+        async submitPdf(id) {
             this.pdfLoad = true;
+            let message;
+            let uid = this.languagePdf == 1 ? this.idmal : this.ideng;
             const formData = new FormData();
-            this.pdfFile.forEach((file) => {
-                formData.append('file', file);
-            });
-
+            this.pdfFile.forEach((file) => { formData.append("file", file); });
+            const payload = {
+                id: uid,
+                type: id,
+                formData: formData
+            }
             try {
-                // Make the API request to submit the PDF
-                const response = await ('/api/upload-pdf', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                });
+                const response = await this.$store.dispatch('guide/submitMedia', payload);
                 if (response) {
-                    this.pdfSubmit = true;
-                    this.pdfFile = []; 
                     this.pdfLoad = false;
+                    if (this.languagePdf == 1) {
+                        message = 'Malayalam pdf uploaded successfully';
+                        this.pdfMalSubmit = true;
+                        this.languagePdf = 2;
+                    }
+                    else {
+                        message = 'English pdf uploaded successfully';
+                        this.pdfEngSubmit = true;
+                        this.languagePdf = 1
+                    }
+                    if (this.pdfEngSubmit && this.pdfMalSubmit) {
+                        this.languagePdf = null;
+                    }
+                    this.success(message);
+                    this.pdfFile = [];
+                    this.$refs.filepdf.value = '';
                 }
-            } catch (error) {
-                console.error('PDF upload failed:', error);
+            }
+            catch (err) {
                 this.pdfLoad = false;
+                message = 'Error uploading pdf:' + err.message;
+                this.error(message);
             }
         },
         finish() {
