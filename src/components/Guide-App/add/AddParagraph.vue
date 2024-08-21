@@ -63,17 +63,24 @@
                 <template v-if="imgPreview.length === 0">
                     <label for="imageBg" class="ms-2">No images chosen.</label>
                 </template>
-                <template v-else>
+                <!-- <template v-else>
                     <div class="mt-2">
                         <v-chip v-for="file in images" :key="file.name" closable @click:close="removeImage(file)"
                             class="me-2 mb-1">{{ file.name }} </v-chip>
                     </div>
-                </template>
+                </template> -->
                 <div class="d-flex gap-2 flex-wrap mt-3" v-if="imgPreview.length > 0">
-                    <div v-for="image in imgPreview" :key="image.url" elevation="4" style="position: relative;">
-                        <v-img :src="image.url" alt="Uploaded Image" style="max-width: 200px;" width="200" height="100"
-                            cover></v-img>
-                    </div>
+                    <v-card v-for="image in imgPreview" :key="image.url" elevation="4" class="p-3">
+                        <v-chip closable @click:close="removeImage(image.file)" class="my-1">{{ image.file.name
+                            }}</v-chip>
+                        <v-img :src="image.url" alt="Uploaded Image" width="400" height="200" cover></v-img>
+                        <div class="mt-3">
+                            <v-text-field v-model="image.name" variant="outlined" density="compact" label="Name"
+                                hide-details></v-text-field>
+                            <v-textarea v-model="image.ref" variant="outlined" density="compact" label="Reference"
+                                class="mt-2" hide-details>{{ image.ref }}</v-textarea>
+                        </div>
+                    </v-card>
                 </div>
             </v-card-text>
             <div class="d-flex justify-content-end gap-3 my-2 w-100">
@@ -278,28 +285,35 @@ export default {
                 const reader = new FileReader();
                 reader.onload = () => {
                     this.images.push(file);
-                    this.imgPreview.push({ url: reader.result, file });
+                    this.imgPreview.push({ url: reader.result, file, name: '', ref: '' });
                 };
                 reader.readAsDataURL(file);
             }
         },
         removeImage(image) {
-            const imgIndex = this.images.findIndex(img => img === image);
+            // const imgIndex = this.images.findIndex(img => img === image);
+            // if (imgIndex !== -1) {
+            //     this.imgPreview.splice(imgIndex, 1);
+            //     this.images.splice(imgIndex, 1);
+            // }
+            const imgIndex = this.imgPreview.findIndex(img => img.file === image);
             if (imgIndex !== -1) {
                 this.imgPreview.splice(imgIndex, 1);
-                this.images.splice(imgIndex, 1);
+                // this.images.splice(imgIndex, 1);
             }
         },
         async uploadImages() {
             let message;
             this.imageLoad = true;
             const formData = new FormData();
-            this.images.forEach((image) => {
-                formData.append("files", image);
+            this.imgPreview.forEach((image) => {
+                formData.append("files", image.file);
+                formData.append("imgName", image.name);
+                formData.append("imgUrls", image.ref)
             });
             const payload = {
-                commonId: this.commonId,
-                formData: formData
+              commonId: this.commonId,
+              formData: formData
             }
             try {
                 const response = await this.$store.dispatch('guide/submitImage', payload);

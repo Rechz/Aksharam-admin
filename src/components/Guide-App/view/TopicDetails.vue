@@ -1,5 +1,18 @@
 <template>
     <v-main class="main">
+        <v-dialog width="600" max-width="600" v-model="dialogTopic">
+            <v-card width="600" rounded="3">
+                <v-card-title class="text-center text-white" :style="{ backgroundColor: color }">{{ dialogHead
+                    }}</v-card-title>
+                <v-card-text class="px-5 text-center">
+                    <v-icon size="88" :class="icon" :color="color"></v-icon>
+                    <h6>{{ message }}</h6>
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn @click="dialogTopic = !dialogTopic" :color="color">Okay</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
         <div class="d-flex justify-content-between align-items-start w-100 px-5 pt-5 pb-3 position-fixed">
             <router-link to="/admin/guide-app/view">
                 <v-btn icon="mdi-arrow-left" variant="tonal" color="#3b2404" size="small" elevation="10"
@@ -17,13 +30,30 @@
                     </g>
                 </svg>Translate</v-btn>
         </div>
+        <v-dialog v-model="deleteDialogAll" width="400px">
+            <v-card class="rounded-4 pb-4">
+                <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
+                    Topic {{ subTopic.topic }}</v-card-title>
+                <v-container class="px-4 d-flex flex-column align-items-center">
+                    <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
+                    <v-card-text class="mt-1 text-center">Are you sure you want to delete
+                        {{ subTopic.topic }}?</v-card-text>
+                </v-container>
+                <v-card-actions class="mx-4 d-flex flex-column align-items-center">
+                    <v-btn block class="text-white mb-3" style="background-color: #BA1A1A;" :disabled="topicDelete"
+                        :loading="topicDelete" @click="deleteAll(subTopic.commonId)">Delete</v-btn>
+                    <v-btn block variant="text" class="mb-3" @click="deleteDialogAll = false">Cancel</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
         <h1 class="mx-auto text-wrap w-75 text-center mb-4 mt-5">{{ subTopic.topic }}</h1>
         <div class="w-75 px-5 mx-auto">
             <div>
                 <div class="d-flex justify-content-end px-3 mb-3">
                     <v-btn icon="mdi-pen" size="x-small" variant="outlined" class="me-2" elevation="10"
                         @click="editTopic"></v-btn>
-                    <v-btn icon="mdi-trash-can" size="x-small" variant="outlined" elevation="10"></v-btn>
+                    <v-btn icon="mdi-trash-can" size="x-small" variant="outlined" elevation="10"
+                        @click="deleteDialogAll = true"></v-btn>
                 </div>
                 <div class="my-3 d-flex justify-content-center" v-if="audios && audios.length > 0">
                     <audio controls :src="audios[0].furl" type="audio/*"
@@ -44,70 +74,21 @@
                             <div class="d-flex gap-3 flex-wrap justify-content-center" v-if="images.length > 0">
                                 <div v-for="(image) in images" :key="image.id">
                                     <v-card class="bg-transparent p-3">
-                                        <v-img :src="image.furl" height="250" width="300" cover
+                                        <v-img :lazy-src="image.furl" :src="image.furl" height="250" width="300" cover
                                             class="mx-auto mb-1"></v-img>
-                                        <p class="text-center mb-0">This is the image description</p>
-                                        <p class="text-center fst-italic text-caption">Reference: this is the reference
-                                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Provident natus
-                                            sit impedit fuga pariatur illo dolorum repellendus debitis labore, culpa
-                                            reiciendis ipsam illum</p>
-                                        <!-- <v-card-actions class="py-0 d-flex justify-content-end">
-                                            <v-btn icon="mdi-pencil" size="x-small" variant="tonal" elevation="10"
-                                                @click="edit(image.imgID, index)" v-if="!image.isEdit"
-                                                color="green-darken-4"></v-btn>
-                                            <v-progress-circular :width="1" color="success" indeterminate size="x-small"
-                                                v-else></v-progress-circular>
-                                            <v-btn icon="mdi-delete" size="x-small" variant="tonal" elevation="10"
-                                                color="error"
-                                                @click="imageId = image.imgID; deleteDialogImage = true"></v-btn>
-                                        </v-card-actions> -->
+                                        <p class="text-center mb-0">{{ image.imageName ?? ''}}</p>
+                                        <p class="text-center fst-italic text-caption">{{ image.imageRefUrl??'' }}</p>
                                     </v-card>
-                                    <!-- <v-dialog v-model="deleteDialogImage" width="400px">
-                                        <v-card class="rounded-4 pb-4">
-                                            <v-card-title class="mb-2 text-white ps-4 fs-4"
-                                                style="background-color: #BA1A1A;">Delete
-                                                Image</v-card-title>
-                                            <v-container class="px-4 d-flex flex-column align-items-center">
-                                                <v-icon color="#BA1A1A" size="80"
-                                                    class="mt-2 mdi mdi-trash-can-outline"></v-icon>
-                                                <v-card-text class="mt-1 text-center">Are you sure you want to delete
-                                                    this image?</v-card-text>
-                                            </v-container>
-                                            <v-card-actions class="mx-4 d-flex flex-column align-items-center">
-                                                <v-btn block class="text-white mb-3" style="background-color: #BA1A1A;"
-                                                    :disabled="imageDelete" :loading="imageDelete"
-                                                    @click="deleteImage()">Delete</v-btn>
-                                                <v-btn block variant="text" class="mb-3"
-                                                    @click="deleteDialogImage = false">Cancel</v-btn>
-                                            </v-card-actions>
-                                        </v-card>
-                                    </v-dialog> -->
                                 </div>
-                                <!-- <div>
-                                    <input type="file" ref="addImage" @change="addImage" class="d-none" accept="image/*"
-                                        multiple>
-                                    <v-btn variant="tonal" elevation="10" size="70" class="text-capitalize ms-3 mt-5"
-                                        @click="add" :disabled="imageLoad" :loading="imageLoad">
-                                        <v-icon class="mdi mdi-plus" size="30"></v-icon>
-                                    </v-btn>
-                                </div>
-                                <input type="file" ref="selectImage" @change="handleImage" class="d-none"
-                                    accept="image/*">-->
                             </div>
-                            <!-- <div class="d-flex justify-content-end" v-else>
-                                <input type="file" ref="addImage" @change="addImage" class="d-none" accept="image/*"
-                                    multiple>
-                                <v-btn class="mb-0 py-0" variant="outlined" size="small" elevation="5" @click="add"
-                                    :disabled="imageLoad" :loading="imageLoad">+Upload
-                                    Image</v-btn>
-                            </div> -->
                         </v-card-text>
                     </v-card>
                 </div>
                 <div class="paragraphs px-3 mt-4" v-for="topic in subTopic.combinedDataSubList" :key="topic.commonId">
                     <h5 class="fw-bold my-0">{{ topic.topic }}</h5>
                     <div class="d-flex justify-content-end px-3 mb-3">
-                        <v-btn icon="mdi-pen" size="x-small" variant="outlined" class="me-2" elevation="10"></v-btn>
+                        <v-btn icon="mdi-pen" size="x-small" variant="outlined" class="me-2" elevation="10"
+                            @click="editPara(topic.fsCommonId)"></v-btn>
                         <v-btn icon="mdi-trash-can" size="x-small" variant="outlined" elevation="10"></v-btn>
                     </div>
                     <p class="text-wrap text-start pre-text" v-html="formattedDescription(topic.description)"></p>
@@ -118,15 +99,11 @@
                                     v-if="topic.imgList.length > 0">
                                     <div v-for="(image) in topic.imgList" :key="image.id">
                                         <v-card class="bg-transparent p-3">
-                                            <v-img :src="image.furl" height="250" width="300" cover
-                                                class="mx-auto mb-1"></v-img>
-                                            <p class="text-center mb-0">This is the image description</p>
-                                            <p class="text-center fst-italic text-caption">Reference: this is the
-                                                reference
-                                                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Provident
-                                                natus
-                                                sit impedit fuga pariatur illo dolorum repellendus debitis labore, culpa
-                                                reiciendis ipsam illum</p>
+                                            <v-img :lazy-src="image.furl" :src="image.furl" height="250" width="300"
+                                                cover class="mx-auto mb-1"></v-img>
+                                            <p class="text-center mb-0">{{ image.imageName ?? '' }}</p>
+                                            <p class="text-center fst-italic text-caption">{{ image.imageRefUrl ?? '' }}
+                                            </p>
                                         </v-card>
                                     </div>
                                 </div>
@@ -136,11 +113,17 @@
                 </div>
             </div>
         </div>
-        <v-dialog v-model="dialogEdit" scrollable ref="dialogContent" transition="dialog-bottom-transition" fullscreen>
+        <v-dialog v-model="dialogEdit" scrollable transition="dialog-bottom-transition" fullscreen>
             <edit-topics @exit="closeDialog" :title="subTopic.topic" :description="subTopic.description"
                 :reference="subTopic.referenceUrl" :commonId="subTopic.commonId" :topicImage="subTopic.imgList"
                 :topicVideo="subTopic.videoList" :topicAudio="subTopic.audioList"
-                :paragraphs="subTopic.combinedDataSubList" @update="updateDetails"></edit-topics>
+                :paragraphs="subTopic.combinedDataSubList" :uid="subTopic.uid" @update="updateDetails"
+                :malId="subTopic.malId" :engId="subTopic.engId"></edit-topics>
+        </v-dialog>
+        <v-dialog v-model="dialogEditPara" scrollable transition="dialog-bottom-transition" fullscreen>
+            <edit-para :title="para.topic" :description="para.description" :reference="para.referenceUrl"
+                :commonId="para.fsCommonId" :topicImage="para.imgList" @exit="dialogEditPara = false;"
+                @update="updateDetails"></edit-para>
         </v-dialog>
     </v-main>
 </template>
@@ -148,16 +131,40 @@
 <script>
 import { mapGetters } from 'vuex';
 import EditTopics from '../edit/EditTopics.vue';
+import EditPara from '../edit/EditPara.vue';
 export default {
-    components: { EditTopics },
+    components: { EditTopics, EditPara },
     data() {
         return {
             dialogEdit: false,
-            dialogDelete: false,
-            editItems: {}
+            deleteDialogAll: false,
+            editItems: {},
+            dialogEditPara: false,
+            para: null,
+            topicDelete: false,
+            message: '',
+            loading: false,
+            color: '',
+            icon: '',
+            dialogTopic: false,
+            dialogHead:''
         }  
     },
     methods: {
+        success(message) {
+            this.icon = 'mdi mdi-check-circle-outline'
+            this.message = message;
+            this.dialogHead = 'Success'
+            this.color = '#2E7D32'
+            this.dialogTopic = true;
+        },
+        error(message) {
+            this.color = '#BA1A1A';
+            this.icon = 'mdi mdi-alert-outline'
+            this.dialogHead = 'Error';
+            this.message = message;
+            this.dialogTopic = true;
+        },
         formattedDescription(description) {
             if (description) {
                 return description.replace(/\n/g, '<br>');
@@ -192,6 +199,29 @@ export default {
     translate() {
     this.language == 1? this.$store.commit('display/setLanguage', 2) : this.$store.commit('display/setLanguage', 1);
     this.updateDetails()
+        },
+    editPara(id) {
+        this.para = this.subTopic.combinedDataSubList.find(p => p.fsCommonId === id);
+        this.dialogEditPara = true;
+        },
+        async deleteAll(id) {
+            this.topicDelete = true;
+            try {
+                const res = await this.$store.dispatch('guide/deleteGuideTopic', { id: id });
+                if (res) {
+                    this.topicDelete = false;
+                    this.deleteDialogAll = false;
+                    let message = 'All details related to the topic deleted successfully !!';
+                    this.success(message);
+                    this.$router.push({ name: 'guide-view' })
+                }
+            }
+            catch (error) {
+                this.topicDelete = false;
+                let message = error.message + '!!';
+                this.error(message);
+                console.log(error)
+        }
     }
   },
   computed: {
@@ -199,7 +229,8 @@ export default {
       ...mapGetters('guide', ['getGuideTopic']),
     subTopic() {
         return this.getGuideTopic;
-    },
+      },
+  
     language() {
       return this.getLanguage;
     },
@@ -226,7 +257,12 @@ export default {
   },
   mounted() {
     this.getType();
-  },
+    },
+    watch: {
+        subTopic(newVal) {
+            this.para = newVal.combinedDataSubList.find(p => p.fsCommonId === this.para?.fsCommonId) || null;
+        }
+    }
 }
 </script>
 

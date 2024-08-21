@@ -14,10 +14,13 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-dialog v-model="dialogGenerate" width="800" max-width="800">
+        <v-dialog v-model="dialogGenerate" width="800" max-width="800" persistent>
           <v-card rounded="3" v-if="!addTopic">
-            <v-card-title class="text-center text-white fs-6" style="background-color: #2E7D32;">Generate
-              QR</v-card-title>
+            <v-card-title class="text-center text-white fs-6 d-flex justify-content-between"
+              style="background-color: #2E7D32;">
+              <h5>Generate QR</h5>
+              <v-icon class="mdi mdi-close" @click="closeGenQR"></v-icon>
+            </v-card-title>
             <v-card-text class="px-5 text-justify pb-0">
               Select topic to be linked with the selected topic '{{ selectedTopic }}'.
               <v-select v-model="selectedItem" :items="topics" item-text="title" item-value="id" label="Select topic"
@@ -98,10 +101,10 @@
               <td class="text-center">{{ index + 1 }}</td>
               <td class="text-center">{{ item.topic }}</td>
               <td class="text-center d-flex justify-content-center align-items-center"><v-img :src="item.qrCodeUrl"
-                  alt="QR" class="qr" style="height: 50px; width: 50px;" v-if="item.mainCommonId"
+                  :lazy-src="item.qrCodeUrl" alt="QR" class="qr" style="height: 50px; width: 50px;" v-if="item.mainCommonId"
                   @click="showQR(item)"></v-img>
                 <v-btn variant="text" class="text-capitalize text-decoration-underline" color="#2E7D32" v-else
-                  @click="generate(item)" :loading="qrLoad" :disabled="qrLoad">Generate QR</v-btn>
+                  @click="generate(item)" :loading="item.qrLoad" :disabled="item.qrLoad">Generate QR</v-btn>
               </td>
               <td class="text-center">
                 <v-btn class="text-none" color="#48663f" min-width="100" size="small" @click="showDetails(item)"
@@ -136,7 +139,7 @@
       icon: '',
       selectedTopic: '',
       topicId: '',
-      qrLoad: false,
+      // qrLoad: false,
       dialogGenerate: false,
       subTopic: {},
       topics: [],
@@ -177,76 +180,89 @@
       },
     },
       mounted() {
-      console.log('get',this.mainheadings)
+      // console.log('get',this.mainheadings)
       this.getTopics();
       this.getType();
       this.getAllLanguages();
     },
-    methods: {
-       async generateQR() {
+      methods: {
+        closeGenQR() {
+          this.dialogGenerate = false;
+          this.selectedTopic = '';
+          this.topicId = '';
+          this.topics = [];
+          this.buttonClicked = false;
+          this.selectedItem = null;
+      },
+      async generateQR() {
         if (this.selectedItem && !this.buttonClicked) {
-          var idmal;
-          var ideng; 
+          var idmal, ideng;
           if (this.language == 1) {
             idmal = this.topicId;
-            ideng = this.selectedItem
-          }
-          else {
+            ideng = this.selectedItem;
+          } else {
             idmal = this.selectedItem;
             ideng = this.topicId;
           }
-          this.qrLoad = true;
+
+          // Find the corresponding item
+          const item = this.mainheadings.find((topic) => topic.mainUniqueId === this.topicId);
+          if (item) {
+            // Directly set qrLoad property dynamically
+            item.qrLoad = true;
+          }
+
           try {
-            const response = await this.$store.dispatch('guide/generateQR', { idmal: idmal, ideng: ideng });
+            const response = await this.$store.dispatch('guide/generateCommonId', { idmal, ideng });
             if (response) {
-              this.qrLoad = false;
+              item.qrLoad = false;  // Set to false after generating QR
               let message = 'Successfully generated QR';
               this.dialogGenerate = false;
               this.selectedItem = null;
               this.success(message);
               this.getTopics();
             }
-          }
-          catch (error) {
+          } catch (error) {
             let message = error.message + '!!';
-            this.qrLoad = false;
+            item.qrLoad = false;  // Set to false in case of error
             this.error(message);
           }
         }
       },
+
       async generate(topic) {
-        this.selectedTopic = topic.title;
-        this.topicId = topic.uId;
-        console.log(this.language)
+        this.selectedTopic = topic.topic;
+        this.topicId = topic.mainUniqueId;
+
+        // Reset qrLoad for all topics to avoid conflicts
+        this.mainheadings.forEach((item) => {
+          item.qrLoad = false;
+        });
+
         try {
-          let language;
-          if (this.language == 1) {
-            language = 2;
-          } else { language = 1 }
-          console.log('selected ' + language )
-          const response = await axios.get(`${this.$store.getters.getUrl}/api/DataEntry1/getMainComplete?dtId=${language}`, {
+          let language = this.language == 1 ? 2 : 1;
+          // console.log('lang',language)
+          const response = await axios.get(`${this.$store.getters.getUrl}/api/guideAppQR/getAllDetailsByDataType?dtId=${language}`, {
             headers: {
               Authorization: `Bearer ${this.$store.getters.getToken}`
             }
-          }
-          );
+          });
+
           if (response.status >= 200 && response.status < 300) {
-            let filteredResponse = response.data.filter(item => !item.commonId);
+            let filteredResponse = response.data.filter(item => !item.mainCommonId);
             this.topics = filteredResponse.map((topic) => {
-              if (!topic.commonId) {
+              if (!topic.mainCommonId) {
                 return {
-                  title: topic.title,
-                  id: topic.uId
-                }
+                  title: topic.topic,
+                  id: topic.mainUniqueId,
+                };
               }
-            })
-            console.log(this.topics)
+            });
           }
-        }
-        catch (error) {  
+        } catch (error) {
           console.error(error);
         }
-        
+
         this.dialogGenerate = true;
       },
       handleButtonClick() {
@@ -282,7 +298,6 @@
       },
       translate(language) {
         this.$store.commit('display/setLanguage', language);
-        console.log('set language', this.$store.getters['display/getLanguage'])
         this.getTopics()
       },
       async showDetails(item) {
@@ -310,13 +325,22 @@
       deleteItem(item) {
         this.editedIndex = this.mainheadings.indexOf(item)
         this.editedItem = Object.assign({}, item)
+        console.log(this.editedItem)
         this.dialogDelete = true
       },
       async deleteItemConfirm() {
         this.loading = true;
+        let success;
         try {
-          const id = this.editedItem.mainCommonId;
-          const success = await this.$store.dispatch('guide/deleteGuideTopic', { id:id })
+          if (this.editedItem.mainCommonId) {
+            let id = this.editedItem.mainCommonId;
+            success = await this.$store.dispatch('guide/deleteGuideTopic', { id: id })
+          }
+          else {
+            let id = this.editedItem.mainUniqueId;
+            success = await this.$store.dispatch('guide/deleteGuideTopicUid', { lang:this.language, id: id })
+          }
+          
           if (success) {
             this.loading = false;
             let message = 'All details related to the topic deleted successfully !!';
@@ -349,7 +373,7 @@
           await this.$store.dispatch('display/getType');
         }
         catch (err) {
-          console.log(err)
+          console.error(err)
         }
       },
       async getAllLanguages() {

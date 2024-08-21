@@ -66,26 +66,17 @@ export default {
             QRLoading: false,
             malSubmit: false,
             engSubmit: false,
-            
             subload: false,
-            
-            
             title: null,
             titleRules: [v => !!v || '*Title is required'],
             description: null,
-            
-           
-        
             url: null,
-            
-           
             message: '',
             loading: false,
             color: '',
             icon: '',
             dialogTopic: false,
-            dialogHead: '',
-            
+            dialogHead: '',   
         };
     },
     computed: {
@@ -200,8 +191,7 @@ export default {
                 }
             }
         },
-        async generateQR() {
-            
+        async generateQR() {  
             this.QRLoading = true;
             try {
                 const response = await this.$store.dispatch('display/generateQR', {
@@ -235,9 +225,6 @@ export default {
             }
         }
     },
-    
-
-
 };
 </script>
 <style scoped>

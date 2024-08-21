@@ -61,19 +61,26 @@
             <template v-if="imgPreview.length === 0">
                 <label for="imageFile" class="ms-2">No images chosen.</label>
             </template>
-            <template v-else>
+            <!-- <template v-else>
                 <div class="mt-2">
                     <v-chip v-for="file in images" :key="file.name" closable @click:close="removeImage(file)"
                         class="me-2 mb-1">
                         {{ file.name }}
                     </v-chip>
                 </div>
-            </template>
-            <div class="d-flex gap-2 flex-wrap mt-3" v-if="imgPreview.length > 0">
-                <div v-for="image in imgPreview" :key="image.url" elevation="4" style="position: relative;">
-                    <v-img :src="image.url" alt="Uploaded Image" style="max-width: 200px;" width="200" height="100"
-                        cover></v-img>
-                </div>
+            </template> -->
+            <div class="d-flex gap-4 flex-wrap mt-3" v-if="imgPreview.length > 0">
+                <v-card v-for="image in imgPreview" :key="image.url" elevation="4" class="p-3">
+                    <v-chip closable @click:close="removeImage(image.file)"
+                        class="my-1">{{ image.file.name }}</v-chip>
+                    <v-img :src="image.url" alt="Uploaded Image" width="400" height="200" cover></v-img>
+                    <div class="mt-3">
+                        <v-text-field v-model="image.name" variant="outlined" density="compact" label="Name"
+                            hide-details></v-text-field>
+                        <v-textarea v-model="image.ref" variant="outlined" density="compact" label="Reference"
+                            class="mt-2" hide-details>{{image.ref}}</v-textarea>
+                    </div>
+                </v-card>
             </div>
             <div class="d-flex justify-content-start mt-3 ">
                 <h6 class="text-success text-end fst-italic mb-0" v-if="imageSubmit">*Image successfully uploaded.</h6>
@@ -282,27 +289,6 @@ export default {
         }
     },
     methods: {
-        addNew() {
-            this.$nextTick(() => {
-                const dialogContent = this.$refs.dialogContent;
-                console.log('Dialog Content Ref:', dialogContent);
-                if (dialogContent) {
-                    const contentHeight = dialogContent.scrollHeight;
-                    const visibleHeight = dialogContent.clientHeight;
-
-                    console.log('Content Height:', contentHeight);
-                    console.log('Visible Height:', visibleHeight);
-
-                    if (contentHeight > visibleHeight) {
-                        console.log('Content is scrollable');
-                    } else {
-                        console.log('Content is not scrollable');
-                    }
-                } else {
-                    console.log('dialogContent ref is not defined');
-                }
-            });   
-        },
         success(message) {
             this.icon = 'mdi mdi-check-circle-outline'
             this.message = message;
@@ -320,7 +306,7 @@ export default {
         
         async submitHeading() {
             this.subload = true;
-            let uid = this.language == 1 ? this.idmal : this.ideng;
+            // let uid = this.language == 1 ? this.idmal : this.ideng;
             const language = this.language;
             const data = {
                 "topic": this.title,
@@ -328,7 +314,7 @@ export default {
                 "refURL": this.url
             };
             const payload = {
-                uid: uid,
+                // uid: uid,
                 lang: language,
                 data: data
             }
@@ -398,24 +384,32 @@ export default {
                 const reader = new FileReader();
                 reader.onload = () => {
                     this.images.push(file);
-                    this.imgPreview.push({ url: reader.result, file });
+                    this.imgPreview.push({ url: reader.result, file, name: '',ref:'' });
                 };
                 reader.readAsDataURL(file);
+                console.log(this.imgPreview)
             }
         },
         removeImage(image) {
-            const imgIndex = this.images.findIndex(img => img === image);
+            // const imgIndex = this.images.findIndex(img => img === image);
+            // if (imgIndex !== -1) {
+            //     this.imgPreview.splice(imgIndex, 1);
+            //     this.images.splice(imgIndex, 1);
+            // }
+            const imgIndex = this.imgPreview.findIndex(img => img.file === image);
             if (imgIndex !== -1) {
                 this.imgPreview.splice(imgIndex, 1);
-                this.images.splice(imgIndex, 1);
+                // this.images.splice(imgIndex, 1);
             }
         },
         async uploadImages() {
             let message;
             this.imageLoad = true;
             const formData = new FormData();
-            this.images.forEach((image) => {
-                formData.append("files", image);
+            this.imgPreview.forEach((image) => {
+                formData.append("files", image.file);
+                formData.append("imgName", image.name);
+                formData.append("imgUrls", image.ref)
             });
             const payload = {
                 commonId: this.commonId,

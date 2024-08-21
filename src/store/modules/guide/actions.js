@@ -5,7 +5,7 @@ export default {
     try {
       const response = await axios.get(`${rootGetters.getUrl}/api/guideAppQR/getAllDetailsByDataType?dtId=${payload.lang}`);
       if (response.status >= 200 && response.status < 300) {
-        console.log(response.data)
+        // console.log(response.data)
         commit('setMainTopicsGuide', response.data);
         return true;
       }
@@ -20,7 +20,7 @@ export default {
     try {
       const response = await axios.get(`${rootGetters.getUrl}/api/guideAppQR/getScanDetails?dtId=${payload.lang}&commonId=${payload.id}`);
       if (response.status >= 200 && response.status < 300) {
-        console.log(response.data)
+        // console.log(response.data)
         commit('setGuideTopic', response.data[0]);
         return true;
       }
@@ -177,6 +177,26 @@ export default {
       throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
     }
   },
+  //delete topic by uid
+  async deleteGuideTopicUid({ rootGetters}, payload) { 
+    try {
+      const response = await axios.delete(`${rootGetters.getUrl}/api/guideApp/deleteMainTitleByUid/${payload.id}?dId=${payload.lang}`,
+        {
+          headers: {
+            Authorization: `Bearer ${rootGetters.getToken}`
+          }
+        }
+      );
+      if (response.status >= 200 && response.status < 300) {
+        return true;
+      }
+    }
+    catch (err) {
+      console.error(err);
+      throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+    }
+  },
+ 
   //delete paragraphs
   async deleteGuidePara({ rootGetters}, payload) { 
     try {
@@ -199,7 +219,26 @@ export default {
   //delete media
   async deleteMedia({ rootGetters}, payload) { 
     try {
-      const response = await axios.delete(`${rootGetters.getUrl}/api/mediaTypeData/deleteMediaPlayer/${payload.id}?mtId=${payload.type}&dType=${payload.lang}`,
+      const response = await axios.delete(`${rootGetters.getUrl}/api/mediaTypeData/deleteSingleItem/${payload.id}?mtId=${payload.type}&dataType=${payload.lang}&itemId=${payload.index}`,
+        {
+          headers: {
+            Authorization: `Bearer ${rootGetters.getToken}`
+          }
+        }
+      );
+      if (response.status >= 200 && response.status < 300) {
+        return true;
+      }
+    }
+    catch (err) {
+      console.error(err);
+      throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+    }
+  },
+  //delete image
+  async deleteImage({ rootGetters}, payload) { 
+    try {
+      const response = await axios.delete(`${rootGetters.getUrl}/api/jpgData/deleteJPG/${payload.id}?imgIds=${payload.index}`,
         {
           headers: {
             Authorization: `Bearer ${rootGetters.getToken}`
@@ -238,6 +277,25 @@ export default {
   async updateImage({ rootGetters }, payload) { 
     try {
       const response = await axios.put(`${rootGetters.getUrl}/api/jpgData/updateJPG/${payload.commonId}?imgIds=${payload.id}`, payload.data,
+        {
+          headers: {
+            Authorization: `Bearer ${rootGetters.getToken}`
+          }
+        }
+      );
+      if (response.status >= 200 && response.status < 300) {
+          return true;
+        }
+    }
+    catch (err) {
+      console.error(err);
+      throw Error(err.response ? err.response.data : err.message);
+    }
+  },
+  //update image names
+  async updateImageName({ rootGetters }, payload) { 
+    try {
+      const response = await axios.put(`${rootGetters.getUrl}/api/jpgData/editNameAndUrl/${payload.commonId}/${payload.id}?imgName=${payload.name}&imgUrl=${payload.ref}`, payload.data,
         {
           headers: {
             Authorization: `Bearer ${rootGetters.getToken}`
