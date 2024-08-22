@@ -24,10 +24,10 @@
             <div class="d-flex gap-4">
               <v-card flat :disabled="!QRLoad" class="p-3 pb-0">
                 <v-select class="select mb-2" label='Select Language' density="comfortable" :items="languages"
-                  v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"
-                  variant="outlined"></v-select>
+                  v-model="language" :rules="languageRules" item-title="talk" item-value="dtId" variant="outlined"
+                  :disabled="malSubmit || engSubmit"></v-select>
                 <v-text-field v-model="title" :label="language == 1 ? 'തലക്കെട്ട്' : 'Heading'" density="comfortable"
-                  class="select mb-2" :rules="titleRules" variant="outlined"></v-text-field>
+                  class="select mb-2" variant="outlined"></v-text-field>
                 <v-textarea :label="language == 1 ? 'വിവരണം' : 'Description'" class="desc mb-2" rows="8"
                   v-model="description" variant="outlined" counter></v-textarea>
                 <v-textarea :label="language == 1 ? 'റഫറൻസ്' : 'References'" density="comfortable" class="reference "
@@ -137,8 +137,8 @@
             <v-card class="p-3 d-flex gap-2" flat :disabled="audioMalSubmit && audioEngSubmit">
               <div>
                 <v-select class="select mb-2" label="Select Language" density="comfortable" :items="languages"
-                  v-model="languageAV" :rules="languageRules" item-title="talk" item-value="dtId"
-                  variant="outlined"></v-select>
+                  v-model="languageAV" :rules="languageRules" item-title="talk" item-value="dtId" variant="outlined"
+                  :disabled="audioMalSubmit || audioEngSubmit"></v-select>
                 <div class="mb-3">
                   <input type="file" ref="fileAudio" @change="handleAudio" class="mb-2 d-none" accept="audio/*">
                   <v-btn @click="triggerAudioInput" color="blue-grey-darken-4" variant="outlined" size="small"
@@ -169,7 +169,8 @@
             <v-card class="p-3 d-flex gap-2" flat :disabled="videoSubmit">
               <div>
                 <div class="mb-3">
-                  <input type="file" ref="fileVideo" @change="handleVideo" class="mb-2 d-none" accept="video/*" multiple>
+                  <input type="file" ref="fileVideo" @change="handleVideo" class="mb-2 d-none" accept="video/*"
+                    multiple>
                   <v-btn @click="triggerVideoInput" color="blue-grey-darken-4" variant="outlined" size="small"
                     class="text-capitalize">Choose Video</v-btn>
                   <template v-if="videoFiles.length === 0">

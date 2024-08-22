@@ -29,7 +29,7 @@
                         <v-card flat :disabled="!QRLoad">
                             <v-select class="select mb-2" label='Select Language' density="comfortable"
                                 :items="languages" v-model="language" :rules="languageRules" item-title="talk"
-                                item-value="dtId" variant="outlined"></v-select>
+                                item-value="dtId" variant="outlined" :disabled="malSubmit || engSubmit"></v-select>
                             <v-text-field v-model="title" :label="language == 1 ? 'തലക്കെട്ട്' : 'Sub Heading'"
                                 density="comfortable" class="select mb-2" variant="outlined"></v-text-field>
                             <v-textarea :label="language == 1 ? 'വിവരണം' : 'Subheading Description'" class="desc mb-2"
@@ -119,7 +119,7 @@
                 <div class="d-flex flex-column gap-2">
                     <v-select class="select mb-3" label="Select Language" density="comfortable" :items="languages"
                         v-model="languageAV" :rules="languageRules" item-title="talk" item-value="dtId"
-                        variant="outlined"></v-select>
+                        variant="outlined" :disabled="audioMalSubmit || audioEngSubmit"></v-select>
                     <div>
                         <input type="file" ref="fileAudio" @change="handleAudio" class="mb-2" accept="audio/*">
                         <ul>

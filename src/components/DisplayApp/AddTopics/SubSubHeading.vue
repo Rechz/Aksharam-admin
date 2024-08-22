@@ -15,13 +15,14 @@
     <template v-if="step === 1">
       <h6 class="text-center mt-3 fw-bolder">Add Sub Heading - {{ count }} ({{ engHeading }})</h6>
       <p class="text-danger fst-italic mt-1 mb-0" style="font-size: 14px;">
-        **Please submit Malayalam & English data before proceeding to next page. Do not refresh the page to avoid data loss.</p>
+        **Please submit Malayalam & English data before proceeding to next page. Do not refresh the page to avoid data
+        loss.</p>
       <v-form class="pt-0" ref="form" @submit.prevent="submitHeading">
         <div class="d-flex">
           <v-card flat :disabled="!QRLoad" class="p-3 pb-0">
             <v-select class="select mb-2" label='Select Language' density="comfortable" :items="languages"
-              v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"
-              variant="outlined"></v-select>
+              v-model="language" :rules="languageRules" item-title="talk" item-value="dtId" variant="outlined"
+              :disabled="malSubmit || engSubmit"></v-select>
             <v-text-field v-model="title" :label="language == 1 ? 'തലക്കെട്ട്' : 'Sub Heading'" density="comfortable"
               class="select mb-2" variant="outlined"></v-text-field>
             <v-textarea :label="language == 1 ? 'വിവരണം' : 'Subheading Description'" class="desc mb-2" rows="8"
@@ -65,7 +66,8 @@
             <label for="imageBg" class="ms-2">No background image chosen.</label>
           </template>
           <template v-else>
-            <v-chip v-for="(file, index) in bgFile" :key="index" closable @click:close="removeBg(index)" class="ms-2">{{ file.name }}</v-chip>
+            <v-chip v-for="(file, index) in bgFile" :key="index" closable @click:close="removeBg(index)" class="ms-2">{{
+              file.name }}</v-chip>
           </template>
           <v-img v-if="imageBg" :src="imageBg" width="200" height="100" class="mt-3" cover
             style="background-position: center; max-width: 200px;"></v-img>
@@ -76,7 +78,8 @@
         </v-card>
         <div class="d-flex gap-3 mt-3">
           <div class="d-flex flex-column align-items-end justify-content-center ">
-            <h6 class="text-success text-end fst-italic mb-0" v-if="bgSubmit">*Background image successfully uploaded.</h6>
+            <h6 class="text-success text-end fst-italic mb-0" v-if="bgSubmit">*Background image successfully uploaded.
+            </h6>
           </div>
         </div>
       </v-card>
@@ -127,8 +130,8 @@
           <v-card class="p-3 d-flex gap-2" flat :disabled="audioMalSubmit && audioEngSubmit">
             <div>
               <v-select class="select mb-2" label="Select Language" density="comfortable" :items="languages"
-                v-model="languageAV" :rules="languageRules" item-title="talk" item-value="dtId"
-                variant="outlined"></v-select>
+                v-model="languageAV" :rules="languageRules" item-title="talk" item-value="dtId" variant="outlined"
+                :disabled="audioMalSubmit||audioEngSubmit"></v-select>
               <div class="mb-3">
                 <input type="file" ref="fileAudio" @change="handleAudio" class="mb-2 d-none" accept="audio/*">
                 <v-btn @click="triggerAudioInput" color="blue-grey-darken-4" variant="outlined" size="small"
@@ -149,8 +152,10 @@
                 class="text-capitalize" :disabled="audioLoad" :loading="audioLoad">Submit Audio</v-btn>
             </div>
             <div class="d-flex flex-column align-items-end justify-content-center ">
-              <h6 class="text-success text-end fst-italic mb-0" v-if="audioMalSubmit">**Malayalam audio successfully uploaded.</h6>
-              <h6 class="text-success text-end fst-italic mb-0" v-if="audioEngSubmit">**English audio successfully uploaded.</h6>
+              <h6 class="text-success text-end fst-italic mb-0" v-if="audioMalSubmit">**Malayalam audio successfully
+                uploaded.</h6>
+              <h6 class="text-success text-end fst-italic mb-0" v-if="audioEngSubmit">**English audio successfully
+                uploaded.</h6>
             </div>
           </v-card>
           <v-card-title class="py-1 bg-blue-grey-lighten-5">Video</v-card-title>

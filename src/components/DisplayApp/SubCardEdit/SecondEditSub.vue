@@ -19,6 +19,7 @@
             <h5>Add Sub Heading</h5>
             <v-icon size="24" color="white" @click="close">mdi-close</v-icon>
         </v-card-title>
+        <div ref="dialogContent"></div>
         <v-card flat :disabled="!proceed && qrGenerated">
             <v-card-text class="px-5 pt-5 mt-4">
                 <p class="text-danger fst-italic mt-1">
@@ -29,12 +30,11 @@
                         <v-card flat :disabled="!QRLoad">
                             <v-select class="select mb-2" label='Select Language' density="comfortable"
                                 :items="languages" v-model="language" :rules="languageRules" item-title="talk"
-                                item-value="dtId" variant="outlined"></v-select>
+                                item-value="dtId" variant="outlined" :disabled="malSubmit || engSubmit"></v-select>
                             <v-text-field v-model="title" :label="language === 1 ? 'തലക്കെട്ട്' : 'Sub Heading'"
                                 density="comfortable" class="select mb-2" variant="outlined"></v-text-field>
                             <v-textarea :label="language === 1 ? 'വിവരണം' : 'Subheading Description'" class="desc mb-2"
-                                rows="6" v-model="description" variant="outlined"
-                                counter></v-textarea>
+                                rows="6" v-model="description" variant="outlined" counter></v-textarea>
                             <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
                                 class="reference desc" rows="2" v-model="url" variant="outlined" counter></v-textarea>
                         </v-card>
@@ -133,7 +133,7 @@
                 <div class="d-flex flex-column gap-2">
                     <v-select class="select mb-3" label="Select Language" density="comfortable" :items="languages"
                         v-model="languageAV" :rules="languageRules" item-title="talk" item-value="dtId"
-                        variant="outlined"></v-select>
+                        variant="outlined" :disabled="audioMalSubmit || audioEngSubmit"></v-select>
                     <div>
                         <input type="file" ref="fileAudio" @change="handleAudio" class="mb-2 d-none" accept="audio/*">
                         <v-btn @click="triggerAudioInput" color="blue-grey-darken-4" variant="outlined" size="small"
@@ -295,6 +295,7 @@ export default {
             this.videoSubmit = false;
             this.imageSubmit = false;
             this.languageAV = null;
+            this.$refs.dialogContent.scrollIntoView({ behavior: 'smooth' });
         },
         close() {
             this.$emit('close'); 

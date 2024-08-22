@@ -1,7 +1,8 @@
 <template>
     <v-dialog width="600" max-width="600" v-model="dialogTopic">
         <v-card width="600" rounded="3">
-            <v-card-title class="text-center text-white" :style="{ backgroundColor: color }">{{dialogHead }}</v-card-title>
+            <v-card-title class="text-center text-white" :style="{ backgroundColor: color }">{{dialogHead
+                }}</v-card-title>
             <v-card-text class="px-5 text-center">
                 <v-icon size="88" :class="icon" :color="color"></v-icon>
                 <h6>{{ message }}</h6>
@@ -17,6 +18,7 @@
             <h5>Add Sub Heading</h5>
             <v-icon size="24" color="white" @click="exit">mdi-close</v-icon>
         </v-card-title>
+        <div ref="dialogContent"></div>
         <v-card flat :disabled="!proceed && qrGenerated">
             <v-card-text class="px-5 pt-5 mt-4">
                 <p class="text-danger fst-italic mt-1">**Please submit Malayalam & English data before proceeding to
@@ -25,15 +27,15 @@
                 <v-form class="pt-0 " ref="form" @submit.prevent="submitHeading">
                     <div class="d-flex">
                         <v-card flat :disabled="!QRLoad">
-                          <v-select class="select mb-2" label='Select Language' density="comfortable"
-                            :rules="languageRules" :items="languages" v-model="language" item-title="talk"
-                            item-value="dtId" variant="outlined"></v-select>
-                          <v-text-field v-model="title" :label="language == 1 ? 'തലക്കെട്ട്' : 'Sub Heading'"
-                            density="comfortable" class="select mb-2" variant="outlined"></v-text-field>
-                          <v-textarea :label="language == 1 ? 'വിവരണം' : 'Subheading Description'" class="desc mb-2"
-                            rows="6" v-model="description" variant="outlined" counter></v-textarea>
-                          <v-textarea :label="language == 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
-                            class="reference desc" rows="2" v-model="url" variant="outlined" counter></v-textarea>
+                            <v-select class="select mb-2" label='Select Language' density="comfortable"
+                                :rules="languageRules" :items="languages" v-model="language" item-title="talk"
+                                item-value="dtId" variant="outlined" :disabled="malSubmit || engSubmit"></v-select>
+                            <v-text-field v-model="title" :label="language == 1 ? 'തലക്കെട്ട്' : 'Sub Heading'"
+                                density="comfortable" class="select mb-2" variant="outlined"></v-text-field>
+                            <v-textarea :label="language == 1 ? 'വിവരണം' : 'Subheading Description'" class="desc mb-2"
+                                rows="6" v-model="description" variant="outlined" counter></v-textarea>
+                            <v-textarea :label="language == 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
+                                class="reference desc" rows="2" v-model="url" variant="outlined" counter></v-textarea>
                         </v-card>
                         <div class="d-flex flex-column ">
                             <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malSubHeading }}
@@ -81,7 +83,8 @@
             </v-card>
             <div class="d-flex gap-3 mt-3">
                 <div class="d-flex flex-column align-items-end justify-content-center ">
-                    <h6 class="text-success text-end fst-italic mb-0" v-if="bgSubmit">*Background image successfully uploaded.</h6>
+                    <h6 class="text-success text-end fst-italic mb-0" v-if="bgSubmit">*Background image successfully
+                        uploaded.</h6>
                 </div>
             </div>
         </v-card>
@@ -103,7 +106,8 @@
                 </template>
                 <div class="d-flex gap-2 flex-wrap mt-3" v-if="imgPreview.length > 0">
                     <div v-for="image in imgPreview" :key="image.url" elevation="4" style="position: relative;">
-                        <v-img :src="image.url" alt="Uploaded Image" style="max-width: 200px;" width="200" height="100" cover></v-img>
+                        <v-img :src="image.url" alt="Uploaded Image" style="max-width: 200px;" width="200" height="100"
+                            cover></v-img>
                     </div>
                 </div>
             </v-card-text>
@@ -112,7 +116,8 @@
                     :loading="imageLoad" prepend-icon="mdi-upload" class="text-capitalize">Upload Images</v-btn>
             </div>
             <div>
-                <h6 class="text-success text-start fst-italic mb-0" v-if="imageSubmit">*Image successfully uploaded.</h6>
+                <h6 class="text-success text-start fst-italic mb-0" v-if="imageSubmit">*Image successfully uploaded.
+                </h6>
             </div>
         </v-card>
         <v-divider class="mx-5"></v-divider>
@@ -122,7 +127,7 @@
                 <div class="d-flex flex-column gap-2">
                     <v-select class="select mb-3" label="Select Language" density="comfortable" :items="languages"
                         v-model="languageAV" :rules="languageRules" item-title="talk" item-value="dtId"
-                        variant="outlined"></v-select>
+                        variant="outlined" :disabled="audioMalSubmit || audioEngSubmit"></v-select>
                     <div>
                         <input type="file" ref="fileAudio" @change="handleAudio" class="mb-2 d-none" accept="audio/*">
                         <v-btn @click="triggerAudioInput" color="blue-grey-darken-4" variant="outlined" size="small"
@@ -140,11 +145,14 @@
                 </div>
                 <div class="d-flex justify-content-end">
                     <v-btn @click="submitAudio(fileType.audio)" color="#386568" variant="outlined" rounded
-                        prepend-icon="mdi-music" class="text-capitalize" :disabled="audioLoad" :loading="audioLoad">Submit Audio</v-btn>
+                        prepend-icon="mdi-music" class="text-capitalize" :disabled="audioLoad"
+                        :loading="audioLoad">Submit Audio</v-btn>
                 </div>
                 <div class="d-flex flex-column align-items-start justify-content-center ">
-                    <h6 class="text-success text-end fst-italic mb-0" v-if="audioMalSubmit">**Malayalam audio successfully uploaded.</h6>
-                    <h6 class="text-success text-end fst-italic mb-0" v-if="audioEngSubmit">**English audio successfully uploaded.</h6>
+                    <h6 class="text-success text-end fst-italic mb-0" v-if="audioMalSubmit">**Malayalam audio
+                        successfully uploaded.</h6>
+                    <h6 class="text-success text-end fst-italic mb-0" v-if="audioEngSubmit">**English audio successfully
+                        uploaded.</h6>
                 </div>
             </v-card>
             <v-card-title class="bg-blue-grey-lighten-5 mb-3">SubHeading Video</v-card-title>
@@ -171,12 +179,14 @@
                         :loading="videoLoad">Submit Video</v-btn>
                 </div>
                 <div class="d-flex flex-column align-items-start justify-content-center ">
-                    <h6 class="text-success text-end fst-italic mb-0" v-if="videoSubmit">*Video successfully uploaded.</h6>
+                    <h6 class="text-success text-end fst-italic mb-0" v-if="videoSubmit">*Video successfully uploaded.
+                    </h6>
                 </div>
             </v-card>
         </v-card>
         <div class="my-5 d-flex justify-content-end align-items-center gap-2 px-5">
-            <v-btn color="#2C7721" size="large" variant="elevated" append-icon="mdi-step-forward" @click="finish">Add New Subheading</v-btn>
+            <v-btn color="#2C7721" size="large" variant="elevated" append-icon="mdi-step-forward" @click="finish">Add
+                New Subheading</v-btn>
         </div>
     </v-sheet>
 </template>
@@ -564,6 +574,7 @@ export default {
             this.videoFiles = [];
             this.images = [];
             this.imgPreview = [];
+            this.$refs.dialogContent.scrollIntoView({ behavior: 'smooth' });
         },
     },
     watch: {
