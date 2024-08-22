@@ -12,7 +12,7 @@ export default {
     }
     catch (err) {
       console.error(err);
-      throw Error(err.response ? err.response.data : err.message);
+      throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
     }
   },
   //view topic using common id
@@ -54,7 +54,7 @@ export default {
     }
     catch (err) {
       console.error(err);
-      throw Error(err.response ? err.response.data : err.message);
+      throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
     }
   },
   //generate commonId
@@ -92,7 +92,7 @@ export default {
       }
     } catch (err) {
       console.error(err);
-      throw Error(err.response ? err.response.data : err.message);
+      throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
     }
   },
   //submit video/audio for main
@@ -110,7 +110,7 @@ export default {
       }
     } catch (err) {
       console.error(err);
-      throw Error(err.response ? err.response.data : err.message);
+      throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
     }
   },
   //submit paragraphs
@@ -135,7 +135,7 @@ export default {
       }
     } catch (err) {
       console.error(err);
-      throw Error(err.response ? err.response.data : err.message);
+      throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
     }
   },
   //generate commonId for translation
@@ -270,7 +270,7 @@ export default {
     }
     catch (err) {
       console.error(err);
-      throw Error(err.response ? err.response.data : err.message);
+      throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
     }
   },
   //update image
@@ -289,7 +289,7 @@ export default {
     }
     catch (err) {
       console.error(err);
-      throw Error(err.response ? err.response.data : err.message);
+      throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
     }
   },
   //update image names
@@ -308,7 +308,7 @@ export default {
     }
     catch (err) {
       console.error(err);
-      throw Error(err.response ? err.response.data : err.message);
+      throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
     }
   },
   //update audio/video/pdf
@@ -327,7 +327,7 @@ export default {
     }
     catch (err) {
       console.error(err);
-      throw Error(err.response ? err.response.data : err.message);
+      throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
     }
   },
 }

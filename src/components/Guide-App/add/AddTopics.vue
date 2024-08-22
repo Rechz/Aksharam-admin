@@ -200,7 +200,7 @@
             </div>
         </v-card-text>
     </v-card>
-    <v-dialog v-model="paraAdd" scrollable ref="dialogContent" transition="dialog-bottom-transition" fullscreen>
+    <v-dialog v-model="paraAdd" scrollable transition="dialog-bottom-transition" fullscreen>
         <add-paragraph :idmal="idmal" :ideng="ideng" @exit="paraAdd=false"></add-paragraph>
     </v-dialog>
 </template>
@@ -387,7 +387,7 @@ export default {
                     this.imgPreview.push({ url: reader.result, file, name: '',ref:'' });
                 };
                 reader.readAsDataURL(file);
-                console.log(this.imgPreview)
+                // console.log(this.imgPreview)
             }
         },
         removeImage(image) {

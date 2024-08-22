@@ -280,8 +280,8 @@ export default {
                 this.imageLoad = true;
                 this.imagesAdd.forEach((image) => {
                     formData.append("files", image);
-                    formData.append("imgName", '');
-                    formData.append("imgUrls", '')
+                    formData.append("imgName", ' ');
+                    formData.append("imgUrls", ' ')
                 });
                 payload = {
                     commonId: this.commonId,
@@ -308,8 +308,8 @@ export default {
             let message;
             try {
                 response = await this.$store.dispatch('guide/deleteImage', {
-                    commonId: this.commonId,
-                    id: this.imageId
+                    id: this.editImages[0].commonId,
+                    index: this.imageId
                 });
                 if ((response)) {
                     this.imageDelete = false;

@@ -102,7 +102,7 @@
 <script>
 import { mapGetters } from 'vuex';
 export default {
-    emits: ['exit'],
+    emits: ['exit','updatePara'],
     props: ['idmal', 'ideng'],
     data() {
         return {
@@ -183,8 +183,12 @@ export default {
         exit() {
             this.$emit('exit');
         },
+        update() {
+            this.$emit('updatePara');
+        },
         back() {
             this.finish();
+            this.update();
             this.exit();
         },
         success(message) {
@@ -237,7 +241,7 @@ export default {
                             this.$refs.form.reset();
                             this.language = 1;
                         }
-                        this.$emit('update');
+                        this.update();
                     }
                 }
                 catch (err) {
@@ -263,7 +267,7 @@ export default {
                     this.qrGenerated = true;
                     this.QRLoad = true;
                     this.success(message);
-                    this.$emit('update');
+                    this.update();
                 }
             }
             catch (error) {
@@ -325,7 +329,7 @@ export default {
                     this.images = [];
                     this.imgPreview = [];
                     this.$refs.imageFile.value = '';
-                    this.$emit('update');
+                    this.update();
                 }
             } catch (error) {
                 this.imageLoad = false;

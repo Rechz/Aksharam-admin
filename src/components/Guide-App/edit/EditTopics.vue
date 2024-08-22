@@ -80,7 +80,8 @@
                                 </v-card-actions>
                                 <v-card-actions class="py-0 d-flex justify-content-end" v-else>
                                     <v-btn @click="image.editClicked = false;">Cancel</v-btn>
-                                    <v-btn color="success" @click="updateImgDetails(image.id, image.imageName, image.imageRefUrl,image)">Submit</v-btn>
+                                    <v-btn color="success"
+                                        @click="updateImgDetails(image.id, image.imageName, image.imageRefUrl,image)">Submit</v-btn>
                                 </v-card-actions>
                             </v-card-text>
                             <!-- <v-card-text> -->
@@ -220,15 +221,20 @@
         </div>
         <!-- <iframe src="https://aksharammuseum.s3.ap-south-1.amazonaws.com/1724140640103_ticket.pdf"></iframe>-->
     </v-sheet>
+    <v-dialog v-model="paraAdd" scrollable ref="dialogContent" transition="dialog-bottom-transition" fullscreen>
+        <add-paragraph :idmal="malId" :ideng="engId" @exit="paraAdd = false" @updatePara="update"></add-paragraph>
+    </v-dialog>
 </template>
 
 <script>
-
+import AddParagraph from '../add/AddParagraph.vue';
 import { mapGetters } from 'vuex';
 export default {
+    components: {
+        AddParagraph
+    },
     emits: ['exit','update'],
-   
-    props: ['main','title', 'description','reference','topicImage','topicVideo','topicAudio','topicPdf','paragraphs','commonId','uid'],
+    props: ['main','title', 'description','reference','topicImage','topicVideo','topicAudio','topicPdf','paragraphs','commonId','uid','malId','engId'],
     data() {
         return {
             qrGenerated: false,
@@ -265,6 +271,7 @@ export default {
             deleteDialogAudio: false,
             videoIndex: null,
             audioIndex: null,
+            paraAdd: false
         };
     },
     computed: {
@@ -304,6 +311,9 @@ export default {
     methods: {
         exit() {
             this.$emit('exit');
+        },
+        update() {
+            this.$emit('update');
         },
         success(message) {
             this.icon = 'mdi mdi-check-circle-outline'
@@ -396,12 +406,10 @@ export default {
         },
         async addImage(event) {
             const files = event.target.files;
-            console.log('file', files)
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
                 this.imagesAdd.push(file);
             }
-            
             let formData = new FormData();
             try {
                 let response;
@@ -409,10 +417,9 @@ export default {
                 this.imageLoad = true;
                 this.imagesAdd.forEach((image) => {
                     formData.append("files", image);
-                    formData.append("imgName", '');
-                    formData.append("imgUrls", '')
+                    formData.append("imgName", ' ');
+                    formData.append("imgUrls", ' ')
                 });
-                console.log(formData)
                 payload = {
                     commonId: this.commonId,
                     formData: formData

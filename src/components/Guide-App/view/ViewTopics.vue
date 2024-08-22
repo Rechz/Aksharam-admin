@@ -325,7 +325,7 @@
       deleteItem(item) {
         this.editedIndex = this.mainheadings.indexOf(item)
         this.editedItem = Object.assign({}, item)
-        console.log(this.editedItem)
+        // console.log(this.editedItem)
         this.dialogDelete = true
       },
       async deleteItemConfirm() {

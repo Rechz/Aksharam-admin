@@ -71,7 +71,7 @@
                 <div class="images">
                     <v-card class="bg-transparent" flat>
                         <v-card-text>
-                            <div class="d-flex gap-3 flex-wrap justify-content-center" v-if="images.length > 0">
+                            <div class="d-flex gap-3 flex-wrap justify-content-center" v-if="images.length >= 0">
                                 <div v-for="(image) in images" :key="image.id">
                                     <v-card class="bg-transparent p-3">
                                         <v-img :lazy-src="image.furl" :src="image.furl" height="250" width="300" cover
@@ -235,7 +235,7 @@ export default {
       return this.getLanguage;
     },
     images() {
-      if (this.subTopic.imgList && this.subTopic.imgList.length > 1) {
+      if (this.subTopic.imgList && this.subTopic.imgList.length > 0) {
         return this.subTopic.imgList;
       } else return [];
       },
