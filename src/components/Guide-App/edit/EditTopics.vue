@@ -43,12 +43,12 @@
             </v-card-text>
         </v-card>
         <v-divider class="mx-5"></v-divider>
-        <v-card flat class="mx-5">
+        <v-card flat class="mx-5" :disabled="imageLoad || submitImage">
             <v-card-title class="bg-blue-grey-lighten-5 mb-3">Images</v-card-title>
             <v-card-text>
                 <div class="d-flex gap-3 flex-wrap" v-if="editImages.length > 0">
                     <div v-for="(image, index) in editImages" :key="image.imgID">
-                        <v-card>
+                        <v-card :disabled="image.isEdit">
                             <v-card-text>
                                 <v-img :lazy-src="image.furl" :src="image.furl" height="250" width="400" cover
                                     class="mx-auto"></v-img>
@@ -61,8 +61,8 @@
                                 </v-card-actions>
 
                                 <div class="text-center" v-if="!image.editClicked">
-                                    <p class="mb-0">{{ image.imageName??''}}</p>
-                                    <p class="mb-0">{{ image.imageRefUrl ?? '' }}</p>
+                                    <p class="mb-0">{{ image.imageName??' '}}</p>
+                                    <p class="mb-0">{{ image.imageRefUrl ??' '}}</p>
                                 </div>
                                 <div v-else>
                                     <v-text-field v-model="image.imageName" label="Image Title" density="compact"
@@ -110,12 +110,6 @@
                     <input type="file" ref="selectImage" @change="handleImage" class="d-none" accept="image/*">
                 </div>
                 <v-card-subtitle v-else class="mb-0 py-0">No images uploaded.</v-card-subtitle>
-                <!-- <div class="d-flex gap-2 flex-wrap mt-3" v-if="imgPreview.length > 0">
-                    <div v-for="image in imgPreview" :key="image.url" elevation="4" style="position: relative;">
-                        <v-img :src="image.url" alt="Uploaded Image" style="max-width: 200px;" width="200" height="100"
-                            cover></v-img>
-                    </div>
-                </div> -->
                 <div class="d-flex justify-content-end">
                     <input type="file" ref="addImage" @change="addImage" class="d-none" accept="image/*" multiple>
                     <v-btn color="#386568" variant="outlined" rounded prepend-icon="mdi-plus"
@@ -271,7 +265,8 @@ export default {
             deleteDialogAudio: false,
             videoIndex: null,
             audioIndex: null,
-            paraAdd: false
+            paraAdd: false,
+            submitImage: false
         };
     },
     computed: {
@@ -370,12 +365,15 @@ export default {
             this.$refs.selectImage.click();
         },
         async handleImage(event) {
-            const files = event.target.files[0];
-            this.newImage = files;
             const formData = new FormData();
+            const files = event.target.files;
+            this.newImage = files[0];
+            this.imgName = this.imgName.length == 0 ? ' ' : this.imgName;
+            this.imgRef = this.imgRef.length == 0 ? ' ' : this.imgRef;
             formData.append('files', this.newImage);
             formData.append('imgName', this.imgName);
             formData.append('imgUrls', this.imgRef);
+            console.log(formData)
             if (this.newImage) {
                 try {
                     this.editImages[this.imageIndex].isEdit = true;

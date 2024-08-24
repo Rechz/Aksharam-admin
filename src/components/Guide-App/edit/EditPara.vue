@@ -235,10 +235,12 @@ export default {
         async handleImage(event) {
             const files = event.target.files[0];
             this.newImage = files;
+            this.imgName = this.imgName.length == 0 ? ' ' : this.imgName;
+            this.imgRef = this.imgRef.length == 0 ? ' ' : this.imgRef;
             const formData = new FormData();
             formData.append('files', this.newImage);
-            formData.append('imgName', this.imgName);
-            formData.append('imgUrls', this.imgRef);
+            formData.append('imgName', this.imgName??' ');
+            formData.append('imgUrls', this.imgRef??' ');
             if (this.newImage) {
                 try {
                     this.editImages[this.imageIndex].isEdit = true;
