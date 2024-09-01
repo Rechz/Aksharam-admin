@@ -38,7 +38,8 @@ export default {
         { text: 'Employee', route: '/admin/employee', routeName: 'employee-add' },
         { text: 'Museum Calendar', route: '/admin/calendar', routeName: 'holiday-add' },
         { text: 'Digital Board', route: '/admin/display-app', routeName: 'display-add-main' },
-        { text: 'Guide-App', route: '/admin/guide-app', routeName: 'guide-add-main' }
+        { text: 'Guide-App', route: '/admin/guide-app', routeName: 'guide-add-main' },
+        { text: 'Tribal', route: '/admin/tribal', routeName: 'tribal-add' },
       ],
     }
   },

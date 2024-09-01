@@ -4,10 +4,12 @@ import rootActions from './actions.js';
 import rootGetters from './getters.js';
 import guideModule from './modules/guide/index.js'
 import displayModule from './modules/display/index.js';
+import tribalModule from './modules/tribal/index.js';
 const store = createStore({
   modules: {
     guide: guideModule,
-    display : displayModule
+    display : displayModule,
+    tribal: tribalModule
   },
   state() {
     return {
