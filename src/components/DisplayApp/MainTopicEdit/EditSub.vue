@@ -159,7 +159,7 @@
             <v-card class="p-3" flat :disabled="videoSubmit">
                 <div class="d-flex flex-column gap-2">
                     <div>
-                        <input type="file" ref="fileVideo" @change="handleVideo" class="mb-2 d-none" accept="video/*">
+                        <input type="file" ref="fileVideo" @change="handleVideo" class="mb-2 d-none" accept="video/*" multiple>
                         <v-btn @click="triggerVideoInput" color="blue-grey-darken-4" variant="outlined" size="small"
                             class="text-capitalize">Choose Video</v-btn>
                         <template v-if="videoFiles.length === 0">
@@ -517,8 +517,10 @@ export default {
             this.$refs.fileVideo.click();
         },
         handleVideo(event) {
-            const selectedFiles = event.target.files[0];
-            this.videoFiles.push(selectedFiles);
+            const selectedFiles = event.target.files;
+            for (let i = 0; i < selectedFiles.length; i++) {
+                this.videoFiles.push(selectedFiles[i]);
+            }
         },
         removeVideo(file) {
             const videoIndex = this.videoFiles.findIndex(vid => vid === file);

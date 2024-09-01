@@ -145,7 +145,7 @@
             <v-card class="p-3" flat :disabled="videoSubmit">
                 <div class="d-flex flex-column gap-2">
                     <div>
-                        <input type="file" ref="fileVideo" @change="handleVideo" class="mb-2" accept="video/*">
+                        <input type="file" ref="fileVideo" @change="handleVideo" class="mb-2" accept="video/*" multiple>
                         <ul>
                             <li v-for="(file, index) in videoFiles" :key="index" style="list-style: none;" class="my-1">
                                 <v-chip closable> {{ file.name }} </v-chip>
@@ -505,8 +505,10 @@ export default {
             }
         },
         handleVideo(event) {
-            const selectedFiles = event.target.files[0];
-            this.videoFiles.push(selectedFiles);
+            const selectedFiles = event.target.files;
+            for (let i = 0; i < selectedFiles.length; i++) {
+                this.videoFiles.push(selectedFiles[i]);
+            }
         },
         removeVideo(index) {
             this.videoFiles.splice(index, 1);

@@ -20,9 +20,12 @@
     <v-card-text class="px-5 pb-5 pt-4 mt-5">
       <div>
         <v-form class="pt-0" ref="form" @submit.prevent="editTopic">
-          <v-text-field v-model="editTitle" label='Heading' variant="outlined" density="comfortable" class="select"></v-text-field>
-          <v-textarea label='Description' class="desc" rows="10" v-model="editDescription" variant="outlined" counter></v-textarea>
-          <v-textarea label='References' density="comfortable" class="reference" rows="2" v-model="editUrl" variant="outlined" counter></v-textarea>
+          <v-text-field v-model="editTitle" label='Heading' variant="outlined" density="comfortable"
+            class="select"></v-text-field>
+          <v-textarea label='Description' class="desc" rows="10" v-model="editDescription" variant="outlined"
+            counter></v-textarea>
+          <v-textarea label='References' density="comfortable" class="reference" rows="2" v-model="editUrl"
+            variant="outlined" counter></v-textarea>
           <div class="d-flex justify-content-end">
             <v-btn color="#386568" class="text-capitalize" type="submit" :disabled="subload" variant="outlined" rounded
               :loading="subload">Update topic</v-btn>
@@ -126,39 +129,45 @@
         <v-card :disabled="!commonId">
           <v-card-title class="bg-blue-grey-lighten-5 mb-3">Video</v-card-title>
           <v-card-text>
-            <v-card class="py-0" v-if="editVideo.length > 0" width="200">
-              <video controls width="200" :src="editVideo[0].furl" type="video/*" cover>
-                Your browser does not support the video tag.
-              </video>
-              <v-card-actions class="py-0 d-flex justify-content-end " min-height="0">
-                <v-btn icon="mdi-pencil" size="small" color="success" @click="updateVideo"
-                  v-if="!editVideo[0].isEdit"></v-btn>
-                <v-progress-circular :width="1" color="success" indeterminate size="x-small"
-                  v-else></v-progress-circular>
-                <v-btn icon="mdi-delete" size="small" color="error" @click="deleteDialogVideo = true;"></v-btn>
-              </v-card-actions>
-              <input type="file" ref="selectVideo" @change="handleVideo" class="d-none" accept="video/*">
-              <v-dialog v-model="deleteDialogVideo" width="400px">
-                <v-card class="rounded-4 pb-4">
-                  <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
-                    Video</v-card-title>
-                  <v-container class="px-4 d-flex flex-column align-items-center">
-                    <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
-                    <v-card-text class="mt-1 text-center">Are you sure you want to delete this video?</v-card-text>
-                  </v-container>
-                  <v-card-actions class="mx-4 d-flex flex-column align-items-center">
-                    <v-btn block class="text-white mb-3" style="background-color: #BA1A1A;" :disabled="videoDelete"
-                      :loading="videoDelete" @click="deleteVideo">Delete</v-btn>
-                    <v-btn block variant="text" class="mb-3" @click="deleteDialogVideo = false">Cancel</v-btn>
+            <div v-if="editVideo.length > 0" class="d-flex gap-3 flex-wrap">
+              <div v-for="(video, index) in editVideo" :key="video.id">
+                <v-card class="py-0" width="200">
+                  <video controls width="200" :src="video.furl" type="video/*" cover>
+                    Your browser does not support the video tag. {{ index }}
+                  </video>
+                  <v-card-actions class="py-0 d-flex justify-content-end " min-height="0">
+                    <v-btn icon="mdi-pencil" size="small" color="success" @click="updateVideo(video.id, index)"
+                      v-if="!video.isEdit"></v-btn>
+                    <v-progress-circular :width="1" color="success" indeterminate size="x-small"
+                      v-else></v-progress-circular>
+                    <v-btn icon="mdi-delete" size="small" color="error" @click="deleteDialogVideo = true;"></v-btn>
                   </v-card-actions>
+                  <v-dialog v-model="deleteDialogVideo" width="400px">
+                    <v-card class="rounded-4 pb-4">
+                      <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
+                        Video</v-card-title>
+                      <v-container class="px-4 d-flex flex-column align-items-center">
+                        <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
+                        <v-card-text class="mt-1 text-center">Are you sure you want to delete this video?</v-card-text>
+                      </v-container>
+                      <v-card-actions class="mx-4 d-flex flex-column align-items-center">
+                        <v-btn block class="text-white mb-3" style="background-color: #BA1A1A;" :disabled="videoDelete"
+                          :loading="videoDelete" @click="deleteVideo">Delete</v-btn>
+                        <v-btn block variant="text" class="mb-3" @click="deleteDialogVideo = false">Cancel</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
                 </v-card>
-              </v-dialog>
-            </v-card>
+              </div>
+              <input type="file" ref="selectVideo" @change="handleVideo" class="d-none" accept="video/*">
+            </div>
+
+
             <v-card-subtitle v-else class="mb-0 py-0">No video uploaded.</v-card-subtitle>
             <div class="d-flex justify-content-end">
-              <input type="file" ref="addVideo" @change="addVideo" class="d-none" accept="video/*">
+              <input type="file" ref="addVideo" @change="addVideo" class="d-none" accept="video/*" multiple>
               <v-btn color="#386568" variant="outlined" rounded prepend-icon="mdi-plus" class="text-capitalize"
-                @click="addVid" v-if="editVideo.length === 0" :disabled="videoLoad" :loading="videoLoad">Add
+                @click="addVid" :disabled="videoLoad" :loading="videoLoad">Add
                 Video</v-btn>
             </div>
           </v-card-text>
@@ -259,13 +268,15 @@ export default {
         audioLoad: false,
         imageId: null,
         imageIndex: null,
+        videoId: null,
+        videoIndex: null,
         imageDelete: false,
         videoDelete: false,
         audioDelete: false,
         newImage: null,
         newBgImage: null,
         imagesAdd: [],
-        videoAdd: null,
+        videoAdd: [],
         audioAdd: null,
         deleteDialogImage: false,
         deleteDialogVideo: false,
@@ -516,10 +527,16 @@ export default {
         this.$refs.addVideo.click();
       },
       async addVideo(event) {
-        const files = event.target.files[0];
-        this.videoAdd = files;
+        const files = event.target.files;
+        for (let i = 0; i < files.length; i++) {
+          this.videoAdd.push(files[i]);
+        }
+        // this.videoAdd = files;
         const formData = new FormData();
-        formData.append("files", this.videoAdd);
+        this.videoAdd.forEach((file) => {
+          formData.append("files", file);
+        });
+        // formData.append("files", this.videoAdd);
         const payload = {
           uid: this.commonId,
           id: this.media.video,
@@ -539,7 +556,7 @@ export default {
             let message = `Video added successfully!`;
             this.success(message);
             this.$emit('update');
-            this.videoAdd = null
+            this.videoAdd = []
           }
         }
         catch (err) {
@@ -548,12 +565,14 @@ export default {
           this.error(message);
         }
       },
-      updateVideo() {
+      updateVideo(id, index) {
+        this.videoIndex = index
+        this.videoId = id;
         this.$refs.selectVideo.click(); 
       },
       async handleVideo(event) {
         const files = event.target.files[0];
-        this.editVideo[0].isEdit = true;
+        this.editVideo[this.videoIndex].isEdit = true;
         this.videoAdd = files;
         let response;
         let payload;
@@ -575,15 +594,17 @@ export default {
             response = await this.$store.dispatch('display/updateSubMedia', payload);
           }
           if (response) {
-            this.editVideo[0].isEdit = false;
+            this.editVideo[this.videoIndex].isEdit = false;
             let message = `Video updated successfully!`;
+            this.videoIndex = null;
+            this.videoId = null;
             this.success(message);
             this.$emit('update');
-            // this.videoLoad = null
+            this.videoAdd = [];
           }
         }
         catch (err) {
-          this.editVideo[0].isEdit = false;
+          this.editVideo[this.videoIndex].isEdit = false;
           let message = err.message;
           this.error(message);
         }

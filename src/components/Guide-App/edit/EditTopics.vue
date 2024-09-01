@@ -207,6 +207,49 @@
             </v-card-text>
         </v-card>
         <v-divider class="mx-5"></v-divider>
+        <v-card flat class="mx-5">
+            <v-card-title class="bg-blue-grey-lighten-5 mb-3">PDF</v-card-title>
+            <v-card-text>
+                <v-card v-if="editPdf.length > 0" width="320" class="pt-2 px-2">
+                    <iframe id="myIframe" style="width: 50vh; height: 40vh; border: none; background-color:#f0f0f0 ;"
+                        frameborder="0" :src="`${editPdf[0].furl}` + '#toolbar=0'"></iframe>
+                    <v-card-actions class="py-0 d-flex justify-content-end ">
+                        <v-btn icon="mdi-pencil" size="small" color="success" @click="updatePdf(editPdf[0].id)"
+                            v-if="!editPdf[0].isEdit"></v-btn>
+                        <v-progress-circular :width="1" color="success" indeterminate size="x-small"
+                            v-else></v-progress-circular>
+                        <v-btn icon="mdi-delete" size="small" color="error"
+                            @click="deleteDialogPdf = true; pdfIndex = editPdf[0].id"></v-btn>
+                    </v-card-actions>
+                    <input type="file" ref="selectPdf" @change="handlePdf" class="d-none" accept="application/pdf">
+                    <v-dialog v-model="deleteDialogPdf" width="400px">
+                        <v-card class="rounded-4 pb-4">
+                            <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
+                                PDF</v-card-title>
+                            <v-container class="px-4 d-flex flex-column align-items-center">
+                                <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
+                                <v-card-text class="mt-1 text-center">Are you sure you want to delete this
+                                    pdf?</v-card-text>
+                            </v-container>
+                            <v-card-actions class="mx-4 d-flex flex-column align-items-center">
+                                <v-btn block class="text-white mb-3" style="background-color: #BA1A1A;"
+                                    :disabled="pdfDelete" :loading="pdfDelete" @click="deletePdf">Delete</v-btn>
+                                <v-btn block variant="text" class="mb-3"
+                                    @click="deleteDialogPdf = false; pdfIndex = null;">Cancel</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </v-card>
+                <v-card-subtitle v-else class="mb-0 py-0">No pdf uploaded.</v-card-subtitle>
+                <div class="d-flex justify-content-end">
+                    <input type="file" ref="addPdf" @change="addPdfFile" class="d-none" accept="application/pdf">
+                    <v-btn color="#386568" variant="outlined" rounded prepend-icon="mdi-plus" class="text-capitalize"
+                        :disabled="pdfLoad" :loading="pdfLoad" v-if="editPdf.length === 0" @click="addPdf">Add
+                        PDF</v-btn>
+                </div>
+            </v-card-text>
+        </v-card>
+        <v-divider class="mx-5"></v-divider>
         <div class="d-flex justify-content-end gap-3 mx-5">
             <v-btn color="#2C7721" variant="outlined" prepend-icon="mdi-plus" class="text-capitalize"
                 @click="paraAdd = !paraAdd">Add Paragraph</v-btn>
@@ -238,12 +281,11 @@ export default {
             imageLoad: false,
             videoLoad: false,
             audioLoad: false,
+            pdfLoad: false,
             editTitle: this.title,
             editDescription: this.description,
             editUrl: this.reference,
             images:[],
-            audioFiles: [],
-            videoFiles: [],
             message: '',
             loading: false,
             color: '',
@@ -256,15 +298,19 @@ export default {
             imageDelete: false,
             videoDelete: false,
             audioDelete: false,
+            pdfDelete: false,
             newImage: null,
             imagesAdd: [],
             videoAdd: null,
             audioAdd: null,
+            pdfAdd: null,
             deleteDialogImage: false,
             deleteDialogVideo: false,
             deleteDialogAudio: false,
+            deleteDialogPdf: false,
             videoIndex: null,
             audioIndex: null,
+            pdfIndex: null,
             paraAdd: false,
             submitImage: false
         };
@@ -289,9 +335,9 @@ export default {
         editAudio() {
             return this.topicAudio || [];
         },
-        // editPdf() {
-        //     return this.topicPdf;
-        // },
+        editPdf() {
+            return this.topicPdf || [];
+        },
         subHeads() {
             if (this.paragraphs && this.paragraphs.length > 0) {
                 return this.paragraphs;
@@ -302,6 +348,7 @@ export default {
         this.editImages.forEach(image => { image.isEdit = false; image.editClicked = false } );
         this.editAudio.forEach(audio => audio.isEdit = false);
         this.editVideo.forEach(video => video.isEdit = false);
+        this.editPdf.forEach(pdf => pdf.isEdit = false);
     },
     methods: {
         exit() {
@@ -561,6 +608,90 @@ export default {
             catch (err) {
                 this.editAudio[0].isEdit = false;
                 let message = err.message;
+                this.error(message);
+            }
+        },
+        addPdf() {
+            this.$refs.addPdf.click();
+        },
+        async addPdfFile(event) {
+            const files = event.target.files[0];
+            this.pdfAdd = files;
+            const formData = new FormData();
+            formData.append("file", this.pdfAdd);
+            try {
+                const payload = {
+                    id: this.uid,
+                    type: this.fileType.pdf,
+                    formData: formData
+                }
+                this.pdfLoad = true;
+                let response = await this.$store.dispatch('guide/submitMedia', payload);
+                if (response) {
+                    this.pdfLoad = false;
+                    let message = `PDF added successfully!`;
+                    this.success(message);
+                    this.$emit('update');
+                }
+            }
+            catch (err) {
+                this.pdfLoad = false;
+                let message = err.message;
+                this.error(message);
+            }
+        },
+        updatePdf(id) {
+            this.pdfIndex = id;
+            this.$refs.selectPdf.click();
+        },
+        async handlePdf(event) {
+            const files = event.target.files[0];
+            this.editPdf[0].isEdit = true;
+            this.pdfAdd = files;
+            let response;
+            let formData = new FormData();
+            try {
+                formData.append("file", this.pdfAdd);
+                response = await this.$store.dispatch('guide/updateMedia', {
+                    data: formData,
+                    id: this.commonId,
+                    type: this.fileType.pdf,
+                    lang: this.language,
+                    index: this.pdfIndex
+                });
+                if (response) {
+                    this.editPdf[0].isEdit = false;
+                    let message = `PDF updated successfully!`;
+                    this.pdfIndex = null;
+                    this.pdfAdd = null;
+                    this.success(message);
+                    this.$emit('update');
+                }
+            }
+            catch (err) {
+                this.editPdf[0].isEdit = false;
+                let message = err.message;
+                this.error(message);
+            }
+        },
+        async deletePdf() {
+            this.pdfDelete = true;
+            let response;
+            let message;
+            try {
+                response = await this.$store.dispatch('guide/deleteMedia', { id: this.editPdf[0].commonId, type: this.fileType.pdf, lang: this.language, index: this.pdfIndex });
+                if ((response)) {
+                    this.pdfDelete = false;
+                    this.deleteDialogPdf = false;
+                    message = `PDF deleted successfully!`;
+                    this.success(message);
+                    this.pdfIndex = null;
+                    this.$emit('update')
+                }
+            }
+            catch (error) {
+                this.pdfDelete = false;
+                message = error.message;
                 this.error(message);
             }
         },

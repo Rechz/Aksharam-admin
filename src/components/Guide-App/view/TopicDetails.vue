@@ -113,10 +113,20 @@
                 </div>
             </div>
         </div>
+        <!-- <iframe :src="'https://docs.google.com/gview?url=' + `${subTopic.pdfDataList[0].furl}` + '&embedded=true'"
+            style="width:100vw; height:100%;" frameborder="0"
+            v-if="subTopic.pdfDataList && subTopic.pdfDataList.length > 0"></iframe> -->
+        <div class="d-flex justify-content-center">
+             <iframe id="myIframe" style="width: 100vh; height: 100vh; border: none; background-color:#f0f0f0 ;"
+            frameborder="0" :src="`${subTopic.pdfDataList[0].furl}` +'#toolbar=0'"
+            v-if="subTopic.pdfDataList && subTopic.pdfDataList.length>0"></iframe>
+        </div>
+       
+
         <v-dialog v-model="dialogEdit" scrollable transition="dialog-bottom-transition" fullscreen>
             <edit-topics @exit="closeDialog" :title="subTopic.topic" :description="subTopic.description"
                 :reference="subTopic.referenceUrl" :commonId="subTopic.commonId" :topicImage="subTopic.imgList"
-                :topicVideo="subTopic.videoList" :topicAudio="subTopic.audioList"
+                :topicVideo="subTopic.videoList" :topicAudio="subTopic.audioList" :topicPdf="subTopic.pdfDataList"
                 :paragraphs="subTopic.combinedDataSubList" :uid="subTopic.uid" @update="updateDetails"
                 :malId="subTopic.malId" :engId="subTopic.engId"></edit-topics>
         </v-dialog>

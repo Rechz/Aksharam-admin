@@ -74,11 +74,11 @@
                     <v-chip closable @click:close="removeImage(image.file)"
                         class="my-1">{{ image.file.name }}</v-chip>
                     <v-img :src="image.url" alt="Uploaded Image" width="400" height="200" cover></v-img>
-                    <div class="mt-3">
+                    <div class="mt-3 pb-4">
                         <v-text-field v-model="image.name" variant="outlined" density="compact" label="Name"
-                            hide-details></v-text-field>
+                            hide-details counter></v-text-field>
                         <v-textarea v-model="image.ref" variant="outlined" density="compact" label="Reference"
-                            class="mt-2" hide-details>{{image.ref}}</v-textarea>
+                            class="mt-2" hide-details counter>{{image.ref}}</v-textarea>
                     </div>
                 </v-card>
             </div>
@@ -305,7 +305,7 @@ export default {
         },
         
         async submitHeading() {
-            this.subload = true;
+            
             // let uid = this.language == 1 ? this.idmal : this.ideng;
             const language = this.language;
             const data = {
@@ -320,6 +320,7 @@ export default {
             }
             const { valid } = await this.$refs.form.validate()
             if (valid) {
+                this.subload = true;
                 try {
                     const response = await this.$store.dispatch('guide/submitHeading', payload);
                     if (response) {
