@@ -129,6 +129,25 @@ const router = createRouter({
               component: () => import('./components/Guide-App/view/ViewTopics.vue'),
             },        
           ]
+        },
+        {
+          path: '/admin/tribal-app',
+          name: 'tribal-app',
+          component: () => import('./components/Tribal/TribalNav.vue'),
+          meta: { requiresAuth: true, role: 'employee' },
+          children: [
+            {
+              path: '/admin/tribal-app/add',
+              alias: '',
+              name: 'tribal-add',
+              component: () => import('./components/Tribal/add/AddTopics.vue'),
+            },
+            {
+              path: '/admin/tribal-app/view',
+              name: 'tribal-view',
+              component: () => import('./components/Tribal/view/ViewTopics.vue'),
+            },        
+          ]
         }
       ]
     },
@@ -143,6 +162,12 @@ const router = createRouter({
       name: 'guide-edit',
       meta: { requiresAuth: true, role: 'employee' },
       component: () => import('./components/Guide-App/view/TopicDetails.vue'),
+    },
+    {
+      path: '/admin/tribal-app/edit',
+      name: 'tribal-edit',
+      meta: { requiresAuth: true, role: 'employee' },
+      component: () => import('./components/Tribal/view/TopicDetails.vue'),
     },
     {
       path: '/admin/display-app/subheading-view',
