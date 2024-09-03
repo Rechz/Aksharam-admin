@@ -140,7 +140,7 @@
                       v-if="!video.isEdit"></v-btn>
                     <v-progress-circular :width="1" color="success" indeterminate size="x-small"
                       v-else></v-progress-circular>
-                    <v-btn icon="mdi-delete" size="small" color="error" @click="deleteDialogVideo = true;"></v-btn>
+                    <v-btn icon="mdi-delete" size="small" color="error" @click="deleteDialogVideo = true; videoIndex = index;"></v-btn>
                   </v-card-actions>
                   <v-dialog v-model="deleteDialogVideo" width="400px">
                     <v-card class="rounded-4 pb-4">
@@ -579,17 +579,26 @@ export default {
         let formData = new FormData();
         try {
           if (this.main == true) {
-            formData.append("uId", this.commonId);
-            formData.append("mtId", this.media.video);
+            // formData.append("uId", this.commonId);
+            // formData.append("mtId", this.media.video);
+            console.log(this.main)
             formData.append("files", this.videoAdd);
-            response = await this.$store.dispatch('display/updateMedia',formData);
+            payload = {
+              data: formData,
+              mtId: this.media.video,
+              uId: this.editVideo[this.videoIndex].dtId,
+              id: this.editVideo[this.videoIndex].id
+            }
+            // console.log(payload)
+            response = await this.$store.dispatch('display/updateMedia',payload);
           } 
           if (this.main == false) {
             formData.append("files", this.videoAdd);
             payload = {
-                data: formData,
-                id: this.media.video,
-                uId: this.uId
+              data: formData,
+              mtId: this.media.video,
+              id: this.editVideo[this.videoIndex].id,
+              uId: this.editVideo[this.videoIndex].dtId
             }
             response = await this.$store.dispatch('display/updateSubMedia', payload);
           }
@@ -657,17 +666,24 @@ export default {
           this.editaudioLoad = true;
           let response;
           if (this.main == true) {
-            formData.append("uId", this.uId);
-            formData.append("mtId", this.media.audio);
+            // formData.append("uId", this.uId);
+            // formData.append("mtId", this.media.audio);
             formData.append("files", this.audioAdd);
-            response = await this.$store.dispatch('display/updateMedia', formData);
+            payload = {
+              uId: this.editAudio[0].dtId,
+              id: this.editAudio[0].id,
+              mtId: this.media.audio,
+              data: formData
+            }
+            response = await this.$store.dispatch('display/updateMedia', payload);
           }
           if (this.main == false) {
             formData.append("files", this.audioAdd);
             payload = {
-              data: formData,
-              id: this.media.audio,
-              uId: this.uId
+              uId: this.editAudio[0].dtId,
+              id: this.editAudio[0].id,
+              mtId: this.media.audio,
+              data: formData
             }
             response = await this.$store.dispatch('display/updateSubMedia', payload);
           }
@@ -748,10 +764,16 @@ export default {
         let message;
         try {
           if (this.main == true) {
-            response = await this.$store.dispatch('display/deleteAudio', this.editAudio[0].dtId);    
+            response = await this.$store.dispatch('display/deleteAudio', {
+              dtId: this.editAudio[0].dtId,
+              id: this.editAudio[0].id
+            });    
           }
           if (this.main == false) {
-            response = await this.$store.dispatch('display/deleteSubAudio', this.editAudio[0].dtId);    
+            response = await this.$store.dispatch('display/deleteSubAudio', {
+              dtId: this.editAudio[0].dtId,
+              id: this.editAudio[0].id
+            });    
           }
           if ((response)) {
             this.audioDelete = false;
@@ -773,15 +795,22 @@ export default {
         let response;
         try {
           if (this.main == true) {
-            response = await this.$store.dispatch('display/deleteVideo', this.editVideo[0].dtId);
+            response = await this.$store.dispatch('display/deleteVideo', {
+              dtId: this.editVideo[this.videoIndex].dtId,
+              id: this.editVideo[this.videoIndex].id
+            });
           }
           if (this.main == false) {
-            response = await this.$store.dispatch('display/deleteSubVideo', this.editVideo[0].dtId);
+            response = await this.$store.dispatch('display/deleteSubVideo', {
+              dtId: this.editVideo[this.videoIndex].dtId,
+              id: this.editVideo[this.videoIndex].id
+            });
           }
           if ((response)) {
             this.videoDelete = false;
             this.deleteDialogVideo = false;
             message = `Video deleted successfully!`;
+            this.videoIndex = null;
             this.success(message);
             this.$emit('update')
           }

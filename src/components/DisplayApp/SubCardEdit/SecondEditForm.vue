@@ -134,7 +134,7 @@
                     v-if="!video.isEdit"></v-btn>
                   <v-progress-circular :width="1" color="success" indeterminate size="x-small"
                     v-else></v-progress-circular>
-                  <v-btn icon="mdi-delete" size="small" color="error" @click="deleteDialogVideo = true;"></v-btn>
+                  <v-btn icon="mdi-delete" size="small" color="error" @click="deleteDialogVideo = true; videoIndex = index;"></v-btn>
                 </v-card-actions>
                 <v-dialog v-model="deleteDialogVideo" width="400px">
                   <v-card class="rounded-4 pb-4">
@@ -540,18 +540,21 @@ export default {
         if (this.main == true) {
           formData.append("files", this.videoAdd);
           payload= {
-            uId: this.commonId,
-            id: this.media.video,
-            data: formData
+            data: formData,
+            mtId: this.media.video,
+            uId: this.editVideo[this.videoIndex].dtId,
+            id: this.editVideo[this.videoIndex].id
           }
           response = await this.$store.dispatch('display/updateSubMedia', payload);
         }
         if (this.main == false) {
           formData.append("files", this.videoAdd);
-          formData.append("mtId", this.media.video);
+          // formData.append("mtId", this.media.video);
           payload = {
-            uId: this.uId,
-            data: formData
+            data: formData,
+            mtId: this.media.video,
+            uId: this.editVideo[this.videoIndex].dtId,
+            id: this.editVideo[this.videoIndex].id
           }
           response = await this.$store.dispatch('display/updateSub2Media', payload);
         }
@@ -623,17 +626,20 @@ export default {
         if (this.main == true) {
           formData.append("files", this.audioAdd);
           payload = {
-            uId: this.uId,
-            id: this.media.audio,
+            uId: this.editAudio[0].dtId,
+            id: this.editAudio[0].id,
+            mtId: this.media.audio,
             data: formData
           };
           response = await this.$store.dispatch('display/updateSubMedia', payload);
         }
         if (this.main == false) {
           formData.append("files", this.audioAdd);
-          formData.append("mtId", this.media.audio);
+          // formData.append("mtId", this.media.audio);
           payload = {
-            uId: this.uId,
+            uId: this.editAudio[0].dtId,
+            id: this.editAudio[0].id,
+            mtId: this.media.audio,
             data: formData
           };
             response = await this.$store.dispatch('display/updateSub2Media', payload);
@@ -711,10 +717,16 @@ export default {
       let response;
       try {
         if (this.main == true) {
-          response = await this.$store.dispatch('display/deleteSubAudio', this.editAudio[0].dtId);
+          response = await this.$store.dispatch('display/deleteSubAudio', {
+            dtId: this.editAudio[0].dtId,
+            id: this.editAudio[0].id
+          });
         }
         if (this.main == false) {
-          response = await this.$store.dispatch('display/deleteSub2Audio', this.editAudio[0].dtId);
+          response = await this.$store.dispatch('display/deleteSub2Audio', {
+            dtId: this.editAudio[0].dtId,
+            id: this.editAudio[0].id
+          });
         }
         if (response) {
           this.audioDelete = false;
@@ -736,14 +748,21 @@ export default {
       let response;
       try {
         if (this.main == true) {
-          response = await this.$store.dispatch('display/deleteSubVideo', this.editVideo[0].dtId);
+          response = await this.$store.dispatch('display/deleteSubVideo', {
+            dtId: this.editVideo[this.videoIndex].dtId,
+            id: this.editVideo[this.videoIndex].id
+          });
         }
         if (this.main == false) {
-          response = await this.$store.dispatch('display/deleteSub2Video', this.editVideo[0].dtId);
+          response = await this.$store.dispatch('display/deleteSub2Video', {
+            dtId: this.editVideo[this.videoIndex].dtId,
+            id: this.editVideo[this.videoIndex].id
+          });
         }
         if (response) {
           this.videoDelete = false;
           this.deleteDialogVideo = false;
+          this.videoIndex = null;
           message = `Video deleted successfully!`;
           this.success(message);
           this.$emit('update')

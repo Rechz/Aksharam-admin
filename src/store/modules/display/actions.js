@@ -463,7 +463,8 @@ export default {
     //update main audio/video
     async updateMedia({ rootGetters }, payload) {
       try {
-        const response = await axios.put(`${rootGetters.getUrl}/api/updateMain/updateMpData`, payload,
+        console.log('payload',payload)
+        const response = await axios.put(`${rootGetters.getUrl}/api/updateMain/updateMpData?uId=${payload.uId}&mtId=${payload.mtId}&id=${payload.id}`,payload.data,
         {
           headers: {
             Authorization: `Bearer ${rootGetters.getToken}`
@@ -483,7 +484,7 @@ export default {
     //update sub audio/video
     async updateSubMedia({ rootGetters }, payload) {
       try {
-        const response = await axios.put(`${rootGetters.getUrl}/api/updateFirst/updateMpData1/${payload.uId}?mtId=${payload.id}`, payload.data,
+        const response = await axios.put(`${rootGetters.getUrl}/api/updateFirst/updateMpData1/${payload.uId}?mtId=${payload.mtId}&id=${payload.id}`, payload.data,
         {
           headers: {
             Authorization: `Bearer ${rootGetters.getToken}`
@@ -502,7 +503,7 @@ export default {
     //update sub2 audio/video
     async updateSub2Media({ rootGetters }, payload) {
       try {
-        const response = await axios.put(`${rootGetters.getUrl}/api/updateSecondSub/updateMpData2/${payload.uId}`, payload.data,
+        const response = await axios.put(`${rootGetters.getUrl}/api/updateSecondSub/updateMpData2/${payload.uId}?id=${payload.id}&mtId=${payload.mtId}`, payload.data,
         {
           headers: {
             Authorization: `Bearer ${rootGetters.getToken}`
@@ -634,9 +635,9 @@ export default {
       }
     },
     //delete main audio
-    async deleteAudio({ rootGetters}, dtId) {
+    async deleteAudio({ rootGetters}, payload) {
       try {
-        const response = await axios.delete(`${rootGetters.getUrl}/api/deleteMain/deleteMp3?dtId=${dtId}`,
+        const response = await axios.delete(`${rootGetters.getUrl}/api/deleteMain/deleteMp3?dtId=${payload.dtId}&id=${payload.id}`,
         {
           headers: {
             Authorization: `Bearer ${rootGetters.getToken}`
@@ -653,9 +654,9 @@ export default {
       }
     },
     //delete sub audio
-    async deleteSubAudio({ rootGetters}, dtId) {  
+    async deleteSubAudio({ rootGetters}, payload) {  
       try {
-        const response = await axios.delete(`${rootGetters.getUrl}/api/deleteMain/deleteMp3First?dtId=${dtId}`,
+        const response = await axios.delete(`${rootGetters.getUrl}/api/deleteMain/deleteMp3First?dtId=${payload.dtId}&id=${payload.id}`,
         {
           headers: {
             Authorization: `Bearer ${rootGetters.getToken}`
@@ -672,9 +673,9 @@ export default {
       }
     },
     //delete sub2 audio
-    async deleteSub2Audio({ rootGetters}, dtId) {
+    async deleteSub2Audio({ rootGetters}, payload) {
       try {
-        const response = await axios.delete(`${rootGetters.getUrl}/api/deleteMain/deleteMp3Second?dtId=${dtId}`,
+        const response = await axios.delete(`${rootGetters.getUrl}/api/deleteMain/deleteMp3Second?dtId=${payload.dtId}&id=${payload.id}`,
         {
           headers: {
             Authorization: `Bearer ${rootGetters.getToken}`
@@ -690,10 +691,10 @@ export default {
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }   
     },
-    //delete main audio
-    async deleteVideo({ rootGetters}, dtId) {
+    //delete main video
+    async deleteVideo({ rootGetters}, payload) {
       try {
-        const response = await axios.delete(`${rootGetters.getUrl}/api/deleteMain/deleteMp4?dtId=${dtId}`,
+        const response = await axios.delete(`${rootGetters.getUrl}/api/deleteMain/deleteMp4?dtId=${payload.dtId}&id=${payload.id}`,
         {
           headers: {
             Authorization: `Bearer ${rootGetters.getToken}`
@@ -710,9 +711,9 @@ export default {
       }
     },
     //delete sub video
-    async deleteSubVideo({ rootGetters}, dtId) {  
+    async deleteSubVideo({ rootGetters}, payload) {  
       try {
-        const response = await axios.delete(`${rootGetters.getUrl}/api/deleteMain/deleteMp4First?dtId=${dtId}`,
+        const response = await axios.delete(`${rootGetters.getUrl}/api/deleteMain/deleteMp4First?dtId=${payload.dtId}&id=${payload.id}`,
         {
           headers: {
             Authorization: `Bearer ${rootGetters.getToken}`
@@ -729,9 +730,9 @@ export default {
       }
     },
     //delete sub2 audio
-    async deleteSub2Video({ rootGetters}, dtId) {
+    async deleteSub2Video({ rootGetters}, payload) {
       try {
-        const response = await axios.delete(`${rootGetters.getUrl}/api/deleteMain/deleteMp4Second?dtId=${dtId}`,
+        const response = await axios.delete(`${rootGetters.getUrl}/api/deleteMain/deleteMp4Second?dtId=${payload.dtId}&id=${payload.id}`,
         {
           headers: {
             Authorization: `Bearer ${rootGetters.getToken}`
