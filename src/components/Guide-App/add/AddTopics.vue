@@ -19,7 +19,7 @@
                 upload media. Do not refresh the page to avoid data loss.</p>
             <v-form class="pt-0" ref="form" @submit.prevent="submitHeading">
                 <div class="d-flex">
-                    <div>
+                    <v-card flat :disabled="!QRLoad" class="p-3 pb-0">
                         <v-select class="select mb-2" label='Select Language' density="comfortable" :items="languages"
                             v-model="language" :rules="languageRules" item-title="talk" item-value="dtId"
                             variant="outlined" :disabled="malSubmit || engSubmit"></v-select>
@@ -29,13 +29,13 @@
                             v-model="description" variant="outlined" counter></v-textarea>
                         <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
                             class="reference desc" rows="2" v-model="url" variant="outlined" counter></v-textarea>
-                    </div>
-                    <div class="d-flex flex-column ">
-                        <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malHeading }} (Malayalam)
-                            added.</h6>
-                        <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engHeading }} (English)
-                            added.</h6>
-                    </div>
+                    </v-card>
+                <div class="d-flex flex-column ">
+                    <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malHeading }} (Malayalam)
+                        added.</h6>
+                    <h6 class="text-success text-end fst-italic mb-0" v-if="engSubmit">*{{ engHeading }} (English)
+                        added.</h6>
+                </div>
                 </div>
                 <div class="d-flex justify-content-end">
                     <div class="d-flex gap-2">
@@ -71,8 +71,7 @@
             </template> -->
             <div class="d-flex gap-4 flex-wrap mt-3" v-if="imgPreview.length > 0">
                 <v-card v-for="image in imgPreview" :key="image.url" elevation="4" class="p-3">
-                    <v-chip closable @click:close="removeImage(image.file)"
-                        class="my-1">{{ image.file.name }}</v-chip>
+                    <v-chip closable @click:close="removeImage(image.file)" class="my-1">{{ image.file.name }}</v-chip>
                     <v-img :src="image.url" alt="Uploaded Image" width="400" height="200" cover></v-img>
                     <div class="mt-3 pb-4">
                         <v-text-field v-model="image.name" variant="outlined" density="compact" label="Name"
