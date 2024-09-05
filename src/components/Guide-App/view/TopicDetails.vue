@@ -46,6 +46,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
         <h1 class="mx-auto text-wrap w-75 text-center mb-4 mt-5">{{ subTopic.topic }}</h1>
         <div class="w-75 px-5 mx-auto">
             <div>
@@ -89,8 +90,26 @@
                     <div class="d-flex justify-content-end px-3 mb-3">
                         <v-btn icon="mdi-pen" size="x-small" variant="outlined" class="me-2" elevation="10"
                             @click="editPara(topic.fsCommonId)"></v-btn>
-                        <v-btn icon="mdi-trash-can" size="x-small" variant="outlined" elevation="10"></v-btn>
+                        <v-btn icon="mdi-trash-can" size="x-small" variant="outlined" elevation="10"
+                            @click="deleteDialogPara = true;"></v-btn>
                     </div>
+                    <v-dialog v-model="deleteDialogPara" width="400px">
+                        <v-card class="rounded-4 pb-4">
+                            <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
+                                Paragraph </v-card-title>
+                            <v-container class="px-4 d-flex flex-column align-items-center">
+                                <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
+                                <v-card-text class="mt-1 text-center">Are you sure you want to delete?</v-card-text>
+                            </v-container>
+                            <v-card-actions class="mx-4 d-flex flex-column align-items-center">
+                                <v-btn block class="text-white mb-3" style="background-color: #BA1A1A;"
+                                    :disabled="topicDelete" :loading="topicDelete"
+                                    @click="deletePara(topic.fsCommonId)">Delete</v-btn>
+                                <v-btn block variant="text" class="mb-3"
+                                    @click="deleteDialogPara = false">Cancel</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
                     <p class="text-wrap text-start pre-text" v-html="formattedDescription(topic.description)"></p>
                     <div class="images">
                         <v-card class="bg-transparent" flat>
@@ -117,11 +136,11 @@
             style="width:100vw; height:100%;" frameborder="0"
             v-if="subTopic.pdfDataList && subTopic.pdfDataList.length > 0"></iframe> -->
         <div class="d-flex justify-content-center">
-             <iframe id="myIframe" style="width: 100vh; height: 100vh; border: none; background-color:#f0f0f0 ;"
-            frameborder="0" :src="`${subTopic.pdfDataList[0].furl}` +'#toolbar=0'"
-            v-if="subTopic.pdfDataList && subTopic.pdfDataList.length>0"></iframe>
+            <iframe id="myIframe" style="width: 100vh; height: 100vh; border: none; background-color:#f0f0f0 ;"
+                frameborder="0" :src="`${subTopic.pdfDataList[0].furl}` +'#toolbar=0'"
+                v-if="subTopic.pdfDataList && subTopic.pdfDataList.length>0"></iframe>
         </div>
-       
+
 
         <v-dialog v-model="dialogEdit" scrollable transition="dialog-bottom-transition" fullscreen>
             <edit-topics @exit="closeDialog" :title="subTopic.topic" :description="subTopic.description"
@@ -157,7 +176,8 @@ export default {
             color: '',
             icon: '',
             dialogTopic: false,
-            dialogHead:''
+            dialogHead: '',
+            deleteDialogPara: false
         }  
     },
     methods: {
@@ -232,6 +252,24 @@ export default {
                 this.error(message);
                 console.log(error)
         }
+        },
+        async deletePara(id) {
+            try {
+                this.topicDelete = true;
+                const res = await this.$store.dispatch('guide/deleteGuidePara', { id: id });
+                if (res) {
+                    this.topicDelete = false;
+                    this.deleteDialogPara = false;
+                    let message = 'All details related to the topic deleted successfully !!';
+                    this.updateDetails();
+                    this.success(message);
+                }
+            }
+            catch (error) {
+                this.topicDelete = false;
+                console.error(error)
+            }
+        
     }
   },
   computed: {
