@@ -14,7 +14,7 @@
             </v-card>
         </v-dialog>
         <div class="d-flex justify-content-between align-items-start w-100 px-5 pt-5 pb-3 position-fixed">
-            <router-link to="/admin/guide-app/view">
+            <router-link to="/admin/tribal-app/view">
                 <v-btn icon="mdi-arrow-left" variant="tonal" color="#3b2404" size="small" elevation="10"
                     class="button"></v-btn>
             </router-link>

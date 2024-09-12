@@ -99,16 +99,16 @@
         <template v-slot:item="{ item, index }">
           <tr style="background-color:#FCFDF6; color:black;">
             <td class="text-center">{{ index + 1 }}</td>
-            <td class="text-center">{{ item.topic }}</td>
-            <td class="text-center d-flex justify-content-center align-items-center"><v-img :src="item.qrCodeUrl"
-                :lazy-src="item.qrCodeUrl" alt="QR" class="qr" style="height: 50px; width: 50px;" v-if="item.mainCommonId"
+            <td class="text-center">{{ item.title }}</td>
+            <!-- <td class="text-center d-flex justify-content-center align-items-center"><v-img :src="item.qrCodeUrl"
+                :lazy-src="item.qrCodeUrl" alt="QR" class="qr" style="height: 50px; width: 50px;" v-if="item.tribalCommonId"
                 @click="showQR(item)"></v-img>
               <v-btn variant="text" class="text-capitalize text-decoration-underline" color="#2E7D32" v-else
                 @click="generate(item)" :loading="item.qrLoad" :disabled="item.qrLoad">Generate QR</v-btn>
-            </td>
+            </td> -->
             <td class="text-center">
               <v-btn class="text-none" color="#48663f" min-width="100" size="small" @click="showDetails(item)"
-                :disabled="!item.mainCommonId">View & Edit</v-btn>
+                :disabled="!item.tribalCommonId">View & Edit</v-btn>
             </td>
             <td class="text-center">
               <v-icon size="default" color="danger" class=" mdi mdi-trash-can" @click="deleteItem(item)"></v-icon>
@@ -150,7 +150,7 @@ export default {
     headers: [
       { title: 'Sl.no', align: 'center', sortable: false },
       { title: 'Topics', align: 'center', key: 'topic', sortable: false },
-      { title: 'QR Code', align: 'center', key: 'QR', sortable: false },
+      // { title: 'QR Code', align: 'center', key: 'QR', sortable: false },
       { title: 'Details', align: 'center' },
       { title: 'Delete', align: 'center' },
     ],
@@ -232,7 +232,7 @@ export default {
 
     async generate(topic) {
       this.selectedTopic = topic.topic;
-      this.topicId = topic.mainUniqueId;
+      this.topicId = topic.uniqueId;
 
       // Reset qrLoad for all topics to avoid conflicts
       this.mainheadings.forEach((item) => {
@@ -249,12 +249,12 @@ export default {
         });
 
         if (response.status >= 200 && response.status < 300) {
-          let filteredResponse = response.data.filter(item => !item.mainCommonId);
+          let filteredResponse = response.data.filter(item => !item.tribalCommonId);
           this.topics = filteredResponse.map((topic) => {
-            if (!topic.mainCommonId) {
+            if (!topic.tribalCommonId) {
               return {
                 title: topic.topic,
-                id: topic.mainUniqueId,
+                id: topic.uniqueId,
               };
             }
           });
@@ -304,10 +304,10 @@ export default {
       try {
         const response = await this.$store.dispatch('tribal/getTribalTopic', {
           lang: this.language,
-          id: item.mainCommonId
+          id: item.tribalCommonId
         });
         if (response) {
-          this.$router.push({name:'guide-edit'})
+          this.$router.push({name:'tribal-edit'})
         }
       }
       catch (error) {
@@ -332,12 +332,12 @@ export default {
       this.loading = true;
       let success;
       try {
-        if (this.editedItem.mainCommonId) {
-          let id = this.editedItem.mainCommonId;
+        if (this.editedItem.tribalCommonId) {
+          let id = this.editedItem.tribalCommonId;
           success = await this.$store.dispatch('tribal/deleteTribalTopic', { id: id })
         }
         else {
-          let id = this.editedItem.mainUniqueId;
+          let id = this.editedItem.uniqueId;
           success = await this.$store.dispatch('tribal/deleteTribalTopicUid', { lang:this.language, id: id })
         }
         
