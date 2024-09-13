@@ -33,20 +33,20 @@
         <v-dialog v-model="deleteDialogAll" width="400px">
             <v-card class="rounded-4 pb-4">
                 <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
-                    Topic {{ subTopic.topic }}</v-card-title>
+                    Topic {{ subTopic.title }}</v-card-title>
                 <v-container class="px-4 d-flex flex-column align-items-center">
                     <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
                     <v-card-text class="mt-1 text-center">Are you sure you want to delete
-                        {{ subTopic.topic }}?</v-card-text>
+                        {{ subTopic.title }}?</v-card-text>
                 </v-container>
                 <v-card-actions class="mx-4 d-flex flex-column align-items-center">
                     <v-btn block class="text-white mb-3" style="background-color: #BA1A1A;" :disabled="topicDelete"
-                        :loading="topicDelete" @click="deleteAll(subTopic.commonId)">Delete</v-btn>
+                        :loading="topicDelete" @click="deleteAll(subTopic.tribalCommonId)">Delete</v-btn>
                     <v-btn block variant="text" class="mb-3" @click="deleteDialogAll = false">Cancel</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <h1 class="mx-auto text-wrap w-75 text-center mb-4 mt-5">{{ subTopic.topic }}</h1>
+        <h1 class="mx-auto text-wrap w-75 text-center mb-4 mt-5">{{ subTopic.title }}</h1>
         <div class="w-75 px-5 mx-auto">
             <div>
                 <div class="d-flex justify-content-end px-3 mb-3">
@@ -55,20 +55,20 @@
                     <v-btn icon="mdi-trash-can" size="x-small" variant="outlined" elevation="10"
                         @click="deleteDialogAll = true"></v-btn>
                 </div>
-                <div class="my-3 d-flex justify-content-center" v-if="audios && audios.length > 0">
+                <!-- <div class="my-3 d-flex justify-content-center" v-if="audios && audios.length > 0">
                     <audio controls :src="audios[0].furl" type="audio/*"
                         class="w-75 bg-brown-darken-2 p-1 rounded-2">Your browser does not support the audio element.
                     </audio>
-                </div>
+                </div> -->
                 <p class="text-wrap text-start ps-3 pre-text" v-html="formattedDescription(subTopic.description)"></p>
                 <div v-if="videos && videos.length > 0">
-                    <div v-for="video in videos" :key="video.furl">
-                        <video controls width="100%" :src="video.furl" type="video/*">
+                    <div v-for="video in videos" :key="video.fileUrl">
+                        <video controls width="100%" :src="video.fileUrl" type="video/*">
                             Your browser does not support the video tag.
                         </video>
                     </div>
                 </div>
-                <div class="images">
+                <!-- <div class="images">
                     <v-card class="bg-transparent" flat>
                         <v-card-text>
                             <div class="d-flex gap-3 flex-wrap justify-content-center" v-if="images.length >= 0">
@@ -83,8 +83,8 @@
                             </div>
                         </v-card-text>
                     </v-card>
-                </div>
-                <div class="paragraphs px-3 mt-4" v-for="topic in subTopic.combinedDataSubList" :key="topic.commonId">
+                </div> -->
+                <!-- <div class="paragraphs px-3 mt-4" v-for="topic in subTopic.combinedDataSubList" :key="topic.commonId">
                     <h5 class="fw-bold my-0">{{ topic.topic }}</h5>
                     <div class="d-flex justify-content-end px-3 mb-3">
                         <v-btn icon="mdi-pen" size="x-small" variant="outlined" class="me-2" elevation="10"
@@ -110,21 +110,20 @@
                             </v-card-text>
                         </v-card>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <v-dialog v-model="dialogEdit" scrollable transition="dialog-bottom-transition" fullscreen>
-            <edit-topics @exit="closeDialog" :title="subTopic.topic" :description="subTopic.description"
-                :reference="subTopic.referenceUrl" :commonId="subTopic.commonId" :topicImage="subTopic.imgList"
-                :topicVideo="subTopic.videoList" :topicAudio="subTopic.audioList"
-                :paragraphs="subTopic.combinedDataSubList" :uid="subTopic.uid" @update="updateDetails"
-                :malId="subTopic.malId" :engId="subTopic.engId"></edit-topics>
+            <edit-topics @exit="closeDialog" :title="subTopic.title" :description="subTopic.description"
+                :commonId="subTopic.tribalCommonId" :topicVideo="subTopic.tribalVideoList" 
+                :uid="subTopic.uniqueId" @update="updateDetails"
+                :malId="subTopic.malayalamId" :engId="subTopic.englishId"></edit-topics>
         </v-dialog>
-        <v-dialog v-model="dialogEditPara" scrollable transition="dialog-bottom-transition" fullscreen>
+        <!-- <v-dialog v-model="dialogEditPara" scrollable transition="dialog-bottom-transition" fullscreen>
             <edit-para :title="para.topic" :description="para.description" :reference="para.referenceUrl"
                 :commonId="para.fsCommonId" :topicImage="para.imgList" @exit="dialogEditPara = false;"
                 @update="updateDetails"></edit-para>
-        </v-dialog>
+        </v-dialog> -->
     </v-main>
 </template>
 
@@ -187,9 +186,9 @@ export default {
     },
     async updateDetails() {
     try {
-        await this.$store.dispatch('guide/getGuideTopic', {
+        await this.$store.dispatch('tribal/getTribalTopic', {
           lang: this.language,
-          id: this.subTopic.commonId
+          id: this.subTopic.tribalCommonId
         });
     }
     catch (error) {
@@ -200,20 +199,20 @@ export default {
     this.language == 1? this.$store.commit('display/setLanguage', 2) : this.$store.commit('display/setLanguage', 1);
     this.updateDetails()
         },
-    editPara(id) {
-        this.para = this.subTopic.combinedDataSubList.find(p => p.fsCommonId === id);
-        this.dialogEditPara = true;
-        },
+    // editPara(id) {
+    //     this.para = this.subTopic.combinedDataSubList.find(p => p.fsCommonId === id);
+    //     this.dialogEditPara = true;
+    //     },
         async deleteAll(id) {
             this.topicDelete = true;
             try {
-                const res = await this.$store.dispatch('guide/deleteGuideTopic', { id: id });
+                const res = await this.$store.dispatch('tribal/deleteTribalTopic', { id: id });
                 if (res) {
                     this.topicDelete = false;
                     this.deleteDialogAll = false;
                     let message = 'All details related to the topic deleted successfully !!';
                     this.success(message);
-                    this.$router.push({ name: 'guide-view' })
+                    this.$router.push({ name: 'tribal-view' })
                 }
             }
             catch (error) {
@@ -226,43 +225,44 @@ export default {
   },
   computed: {
       ...mapGetters('display', ['getLanguage']),
-      ...mapGetters('guide', ['getGuideTopic']),
+      ...mapGetters('tribal', ['getTribalTopic']),
     subTopic() {
-        return this.getGuideTopic;
+        return this.getTribalTopic;
       },
   
     language() {
       return this.getLanguage;
     },
-    images() {
-      if (this.subTopic.imgList && this.subTopic.imgList.length > 0) {
-        return this.subTopic.imgList;
-      } else return [];
-      },
-    audios() {
-      if (this.subTopic.audioList && this.subTopic.audioList.length >= 1) {
-        return this.subTopic.audioList;
-      } else return [];
-      },
+    // images() {
+    //   if (this.subTopic.imgList && this.subTopic.imgList.length > 0) {
+    //     return this.subTopic.imgList;
+    //   } else return [];
+    //   },
+    // audios() {
+    //   if (this.subTopic.audioList && this.subTopic.audioList.length >= 1) {
+    //     return this.subTopic.audioList;
+    //   } else return [];
+    //   },
       videos() {
-          if (this.subTopic.videoList && this.subTopic.videoList.length >= 1) {
-              return this.subTopic.videoList;
+          if (this.subTopic.tribalVideoList && this.subTopic.tribalVideoList.length >= 1) {
+              return this.subTopic.tribalVideoList;
           } else return [];
       },
-      paragraphs() {
-          if (this.subTopic.combinedDataSubList && this.subTopic.combinedDataSubList.length > 0) {
-              return this.subTopic.combinedDataSubList;
-          } else return [];
-      }
+    //   paragraphs() {
+    //       if (this.subTopic.combinedDataSubList && this.subTopic.combinedDataSubList.length > 0) {
+    //           return this.subTopic.combinedDataSubList;
+    //       } else return [];
+    //   }
   },
   mounted() {
     this.getType();
+    console.log("videos",this.videos)
     },
-    watch: {
-        subTopic(newVal) {
-            this.para = newVal.combinedDataSubList.find(p => p.fsCommonId === this.para?.fsCommonId) || null;
-        }
-    }
+    // watch: {
+    //     subTopic(newVal) {
+    //         this.para = newVal.combinedDataSubList.find(p => p.fsCommonId === this.para?.fsCommonId) || null;
+    //     }
+    // },
 }
 </script>
 

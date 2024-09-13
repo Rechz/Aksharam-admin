@@ -1,6 +1,6 @@
 export default {
     setMainTopicsTribal(state, payload) {
-        state.setMainTopicsTribal = payload;
+        state.mainTopicsTribal = payload;
         // sessionStorage.setItem('mainTopicsTribal', JSON.stringify(payload))
     },
     setTribalTopic(state, payload) {

@@ -1,4 +1,3 @@
-
 <template>
     <v-container class="py-2 px-0" fluid>
       <v-dialog width="600" max-width="600" v-model="dialogTopic">
@@ -14,7 +13,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-dialog v-model="dialogGenerate" width="800" max-width="800" persistent>
+      <!-- <v-dialog v-model="dialogGenerate" width="800" max-width="800" persistent>
         <v-card rounded="3" v-if="!addTopic">
           <v-card-title class="text-center text-white fs-6 d-flex justify-content-between"
             style="background-color: #2E7D32;">
@@ -44,7 +43,7 @@
           <add-new :languageId="language" :id="topicId" @back="addTopic = false"
             @exit="addTopic = false; dialogGenerate = false" @update="getTopics"></add-new>
         </v-card>
-      </v-dialog>
+      </v-dialog> -->
       <div class="d-flex justify-content-end mb-4">
         <v-btn-toggle color="green-lighten-5" v-model="lang" density="compact">
           <v-btn :value="'English'" @click="translate(2)" size="small">English</v-btn>
@@ -72,7 +71,7 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <v-dialog v-model="qrDialog" width="400px">
+          <!-- <v-dialog v-model="qrDialog" width="400px">
             <v-card style="width: 400px; height:auto; border-radius: 15px;">
               <v-card-title class="d-flex justify-content-between  align-items-center px-4"
                 style="background-color: #216D17; color: #FFFFFF;">
@@ -94,7 +93,7 @@
                 </div>
               </v-card-text>
             </v-card>
-          </v-dialog>
+          </v-dialog> -->
         </template>
         <template v-slot:item="{ item, index }">
           <tr style="background-color:#FCFDF6; color:black;">
@@ -180,7 +179,7 @@ export default {
     },
   },
     mounted() {
-    // console.log('get',this.mainheadings)
+    console.log('get',this.mainheadings)
     this.getTopics();
     this.getType();
     this.getAllLanguages();
@@ -206,7 +205,7 @@ export default {
         }
 
         // Find the corresponding item
-        const item = this.mainheadings.find((topic) => topic.mainUniqueId === this.topicId);
+        const item = this.mainheadings.find((topic) => topic.uniqueId === this.topicId);
         if (item) {
           // Directly set qrLoad property dynamically
           item.qrLoad = true;

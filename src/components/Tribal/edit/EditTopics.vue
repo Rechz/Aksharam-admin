@@ -28,9 +28,9 @@
                                 density="comfortable" class="select mb-2" variant="outlined"></v-text-field>
                             <v-textarea :label="language == 1 ? 'വിവരണം' : 'Paragraph Description'" class="desc mb-2"
                                 rows="6" v-model="editDescription" variant="outlined" counter></v-textarea>
-                            <v-textarea :label="language == 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
+                            <!-- <v-textarea :label="language == 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
                                 class="reference desc" rows="2" v-model="editUrl" variant="outlined"
-                                counter></v-textarea>
+                                counter></v-textarea> -->
                         </v-card>
                     </div>
                     <div class="d-flex justify-content-end">
@@ -42,8 +42,8 @@
                 </v-form>
             </v-card-text>
         </v-card>
-        <v-divider class="mx-5"></v-divider>
-        <v-card flat class="mx-5" :disabled="imageLoad || submitImage">
+        <!-- <v-divider class="mx-5"></v-divider> -->
+        <!-- <v-card flat class="mx-5" :disabled="imageLoad || submitImage">
             <v-card-title class="bg-blue-grey-lighten-5 mb-3">Images</v-card-title>
             <v-card-text>
                 <div class="d-flex gap-3 flex-wrap" v-if="editImages.length > 0">
@@ -69,10 +69,10 @@
                                         variant="outlined"></v-text-field>
                                     <v-text-field v-model="image.imageRefUrl" label="Image Reference URL"
                                         density="compact" variant="outlined"></v-text-field>
-                                </div>
+                                </div> -->
                                 <!-- <v-text-field v-model="image.imageName" label="image title" density="compact"
                                     variant="outlined"></v-text-field> -->
-                                <v-card-actions class="py-0 d-flex justify-content-end " v-if="!image.editClicked">
+                                <!-- <v-card-actions class="py-0 d-flex justify-content-end " v-if="!image.editClicked">
                                     <v-btn icon="mdi-pencil" size="small" color="success"
                                         @click="image.editClicked = true"></v-btn>
                                     <v-btn icon="mdi-delete" size="small" color="error"
@@ -83,11 +83,11 @@
                                     <v-btn color="success"
                                         @click="updateImgDetails(image.id, image.imageName, image.imageRefUrl,image)">Submit</v-btn>
                                 </v-card-actions>
-                            </v-card-text>
+                            </v-card-text> -->
                             <!-- <v-card-text> -->
 
                             <!-- </v-card-text> -->
-                        </v-card>
+                        <!-- </v-card>
                         <v-dialog v-model="deleteDialogImage" width="400px">
                             <v-card class="rounded-4 pb-4">
                                 <v-card-title class="mb-2 text-white ps-4 fs-4"
@@ -117,7 +117,7 @@
                         Image</v-btn>
                 </div>
             </v-card-text>
-        </v-card>
+        </v-card> -->
         <v-divider class="mx-5"></v-divider>
         <v-card flat class="mx-5">
             <v-card-title class="bg-blue-grey-lighten-5 mb-3">Video</v-card-title>
@@ -162,7 +162,7 @@
                 </div>
             </v-card-text>
         </v-card>
-        <v-divider class="mx-5"></v-divider>
+        <!-- <v-divider class="mx-5"></v-divider>
         <v-card flat class="mx-5">
             <v-card-title class="bg-blue-grey-lighten-5 mb-3">Audio</v-card-title>
             <v-card-text>
@@ -205,11 +205,11 @@
                         Audio</v-btn>
                 </div>
             </v-card-text>
-        </v-card>
+        </v-card> -->
         <v-divider class="mx-5"></v-divider>
         <div class="d-flex justify-content-end gap-3 mx-5">
-            <v-btn color="#2C7721" variant="outlined" prepend-icon="mdi-plus" class="text-capitalize"
-                @click="paraAdd = !paraAdd">Add Paragraph</v-btn>
+            <!-- <v-btn color="#2C7721" variant="outlined" prepend-icon="mdi-plus" class="text-capitalize"
+                @click="paraAdd = !paraAdd">Add Paragraph</v-btn> -->
             <v-btn color="#2C7721" variant="elevated" prepend-icon="mdi-check" class="text-capitalize"
                 @click="exit">Finish</v-btn>
         </div>
@@ -228,7 +228,7 @@ export default {
     //     AddParagraph
     // },
     emits: ['exit','update'],
-    props: ['main','title', 'description','reference','topicImage','topicVideo','topicAudio','topicPdf','paragraphs','commonId','uid','malId','engId'],
+    props: ['main','title', 'description','topicVideo','commonId','uid','malId','engId'],
     data() {
         return {
             qrGenerated: false,
@@ -325,23 +325,23 @@ export default {
             this.dialogTopic = true;
         },
         async submitHeading() {
-            let uid = this.commonId;
-            const language = this.language;
+            let uid = this.uid;
+            // const language = this.language;
             const data = {
-                "topic": this.editTitle,
+                "title": this.editTitle,
                 "description": this.editDescription,
-                "refURL": this.editUrl
+                // "refURL": this.editUrl
             };
             const payload = {
                 id: uid,
-                lang: language,
+                // lang: language,
                 data: data
             }
             const { valid } = await this.$refs.form.validate()
             if (valid) {
                 this.subload = true;
                 try {
-                    const response = await this.$store.dispatch('guide/updateTopic', payload);
+                    const response = await this.$store.dispatch('tribal/updateTopic', payload);
                     if (response) {
                         this.subload = false;
                         let message = 'Updated successfully!';
@@ -447,12 +447,12 @@ export default {
             formData.append("file", this.videoAdd);
             const payload = {
                 id: this.commonId,
-                type: this.fileType.video,
+                // index: this.language,
                 formData: formData
             }
             try {
                 this.videoLoad = true;
-                let response = await this.$store.dispatch('guide/submitMedia', payload);
+                let response = await this.$store.dispatch('tribal/submitVideo', payload);
                 if (response) {
                     this.videoLoad = false;
                     let message = `Video added successfully!`;
@@ -479,11 +479,11 @@ export default {
             let formData = new FormData();
             try {
                 formData.append("file", this.videoAdd);
-                response = await this.$store.dispatch('guide/updateMedia', {
+                response = await this.$store.dispatch('tribal/updateVideo', {
                     data: formData,
                     id: this.commonId,
-                    type: this.fileType.video,
-                    lang: this.language,
+                    // type: this.fileType.video,
+                    // lang: this.language,
                     index: this.videoIndex
                 });
                 if (response) {
@@ -586,11 +586,12 @@ export default {
             }
         },
         async deleteVideo() {
+            console.log('hello')
             this.videoDelete = true;
             let response;
             let message;
             try {
-                response = await this.$store.dispatch('guide/deleteMedia', { id: this.editVideo[0].dtId, type: this.fileType.video, lang: this.language, index: this.videoIndex });
+                response = await this.$store.dispatch('tribal/deleteVideo', { id: this.commonId, index: this.videoIndex });
                 if ((response)) {
                     this.videoDelete = false;
                     this.deleteDialogVideo = false;

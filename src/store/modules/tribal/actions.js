@@ -136,7 +136,7 @@ export default {
   //delete video
   async deleteVideo({ rootGetters}, payload) { 
     try {
-      const response = await axios.delete(`${rootGetters.getUrl}api/tribalData/deleteVideo?commonId=${payload.id}}&tId=${payload.lang}`,
+      const response = await axios.delete(`${rootGetters.getUrl}/api/tribalData/deleteVideo?commonId=${payload.id}&tId=${payload.index}`,
         {
           headers: {
             Authorization: `Bearer ${rootGetters.getToken}`
@@ -174,7 +174,7 @@ export default {
   //update video
   async updateVideo({ rootGetters }, payload) { 
     try {
-      const response = await axios.put(`${rootGetters.getUrl}/api/tribalData/updateVideo?commonId=${payload.id}&tId=${payload.lang}`, payload.data,
+      const response = await axios.put(`${rootGetters.getUrl}/api/tribalData/updateVideo?commonId=${payload.id}&tId=${payload.index}`, payload.data,
         {
           headers: {
             Authorization: `Bearer ${rootGetters.getToken}`
