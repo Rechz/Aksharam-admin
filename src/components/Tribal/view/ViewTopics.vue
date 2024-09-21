@@ -13,7 +13,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <!-- <v-dialog v-model="dialogGenerate" width="800" max-width="800" persistent>
+      <v-dialog v-model="dialogGenerate" width="800" max-width="800" persistent>
         <v-card rounded="3" v-if="!addTopic">
           <v-card-title class="text-center text-white fs-6 d-flex justify-content-between"
             style="background-color: #2E7D32;">
@@ -39,11 +39,12 @@
               @click="generateQR">Generate</v-btn>
           </v-card-actions>
         </v-card>
+        <!-- <v-dialog v-model="dialogGenerate"> -->
         <v-card v-else>
           <add-new :languageId="language" :id="topicId" @back="addTopic = false"
             @exit="addTopic = false; dialogGenerate = false" @update="getTopics"></add-new>
         </v-card>
-      </v-dialog> -->
+      </v-dialog> 
       <div class="d-flex justify-content-end mb-4">
         <v-btn-toggle color="green-lighten-5" v-model="lang" density="compact">
           <v-btn :value="'English'" @click="translate(2)" size="small">English</v-btn>
@@ -101,13 +102,15 @@
             <td class="text-center">{{ item.title }}</td>
             <!-- <td class="text-center d-flex justify-content-center align-items-center"><v-img :src="item.qrCodeUrl"
                 :lazy-src="item.qrCodeUrl" alt="QR" class="qr" style="height: 50px; width: 50px;" v-if="item.tribalCommonId"
-                @click="showQR(item)"></v-img>
+                @click="showQR(item)"></v-img>:disabled="!item.tribalCommonId"
               <v-btn variant="text" class="text-capitalize text-decoration-underline" color="#2E7D32" v-else
                 @click="generate(item)" :loading="item.qrLoad" :disabled="item.qrLoad">Generate QR</v-btn>
             </td> -->
             <td class="text-center">
-              <v-btn class="text-none" color="#48663f" min-width="100" size="small" @click="showDetails(item)"
-                :disabled="!item.tribalCommonId">View & Edit</v-btn>
+              <v-btn v-if="item.tribalCommonId" class="text-none" color="#48663f" min-width="100" size="small" @click="showDetails(item)"
+                >View & Edit</v-btn>
+                <v-btn variant="text" class="text-capitalize text-decoration-underline" color="#2E7D32" v-else
+                @click="generate(item)" :loading="item.qrLoad" :disabled="item.qrLoad">Generate CommonId</v-btn>
             </td>
             <td class="text-center">
               <v-icon size="default" color="danger" class=" mdi mdi-trash-can" @click="deleteItem(item)"></v-icon>
@@ -120,12 +123,12 @@
 
   <script>
 import axios from 'axios';
-// import AddNew from './AddNew.vue';
+import AddNew from './AddNew.vue';
 import { mapGetters } from 'vuex';
 export default {
-//   components: {
-//     AddNew
-//   },
+  components: {
+    AddNew
+  },
   data: () => ({
     qrDialog: false,
     dialogDelete: false,
@@ -252,7 +255,7 @@ export default {
           this.topics = filteredResponse.map((topic) => {
             if (!topic.tribalCommonId) {
               return {
-                title: topic.topic,
+                title: topic.title,
                 id: topic.uniqueId,
               };
             }
