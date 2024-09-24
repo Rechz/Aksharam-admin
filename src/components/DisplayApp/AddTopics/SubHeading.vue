@@ -160,7 +160,7 @@
             </div>
           </v-card>
           <v-card-title class="py-1 bg-blue-grey-lighten-5">Video</v-card-title>
-          <v-card class="p-3 d-flex gap-2" flat :disabled="videoSubmit">
+          <v-card class="p-3 d-flex gap-2" flat>
             <div>
               <div class="mb-3">
                 <input type="file" ref="fileVideo" @change="handleVideo" class="mb-2 d-none" accept="video/*" multiple>
@@ -170,11 +170,30 @@
                   <label for="fileVideo" class="ms-2">No video chosen.</label>
                 </template>
                 <template v-else>
-                  <div class="mt-2">
-                    <v-chip v-for="file in videoFiles" :key="file.name" closable @click:close="removeVideo(file)"
-                      class="me-2 mb-1">
-                      {{ file.name }}
-                    </v-chip>
+                  <div class="d-flex gap-2 flex-wrap">
+                    <div class="mt-2 " v-for="(video, index) in videoPreview" :key="video.file.name">
+                      <v-card class="pt-1 pb-4 d-flex flex-column" elevation="2">
+                        <div class="d-flex justify-content-end">
+                          <v-icon class="mdi mdi-close" @click="removeVideo(video.file)"></v-icon>
+                        </div>
+                        <video :src="video.url" controls width="300" class="mx-3 mb-2"></video>
+                        <div class="mx-3">
+                          <input type="file" :ref="'thumbnailInput' + index" @change="handleThumbnailSelection(index)"
+                            class="d-none" accept="image/*" />
+                          <v-btn @click="triggerThumbnailInput(index)" color="blue-grey-darken-2" variant="outlined"
+                            size="small" class="text-capitalize">
+                            Choose Thumbnail
+                          </v-btn>
+                          <template v-if="video.thumbnail">
+                            <v-img :src="video.thumbnail" alt="Thumbnail Image" max-width="300" width="300"
+                              max-height="150px" cover class="mt-2"></v-img>
+                          </template>
+                          <template v-else>
+                            <label class="ms-2">No thumbnail chosen.</label>
+                          </template>
+                        </div>
+                      </v-card>
+                    </div>
                   </div>
                 </template>
               </div>
@@ -255,7 +274,8 @@ export default {
         bgFile: [],
         imageBg: null,
         bgLoad: false,
-        bgSubmit: false   
+        bgSubmit: false,
+        videoPreview:[]   
       };
     },
     computed: {
@@ -546,13 +566,38 @@ export default {
       handleVideo(event) {
         const selectedFiles = event.target.files;
         for (let i = 0; i < selectedFiles.length; i++) {
+          const file = selectedFiles[i];
           this.videoFiles.push(selectedFiles[i]);
+          if (file.type.includes("video")) {
+            // Create a preview URL for the video
+            const videoUrl = URL.createObjectURL(file);
+            this.videoPreview.push({ url: videoUrl, file, thumbnail: null, thumbnailFile: null });
+          }
         }
       },
       removeVideo(file) {
         const videoIndex = this.videoFiles.findIndex(vid => vid === file);
         this.videoFiles.splice(videoIndex, 1);
+        this.videoPreview.splice(videoIndex, 1);
+        console.log(this.videoPreview)
         this.$refs.fileVideo.value = '';
+      },
+      triggerThumbnailInput(index) {
+        this.$refs[`thumbnailInput${index}`][0].click();
+      },
+
+      // Handle thumbnail selection for a specific video
+      handleThumbnailSelection(index) {
+        const file = this.$refs[`thumbnailInput${index}`][0].files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            this.videoPreview[index].thumbnail = e.target.result;
+            this.videoPreview[index].thumbnailFile = file;// Set thumbnail preview
+          };
+          reader.readAsDataURL(file); // Read the file for preview
+          console.log(this.videoPreview)
+        }
       },
       async submitVideo(id) {
         let message;
@@ -560,7 +605,10 @@ export default {
         let uid;
         uid = this.commonId;
         const formData = new FormData();
-        this.videoFiles.forEach((file) => { formData.append("files", file);});
+        this.videoPreview.forEach((file) => {
+          formData.append("files", file.file);
+          formData.append('thumbnailFile', file.thumbnailFile)
+        });
         const payload = {
           uid: uid,
           id: id,
@@ -583,6 +631,7 @@ export default {
           this.error(message);
         }
       },
+
       finish() {
         sessionStorage.clear();
         this.step = 1
