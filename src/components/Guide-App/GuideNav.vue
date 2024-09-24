@@ -21,7 +21,7 @@ export default {
     data() {
         return {
             // tab: 'Details',
-            items: ['Add Topics', 'Topic Details'],
+            items: ['Add Topics', 'Topic Details','User Details'],
         };
     },
     methods: {
@@ -29,8 +29,11 @@ export default {
             if (item === 'Add Topics') {
                 this.$router.push({ name: 'guide-add-main' })
             }
-            else {
+            else if(item === 'Topic Details'){
                 this.$router.push({ name: 'guide-view' })
+            }
+            else {
+                this.$router.push({ name: 'guide-user-view' })
             }
 
         }
@@ -41,16 +44,22 @@ export default {
                 if ((this.$route.name === 'guide-view')) {
                     return 'Topic Details';
                 }
-                else {
+                else if(this.$route.name === 'guide-add-main'){
                     return 'Add Topics';
+                }
+                else {
+                    return 'User Details';
                 }
             },
             set(value) {
                 if (value === 'Topic Details') {
                     this.$router.push({ name: 'guide-view' })
                 }
-                else {
+                else if(value === 'Add Topics'){
                     this.$router.push({ name: 'guide-add-main' })
+                }
+                else {
+                    this.$router.push({name: 'guide-user-view'})
                 }
             }
         },

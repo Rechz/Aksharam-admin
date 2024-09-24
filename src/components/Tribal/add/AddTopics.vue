@@ -27,8 +27,6 @@
                             density="comfortable" class="select mb-2" variant="outlined"></v-text-field>
                         <v-textarea :label="language === 1 ? 'വിവരണം' : 'Description'" class="desc mb-2" rows="6"
                             v-model="description" variant="outlined" counter></v-textarea>
-                        <!-- <v-textarea :label="language === 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
-                            class="reference desc" rows="2" v-model="url" variant="outlined" counter></v-textarea> -->
                     </div>
                     <div class="d-flex flex-column ">
                         <h6 class="text-success text-end fst-italic mb-0" v-if="malSubmit">*{{ malHeading }} (Malayalam)
@@ -101,18 +99,9 @@ export default {
             QRLoading: false,
             malSubmit: false,
             engSubmit: false,
-            // imageSubmit: false,
             videoSubmit: false,
-            // audioEngSubmit: false,
-            // audioMalSubmit: false,
-            // pdfMalSubmit: false,
-            // pdfEngSubmit:false,
             subload: false,
-            // imageLoad: false,
             videoLoad: false,
-            // audioLoad: false,
-            // images: [],
-            // imgPreview: [],
             title: null,
             description: null,
             language: null,
@@ -127,11 +116,6 @@ export default {
             icon: '',
             dialogTopic: false,
             dialogHead: '',
-            // languagePdf: null,                         
-            // pdfFile: [],
-            // pdfSubmit: false,
-            // pdfLoad: false,
-            // paraAdd: false
         };
     },
     computed: {
@@ -306,15 +290,8 @@ export default {
             // this.subhead = false;
             this.malSubmit = false;
             this.engSubmit = false;
-            // this.audioEngSubmit = false;
-            // this.audioMalSubmit = false;
             this.videoSubmit = false;
-            // this.imageSubmit = false;
             this.languageAV = null;
-            // this.images = [];
-            // this.imgPreview = [];
-            // this.pdfFile = [];
-            // this.audioFiles = [];
             this.videoFiles = [];
             this.qrGenerated = false;
             this.$router.push({ name: 'tribal-add' })

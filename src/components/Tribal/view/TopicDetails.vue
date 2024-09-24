@@ -55,11 +55,6 @@
                     <v-btn icon="mdi-trash-can" size="x-small" variant="outlined" elevation="10"
                         @click="deleteDialogAll = true"></v-btn>
                 </div>
-                <!-- <div class="my-3 d-flex justify-content-center" v-if="audios && audios.length > 0">
-                    <audio controls :src="audios[0].furl" type="audio/*"
-                        class="w-75 bg-brown-darken-2 p-1 rounded-2">Your browser does not support the audio element.
-                    </audio>
-                </div> -->
                 <p class="text-wrap text-start ps-3 pre-text" v-html="formattedDescription(subTopic.description)"></p>
                 <div v-if="videos && videos.length > 0">
                     <div v-for="video in videos" :key="video.fileUrl">
@@ -68,49 +63,6 @@
                         </video>
                     </div>
                 </div>
-                <!-- <div class="images">
-                    <v-card class="bg-transparent" flat>
-                        <v-card-text>
-                            <div class="d-flex gap-3 flex-wrap justify-content-center" v-if="images.length >= 0">
-                                <div v-for="(image) in images" :key="image.id">
-                                    <v-card class="bg-transparent p-3">
-                                        <v-img :lazy-src="image.furl" :src="image.furl" height="250" width="300" cover
-                                            class="mx-auto mb-1"></v-img>
-                                        <p class="text-center mb-0">{{ image.imageName ?? ''}}</p>
-                                        <p class="text-center fst-italic text-caption">{{ image.imageRefUrl??'' }}</p>
-                                    </v-card>
-                                </div>
-                            </div>
-                        </v-card-text>
-                    </v-card>
-                </div> -->
-                <!-- <div class="paragraphs px-3 mt-4" v-for="topic in subTopic.combinedDataSubList" :key="topic.commonId">
-                    <h5 class="fw-bold my-0">{{ topic.topic }}</h5>
-                    <div class="d-flex justify-content-end px-3 mb-3">
-                        <v-btn icon="mdi-pen" size="x-small" variant="outlined" class="me-2" elevation="10"
-                            @click="editPara(topic.fsCommonId)"></v-btn>
-                        <v-btn icon="mdi-trash-can" size="x-small" variant="outlined" elevation="10"></v-btn>
-                    </div>
-                    <p class="text-wrap text-start pre-text" v-html="formattedDescription(topic.description)"></p>
-                    <div class="images">
-                        <v-card class="bg-transparent" flat>
-                            <v-card-text>
-                                <div class="d-flex gap-3 flex-wrap justify-content-center"
-                                    v-if="topic.imgList.length > 0">
-                                    <div v-for="(image) in topic.imgList" :key="image.id">
-                                        <v-card class="bg-transparent p-3">
-                                            <v-img :lazy-src="image.furl" :src="image.furl" height="250" width="300"
-                                                cover class="mx-auto mb-1"></v-img>
-                                            <p class="text-center mb-0">{{ image.imageName ?? '' }}</p>
-                                            <p class="text-center fst-italic text-caption">{{ image.imageRefUrl ?? '' }}
-                                            </p>
-                                        </v-card>
-                                    </div>
-                                </div>
-                            </v-card-text>
-                        </v-card>
-                    </div>
-                </div> -->
             </div>
         </div>
         <v-dialog v-model="dialogEdit" scrollable transition="dialog-bottom-transition" fullscreen>
@@ -119,11 +71,6 @@
                 :uid="subTopic.uniqueId" @update="updateDetails"
                 :malId="subTopic.malayalamId" :engId="subTopic.englishId"></edit-topics>
         </v-dialog>
-        <!-- <v-dialog v-model="dialogEditPara" scrollable transition="dialog-bottom-transition" fullscreen>
-            <edit-para :title="para.topic" :description="para.description" :reference="para.referenceUrl"
-                :commonId="para.fsCommonId" :topicImage="para.imgList" @exit="dialogEditPara = false;"
-                @update="updateDetails"></edit-para>
-        </v-dialog> -->
     </v-main>
 </template>
 
@@ -233,36 +180,16 @@ export default {
     language() {
       return this.getLanguage;
     },
-    // images() {
-    //   if (this.subTopic.imgList && this.subTopic.imgList.length > 0) {
-    //     return this.subTopic.imgList;
-    //   } else return [];
-    //   },
-    // audios() {
-    //   if (this.subTopic.audioList && this.subTopic.audioList.length >= 1) {
-    //     return this.subTopic.audioList;
-    //   } else return [];
-    //   },
       videos() {
           if (this.subTopic.tribalVideoList && this.subTopic.tribalVideoList.length >= 1) {
               return this.subTopic.tribalVideoList;
           } else return [];
       },
-    //   paragraphs() {
-    //       if (this.subTopic.combinedDataSubList && this.subTopic.combinedDataSubList.length > 0) {
-    //           return this.subTopic.combinedDataSubList;
-    //       } else return [];
-    //   }
   },
   mounted() {
     this.getType();
     console.log("videos",this.videos)
     },
-    // watch: {
-    //     subTopic(newVal) {
-    //         this.para = newVal.combinedDataSubList.find(p => p.fsCommonId === this.para?.fsCommonId) || null;
-    //     }
-    // },
 }
 </script>
 

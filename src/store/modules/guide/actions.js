@@ -330,4 +330,18 @@ export default {
       throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
     }
   },
+  // get user details
+  async getUserDetails({ rootGetters, commit }) { 
+    try {
+      const response = await axios.get(`${rootGetters.getUrl}/api/guideAppQR/getAllUsers`);
+      if (response.status >= 200 && response.status < 300) {
+        // console.log(response.data)
+        commit('setUserDetails', response.data);
+        return true;
+      }
+    }
+    catch (error) {
+      console.error(error);
+    }
+  },
 }

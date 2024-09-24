@@ -28,9 +28,6 @@
                                 density="comfortable" class="select mb-2" variant="outlined"></v-text-field>
                             <v-textarea :label="language == 1 ? 'വിവരണം' : 'Paragraph Description'" class="desc mb-2"
                                 rows="6" v-model="editDescription" variant="outlined" counter></v-textarea>
-                            <!-- <v-textarea :label="language == 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
-                                class="reference desc" rows="2" v-model="editUrl" variant="outlined"
-                                counter></v-textarea> -->
                         </v-card>
                     </div>
                     <div class="d-flex justify-content-end">
@@ -42,82 +39,6 @@
                 </v-form>
             </v-card-text>
         </v-card>
-        <!-- <v-divider class="mx-5"></v-divider> -->
-        <!-- <v-card flat class="mx-5" :disabled="imageLoad || submitImage">
-            <v-card-title class="bg-blue-grey-lighten-5 mb-3">Images</v-card-title>
-            <v-card-text>
-                <div class="d-flex gap-3 flex-wrap" v-if="editImages.length > 0">
-                    <div v-for="(image, index) in editImages" :key="image.imgID">
-                        <v-card :disabled="image.isEdit">
-                            <v-card-text>
-                                <v-img :lazy-src="image.furl" :src="image.furl" height="250" width="400" cover
-                                    class="mx-auto"></v-img>
-                                <v-card-actions v-if="image.editClicked" class="py-0 d-flex justify-content-end">
-                                    <v-btn prepend-icon="mdi-pencil" size="small" color="success"
-                                        @click="edit(image.id, index, image.imageName, image.imageRefUrl )"
-                                        v-if="!image.isEdit">change image</v-btn>
-                                    <v-progress-circular :width="1" color="success" indeterminate size="x-small"
-                                        v-else></v-progress-circular>
-                                </v-card-actions>
-
-                                <div class="text-center" v-if="!image.editClicked">
-                                    <p class="mb-0">{{ image.imageName??' '}}</p>
-                                    <p class="mb-0">{{ image.imageRefUrl ??' '}}</p>
-                                </div>
-                                <div v-else>
-                                    <v-text-field v-model="image.imageName" label="Image Title" density="compact"
-                                        variant="outlined"></v-text-field>
-                                    <v-text-field v-model="image.imageRefUrl" label="Image Reference URL"
-                                        density="compact" variant="outlined"></v-text-field>
-                                </div> -->
-                                <!-- <v-text-field v-model="image.imageName" label="image title" density="compact"
-                                    variant="outlined"></v-text-field> -->
-                                <!-- <v-card-actions class="py-0 d-flex justify-content-end " v-if="!image.editClicked">
-                                    <v-btn icon="mdi-pencil" size="small" color="success"
-                                        @click="image.editClicked = true"></v-btn>
-                                    <v-btn icon="mdi-delete" size="small" color="error"
-                                        @click="imageId = image.id; deleteDialogImage = true"></v-btn>
-                                </v-card-actions>
-                                <v-card-actions class="py-0 d-flex justify-content-end" v-else>
-                                    <v-btn @click="image.editClicked = false;">Cancel</v-btn>
-                                    <v-btn color="success"
-                                        @click="updateImgDetails(image.id, image.imageName, image.imageRefUrl,image)">Submit</v-btn>
-                                </v-card-actions>
-                            </v-card-text> -->
-                            <!-- <v-card-text> -->
-
-                            <!-- </v-card-text> -->
-                        <!-- </v-card>
-                        <v-dialog v-model="deleteDialogImage" width="400px">
-                            <v-card class="rounded-4 pb-4">
-                                <v-card-title class="mb-2 text-white ps-4 fs-4"
-                                    style="background-color: #BA1A1A;">Delete Image</v-card-title>
-                                <v-container class="px-4 d-flex flex-column align-items-center">
-                                    <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
-                                    <v-card-text class="mt-1 text-center">Are you sure you want to delete this
-                                        image?</v-card-text>
-                                </v-container>
-                                <v-card-actions class="mx-4 d-flex flex-column align-items-center">
-                                    <v-btn block class="text-white mb-3" style="background-color: #BA1A1A;"
-                                        :disabled="imageDelete" :loading="imageDelete"
-                                        @click="deleteImage()">Delete</v-btn>
-                                    <v-btn block variant="text" class="mb-3"
-                                        @click="deleteDialogImage = false">Cancel</v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>
-                    </div>
-                    <input type="file" ref="selectImage" @change="handleImage" class="d-none" accept="image/*">
-                </div>
-                <v-card-subtitle v-else class="mb-0 py-0">No images uploaded.</v-card-subtitle>
-                <div class="d-flex justify-content-end">
-                    <input type="file" ref="addImage" @change="addImage" class="d-none" accept="image/*" multiple>
-                    <v-btn color="#386568" variant="outlined" rounded prepend-icon="mdi-plus"
-                        class="text-capitalize mt-3" @click="add" :disabled="imageLoad" :loading="imageLoad">Add
-                        Image</v-btn>
-                </div>
-            </v-card-text>
-        </v-card> -->
         <v-divider class="mx-5"></v-divider>
         <v-card flat class="mx-5">
             <v-card-title class="bg-blue-grey-lighten-5 mb-3">Video</v-card-title>
@@ -162,54 +83,8 @@
                 </div>
             </v-card-text>
         </v-card>
-        <!-- <v-divider class="mx-5"></v-divider>
-        <v-card flat class="mx-5">
-            <v-card-title class="bg-blue-grey-lighten-5 mb-3">Audio</v-card-title>
-            <v-card-text>
-                <v-card v-if="editAudio.length > 0" width="320" class="pt-2 px-2">
-                    <audio controls :src="editAudio[0].furl" type="audio/*" width="200">
-                        Your browser does not support the audio element.
-                    </audio>
-                    <v-card-actions class="py-0 d-flex justify-content-end ">
-                        <v-btn icon="mdi-pencil" size="small" color="success" @click="updateAudio(editAudio[0].id)"
-                            v-if="!editAudio[0].isEdit"></v-btn>
-                        <v-progress-circular :width="1" color="success" indeterminate size="x-small"
-                            v-else></v-progress-circular>
-                        <v-btn icon="mdi-delete" size="small" color="error"
-                            @click="deleteDialogAudio = true; audioIndex = editAudio[0].id"></v-btn>
-                    </v-card-actions>
-                    <input type="file" ref="selectAudio" @change="handleAudio" class="d-none" accept="audio/*">
-                    <v-dialog v-model="deleteDialogAudio" width="400px">
-                        <v-card class="rounded-4 pb-4">
-                            <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
-                                Audio</v-card-title>
-                            <v-container class="px-4 d-flex flex-column align-items-center">
-                                <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
-                                <v-card-text class="mt-1 text-center">Are you sure you want to delete this
-                                    audio?</v-card-text>
-                            </v-container>
-                            <v-card-actions class="mx-4 d-flex flex-column align-items-center">
-                                <v-btn block class="text-white mb-3" style="background-color: #BA1A1A;"
-                                    :disabled="audioDelete" :loading="audioDelete" @click="deleteAudio">Delete</v-btn>
-                                <v-btn block variant="text" class="mb-3"
-                                    @click="deleteDialogAudio = false; audioIndex = null;">Cancel</v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                </v-card>
-                <v-card-subtitle v-else class="mb-0 py-0">No audio uploaded.</v-card-subtitle>
-                <div class="d-flex justify-content-end">
-                    <input type="file" ref="addAudio" @change="addAudio" class="d-none" accept="audio/*">
-                    <v-btn color="#386568" variant="outlined" rounded prepend-icon="mdi-plus" class="text-capitalize"
-                        :disabled="audioLoad" :loading="audioLoad" v-if="editAudio.length === 0" @click="addAud">Add
-                        Audio</v-btn>
-                </div>
-            </v-card-text>
-        </v-card> -->
         <v-divider class="mx-5"></v-divider>
         <div class="d-flex justify-content-end gap-3 mx-5">
-            <!-- <v-btn color="#2C7721" variant="outlined" prepend-icon="mdi-plus" class="text-capitalize"
-                @click="paraAdd = !paraAdd">Add Paragraph</v-btn> -->
             <v-btn color="#2C7721" variant="elevated" prepend-icon="mdi-check" class="text-capitalize"
                 @click="exit">Finish</v-btn>
         </div>
@@ -221,12 +96,8 @@
 </template>
 
 <script>
-// import AddParagraph from '../add/AddParagraph.vue';
 import { mapGetters } from 'vuex';
 export default {
-    // components: {
-    //     AddParagraph
-    // },
     emits: ['exit','update'],
     props: ['main','title', 'description','topicVideo','commonId','uid','malId','engId'],
     data() {
