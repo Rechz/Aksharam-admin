@@ -18,6 +18,7 @@ export default {
         paraidmal: sessionStorage.getItem('paraidmal') ||'',
         paraideng: sessionStorage.getItem('paraideng') || '',
         commonIdPara: sessionStorage.getItem('commonIdPara') || '',
+        UserDetails: sessionStorage.getItem('UserDetails') || ''
       }
     },
     actions,

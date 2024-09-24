@@ -46,5 +46,9 @@ export default {
   setGuideTopic(state, payload) {
     state.guideTopic = payload;
     sessionStorage.setItem('guideTopic', JSON.stringify(payload))
+  },
+  setUserDetails(state, payload) {
+    state.UserDetails = payload;
+    sessionStorage.setItem('UserDetails', JSON.stringify(payload))
   }
 }

@@ -25,9 +25,6 @@
                 <v-form class="pt-0 " ref="form" @submit.prevent="submitHeading">
                     <div class="d-flex">
                         <v-card flat :disabled="!QRLoad" class="py-3 pt-2">
-                            <!-- <v-select class="select mb-2" label='Select Language' density="comfortable"
-                                :items="languages" v-model="selectedLanguage" :rules="languageRules"
-                                item-title="talk" item-value="dtId" variant="outlined" disabled="true"></v-select> -->
                             <v-text-field v-model="selectedLanguage" label="Language" :disabled="true" width="400"
                                 variant="outlined" density="comfortable"></v-text-field>
                             <v-text-field v-model="title" :label="language == 1 ? 'തലക്കെട്ട്' : 'Heading'"
@@ -35,8 +32,6 @@
                                 variant="outlined"></v-text-field>
                             <v-textarea :label="language == 1 ? 'വിവരണം' : 'Description'" class="desc mb-2" rows="6"
                                 v-model="description" variant="outlined" counter></v-textarea>
-                            <!-- <v-textarea :label="language == 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
-                                class="reference desc" rows="2" v-model="url" variant="outlined"></v-textarea> -->
                         </v-card>
                     </div>
                     <div class="d-flex justify-content-end">

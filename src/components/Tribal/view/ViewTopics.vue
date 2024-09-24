@@ -72,40 +72,11 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <!-- <v-dialog v-model="qrDialog" width="400px">
-            <v-card style="width: 400px; height:auto; border-radius: 15px;">
-              <v-card-title class="d-flex justify-content-between  align-items-center px-4"
-                style="background-color: #216D17; color: #FFFFFF;">
-                <h5 class="mt-2">QR Code</h5>
-                <v-icon @click="closeQR" class="mdi mdi-window-close" size="20"></v-icon>
-              </v-card-title>
-              <v-card-text class="mb-0 px-3 py-0">
-                <v-container class="py-0">
-                  <v-img :src='editedItem.qrCodeUrl' alt="QR" style=" height: 400px; width: 400px;"></v-img>
-                </v-container>
-              </v-card-text>
-              <v-card-text class="px-3 pt-0 mb-3">
-                <div class="d-flex justify-content-end me-3">
-                  <v-btn class="text-capitalize fw-bolder" color="green-darken-4" width="170" variant="outlined"
-                    rounded @click="downloadQRCodeImage(editedItem.qrCodeImage, editedItem.topic)">
-                    <v-icon class="mdi mdi-content-save-outline" color="green-darken-4"></v-icon>
-                    download
-                  </v-btn>
-                </div>
-              </v-card-text>
-            </v-card>
-          </v-dialog> -->
         </template>
         <template v-slot:item="{ item, index }">
           <tr style="background-color:#FCFDF6; color:black;">
             <td class="text-center">{{ index + 1 }}</td>
             <td class="text-center">{{ item.title }}</td>
-            <!-- <td class="text-center d-flex justify-content-center align-items-center"><v-img :src="item.qrCodeUrl"
-                :lazy-src="item.qrCodeUrl" alt="QR" class="qr" style="height: 50px; width: 50px;" v-if="item.tribalCommonId"
-                @click="showQR(item)"></v-img>:disabled="!item.tribalCommonId"
-              <v-btn variant="text" class="text-capitalize text-decoration-underline" color="#2E7D32" v-else
-                @click="generate(item)" :loading="item.qrLoad" :disabled="item.qrLoad">Generate QR</v-btn>
-            </td> -->
             <td class="text-center">
               <v-btn v-if="item.tribalCommonId" class="text-none" color="#48663f" min-width="100" size="small" @click="showDetails(item)"
                 >View & Edit</v-btn>

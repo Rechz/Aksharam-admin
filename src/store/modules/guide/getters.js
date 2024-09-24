@@ -11,4 +11,5 @@ export default {
     getengHeading: (state) => state.engHeading,
     getmalParaHeading: (state) => state.malParaHeading,
     getengParaHeading: (state) => state.engParaHeading,
+    getUserData: (state) => state.UserDetails
 };

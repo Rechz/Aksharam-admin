@@ -127,7 +127,12 @@ const router = createRouter({
               path: '/admin/guide-app/view',
               name: 'guide-view',
               component: () => import('./components/Guide-App/view/ViewTopics.vue'),
-            },        
+            },
+            {
+              path: '/admin/guide-app/user-view',
+              name: 'guide-user-view',
+              component: () => import('./components/Guide-App/User-Guide/ViewUsers.vue'),
+            },         
           ]
         },
         {
