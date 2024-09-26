@@ -164,33 +164,55 @@
                 </div>
             </v-sheet>
             <v-card-title class="bg-blue-grey-lighten-5 mb-3">SubHeading Video</v-card-title>
-            <v-sheet class="p-3" flat :disabled="videoSubmit">
+            <v-card class="p-3" flat>
                 <div class="d-flex flex-column gap-2">
                     <div>
-                        <input type="file" ref="fileVideo" @change="handleVideo" class="mb-2 d-none" accept="video/*" multiple>
+                        <input type="file" ref="fileVideo" @change="handleVideo" class="mb-2 d-none" accept="video/*"
+                            multiple>
                         <v-btn @click="triggerVideoInput" color="blue-grey-darken-4" variant="outlined" size="small"
                             class="text-capitalize">Choose Video</v-btn>
                         <template v-if="videoFiles.length === 0">
                             <label for="fileVideo" class="ms-2">No video chosen.</label>
                         </template>
                         <template v-else>
-                            <div class="mt-2">
-                                <v-chip v-for="file in videoFiles" :key="file.name" closable
-                                    @click:close="removeVideo(file)" class="me-2 mb-1">{{ file.name }}</v-chip>
+                            <div class="d-flex gap-2 flex-wrap">
+                                <div class="mt-2 " v-for="(video, index) in videoPreview" :key="video.file.name">
+                                    <v-card class="pt-1 pb-4 d-flex flex-column" elevation="2">
+                                        <div class="d-flex justify-content-end">
+                                            <v-icon class="mdi mdi-close" @click="removeVideo(video.file)"></v-icon>
+                                        </div>
+                                        <video :src="video.url" controls width="300" class="mx-3 mb-2"></video>
+                                        <div class="mx-3">
+                                            <input type="file" :ref="'thumbnailInput' + index"
+                                                @change="handleThumbnailSelection(index)" class="d-none"
+                                                accept="image/*" />
+                                            <v-btn @click="triggerThumbnailInput(index)" color="blue-grey-darken-2"
+                                                variant="outlined" size="small" class="text-capitalize">
+                                                Choose Thumbnail
+                                            </v-btn>
+                                            <template v-if="video.thumbnail">
+                                                <v-img :src="video.thumbnail" alt="Thumbnail Image" max-width="300"
+                                                    width="300" max-height="150px" cover class="mt-2"></v-img>
+                                            </template>
+                                            <template v-else>
+                                                <label class="ms-2">No thumbnail chosen.</label>
+                                            </template>
+                                        </div>
+                                    </v-card>
+                                </div>
                             </div>
                         </template>
                     </div>
-                    <div class="d-flex flex-column align-items-end justify-content-center ">
-                        <h6 class="text-success text-end fst-italic mb-0" v-if="videoSubmit">*Video successfully
-                            uploaded.</h6>
-                    </div>
                 </div>
                 <div class="d-flex justify-content-end">
-                    <v-btn @click="submitVideo(fileType.video)" color="#386568" variant="outlined" rounded
-                        prepend-icon="mdi-video" class="text-capitalize" :disabled="videoLoad"
-                        :loading="videoLoad">Submit Video</v-btn>
+                    <v-btn @click="submitVideo()" color="#386568" variant="outlined" rounded prepend-icon="mdi-video"
+                        class="text-capitalize" :disabled="videoLoad" :loading="videoLoad">Submit Video</v-btn>
                 </div>
-            </v-sheet>
+                <div class="d-flex flex-column align-items-start justify-content-center ">
+                    <h6 class="text-success text-end fst-italic mb-0" v-if="videoSubmit">*Video successfully uploaded.
+                    </h6>
+                </div>
+            </v-card>
         </v-card>
         <div class="my-5 d-flex justify-content-end align-items-center gap-2 px-5">
             <!-- <v-btn color="#2C7721" size="large" variant="elevated" prepend-icon="mdi-step-backward" @click="back">Finish
@@ -241,7 +263,8 @@ export default {
             bgFile: [],
             imageBg: null,
             bgLoad: false,
-            bgSubmit: false
+            bgSubmit: false,
+            videoPreview: [] 
         };
     },
     computed: {
@@ -542,33 +565,59 @@ export default {
         handleVideo(event) {
             const selectedFiles = event.target.files;
             for (let i = 0; i < selectedFiles.length; i++) {
+                const file = selectedFiles[i];
                 this.videoFiles.push(selectedFiles[i]);
+                if (file.type.includes("video")) {
+                    const videoUrl = URL.createObjectURL(file);
+                    this.videoPreview.push({ url: videoUrl, file, thumbnail: null, thumbnailFile: null });
+                }
             }
         },
         removeVideo(file) {
             const videoIndex = this.videoFiles.findIndex(vid => vid === file);
             this.videoFiles.splice(videoIndex, 1);
+            this.videoPreview.splice(videoIndex, 1);
+            console.log(this.videoPreview)
             this.$refs.fileVideo.value = '';
         },
-        async submitVideo(id) {
-            this.videoLoad = true;
+        triggerThumbnailInput(index) {
+            this.$refs[`thumbnailInput${index}`][0].click();
+        },
+        // Handle thumbnail selection for a specific video
+        handleThumbnailSelection(index) {
+            const file = this.$refs[`thumbnailInput${index}`][0].files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.videoPreview[index].thumbnail = e.target.result;
+                    this.videoPreview[index].thumbnailFile = file;// Set thumbnail preview
+                };
+                reader.readAsDataURL(file); // Read the file for preview
+                console.log(this.videoPreview)
+            }
+        },
+        async submitVideo() {
             let message;
+            this.videoLoad = true;
             let uid = this.commonId;
             const formData = new FormData();
-            this.videoFiles.forEach((file) => { formData.append("files", file); });
+            this.videoPreview.forEach((file) => {
+                formData.append("video", file.file);
+                formData.append('thumbnailFile', file.thumbnailFile)
+            });
             const payload = {
-                uid: uid,
-                formData: formData,
-                id: id
+                id: uid,
+                formData: formData
             }
             try {
-                const response = await this.$store.dispatch('display/submitSub2Media', payload);
+                const response = await this.$store.dispatch('display/uploadVideo', payload);
                 if (response) {
                     this.videoLoad = false;
-                    message = 'Malayalam video uploaded successfully';
+                    message = 'Video uploaded successfully';
                     this.videoSubmit = true;
                     this.success(message);
                     this.videoFiles = [];
+                    this.videoPreview = [];
                     this.$refs.fileVideo.value = '';
                     this.$emit('update');
                 }
@@ -579,7 +628,6 @@ export default {
                 this.error(message);
             }
         },
-
     },
     watch: {
         proceed(newValue) {

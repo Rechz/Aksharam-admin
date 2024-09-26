@@ -197,7 +197,7 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-end">
-                    <v-btn @click="submitVideo(fileType.video)" color="#386568" variant="outlined" rounded
+                    <v-btn @click="submitVideo()" color="#386568" variant="outlined" rounded
                         prepend-icon="mdi-video" class="text-capitalize" :disabled="videoLoad"
                         :loading="videoLoad">Submit Video</v-btn>
                 </div>
@@ -546,9 +546,8 @@ export default {
                 const file = selectedFiles[i];
                 this.videoFiles.push(selectedFiles[i]);
                 if (file.type.includes("video")) {
-                    // Create a preview URL for the video
-                    const videoUrl = URL.createObjectURL(file);
-                    this.videoPreview.push({ url: videoUrl, file, thumbnail: null, thumbnailFile: null });
+                  const videoUrl = URL.createObjectURL(file);
+                  this.videoPreview.push({ url: videoUrl, file, thumbnail: null, thumbnailFile: null });
                 }
             }
         },
@@ -576,29 +575,29 @@ export default {
                 console.log(this.videoPreview)
             }
         },
-        async submitVideo(id) {
+        async submitVideo() {
             let message;
             this.videoLoad = true;
             let uid = this.commonId;
             const formData = new FormData();
             this.videoPreview.forEach((file) => {
-                formData.append("files", file.file);
+                formData.append("video", file.file);
                 formData.append('thumbnailFile', file.thumbnailFile)
                 // console.log('preview',file.thumbnailFile.name)
             });
             const payload = {
-                uid: uid,
-                id: id,
+                id: uid,
                 formData: formData
             }
             try {
-                const response = await this.$store.dispatch('display/submitSubMedia', payload);
+                const response = await this.$store.dispatch('display/uploadVideo', payload);
                 if (response) {
                     this.videoLoad = false;
                     message = 'Video uploaded successfully';
                     this.videoSubmit = true;
                     this.success(message);
                     this.videoFiles = [];
+                    this.videoPreview = [];
                     this.$refs.fileVideo.value = '';
                     this.$emit('update');
                 }
