@@ -801,5 +801,96 @@ export default {
       console.log(err)
       throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
     }
+  },
+  //update main video thumbnail
+  async updateMainVidThumbnail({ rootGetters, }, payload) {
+    try {
+      const response = await axios.put(`${rootGetters.getUrl}/api/updateMain/updateThumbnail?uId=${payload.id}&id=${payload.index}`, payload.file,
+        {
+          headers: {
+            Authorization: `Bearer ${rootGetters.getToken}`
+          }
+        });
+      if ((response.status >= 200) || (response.status < 300)) { 
+        return true;
+      }
+    }
+    catch (err) {
+      console.error(err);
+      throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+    }
+  },
+  //update sub video thumbnail
+  async updateSubVidThumbnail({ rootGetters, }, payload) {
+    try {
+      const response = await axios.put(`${rootGetters.getUrl}/api/updateFirst/updateThumbnail?uId=${payload.id}&id=${payload.index}`, payload.file,
+        {
+          headers: {
+            Authorization: `Bearer ${rootGetters.getToken}`
+          }
+        });
+      if ((response.status >= 200) || (response.status < 300)) { 
+        return true;
+      }
+    }
+    catch (err) {
+      console.error(err);
+      throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+    }
+  },
+  //update second sub video thumbnail
+  async updateSub2VidThumbnail({ rootGetters, }, payload) {
+    try {
+      const response = await axios.put(`${rootGetters.getUrl}/api/updateSecondSub/updateThumbnail?uId=${payload.id}&id=${payload.index}`, payload.file,
+        {
+          headers: {
+            Authorization: `Bearer ${rootGetters.getToken}`
+          }
+        });
+      if ((response.status >= 200) || (response.status < 300)) { 
+        return true;
+      }
+    }
+    catch (err) {
+      console.error(err);
+      throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+    }
+  },
+  //delete main video thumbnail
+  async deleteMainVidThumbnail({ rootGetters, }, payload) {
+    try {
+      const response = await axios.delete(`${rootGetters.getUrl}/api/deleteMain/deleteThumbnail?commonId=${payload.commonId}&tId=${payload.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${rootGetters.getToken}`
+          }
+        });
+      if ((response.status >= 200) || (response.status < 300)) { 
+        return true;
+      }
+    }
+    catch (err) {
+      console.error(err);
+      throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+    }
+  },
+  //upload video main
+  async uploadVideo({ rootGetters, }, payload) {
+    try {
+        const response = await axios.post(`${rootGetters.getUrl}/api/mediaData/videoUpload?commonId=${payload.id}`, payload.formData,
+        {
+        headers: {
+          Authorization: `Bearer ${rootGetters.getToken}`
+        }
+       }
+        );
+        if (response.status >= 200 && response.status < 300) {
+            return true;
+          }
+        }
+      catch (err) {
+        console.error(err)
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+      }
   }
 };
