@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="!subheading">
+  <v-card v-if="!subheading && !addTopic">
     <v-card-title class="text-center text-white d-flex justify-content-between px-4 fixed-top"
       style="background-color: #2C7721;">
       <h5>{{ main? 'Edit Topic': 'Edit Subheading'}}</h5>
@@ -32,11 +32,9 @@
           </div>
         </v-form>
       </div>
-
       <v-card v-if="!topicAddBtn" flat>
         <v-divider></v-divider>
       </v-card>
-
       <div v-if="commonId">
         <v-divider></v-divider>
         <v-card :disabled="!commonId">
@@ -168,7 +166,8 @@
                         v-if="!video.editThumb"></v-btn>
                       <v-progress-circular :width="1" color="success" indeterminate size="x-small"
                         v-else></v-progress-circular>
-                      <v-btn icon="mdi-delete" size="small" color="error" @click="deleteDialogThumb = true; thumbIndex = index;"></v-btn>
+                      <v-btn icon="mdi-delete" size="small" color="error"
+                        @click="deleteDialogThumb = true; thumbIndex = index;"></v-btn>
                     </v-card-actions>
                     <v-dialog v-model="deleteDialogThumb" width="400px">
                       <v-card class="rounded-4 pb-4">
@@ -267,33 +266,66 @@
           </v-card>
         </v-card>
       </div>
-      <div class="d-flex justify-content-end mt-3">
-        <v-btn prepend-icon="mdi-plus" class="text-capitalize" color="#2C7721" size="large" variant="elevated"
-          v-if="!commonId" @click="addTranslation">Add Translation</v-btn>
-        <v-btn color="#2C7721" variant="elevated" @click="finish" v-else>Finish</v-btn>
+      <div v-if="!commonId">
+        <v-card-title class="bg-blue-grey-lighten-5 mb-3">Add Translation</v-card-title>
+        <v-select v-model="selectedItem" :items="topics" item-title="title" item-value="id" label="Select topic"
+          append-outer-icon="mdi-menu-down" clearable variant="outlined" density="compact" width="400" class="mt-3">
+          <template v-slot:append-item>
+            <v-divider class="my-0 py-0"></v-divider>
+            <v-list-item class="py-0">
+              <v-btn @click="handleButtonClick" class="ps-0 text-capitalize" variant="text" prepend-icon="mdi-plus"
+                color="success">Add Topic</v-btn>
+            </v-list-item>
+          </template>
+        </v-select>
+        <div class="d-flex justify-content-end mt-3">
+          <v-btn prepend-icon="mdi-plus" class="text-capitalize" :loading="translate" color="#2C7721" variant="elevated"
+            @click="addTranslation" :disabled="!selectedItem || buttonClicked || translate">Add</v-btn>
+        </div>
       </div>
     </v-card-text>
   </v-card>
-  <v-card v-else>
+  <v-card v-if="subheading && !addTopic">
     <EditSub @back="subheading = !subheading" :idmal="malId" :ideng="engId" @update="update" v-if="main == true"
       @close="subheading = false;" @exit="exit" />
     <EditSecondSub @back="subheading = !subheading" :idmal="malId" :ideng="engId" @update="update"
       @close="subheading = false;" @exit="exit" v-else />
+  </v-card>
+  <v-card v-if="addTopic" >
+    <add-sub :languageId="language" :id="uId" @back="addTopic = false" :malUid="malayalam" :engUid="english"
+      @exit="addTopic = false; dialogGenerate = false" @updateTopic="update"></add-sub>
   </v-card>
 </template>
 
 <script>
 import EditSub from './EditSub.vue';
 import EditSecondSub from './EditSecondSub.vue';
+import AddSub from './AddSub.vue';
 export default {
-    props: ["head", "description", "images", 'video', 'url', 'audio', 'commonId', 'uId', 'main', 'subtopic', 'malId','engId','bgImage'],
+    props: ["head", "description", "images", 'video', 'url', 'audio', 'commonId', 'uId', 'main', 'subtopic', 'subs', 'malId','engId','bgImage','mainId','malayalam','english'],
     emits: ['finish', 'update','dialogClose','exit'],
-    components: { EditSub, EditSecondSub },
+    components: { EditSub, EditSecondSub, AddSub },
     created() {
       this.editImages.forEach(image => image.isEdit = false);
       this.editAudio.forEach(audio => audio.isEdit = false);
       this.editVideo.forEach(video => { video.isEdit = false; video.editThumb = false; });
       this.editBg.forEach(bg => bg.isEdit = false);
+  },
+
+  async mounted() {
+    if (this.main == false) {
+      if (!this.firstsubs.fsCommonId) {
+        var language;
+        this.language == 1 ? language = 2 : language = 1;
+        const res = await this.$store.dispatch('display/showTopicDetails', {
+          language: language,
+          commonId: this.mainId
+        })
+        if (res) {
+          this.topics = res;
+        }
+      }
+    }
     },
     data() {
       return {
@@ -338,7 +370,15 @@ export default {
         topicAddBtn: false,
         deleteDialogThumb: false,
         thumbIndex: null,
-        thumbDelete: false
+        thumbDelete: false,
+        buttonClicked: false,
+        selectedItem: null,
+        addTopic: false,
+        dialogSub: false,
+        firstsubs: this.subs,
+        id: this.mainId,
+        topics: [],
+        translate: false
       };  
     },
     methods: {
@@ -356,6 +396,10 @@ export default {
         this.message = message;
         this.dialogTopic = true;
       },
+      handleButtonClick() {
+        this.buttonClicked = true;
+        this.addTopic = true;
+      },
       exit() {
         this.$emit('exit');
       },
@@ -370,14 +414,39 @@ export default {
       },
       async addTranslation() {
         this.topicAddBtn = true;
-        // try {
-        //   if (this.main == true) {
-        //     this.$store.dispatch('display/generateQR', {
-        //     })
-        //   }
-        // }
-        // catch (error) {
-        // } 
+        if (this.main == false) {
+          if (this.selectedItem && !this.buttonClicked) {
+            var idmal;
+            var ideng;
+            if (this.language == 1) {
+              idmal = this.uId;
+              ideng = this.selectedItem
+              // console.log(ideng + ' ' + idmal)
+            }
+            else {
+              idmal = this.selectedItem;
+              ideng = this.uId;
+              // console.log(idmal + ' ' + ideng)
+            }
+            try {
+              this.translate = true;
+              const res = await this.$store.dispatch('display/generateQRSub', { subideng: ideng, subidmal: idmal });
+              if (res) {
+                this.translate = false;
+                let message = `Translation added successfully!`;
+                this.success(message);
+                this.$emit('update');
+              }
+            }
+            catch (error) {
+              this.translate = false;
+              let message = error.message;
+              this.error(message);
+              console.error(error)
+            }
+          }
+        }
+      
       },
       async editTopic() {
         const { valid } = await this.$refs.form.validate()
@@ -565,27 +634,22 @@ export default {
       async addVideo(event) {
         const files = event.target.files;
         for (let i = 0; i < files.length; i++) {
-          this.videoAdd.push(files[i]);
+          this.videoAdd.push({ file: files[i], thumbnailFile: null });
         }
         const formData = new FormData();
         this.videoAdd.forEach((file) => {
-          formData.append("files", file);
+          formData.append("video", file.file);
+          // formData.append('thumbnailFile', file.thumbnailFile)
         });
         let message;
         const payload = {
-          uid: this.commonId,
-          id: this.media.video,
+          id: this.commonId,
           formData: formData
         }
         try {
           this.videoLoad = true;
           let response;
-          if (this.main == true) {
-            response = await this.$store.dispatch('display/submitSubMedia', payload)
-          }
-          if (this.main == false) {
-            response = await this.$store.dispatch('display/submitSub2Media', payload);
-          }
+          response = await this.$store.dispatch('display/uploadVideo', payload);
           if (response) {
             this.videoLoad = false;
             message = `Video added successfully!`;
@@ -915,7 +979,10 @@ export default {
         }
       }
     },
-    computed: {
+  computed: {
+    language() {
+      return this.$store.getters['display/getLanguage'];
+      },
       media() {
         return this.$store.getters['display/getMedia'];
       },
@@ -935,7 +1002,10 @@ export default {
         if (this.subtopic && this.subtopic.length > 0) {
           return this.subtopic;
         } else return [];
-      } 
+    },
+    // topics() {
+    //   return this.$store.getters['display/getFirstSubList'] || []
+    // }
     },
 };
 </script>

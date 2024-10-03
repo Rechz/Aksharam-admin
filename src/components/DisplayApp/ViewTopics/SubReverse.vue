@@ -85,7 +85,7 @@
     <edit-form :head="head" :description="description" :images="images" :video="video" :url="url" :audio="audio"
       @finish="editDialog = false" :commonId="commonId" :uId="uId" @update="update" :main="main" :malId="malId"
       :engId="engId" :subtopic="subtopic" @dialogClose="editDialog = false;" @exit="editDialog = false;"
-      :bgImage="bgImage"></edit-form>
+      :bgImage="bgImage" :subs="subs" :mainId="mainId" :english="english" :malayalam="malayalam"></edit-form>
   </v-dialog>
   <v-dialog v-model="dialogDelete" width="400px">
     <v-card class="rounded-4 pb-4">
@@ -125,8 +125,13 @@ export default {
     'malId',
     'engId',
     'id',
-    'bgImage'
+    'bgImage',
+    'subs',
+    'mainId',
+    'malayalam',
+    'english'
   ],
+  
   data() {
     return {
       dialog: false,

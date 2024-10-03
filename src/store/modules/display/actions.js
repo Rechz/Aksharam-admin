@@ -315,8 +315,31 @@ export default {
         const response = await axios.get(`${rootGetters.getUrl}/api/qrcode/getScanDetails?dtId=${payload.language}&commonId=${payload.commonId}`);
         if (response.status >= 200 && response.status < 300) {
           commit('setDetails', response.data)
-          // console.log(response.data)
           return true;
+        }
+      }
+      catch (err) {
+        console.error(err)
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+
+      }
+  },
+    async showTopicDetails({ rootGetters}, payload) {
+      try {
+        const response = await axios.get(`${rootGetters.getUrl}/api/qrcode/getScanDetails?dtId=${payload.language}&commonId=${payload.commonId}`);
+        if (response.status >= 200 && response.status < 300) {
+          let filteredResponse = response.data[0].combinedDataSubList.filter(item => !item.fsCommonId);
+            let topics = filteredResponse.map((topic) => {
+              if (!topic.fsCommonId) {
+                return {
+                  title: topic.title,
+                  id: topic.uId
+                }
+              }
+            })
+          // commit('setFirstSubList', topics)
+          
+          return topics;
         }
       }
       catch (err) {

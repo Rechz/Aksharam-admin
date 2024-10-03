@@ -25,13 +25,13 @@
                 <v-form class="pt-0 " ref="form" @submit.prevent="submitHeading">
                     <div class="d-flex">
                         <v-card flat :disabled="!QRLoad" class="py-3 pt-2">
-                            <v-text-field v-model="selectedLanguage" label="Language" :disabled="true" width="400" variant="outlined" density="comfortable"></v-text-field>
+                            <v-text-field v-model="selectedLanguage" label="Language" :disabled="true" width="400"
+                                variant="outlined" density="comfortable"></v-text-field>
                             <v-text-field v-model="title" :label="language == 1 ? 'തലക്കെട്ട്' : 'Heading'"
                                 density="comfortable" class="select mb-2" :rules="titleRules"
                                 variant="outlined"></v-text-field>
-                            <v-textarea :label="language == 1 ? 'വിവരണം' : 'Description'" class="desc mb-2"
-                                rows="6" v-model="description" variant="outlined"
-                                counter></v-textarea>
+                            <v-textarea :label="language == 1 ? 'വിവരണം' : 'Description'" class="desc mb-2" rows="6"
+                                v-model="description" variant="outlined" counter></v-textarea>
                             <v-textarea :label="language == 1 ? 'റഫറൻസ്' : 'References'" density="comfortable"
                                 class="reference desc" rows="2" v-model="url" variant="outlined"></v-textarea>
                         </v-card>
@@ -40,8 +40,8 @@
                         <div class="d-flex gap-2">
                             <v-btn v-if="QRLoad" color="#386568" class="text-capitalize" type="submit"
                                 :disabled="subload" variant="elevated" :loading="subload">Add {{ topic }} topic</v-btn>
-                            <v-btn v-else color="#386568" class="text-capitalize" variant="outlined"
-                                rounded :disabled="QRLoad" :loading="QRLoading" @click="generateQR">Submit &
+                            <v-btn v-else color="#386568" class="text-capitalize" variant="outlined" rounded
+                                :disabled="QRLoad" :loading="QRLoading" @click="generateQR">Submit &
                                 Proceed</v-btn>
                         </div>
                     </div>
@@ -54,8 +54,8 @@
 <script>
 import { mapGetters } from 'vuex';
 export default {
-    emits: ['back', 'exit', 'update'],
-    props: ['id','languageId'],
+    emits: ['back', 'exit', 'updateTopic'],
+    props: ['id', 'languageId','malUid','engUid'],
     data() {
         return {
             qrGenerated: false,
@@ -73,11 +73,12 @@ export default {
             color: '',
             icon: '',
             dialogTopic: false,
-            dialogHead: '',   
+            dialogHead: '',
         };
     },
+    
     computed: {
-        ...mapGetters('display', ['getLanguageList', 'getFileTypes', 'getMedia', 'getidmal', 'getideng', 'getmalHeading', 'getengHeading']),
+        ...mapGetters('display', ['getLanguageList', 'getFileTypes', 'getMedia', 'getsubidmal', 'getsubideng', 'getmalSubHeading', 'getengSubHeading']),
         proceed() {
             if ((this.malSubmit) || (this.engSubmit)) {
                 return false;
@@ -92,16 +93,16 @@ export default {
             return this.getLanguageList;
         },
         idmal() {
-            return this.getidmal;
+            return this.getsubidmal;
         },
         ideng() {
-            return this.getideng;
+            return this.getsubideng;
         },
         malHeading() {
-            return this.getmalHeading;
+            return this.getmalSubHeading;
         },
         engHeading() {
-            return this.getengHeading;
+            return this.getengSubHeading;
         },
         selectedLanguage() {
             if (this.languageId == 1) {
@@ -111,9 +112,9 @@ export default {
                 const language = this.languages.find(language => language.dtId == 1);
                 return language ? language.talk : null;
             }
-        },  
+        },
         language() {
-            if (this.languageId === 1) {
+            if (this.languageId == 1) {
                 return 2;
             } else return 1;
         }
@@ -126,7 +127,7 @@ export default {
             this.$emit('exit');
         },
         update() {
-           this.$emit('update') 
+            this.$emit('updateTopic')
         },
         success(message) {
             this.icon = 'mdi mdi-check-circle-outline'
@@ -144,9 +145,9 @@ export default {
         },
         async submitHeading() {
             if (this.language == 2) {
-                this.$store.commit('display/setIdmal', this.id)
+                this.$store.commit('display/setSubidmal', this.id)
             } else {
-                this.$store.commit('display/setIdeng', this.id)
+                this.$store.commit('display/setSubideng', this.id)
             }
             const { valid } = await this.$refs.form.validate()
             if (valid) {
@@ -156,12 +157,16 @@ export default {
                     "title": this.title,
                     "description": this.description,
                     "referenceURL": this.url
+                };
+                let uid;
+                this.language == 1 ? uid = this.malUid : uid = this.engUid;
+                const payload = {
+                    uid: uid,
+                    lang: language,
+                    data: data
                 }
                 try {
-                    const response = await this.$store.dispatch('display/submitHeading', {
-                        language: language,
-                        data: data
-                    });
+                    const response = await this.$store.dispatch('display/submitSubHead', payload);
                     if (response) {
                         this.subload = false;
                         if (this.language == 1) {
@@ -188,12 +193,12 @@ export default {
                 }
             }
         },
-        async generateQR() {  
+        async generateQR() {
             this.QRLoading = true;
             try {
-                const response = await this.$store.dispatch('display/generateQR', {
-                    idmal: this.idmal,
-                    ideng: this.ideng
+                const response = await this.$store.dispatch('display/generateQRSub', {
+                    subidmal: this.idmal,
+                    subideng: this.ideng
                 });
                 if (response) {
                     this.QRLoading = false;
@@ -217,7 +222,7 @@ export default {
     watch: {
         proceed(newValue) {
             if (!newValue) {
-                this.language = null;
+                // this.language = null;
                 this.QRLoad = false;
             }
         }
@@ -255,6 +260,7 @@ export default {
 :deep(.v-input--outlined.v-input--is-focused .v-input__control .guide .desc) {
     border-bottom-color: #48663f;
 }
+
 ::-webkit-scrollbar,
 :deep(::-webkit-scrollbar) {
     width: 4px;
@@ -279,3 +285,4 @@ export default {
     cursor: pointer;
 }
 </style>
+
