@@ -33,15 +33,17 @@
         <SubReverse :head="topic.title" :title="topic.title" :description="topic.description"
           :images="topic.imgDataList ? topic.imgDataList : []" :video="topic.mp4DataList" :url="topic.referenceUrl"
           :audio="topic.mp3DataList" :commonId="topic.fsCommonId" :uId="topic.uId" :main="false" @update="updateDetails"
-          :subtopic="topic.combinedDataSubSubList" :malId="topic.fsMalId" :engId="topic.fsEngId"
-          :bgImage="topic.backgroundImgList" />
+          :subtopic="topic.combinedDataSubSubList" :malId="topic.fsMalId" :engId="topic.fsEngId" :subs="topic"
+          :bgImage="topic.backgroundImgList" :mainId="subTopic.commonId" :english="subTopic.engId"
+          :malayalam="subTopic.malId" />
       </div>
       <div v-else class=" my-5">
         <SubCard :head="topic.title" :title="topic.title" :description="topic.description"
           :images="topic.imgDataList ? topic.imgDataList : []" :video="topic.mp4DataList" :url="topic.referenceUrl"
           :audio="topic.mp3DataList" :commonId="topic.fsCommonId" :uId="topic.uId" :main="false" @update="updateDetails"
-          :subtopic="topic.combinedDataSubSubList" :malId="topic.fsMalId" :engId="topic.fsEngId"
-          :bgImage="topic.backgroundImgList" />
+          :subtopic="topic.combinedDataSubSubList" :malId="topic.fsMalId" :engId="topic.fsEngId" :subs="topic"
+          :bgImage="topic.backgroundImgList" :mainId="subTopic.commonId" :english="subTopic.engId"
+          :malayalam="subTopic.malId" />
       </div>
     </div>
   </div>

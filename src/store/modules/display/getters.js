@@ -19,5 +19,6 @@ export default {
     getLanguage: (state) => state.language,
     getLanguageList: (state) => state.languageList,
     getMedia: (state) => state.mediaType,
-    getFirstSubData: (state) => state.firstSubData
+    getFirstSubData: (state) => state.firstSubData,
+    getFirstSubList: (state) => state.firstSubList
 };

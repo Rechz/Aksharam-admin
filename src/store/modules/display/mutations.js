@@ -85,5 +85,9 @@ export default {
     setFirstSubData(state, payload) {
         state.firstSubData = payload;
         sessionStorage.setItem('firstData', JSON.stringify(payload));
+    },
+    setFirstSubList(state, payload) {
+        state.firstSubList = payload;
+        sessionStorage.setItem('firstSubList', JSON.stringify(payload));
     }
 };

@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="!subheading">
+  <v-card v-if="!subheading && !addTopic">
     <v-card-title class="text-center text-white d-flex justify-content-between px-4 fixed-top"
       style="background-color: #2C7721;">
       <h5>{{ main? 'Edit Topic': 'Edit Subheading'}}</h5>
@@ -32,11 +32,9 @@
           </div>
         </v-form>
       </div>
-
       <v-card v-if="!topicAddBtn" flat>
         <v-divider></v-divider>
       </v-card>
-
       <div v-if="commonId">
         <v-divider></v-divider>
         <v-card :disabled="!commonId">
@@ -131,16 +129,17 @@
           <v-card-text>
             <div v-if="editVideo.length > 0" class="d-flex gap-3 flex-wrap">
               <div v-for="(video, index) in editVideo" :key="video.id">
-                <v-card class="py-0" width="200">
-                  <video controls width="200" :src="video.furl" type="video/*" cover>
-                    Your browser does not support the video tag. {{ index }}
+                <v-card class="py-0" width="300">
+                  <video controls width="300" :src="video.furl" type="video/*" cover>
+                    Your browser does not support the video tag.
                   </video>
                   <v-card-actions class="py-0 d-flex justify-content-end " min-height="0">
                     <v-btn icon="mdi-pencil" size="small" color="success" @click="updateVideo(video.id, index)"
                       v-if="!video.isEdit"></v-btn>
                     <v-progress-circular :width="1" color="success" indeterminate size="x-small"
                       v-else></v-progress-circular>
-                    <v-btn icon="mdi-delete" size="small" color="error" @click="deleteDialogVideo = true; videoIndex = index;"></v-btn>
+                    <v-btn icon="mdi-delete" size="small" color="error"
+                      @click="deleteDialogVideo = true; videoIndex = index;"></v-btn>
                   </v-card-actions>
                   <v-dialog v-model="deleteDialogVideo" width="400px">
                     <v-card class="rounded-4 pb-4">
@@ -157,18 +156,54 @@
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
+                  <!-- thumbnail -->
+                  <input type="file" :ref="'thumbnailInput' + index" @change="handleThumbnailSelection(video.id, index)"
+                    class="d-none" accept="image/*" />
+                  <div v-if="video.thumbnailUrl">
+                    <v-img :src="video.thumbnailUrl" width="300" height="150"></v-img>
+                    <v-card-actions class="py-0 d-flex justify-content-end " min-height="0">
+                      <v-btn icon="mdi-pencil" size="small" color="success" @click="triggerThumbnailInput(index)"
+                        v-if="!video.editThumb"></v-btn>
+                      <v-progress-circular :width="1" color="success" indeterminate size="x-small"
+                        v-else></v-progress-circular>
+                      <v-btn icon="mdi-delete" size="small" color="error"
+                        @click="deleteDialogThumb = true; thumbIndex = index;"></v-btn>
+                    </v-card-actions>
+                    <v-dialog v-model="deleteDialogThumb" width="400px">
+                      <v-card class="rounded-4 pb-4">
+                        <v-card-title class="mb-2 text-white ps-4 fs-4" style="background-color: #BA1A1A;">Delete
+                          Thumbnail</v-card-title>
+                        <v-container class="px-4 d-flex flex-column align-items-center">
+                          <v-icon color="#BA1A1A" size="80" class="mt-2 mdi mdi-trash-can-outline"></v-icon>
+                          <v-card-text class="mt-1 text-center">Are you sure you want to delete this video
+                            thumbnail?</v-card-text>
+                        </v-container>
+                        <v-card-actions class="mx-4 d-flex flex-column align-items-center">
+                          <v-btn block class="text-white mb-3" style="background-color: #BA1A1A;"
+                            :disabled="thumbDelete" :loading="thumbDelete" @click="deletethumb()">Delete</v-btn>
+                          <v-btn block variant="text" class="mb-3" @click="deleteDialogThumb = false">Cancel</v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                  </div>
+                  <div v-else>
+                    <div class="d-flex align-items-center mx-2 mb-2">
+                      <v-btn @click="triggerThumbnailInput(index)" color="blue-grey-darken-2" variant="outlined"
+                        size="small" class="text-capitalize" :disabled="video.editThumb" :loading="video.editThumb">
+                        Choose Thumbnail
+                      </v-btn>
+                      <label class="ms-2">No image chosen.</label>
+                    </div>
+                  </div>
                 </v-card>
               </div>
               <input type="file" ref="selectVideo" @change="handleVideo" class="d-none" accept="video/*">
             </div>
-
-
             <v-card-subtitle v-else class="mb-0 py-0">No video uploaded.</v-card-subtitle>
             <div class="d-flex justify-content-end">
               <input type="file" ref="addVideo" @change="addVideo" class="d-none" accept="video/*" multiple>
               <v-btn color="#386568" variant="outlined" rounded prepend-icon="mdi-plus" class="text-capitalize"
-                @click="addVid" :disabled="videoLoad" :loading="videoLoad">Add
-                Video</v-btn>
+                @click="addVid" :disabled="videoLoad" :loading="videoLoad">Add Video</v-btn>
             </div>
           </v-card-text>
         </v-card>
@@ -231,33 +266,66 @@
           </v-card>
         </v-card>
       </div>
-      <div class="d-flex justify-content-end mt-3">
-        <v-btn prepend-icon="mdi-plus" class="text-capitalize" color="#2C7721" size="large" variant="elevated"
-          v-if="!commonId" @click="addTranslation">Add Translation</v-btn>
-        <v-btn color="#2C7721" variant="elevated" @click="finish" v-else>Finish</v-btn>
+      <div v-if="!commonId">
+        <v-card-title class="bg-blue-grey-lighten-5 mb-3">Add Translation</v-card-title>
+        <v-select v-model="selectedItem" :items="topics" item-title="title" item-value="id" label="Select topic"
+          append-outer-icon="mdi-menu-down" clearable variant="outlined" density="compact" width="400" class="mt-3">
+          <template v-slot:append-item>
+            <v-divider class="my-0 py-0"></v-divider>
+            <v-list-item class="py-0">
+              <v-btn @click="handleButtonClick" class="ps-0 text-capitalize" variant="text" prepend-icon="mdi-plus"
+                color="success">Add Topic</v-btn>
+            </v-list-item>
+          </template>
+        </v-select>
+        <div class="d-flex justify-content-end mt-3">
+          <v-btn prepend-icon="mdi-plus" class="text-capitalize" :loading="translate" color="#2C7721" variant="elevated"
+            @click="addTranslation" :disabled="!selectedItem || buttonClicked || translate">Add</v-btn>
+        </div>
       </div>
     </v-card-text>
   </v-card>
-  <v-card v-else>
+  <v-card v-if="subheading && !addTopic">
     <EditSub @back="subheading = !subheading" :idmal="malId" :ideng="engId" @update="update" v-if="main == true"
       @close="subheading = false;" @exit="exit" />
     <EditSecondSub @back="subheading = !subheading" :idmal="malId" :ideng="engId" @update="update"
       @close="subheading = false;" @exit="exit" v-else />
+  </v-card>
+  <v-card v-if="addTopic" >
+    <add-sub :languageId="language" :id="uId" @back="addTopic = false" :malUid="malayalam" :engUid="english"
+      @exit="addTopic = false; dialogGenerate = false" @updateTopic="update"></add-sub>
   </v-card>
 </template>
 
 <script>
 import EditSub from './EditSub.vue';
 import EditSecondSub from './EditSecondSub.vue';
+import AddSub from './AddSub.vue';
 export default {
-    props: ["head", "description", "images", 'video', 'url', 'audio', 'commonId', 'uId', 'main', 'subtopic', 'malId','engId','bgImage'],
+    props: ["head", "description", "images", 'video', 'url', 'audio', 'commonId', 'uId', 'main', 'subtopic', 'subs', 'malId','engId','bgImage','mainId','malayalam','english'],
     emits: ['finish', 'update','dialogClose','exit'],
-    components: { EditSub, EditSecondSub },
+    components: { EditSub, EditSecondSub, AddSub },
     created() {
       this.editImages.forEach(image => image.isEdit = false);
       this.editAudio.forEach(audio => audio.isEdit = false);
-      this.editVideo.forEach(video => video.isEdit = false);
+      this.editVideo.forEach(video => { video.isEdit = false; video.editThumb = false; });
       this.editBg.forEach(bg => bg.isEdit = false);
+  },
+
+  async mounted() {
+    if (this.main == false) {
+      if (!this.firstsubs.fsCommonId) {
+        var language;
+        this.language == 1 ? language = 2 : language = 1;
+        const res = await this.$store.dispatch('display/showTopicDetails', {
+          language: language,
+          commonId: this.mainId
+        })
+        if (res) {
+          this.topics = res;
+        }
+      }
+    }
     },
     data() {
       return {
@@ -299,8 +367,18 @@ export default {
         bgIndex: null,
         bgDelete: false,
         bgLoad: false,
-        topicAddBtn: false
-          
+        topicAddBtn: false,
+        deleteDialogThumb: false,
+        thumbIndex: null,
+        thumbDelete: false,
+        buttonClicked: false,
+        selectedItem: null,
+        addTopic: false,
+        dialogSub: false,
+        firstsubs: this.subs,
+        id: this.mainId,
+        topics: [],
+        translate: false
       };  
     },
     methods: {
@@ -318,6 +396,10 @@ export default {
         this.message = message;
         this.dialogTopic = true;
       },
+      handleButtonClick() {
+        this.buttonClicked = true;
+        this.addTopic = true;
+      },
       exit() {
         this.$emit('exit');
       },
@@ -332,16 +414,39 @@ export default {
       },
       async addTranslation() {
         this.topicAddBtn = true;
-        // try {
-        //   if (this.main == true) {
-        //     this.$store.dispatch('display/generateQR', {
-
-        //     })
-        //   }
-        // }
-        // catch (error) {
-        
-        // } 
+        if (this.main == false) {
+          if (this.selectedItem && !this.buttonClicked) {
+            var idmal;
+            var ideng;
+            if (this.language == 1) {
+              idmal = this.uId;
+              ideng = this.selectedItem
+              // console.log(ideng + ' ' + idmal)
+            }
+            else {
+              idmal = this.selectedItem;
+              ideng = this.uId;
+              // console.log(idmal + ' ' + ideng)
+            }
+            try {
+              this.translate = true;
+              const res = await this.$store.dispatch('display/generateQRSub', { subideng: ideng, subidmal: idmal });
+              if (res) {
+                this.translate = false;
+                let message = `Translation added successfully!`;
+                this.success(message);
+                this.$emit('update');
+              }
+            }
+            catch (error) {
+              this.translate = false;
+              let message = error.message;
+              this.error(message);
+              console.error(error)
+            }
+          }
+        }
+      
       },
       async editTopic() {
         const { valid } = await this.$refs.form.validate()
@@ -529,39 +634,33 @@ export default {
       async addVideo(event) {
         const files = event.target.files;
         for (let i = 0; i < files.length; i++) {
-          this.videoAdd.push(files[i]);
+          this.videoAdd.push({ file: files[i], thumbnailFile: null });
         }
-        // this.videoAdd = files;
         const formData = new FormData();
         this.videoAdd.forEach((file) => {
-          formData.append("files", file);
+          formData.append("video", file.file);
+          // formData.append('thumbnailFile', file.thumbnailFile)
         });
-        // formData.append("files", this.videoAdd);
+        let message;
         const payload = {
-          uid: this.commonId,
-          id: this.media.video,
+          id: this.commonId,
           formData: formData
         }
         try {
           this.videoLoad = true;
           let response;
-          if (this.main == true) {
-            response = await this.$store.dispatch('display/submitMedia',payload); 
-          }
-          if (this.main == false) {
-            response = await this.$store.dispatch('display/submitSubMedia', payload);
-          }
+          response = await this.$store.dispatch('display/uploadVideo', payload);
           if (response) {
             this.videoLoad = false;
-            let message = `Video added successfully!`;
-            this.success(message);
+            message = `Video added successfully!`;
+            this.success(message)
             this.$emit('update');
-            this.videoAdd = []
+            this.videoAdd = null
           }
         }
         catch (err) {
           this.videoLoad = false;
-          let message = err.message;
+          message = err.message;
           this.error(message);
         }
       },
@@ -579,9 +678,6 @@ export default {
         let formData = new FormData();
         try {
           if (this.main == true) {
-            // formData.append("uId", this.commonId);
-            // formData.append("mtId", this.media.video);
-            console.log(this.main)
             formData.append("files", this.videoAdd);
             payload = {
               data: formData,
@@ -589,7 +685,6 @@ export default {
               uId: this.editVideo[this.videoIndex].dtId,
               id: this.editVideo[this.videoIndex].id
             }
-            // console.log(payload)
             response = await this.$store.dispatch('display/updateMedia',payload);
           } 
           if (this.main == false) {
@@ -820,9 +915,74 @@ export default {
           message = error.message;
           this.error(message);
         }
-      },   
+      },  
+      triggerThumbnailInput(index) {
+        this.$refs[`thumbnailInput${index}`][0].click();
+      },
+      // Handle thumbnail selection for a specific video
+      async handleThumbnailSelection(id, index) {
+        const file = this.$refs[`thumbnailInput${index}`][0].files[0];
+        if (file) {
+          const formData = new FormData();
+          formData.append('files', file)
+            const payload = {
+              index: id,
+              id: this.commonId,
+              file: formData
+          }
+          let res;
+          try {
+            this.editVideo[index].editThumb = true;
+            if (this.main == true) {
+              res = await this.$store.dispatch('display/updateMainVidThumbnail', payload)
+            }
+            if (this.main == false) {
+              res = await this.$store.dispatch('display/updateSubVidThumbnail', payload)
+            }
+            if (res) {
+              this.editVideo[index].editThumb = false;
+              let message = `Thumbnail updated successfully!`;
+              this.success(message);
+              this.$emit('update')
+            }
+          }
+          catch (error) {
+            this.editVideo[index].editThumb = false;
+            let message = error.message;
+            this.error(message);
+            console.log(error)
+            }
+        }
+      }, 
+      async deletethumb() {
+        const id = this.editVideo[this.thumbIndex].id;
+        const payload = {
+          commonId: this.commonId,
+          id: id
+        }
+        try {
+          this.thumbDelete = true;
+          const res = await this.$store.dispatch('display/deleteMainVidThumbnail', payload);
+          if (res) {
+            this.thumbDelete = false;
+            this.deleteDialogThumb = false;
+            let message = `Thumbnail deleted successfully!`;
+            this.success(message);
+            this.$emit('update')
+          }
+        }
+        catch (error) {
+          this.thumbDelete = false;
+          let message = error.message;
+          this.error(message);
+          console.log(error)
+        }
+      }
     },
-    computed: {
+  computed: {
+    language() {
+      return this.$store.getters['display/getLanguage'];
+      },
       media() {
         return this.$store.getters['display/getMedia'];
       },
@@ -842,7 +1002,10 @@ export default {
         if (this.subtopic && this.subtopic.length > 0) {
           return this.subtopic;
         } else return [];
-      } 
+    },
+    // topics() {
+    //   return this.$store.getters['display/getFirstSubList'] || []
+    // }
     },
 };
 </script>

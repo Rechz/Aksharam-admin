@@ -203,7 +203,7 @@
                     </div>
                   </template>
                 </div>
-                <v-btn @click="submitVideo(fileType.video)" color="#386568" variant="elevated" prepend-icon="mdi-video"
+                <v-btn @click="submitVideo()" color="#386568" variant="elevated" prepend-icon="mdi-video"
                   class="text-capitalize" :disabled="videoLoad" :loading="videoLoad">Submit Video</v-btn>
               </div>
               <div class="d-flex flex-column align-items-end justify-content-center ">
@@ -267,8 +267,6 @@ export default {
         audioFiles: [],
         videoFiles: [],
         videoPreview: [],
-        // thumbnailPreview: [],
-        // thumbnailFile:[],
         message: '',
         loading: false,
         color: '',
@@ -424,17 +422,15 @@ export default {
       triggerThumbnailInput(index) {
         this.$refs[`thumbnailInput${index}`][0].click();
       },
-
-      // Handle thumbnail selection for a specific video
       handleThumbnailSelection(index) {
         const file = this.$refs[`thumbnailInput${index}`][0].files[0];
         if (file) {
           const reader = new FileReader();
           reader.onload = (e) => {
             this.videoPreview[index].thumbnail = e.target.result;
-            this.videoPreview[index].thumbnailFile = file;// Set thumbnail preview
+            this.videoPreview[index].thumbnailFile = file;
           };
-          reader.readAsDataURL(file); // Read the file for preview
+          reader.readAsDataURL(file); 
           console.log(this.videoPreview)
         }
       },
@@ -586,13 +582,10 @@ export default {
           const file = selectedFiles[i];
           this.videoFiles.push(selectedFiles[i]);
           if (file.type.includes("video")) {
-            // Create a preview URL for the video
             const videoUrl = URL.createObjectURL(file);
             this.videoPreview.push({ url: videoUrl, file, thumbnail:null, thumbnailFile:null});
           }
         }
-        // console.log('video',this.videoPreview)
-
       },
       removeVideo(file) {
         const videoIndex = this.videoFiles.findIndex(vid => vid === file);
@@ -601,21 +594,19 @@ export default {
         console.log(this.videoPreview)
         this.$refs.fileVideo.value = '';
       },
-      async submitVideo(id) {
+      async submitVideo() {
         this.videoLoad = true;
         let uid;
         uid = this.commonId;
         const formData = new FormData();
         this.videoPreview.forEach((file) => {
-          formData.append("files", file.file);
+          formData.append("video", file.file);
           formData.append('thumbnailFile', file.thumbnailFile)
         });
-        // console.log('formdata',formData)
         try {
-          const response = await this.$store.dispatch('display/submitMedia', {
-            uid: uid,
+          const response = await this.$store.dispatch('display/uploadVideo', {
+            id: uid,
             formData: formData,
-            id: id
           });
           let message;
           if (response) {
@@ -624,6 +615,7 @@ export default {
             this.videoSubmit = true;
             this.success(message);
             this.videoFiles = [];
+            this.videoPreview = [];
             this.$refs.fileVideo.value = '';
           }
         }

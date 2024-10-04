@@ -196,7 +196,7 @@
                   </div>
                 </template>
               </div>
-              <v-btn @click="submitVideo(fileType.video)" color="#386568" variant="elevated" prepend-icon="mdi-video"
+              <v-btn @click="submitVideo()" color="#386568" variant="elevated" prepend-icon="mdi-video"
                 class="text-capitalize" :disabled="videoLoad" :loading="videoLoad">Submit Video</v-btn>
             </div>
             <div class="d-flex flex-column align-items-end justify-content-center ">
@@ -597,28 +597,29 @@ export default {
           console.log(this.videoPreview)
         }
       },
-      async submitVideo(id) {
+      async submitVideo() {
         this.videoLoad = true;
         let message;
-        let uid = this.commonId;
+        let uid;
+        uid = this.commonId;
         const formData = new FormData();
         this.videoPreview.forEach((file) => {
-          formData.append("files", file.file);
+          formData.append("video", file.file);
           formData.append('thumbnailFile', file.thumbnailFile)
         });
-        const payload={
-          uid: uid,
-          formData: formData,
-          id:id
-        }
         try {
-          const response = await this.$store.dispatch('display/submitSub2Media', payload);
+          const response = await this.$store.dispatch('display/uploadVideo', {
+            id: uid,
+            formData: formData,
+          });
+          let message;
           if (response) {
             this.videoLoad = false;
             message = 'Video uploaded successfully';
             this.videoSubmit = true;
             this.success(message);
             this.videoFiles = [];
+            this.videoPreview = [];
             this.$refs.fileVideo.value = '';
           }
         }

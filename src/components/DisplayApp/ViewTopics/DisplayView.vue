@@ -17,7 +17,7 @@
         <v-card-title class="text-center text-white fs-6" style="background-color: #2E7D32;">Generate QR</v-card-title>
         <v-card-text class="px-5 text-justify pb-0">
           Select topic to be linked with the selected topic '{{ selectedTopic }}'.
-          <v-select v-model="selectedItem" :items="topics" item-text="title" item-value="id" label="Select topic"
+          <v-select v-model="selectedItem" :items="topics" item-title="title" item-value="id" label="Select topic"
             append-outer-icon="mdi-menu-down" clearable variant="outlined" density="compact" width="400" class="mt-3">
             <template v-slot:append-item>
               <v-divider class="my-0 py-0"></v-divider>
