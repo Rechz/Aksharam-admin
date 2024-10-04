@@ -48,6 +48,12 @@ const router = createRouter({
           ]
         },
         {
+          path: '/admin/booking',
+          component: () => import('./components/Booking/TicketBooking.vue'),
+          meta: { requiresAuth: true, role: 'admin' },
+          name: 'booking',
+        },
+        {
           path: '/admin/calendar',
           name: 'calendar',
           component: () => import('./components/Holidays/CalendarNav.vue'),

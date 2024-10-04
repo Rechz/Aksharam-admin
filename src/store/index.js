@@ -5,16 +5,19 @@ import rootGetters from './getters.js';
 import guideModule from './modules/guide/index.js'
 import displayModule from './modules/display/index.js';
 import tribalModule from './modules/tribal/index.js';
+import bookingModule from './modules/booking/index.js';
 const store = createStore({
   modules: {
     guide: guideModule,
     display : displayModule,
-    tribal: tribalModule
+    tribal: tribalModule,
+    booking:  bookingModule
+
   },
   state() {
     return {
       // base_url: 'http://localhost:8448',
-      // base_url: 'http://192.168.1.34:8083',
+      // base_url: 'http://192.168.1.28:8083',
       // base_url: 'http://192.168.1.23:5000',
       //  base_url: 'http://192.168.33.172:8083',
       base_url: 'https://aksharammuseum.com',

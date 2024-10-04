@@ -1,6 +1,6 @@
 <template>
   <v-skeleton-loader v-if="skeleton" type="table"></v-skeleton-loader>
-  <v-container class="pb-8 px-0" fluid>
+  <v-container v-else class="pb-8 px-0" fluid>
     <v-dialog v-model="dialog" max-width="500px">
       <template v-slot:activator="{ props }">
         <div class="d-flex justify-content-end">

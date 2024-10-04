@@ -34,6 +34,7 @@ export default {
       rail: true,
       navItems: [ 
         { text: 'Overview', route: '/admin/dashboard-page', routeName: 'dashboard' },
+        { text: 'Booking', route: '/admin/booking', routeName: 'booking' },
         { text: 'Tickets', route: '/admin/tickets', routeName: 'ticket-details' },
         { text: 'Employee', route: '/admin/employee', routeName: 'employee-add' },
         { text: 'Museum Calendar', route: '/admin/calendar', routeName: 'holiday-add' },
