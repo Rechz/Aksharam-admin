@@ -63,15 +63,17 @@ export default {
 response.data.forEach(item => {
     let key;
         // Split the type by spaces, capitalize the first letter of each word after the first, and join them
-        const parts = item.type.split(' ');
+  const parts = item.type.split(' ');
+  const baseKey =item.type.charAt(0).toLowerCase() + item.type.slice(1).replace(' ', '');
         key = parts[0].toLowerCase() + parts.slice(1).map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('') + 'Type';
     // Initialize the value to 0
-    result[key] = item.id;
+  result[key] = item.id;
+  result[baseKey] = 0
 });
-console.log(result)
+// console.log(result)
 
             commit('setType', response.data);
-            return true;
+            return result;
           }
         }
         catch (err) {

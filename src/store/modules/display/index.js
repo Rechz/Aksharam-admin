@@ -5,7 +5,7 @@ export default {
     namespaced: true,
     state() {
         return {
-           language: sessionStorage.getItem('language') || 2,
+           language: sessionStorage.getItem('language') || 1,
            languageList: JSON.parse(sessionStorage.getItem('languageList')) || [],
            fileTypes: sessionStorage.getItem('fileTypes') || [],
            mediaType: JSON.parse(sessionStorage.getItem('mediaType')) || {},

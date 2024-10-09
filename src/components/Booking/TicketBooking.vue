@@ -22,7 +22,7 @@
           <div v-for="type in types" :key="type.id">
             <category-type :cat="type.type" :id="type.id" @updateCount="handleUpdate"></category-type>
           </div>
-          <v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="submit"  :disabled="disabled">Get Tickets</v-btn>
+          <v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="submit" >Get Tickets</v-btn>
           </v-sheet>
             </div>
         </v-container>
@@ -72,21 +72,15 @@ export default {
           return 'Enter a valid number.';
         }
       ],
-            name:null,
-            number:null,
-            adult: 0,
-            child: 0,
-            senior: 0,
-            selectedCat: null,
-            bookingDetails: [],
-            counts: {
-        adultType: 0,
-        adult: 0,
-        childType: 0,
-        child: 0,
-        seniorCitizenType: 0,
-        seniorCitizen: 0
-      }
+      name:null,
+      number:null,
+      adult: 0,
+      child: 0,
+      senior: 0,
+      selectedCat: null,
+      bookingDetails: [],
+      counts: {}
+   
         }
     },
     methods: {
@@ -99,15 +93,17 @@ export default {
       }
     },
     async submit() {
-      // const { valid } = await this.$refs.form.validate()
-        const payload = {
-        id: this.selectedCat,
-        data: {
-          name: this.name,         
-          phNumber: this.number,   
-          bookings: this.bookingDetails, 
-        },
-      };
+      const payload = {
+        name: this.name,
+        phNumber: this.number,
+        ...this.counts
+} ;
+        
+        
+             
+          
+       
+    
       console.log("payload",payload);
       // try {
       //   await this.$store.dispatch('booking/spotBooking',payload)
@@ -122,33 +118,18 @@ export default {
       try {
         const res = await this.$store.dispatch('booking/getTypeById',payload) 
         if(res){
-          
-          console.log(this.types)
+          this.counts = res;
+          console.log(this.counts)
         }
         }
       catch (error) {
         console.error(error)
       }
     },
-    // handleUpdate(payload) {
-    //   const index = this.bookingDetails.findIndex((item) => item.id === payload.id);
-    //   if (index !== -1) {
-    //     // Update existing entry if already present
-    //     this.bookingDetails.splice(index, 1, payload);
-    //   } else {
-    //     // Add new entry if not present
-    //     this.bookingDetails.push(payload);
-    //   }
-    //   console.log(this.bookingDetails); // For debugging
-    // },
-    handleUpdate(payload) {
-      // Convert type to camelCase for both 'Type' and the simple key
-      const baseKey = payload.cat.charAt(0).toLowerCase() + payload.cat.slice(1).replace(' ', '');
-      const typeKey = `${baseKey}Type`;
 
-      // Update the specific count values
-      this.counts[typeKey] = payload.id; // Assign the id to the 'Type'
-      this.counts[baseKey] = parseInt(payload.type); // Assign the count to the type (e.g., adult)
+    handleUpdate(payload) {
+      const baseKey = payload.cat.charAt(0).toLowerCase() + payload.cat.slice(1).replace(' ', '');
+      this.counts[baseKey] = parseInt(payload.count); 
       console.log(this.counts);
     }
     },
