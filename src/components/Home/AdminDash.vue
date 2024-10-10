@@ -10,6 +10,7 @@
           :disabled="!status" @click.prevent="navigate({ name: item.routeName })">
           {{ item.text }}
         </v-list-item>
+        <v-list-item class="navlist fs-6" :href="mapLink">Map</v-list-item>
       </v-list>
     </v-navigation-drawer>
     <div>
@@ -42,6 +43,7 @@ export default {
         { text: 'Guide-App', route: '/admin/guide-app', routeName: 'guide-add-main' },
         { text: 'Tribal', route: '/admin/tribal', routeName: 'tribal-add' },
       ],
+      mapLink: "https://aksharammuseum.com/map/coords"
     }
   },
   computed: {
