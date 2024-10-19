@@ -2,6 +2,7 @@ export default {
   getUrl : (state) => state.base_url,
   getToken: (state) => state.token,
   getStatus: (state) => state.status,
+  getRole: (state) => state.role,
   getAllTickets: (state) => state.allTickets,
   getCurrentTickets: (state) => state.currentTickets,
   getAllEmployees: (state) => state.allEmployees,

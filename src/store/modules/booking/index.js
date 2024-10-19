@@ -7,10 +7,13 @@ export default {
         return {
            // state
            Category: JSON.parse(sessionStorage.getItem('Category')) || [],
+           Slot: [],
            Type: [],
            Gst: JSON.parse(sessionStorage.getItem('Gst')) || [],
            Fees: JSON.parse(sessionStorage.getItem('Fees')) || [],
            Price: JSON.parse(sessionStorage.getItem('Price')) || [],
+           paymentMode: JSON.parse(sessionStorage.getItem('paymentMode')) || [],
+           paymentStatus: JSON.parse(sessionStorage.getItem('paymentStatus')) || [],
            SpotBooking: JSON.parse(sessionStorage.getItem('SpotPublic')) || [],
         }
     },

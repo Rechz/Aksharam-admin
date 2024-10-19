@@ -33,6 +33,21 @@ export default {
           throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
         }
       },
+      // get slot by date
+      async getSlotByDate({ rootGetters, commit }, payload){
+        try {
+          const response = await axios.get(`${rootGetters.getUrl}/api/slot/bookDate?bDate=${payload}`);
+          if (response.status >= 200 && response.status < 300) {
+            console.log(response.data)
+            commit('setSlot', response.data);
+            return true;
+          }
+        }
+        catch (err) {
+          console.error(err);
+          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+        }
+      },
     //   add type
       async addType({ rootGetters}, payload) {
         try {
@@ -65,7 +80,7 @@ response.data.forEach(item => {
         // Split the type by spaces, capitalize the first letter of each word after the first, and join them
   const parts = item.type.split(' ');
   const baseKey =item.type.charAt(0).toLowerCase() + item.type.slice(1).replace(' ', '');
-        key = parts[0].toLowerCase() + parts.slice(1).map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('') + 'Type';
+        key = parts[0].toLowerCase() + parts.slice(1).map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('') + 'Type'+ 'Id';
     // Initialize the value to 0
   result[key] = item.id;
   result[baseKey] = 0

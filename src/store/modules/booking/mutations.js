@@ -3,6 +3,10 @@ export default {
         state.Category = payload;
         sessionStorage.setItem('Category', JSON.stringify(payload))
     },
+    setSlot(state, payload) {
+        state.Slot = payload;
+        // sessionStorage.setItem('Slot', JSON.stringify(payload))
+    },
     setType(state, payload) {
         state.Type = payload;
         sessionStorage.setItem('Type', JSON.stringify(payload))
@@ -22,6 +26,10 @@ export default {
     setPaymentMode(state, payload) {
         state.paymentMode = payload;
         sessionStorage.setItem('paymentMode', JSON.stringify(payload))
+    },
+    setPaymentStatus(state, payload) {
+        state.paymentStatus = payload;
+        sessionStorage.setItem('paymentStatus', JSON.stringify(payload))
     },
     setSpotBooking(state, payload) {
         state.SpotBooking = payload;

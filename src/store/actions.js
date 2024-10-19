@@ -12,6 +12,7 @@ export default {
       if (response.status === 200) {
         commit('setToken', response.data.token);
         commit('setStatus', response.data.admin);
+        commit('setRole', response.data.sessionId);
         return true;
       }
   },

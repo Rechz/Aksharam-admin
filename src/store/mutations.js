@@ -11,6 +11,10 @@ export default {
     state.status = payload;
     sessionStorage.setItem('status', JSON.stringify(payload));
   },
+  setRole(state, payload) {
+    state.role = payload;
+    sessionStorage.setItem('role', JSON.stringify(payload));
+  },
    clearStatus(state) {
       state.status = false;
       sessionStorage.removeItem('status');

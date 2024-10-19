@@ -22,6 +22,7 @@ const store = createStore({
       //  base_url: 'http://192.168.33.172:8083',
       base_url: 'https://aksharammuseum.com',
       token: sessionStorage.getItem('token') || '',
+      role: JSON.parse(sessionStorage.getItem('role')) || '',
       status: JSON.parse(sessionStorage.getItem('status')) || false,
       user: JSON.parse(sessionStorage.getItem('user')) || {},
       slots: JSON.parse(sessionStorage.getItem('slots')) || [],
