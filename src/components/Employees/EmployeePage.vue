@@ -16,24 +16,24 @@
           <v-card-text>
             <v-container class="d-flex gap-2">
               <div style="height: 300px; width: 300px;">
-                <v-hover v-slot="{ isHovering, props }">
+                <!-- <v-hover v-slot="{ isHovering, props }"> -->
                   <v-icon v-if="editedIndex === -1" size="240" color="#DFE4D7" class="mdi mdi-account-box"
                     v-bind="props">
-                    <v-overlay :model-value="isHovering" class="align-center justify-center" scrim="#616161" contained>
+                    <!-- <v-overlay :model-value="isHovering" class="align-center justify-center" scrim="#616161" contained>
                       <v-btn class="overlay" flat>
                         <v-icon size="32" class="mdi mdi-camera-plus"></v-icon>
                       </v-btn>
-                    </v-overlay>
+                    </v-overlay> -->
                   </v-icon>
                   <v-icon v-if="editedIndex !== -1" size="240" color="#DFE4D7" class="mdi mdi-account-box"
                     v-bind="props">
-                    <v-overlay :model-value="isHovering" class="align-center justify-center" scrim="#616161" contained>
+                    <!-- <v-overlay :model-value="isHovering" class="align-center justify-center" scrim="#616161" contained>
                       <v-btn class="overlay" flat>
                         <v-icon size="32" class="mdi mdi-pencil" color="white"></v-icon>
                       </v-btn>
-                    </v-overlay>
+                    </v-overlay> -->
                   </v-icon>
-                </v-hover>
+                <!-- </v-hover> -->
               </div>
               <div class="d-flex flex-column w-100 emp-add">
                 <v-form ref="form">
