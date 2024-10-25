@@ -229,7 +229,7 @@ export default {
                 const response = await this.$store.dispatch('tribal/generateTribalCommonId', payload);
                 if (response) {
                     this.QRLoading = false;
-                    message = 'Qr generated successfully. Proceed to next steps.';
+                    message = 'Data added successfully. Proceed to next steps.';
                     this.qrGenerated = true;
                     this.QRLoad = true;
                     this.success(message);
