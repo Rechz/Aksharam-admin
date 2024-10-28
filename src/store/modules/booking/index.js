@@ -14,7 +14,9 @@ export default {
            Price: JSON.parse(sessionStorage.getItem('Price')) || [],
            paymentMode: JSON.parse(sessionStorage.getItem('paymentMode')) || [],
            paymentStatus: JSON.parse(sessionStorage.getItem('paymentStatus')) || [],
-           SpotBooking: JSON.parse(sessionStorage.getItem('SpotPublic')) || [],
+           SpotBooking: JSON.parse(sessionStorage.getItem('SpotBooking')) || [],
+           confirmBooking: JSON.parse(sessionStorage.getItem('confirmBooking')) || [],
+           details: JSON.parse(sessionStorage.getItem('details')) || [],
         }
     },
     actions,

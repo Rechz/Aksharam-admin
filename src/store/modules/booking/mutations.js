@@ -35,4 +35,12 @@ export default {
         state.SpotBooking = payload;
         sessionStorage.setItem('SpotBooking', JSON.stringify(payload))
     },
+    setConfirmBooking(state, payload) {
+        state.confirmBooking = payload;
+        sessionStorage.setItem('confirmBooking', JSON.stringify(payload))
+    },
+    setDetails(state,payload) {
+        state.details = payload;
+        sessionStorage.setItem('details', JSON.stringify(payload))
+    }
 }

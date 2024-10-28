@@ -66,7 +66,7 @@ export default {
           password: this.password
         });
         if (success) {
-          this.$router.push({name: 'dashboard'});
+          this.$router.push({name: 'booking'});
         }
       }
       catch (error) {

@@ -10,14 +10,14 @@
                     <v-row>
                         <v-col cols="12" md="6">
                             <v-container>
-                                <v-text-field v-model="formattedDate" label="Date" class="price" density="comfortable"
-                                    width="300" variant="outlined" :disabled="!selectedCat"></v-text-field>
-                                <v-text-field v-model="slot.slotStartTime" label="Slot Start Time" class="price"
+                                <!-- <v-text-field v-model="formattedDate" label="Date" class="price" density="comfortable"
+                                    width="300" variant="outlined" :disabled="!selectedCat"></v-text-field> -->
+                                <!-- <v-text-field v-model="slot.slotStartTime" label="Slot Start Time" class="price"
                                     density="comfortable" width="300" variant="outlined"
                                     :disabled="!selectedCat"></v-text-field>
                                 <v-text-field v-model="slot.slotEndTime" label="Slot End Time" class="price"
                                     density="comfortable" width="300" variant="outlined"
-                                    :disabled="!selectedCat"></v-text-field>
+                                    :disabled="!selectedCat"></v-text-field> -->
                                 <v-text-field v-model="name" label="Name" class="price" density="comfortable"
                                     :rules="nameRules" width="300" variant="outlined"
                                     :disabled="!selectedCat"></v-text-field>
@@ -27,9 +27,9 @@
                                 <v-select clearable density="comfortable" variant="outlined" label="Select a payment mode" 
                                     width="300" :items="paymentMode" item-title="paymentType" 
                                     item-value="id" v-model="selectedMode"></v-select>
-                                <v-select clearable density="comfortable" variant="outlined" label="Select a payment status" 
+                                <!-- <v-select clearable density="comfortable" variant="outlined" label="Select a payment status" 
                                     width="300" :items="paymentStatus" item-title="statusName" 
-                                    item-value="id" v-model="selectedStatus"></v-select>
+                                    item-value="id" v-model="selectedStatus"></v-select> -->
                             </v-container>
                         </v-col>
                         <v-col cols="12" md="6">
@@ -120,18 +120,25 @@ export default {
         data: {
           name: this.name,
         phNumber: this.number,
-        visitDate: this.formattedDate,
-        slotId: this.slot.slotId,
+        // visitDate: this.formattedDate,
+        // slotId: this.slot.slotId,
         paymentMode: this.selectedMode,
-        paymentStatusId: this.selectedStatus,
+        // paymentStatusId: this.selectedStatus,
         createdBy: this.role,
         ...this.counts
         }
         
 } ;
-      console.log("payload",payload);
+      // console.log("payload",payload);
+      this.$store.commit('booking/setDetails',payload)
       try {
-        await this.$store.dispatch('booking/spotBooking',payload)
+       const res = await this.$store.dispatch('booking/spotBooking',payload)
+        if(res) {
+          this.$router.push({name: 'confirmbooking'});
+        }
+        else {
+          console.log('error')
+        }
       }
       catch (error) {
         console.error(error)

@@ -7,5 +7,7 @@ export default {
     getPrice: (state) => state.Price,
     getPaymentMode: (state) => state.paymentMode,
     getPaymentStatus: (state) => state.paymentStatus,
-    getSpotBooking: (state) => state.SpotPublic
+    getSpotBooking: (state) => state.SpotBooking,
+    getConfirmBooking: (state) => state.confirmBooking,
+    getDetails:(state) => state.details,
 }

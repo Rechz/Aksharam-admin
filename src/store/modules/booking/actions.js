@@ -244,7 +244,6 @@ response.data.forEach(item => {
         }
       },
       // Spot_Registration
-      // PUBLIC
       async spotBooking({ rootGetters,commit}, payload) {
         try {
           const response = await axios.post(`${rootGetters.getUrl}/api/spotData/userReg?category=${payload.id}`, payload.data,
@@ -254,7 +253,27 @@ response.data.forEach(item => {
               }
             });
             if (response.status >= 200 && response.status < 300) {
+              console.log(response.data)
               commit('setSpotBooking', response.data);
+                return true;
+            }
+        }
+        catch (err) {
+          console.error(err);
+          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+        }
+      },
+      // Confirm booking
+      async confirmBooking({ rootGetters,commit}, payload) {
+        try {
+          const response = await axios.post(`${rootGetters.getUrl}/api/spotData/confirmPayment?orderId=${payload.id}&totalUserCount=${payload.count}`, payload.data,
+            {
+              headers: {
+                Authorization: `Bearer ${rootGetters.getToken}`
+              }
+            });
+            if (response.status >= 200 && response.status < 300) {
+              commit('setConfirmBooking', response.data);
                 return true;
             }
         }
