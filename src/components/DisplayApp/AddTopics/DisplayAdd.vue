@@ -180,7 +180,7 @@
                       <div class="mt-2 " v-for="(video,index) in videoPreview" :key="video.file.name">
                         <v-card class="pt-1 pb-4 d-flex flex-column" elevation="2">
                           <div class="d-flex justify-content-end">
-                            <v-icon class="mdi mdi-close" @click="removeVideo(video.file)"></v-icon>
+                            <v-icon class="mdi mdi-close" @click="removeVideo(video.file.name)"></v-icon>
                           </div>
                           <video :src=" video.url" controls width="300" class="mx-3 mb-2"></video>
                           <div class="mx-3">
