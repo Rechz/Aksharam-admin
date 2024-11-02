@@ -52,6 +52,37 @@ const router = createRouter({
           component: () => import('./components/Booking/TicketBooking.vue'),
           meta: { requiresAuth: true, role: 'admin' },
           name: 'booking',
+          children: [
+            {
+              path: '/admin/spottickets/nav',
+              alias: '',
+              name: 'spot-ticket-nav',
+              component: () => import('./components/Booking/Tickets/TicketNav.vue'),
+              children: [ 
+                {
+                  path: '/admin/spottickets/details',
+                  alias: '',
+                  name: 'spot-ticket-details',
+                  component: () => import('./components/Booking/Tickets/TicketPage.vue')
+                },
+                {
+                  path: '/admin/spottickets/price',
+                  name: 'spot-ticket-price',
+                  component: () => import('./components/Booking/Tickets/TicketPrice.vue')
+                },
+                {
+                  path: '/admin/spottickets/slots',
+                  name: 'spot-ticket-slots',
+                  component: () => import('./components/Booking/Tickets/TicketSlots.vue')
+                },
+              ]
+            },
+            {
+              path: '/admin/booking/dashboard',
+              name: 'spot-dashboard',
+              component: () => import('./components/Booking/SpotDash/SpotDash.vue')
+            }
+          ]
         },
         {
           path: '/admin/calendar',

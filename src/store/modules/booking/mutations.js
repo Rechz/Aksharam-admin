@@ -7,6 +7,10 @@ export default {
         state.Slot = payload;
         // sessionStorage.setItem('Slot', JSON.stringify(payload))
     },
+    setAllSlot(state, payload) {
+        state.allSlot = payload;
+        sessionStorage.setItem('allSlot', JSON.stringify(payload))
+    },
     setType(state, payload) {
         state.Type = payload;
         sessionStorage.setItem('Type', JSON.stringify(payload))
@@ -34,5 +38,9 @@ export default {
     setSpotBooking(state, payload) {
         state.SpotBooking = payload;
         sessionStorage.setItem('SpotBooking', JSON.stringify(payload))
+    },
+    setTickets(state, payload) {
+        state.Tickets = payload;
+        sessionStorage.setItem('Tickets', JSON.stringify(payload))
     },
 }
