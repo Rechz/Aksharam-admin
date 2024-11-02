@@ -33,6 +33,58 @@ export default {
           throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
         }
       },
+      // add Slot
+      async addSlot({ rootGetters}, payload) {
+        try {
+          const response = await axios.post(`${rootGetters.getUrl}/api/slot/addSlot`, payload,
+            {
+              headers: {
+                Authorization: `Bearer ${rootGetters.getToken}`
+              }
+            });
+            if (response.status >= 200 && response.status < 300) {
+                return true;
+            }
+        }
+        catch (err) {
+          console.error(err);
+          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+        }
+      },
+      // get all slot
+      async fetchAllSlot({ rootGetters, commit }) {
+        try {
+          const response = await axios.get(`${rootGetters.getUrl}/api/slot/getAllSlot`);
+          if (response.status >= 200 && response.status < 300) {
+            // console.log(response.data)
+            commit('setAllSlot', response.data);
+            return true;
+          }
+        }
+        catch (err) {
+          console.error(err);
+          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+        }
+      },
+      // Update capacity
+      async editSlot({ rootGetters}, payload) {
+        try {
+          const response = await axios.put(`${rootGetters.getUrl}/api/slot/updateSlot?id=${payload.id}`, payload.data,
+            {
+              headers: {
+                Authorization: `Bearer ${rootGetters.getToken}`
+              }
+            });
+            if (response.status >= 200 && response.status < 300) {
+              // commit('setSpotBooking', response.data);
+                return true;
+            }
+        }
+        catch (err) {
+          console.error(err);
+          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+        }
+      },
       // get slot by date
       async getSlotByDate({ rootGetters, commit }, payload){
         try {
@@ -255,6 +307,28 @@ response.data.forEach(item => {
             });
             if (response.status >= 200 && response.status < 300) {
               commit('setSpotBooking', response.data);
+                return true;
+            }
+        }
+        catch (err) {
+          console.error(err);
+          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+        }
+      },
+
+
+      // Dashboard api
+      // get all users 
+      async fetchTickets({ rootGetters,commit}, payload) {
+        try {
+          const response = await axios.get(`${rootGetters.getUrl}/api/spotData/getAllUser?categoryId=${payload}`,
+            {
+              headers: {
+                Authorization: `Bearer ${rootGetters.getToken}`
+              }
+            });
+            if (response.status >= 200 && response.status < 300) {
+              commit('setTickets', response.data);
                 return true;
             }
         }
