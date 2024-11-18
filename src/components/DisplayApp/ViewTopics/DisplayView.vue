@@ -283,6 +283,7 @@
         }
       },
       translate(language) {
+        this.search = '';
         this.$store.commit('display/setLanguage', language);
         this.getTopics()
       },

@@ -307,9 +307,10 @@
           console.error(error);
         }
       },
-      translate(language) {
-        this.$store.commit('display/setLanguage', language);
-        this.getTopics()
+        translate(language) {
+          this.search = '';
+          this.$store.commit('display/setLanguage', language);
+          this.getTopics()
       },
       async showDetails(item) {
         try {
