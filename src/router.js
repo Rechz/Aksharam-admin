@@ -4,7 +4,7 @@ const router = createRouter({
     history : createWebHistory(),
   routes: [
     {
-      path: '/admin',
+      path: '/admin-spot',
       name: 'admin-login',
       component: () => import('./components/Home/AdminLogin.vue')
     },
@@ -19,24 +19,24 @@ const router = createRouter({
       component: () => import('./components/Home/NotFound.vue')
     },
     {
-      path: '/admin/dashboard',
+      path: '/admin-spot/dashboard',
       component: () => import('./components/Home/AdminDash.vue'),
        name: 'overview',
       children: [
         {
-          path: '/admin/booking',
+          path: '/admin-spot/booking',
           component: () => import('./components/Booking/TicketBooking.vue'),
           meta: { requiresAuth: true, role: 'admin' },
           name: 'booking',
         },
         {
-          path: '/admin/confirm-booking',
+          path: '/admin-spot/confirm-booking',
           component: () => import('./components/Booking/ConfirmBooking.vue'),
           meta: { requiresAuth: true, role: 'admin' },
           name: 'confirmbooking',
         },
         {
-          path: '/admin/ticket',
+          path: '/admin-spot/ticket',
           component: () => import('./components/Booking/TicketPage.vue'),
           meta: { requiresAuth: true, role: 'admin' },
           name: 'ticket',
@@ -61,7 +61,7 @@ router.beforeEach((to, from, next) => {
             if (isAuthenticated) {
                 next(); // Allow access for admin
             } else {
-                const isDisplayAppRoute = to.matched.some(record => record.path.startsWith('/admin/display-app'));
+                const isDisplayAppRoute = to.matched.some(record => record.path.startsWith('/admin-spot/display-app'));
                 if (isDisplayAppRoute) {
                     next(); // Allow access to any route within DisplayApp for employees
                 } else {
