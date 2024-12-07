@@ -5,6 +5,7 @@
       </div>
       <div class="ticket-body">
         <p><strong>Name:</strong> {{ ticket.name }}</p>
+        <v-img :src="'data:image/png;base64,' + ticket.qrCodeImage"></v-img>
         <p><strong>Phone Number:</strong> {{ ticket.phNumber }}</p>
         <p><strong>Adults:</strong> {{ ticket.adult }}</p>
         <p><strong>Children:</strong> {{ ticket.child }}</p>

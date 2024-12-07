@@ -1,9 +1,9 @@
 <template>
   <div>
-    <v-col cols="12" sm="12" md="12">
-        <v-text-field v-model="type" :label='"No of " + cat' class="price" density="comfortable" :rules="quantityRules" width="300"
-        variant="outlined"></v-text-field>
-    </v-col>
+    <!-- <v-col cols="12" sm="12" md="12"> -->
+        <v-text-field v-model="type" :label='"No of " + cat' class="price" density="comfortable" :rules="quantityRules" width="300" color="success"
+        variant="outlined" ></v-text-field>
+    <!-- </v-col> -->
   </div>
 </template>
 
