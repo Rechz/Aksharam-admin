@@ -6,7 +6,7 @@
         <div class="subtitle">
             Oops, the page you were looking for does not exist or might have been removed or is temporarily unavailable.
         </div>
-        <router-link class="button" to="/admin"><v-btn variant="elevated" color="blue-grey-darken-2"
+        <router-link class="button" to="/admin-spot"><v-btn variant="elevated" color="blue-grey-darken-2"
                 class="mt-4">Go to Home Page</v-btn></router-link>
 
     </div>

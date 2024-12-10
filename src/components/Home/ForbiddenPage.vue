@@ -6,7 +6,7 @@
         <div class="subtitle">
             Oops, You don't have permission to access this page.
         </div>
-        <router-link class="button" to="/admin"><v-btn variant="elevated" color="blue-grey-darken-2"
+        <router-link class="button" to="/admin-spot"><v-btn variant="elevated" color="blue-grey-darken-2"
                 class="mt-4">Login</v-btn></router-link>
 
     </div>
