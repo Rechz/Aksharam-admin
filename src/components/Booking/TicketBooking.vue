@@ -106,14 +106,15 @@
               </div>
               <p><strong>Grand Total: </strong> {{ bookedDetails.grandTotal }}</p>
               <v-chip-group v-model="selectedStatus" selected-class="text-danger" column>
-      <v-chip>
-        <!-- v-for="status in paymentStatus" 
-        :key="status.id" 
-        :value="status.id" 
+                <v-chip>
+        <!-- v-for="status in filteredStatuses"
+        :title="status.statusName"
+        :key="status.id"
+        :value="status.id"
         size="large"
         :disabled="!selectedCat"
       > -->
-        Received
+        {{ filteredStatuses.statusName }}
       </v-chip>
     </v-chip-group>
     <v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="confirmBooking">Proceed to print</v-btn>
@@ -121,7 +122,7 @@
             </v-row>
           </v-container>
         </v-sheet>
-        <!-- <v-dialog v-model="dialog">
+        <!-- <v-dialog v-model="dialog">        Received
           <demo-ticket></demo-ticket>
         </v-dialog> -->
     </v-container>
@@ -302,7 +303,7 @@ let visitorDetails = "";
         visitDate: this.formattedDate,
         slotId: this.slot.slotId,
         // paymentMode: this.selectedMode,
-        paymentStatusId: 1,
+        paymentStatusId: this.filteredStatuses.id,
         createdBy: this.role,
         // ...this.counts
         }
@@ -409,6 +410,9 @@ let visitorDetails = "";
     paymentStatus() {
       return this.getPaymentStatus;
     },
+    filteredStatuses() {
+      return this.paymentStatus.find(status => status.statusName === "Received");
+    },
     role() {
       return this.getRole;
     },
@@ -445,6 +449,7 @@ let visitorDetails = "";
     this.fetchSlotByDate();
     this.fetchPaymentMode();
     this.fetchPaymentStatus();
+    console.log('filtered', this.filteredStatuses)
     console.log('time',this.slot);
   },
   watch: {
