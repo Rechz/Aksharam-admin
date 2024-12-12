@@ -324,7 +324,8 @@ let visitorDetails = "";
        this.selectedCat= null
        this.selectedMode= null
        this.selectedStatus= null
-      this.counts= ''
+          this.counts = ''
+      this.$store.commit('booking/clearType')
       this.$store.commit('booking/setDetails', ' ');
       this.fetchSlotByDate();
         }

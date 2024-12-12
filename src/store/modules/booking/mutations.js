@@ -11,6 +11,10 @@ export default {
         state.Type = payload;
         sessionStorage.setItem('Type', JSON.stringify(payload))
     },
+    clearType(state) {
+        state.Type = [];
+        sessionStorage.removeItem('Type')
+    },
     setGst(state, payload) {
         state.GST = payload;
         sessionStorage.setItem('GST', JSON.stringify(payload))
