@@ -1,7 +1,7 @@
 <template>
-    <v-main>
+  <v-main>
     <v-container class="py-8 px-6" fluid>
-        <!-- <div>
+      <!-- <div>
             <v-select clearable density="comfortable" variant="outlined" label="Select a category" width="300"
                 :items="category" item-title="category" item-value="id" v-model="selectedCat">
             </v-select>
@@ -33,64 +33,54 @@
                 </v-container>
             </v-sheet>
         </div> -->
-        <div class="fw-bold d-flex justify-content-between mx-3 my-0 ">
+      <div class="fw-bold d-flex justify-content-between mx-3 my-0 ">
         <div class="d-flex flex-column  ">
-            <div>Date: {{ slot.bookDate }}</div>
-            <div>Slot Start Time: {{ slot.slotStartTime }}</div>
-          </div>
-          <div class="d-flex flex-column  ">
+          <div>Date: {{ slot.bookDate }}</div>
+          <div>Slot Start Time: {{ slot.slotStartTime }}</div>
+        </div>
+        <div class="d-flex flex-column  ">
           <div>Present capacity : {{ slot.presentCapacity }}</div>
           <div>Slot End Time: {{ slot.slotEndTime }}</div>
         </div>
-        </div>
-        <v-sheet :elevation="5" :height="580" class="mt-2">
-          <v-container class="pb-0">
-            <v-row>
-              <v-col cols="12" md="6" >
-                <v-container>
-                  <!-- <v-select clearable density="comfortable" variant="outlined" label="Select a category" width="300"
+      </div>
+      <v-sheet :elevation="5" :height="580" class="mt-2">
+        <v-container class="pb-0">
+          <v-row>
+            <v-col cols="12" md="6">
+              <v-container>
+                <!-- <v-select clearable density="comfortable" variant="outlined" label="Select a category" width="300"
                 :items="category" item-title="category" item-value="id" v-model="selectedCat">
             </v-select> -->
-            <p v-if="validationError" class="text-danger errorText">
-  Please fill all required fields and select a category.
-</p>
-      <v-chip-group v-model="selectedCat" selected-class="text-success" column :disabled="showPreview">
-      <v-chip 
-        v-for="category in category" 
-        :key="category.id" 
-        :value="category.id" 
-        size="large"
-      >
-        {{ category.category }}
-      </v-chip>
-    </v-chip-group>
-                  <v-text-field v-model="name" label="Name" class="price" density="comfortable"
-                                    :rules="nameRules" width="300" variant="outlined"
-                                    :disabled="!selectedCat"  color="success"></v-text-field>
-                  <v-text-field v-model="number" label="Phone number" class="price"
-                                    density="comfortable" :rules="mobRules" width="300"
-                                    variant="outlined" :disabled="!selectedCat"  color="success"></v-text-field>
-                  <div v-for="type in types" :key="type.id">
-                      <category-type :cat="type.type" :id="type.id" @updateCount="handleUpdate"></category-type>
-                  </div>
-                  <!-- <v-select clearable density="comfortable" variant="outlined" label="Select a payment mode" 
+                <p v-if="validationError" class="text-danger errorText">
+                  Please fill all required fields and select a category.
+                </p>
+                <v-chip-group v-model="selectedCat" selected-class="text-success" column :disabled="showPreview">
+                  <v-chip v-for="category in category" :key="category.id" :value="category.id" size="large">
+                    {{ category.category }}
+                  </v-chip>
+                </v-chip-group>
+                <v-text-field v-model="name" label="Name" class="price" density="comfortable" :rules="nameRules"
+                  width="300" variant="outlined" :disabled="!selectedCat" color="success"></v-text-field>
+                <v-text-field v-model="number" label="Phone number" class="price" density="comfortable"
+                  :rules="mobRules" width="300" variant="outlined" :disabled="!selectedCat"
+                  color="success"></v-text-field>
+                <div v-for="type in types" :key="type.id">
+                  <category-type :cat="type.type" :id="type.id" @updateCount="handleUpdate"></category-type>
+                </div>
+                <!-- <v-select clearable density="comfortable" variant="outlined" label="Select a payment mode" 
                                     width="300" :items="paymentMode" item-title="paymentType" 
                                     item-value="id" v-model="selectedMode"></v-select> -->
-      <v-chip-group v-model="selectedMode" selected-class="text-danger" column>
-      <v-chip 
-        v-for="mode in paymentMode" 
-        :key="mode.id" 
-        :value="mode.id" 
-        size="large"
-        :disabled="!selectedCat"
-      >
-        {{ mode.paymentType }}
-      </v-chip>
-    </v-chip-group>
-    <v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="validateAndSubmit" :disabled="showPreview">Get Tickets</v-btn>
-                </v-container>
-              </v-col>
-              <v-col cols="12" md="6" v-if="showPreview">
+                <v-chip-group v-model="selectedMode" selected-class="text-danger" column>
+                  <v-chip v-for="mode in paymentMode" :key="mode.id" :value="mode.id" size="large"
+                    :disabled="!selectedCat">
+                    {{ mode.paymentType }}
+                  </v-chip>
+                </v-chip-group>
+                <v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="validateAndSubmit"
+                  :disabled="showPreview">Get Tickets</v-btn>
+              </v-container>
+            </v-col>
+            <v-col cols="12" md="6" v-if="showPreview">
               <h3>Preview</h3>
               <p><strong>Name:</strong> {{ details.data.name }}</p>
               <p><strong>Phone Number:</strong> {{ details.data.phNumber }}</p>
@@ -108,31 +98,24 @@
                 <p><strong>No of children:</strong> {{ details.data.child }}</p>
               </div>
               <p><strong>Grand Total: </strong> {{ bookedDetails.grandTotal }}</p>
-              <v-chip-group v-model="selectedStatus" selected-class="text-danger" column>
-                <v-chip>
-        <!-- v-for="status in filteredStatuses"
-        :title="status.statusName"
-        :key="status.id"
-        :value="status.id"
-        size="large"
-        :disabled="!selectedCat"
-      > -->
-        {{ filteredStatuses.statusName }}
-      </v-chip>
-    </v-chip-group>
-    <v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="confirmBooking()">Proceed to print</v-btn>
-    <p v-if="validationStatus" class="text-danger errorText">
-  Please fill the payment status...
-</p>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-sheet>
-        <!-- <v-dialog v-model="dialog">        Received
+                <v-chip @click="selectedStatus= filteredStatuses.id" selected-class="text-danger">
+                  
+                  {{ filteredStatuses.statusName }}-{{ selectedStatus }}
+                </v-chip>
+              <v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="validateAndConfirm()">Proceed to
+                print</v-btn>
+              <p v-if="validationStatus" class="text-danger errorText">
+                Please fill the payment status...
+              </p>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-sheet>
+      <!-- <v-dialog v-model="dialog">        Received
           <demo-ticket></demo-ticket>
         </v-dialog> -->
     </v-container>
-</v-main>
+  </v-main>
 </template>
 
 <script>
@@ -280,7 +263,6 @@ export default {
         return;
       }
       this.validationError = false; 
-
       await this.submit();
     },
     async submit() {
@@ -316,7 +298,7 @@ export default {
       }
     
     },
-    async validateAndConfirm() {
+      async validateAndConfirm() {
       if (!this.selectedStatus) {
         this.validationStatus = true; 
         return;
@@ -482,7 +464,7 @@ export default {
     this.fetchPaymentMode();
     this.fetchPaymentStatus();
     console.log('filtered', this.filteredStatuses)
-    console.log('time',this.slot);
+    console.log('time', this.slot);
   },
   watch: {
     selectedCat(value) {
@@ -506,11 +488,11 @@ export default {
         this.validationError = false;
       }
     },
-    selectedStatus(newValue) {
-      if (newValue) {
-        this.validationStatus = false;
-      }
-    },
+    // selectedStatus(newValue) {
+    //   if (newValue) {
+    //     this.validationStatus = false;
+    //   }
+    // },
   }
 }
 </script>
