@@ -61,11 +61,11 @@ router.beforeEach((to, from, next) => {
             if (isAuthenticated) {
                 next(); // Allow access for admin
             } else {
-                const isDisplayAppRoute = to.matched.some(record => record.path.startsWith('/admin-spot/display-app'));
+                const isDisplayAppRoute = to.matched.some(record => record.path.startsWith('/admin-spot/booking'));
                 if (isDisplayAppRoute) {
                     next(); // Allow access to any route within DisplayApp for employees
                 } else {
-                    next({ name: 'display-add-main' }); // Redirect employee to display-add-main for non-displayApp routes
+                    next({ name: 'booking' }); // Redirect employee to display-add-main for non-displayApp routes
                 }
             }
         } else {
