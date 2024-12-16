@@ -263,6 +263,25 @@ response.data.forEach(item => {
           throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
         }
       },
+      //Delete usersemibooking
+      async deleteUserReg({ rootGetters}, payload) {
+        try {
+          const response = await axios.delete(`${rootGetters.getUrl}/api/spotData/deletePartialRegistration?categoryId=${payload.catId}&deleteId=${payload.id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${rootGetters.getToken}`
+              }
+            });
+            if (response.status >= 200 && response.status < 300) {
+              console.log(response.data)
+                return true;
+            }
+        }
+        catch (err) {
+          console.error(err);
+          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+        }
+      },
       // Confirm booking
       async confirmBooking({ rootGetters,commit}, payload) {
         try {

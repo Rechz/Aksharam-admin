@@ -70,12 +70,12 @@
                 <!-- <v-select clearable density="comfortable" variant="outlined" label="Select a payment mode" 
                                     width="300" :items="paymentMode" item-title="paymentType" 
                                     item-value="id" v-model="selectedMode"></v-select> -->
-                <v-chip-group v-model="selectedMode" selected-class="text-danger" column>
-                  <v-chip v-for="mode in paymentMode" :key="mode.id" :value="mode.id" size="large"
+                <!-- <v-chip-group v-model="selectedMode" selected-class="text-danger" column>
+                  <v-chip v-for="mode in filteredModes" :key="mode.id" :value="mode.id" size="large"
                     :disabled="!selectedCat">
                     {{ mode.paymentType }}
                   </v-chip>
-                </v-chip-group>
+                </v-chip-group> -->
                 <v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="validateAndSubmit"
                   :disabled="showPreview">Get Tickets</v-btn>
               </v-container>
@@ -105,9 +105,12 @@
 >
   {{ filteredStatuses.statusName }}
 </v-chip> -->
+<div class="d-flex flex-wrap gap-2">
+<v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="confirmBooking()">Proceed to
+  print</v-btn>
+<v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="cancelBooking()">Cancel</v-btn></div>
 
-              <v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="confirmBooking()">Proceed to
-                print</v-btn>
+              
               <p v-if="validationStatus" class="text-danger errorText">
                 Please fill the payment status...
               </p>
@@ -262,7 +265,7 @@ export default {
     this.dialog = false
   },
   async validateAndSubmit() {
-      if (!this.selectedCat || !this.name || !this.number || !this.selectedMode) {
+      if (!this.selectedCat || !this.name || !this.number) {
         this.validationError = true; 
         return;
       }
@@ -277,7 +280,7 @@ export default {
         phNumber: this.number,
         // visitDate: this.formattedDate,
         // slotId: this.slot.slotId,
-        paymentMode: this.selectedMode,
+        paymentMode: this.filteredModes.id,
         paymentStatusId: 2,
         createdBy: this.role,
         ...this.counts
@@ -331,6 +334,35 @@ export default {
         const res =  await this.$store.dispatch('booking/confirmBooking',payload) 
         if(res) {
           this.printTicket();
+          this.showPreview = false
+          // this.dialog = true;
+          this.totalGuests = ''
+          this.paymentStatus = ''
+          this.bookedDetails = ''
+          this.name= null
+       this.number= null
+       this.selectedCat= null
+       this.selectedMode= null
+       this.selectedStatus= null
+          this.counts = ''
+      this.$store.commit('booking/clearType')
+      this.$store.commit('booking/setDetails', ' ');
+      this.fetchSlotByDate();
+        }
+      }
+      catch (error) {
+        console.error(error)
+      }
+    
+    },
+    async cancelBooking() {
+      const payload = {
+        catId: this.selectedCat,
+        id: this.bookedDetails.id,
+      }
+      try {
+        const res =  await this.$store.dispatch('booking/deleteUserReg',payload) 
+        if(res) {
           this.showPreview = false
           // this.dialog = true;
           this.totalGuests = ''
@@ -424,6 +456,9 @@ export default {
     },
     paymentMode() {
       return this.getPaymentMode;
+    },
+    filteredModes() {
+      return this.paymentMode.find(mode => mode.paymentType === "Cash");
     },
     paymentStatus() {
       return this.getPaymentStatus;
