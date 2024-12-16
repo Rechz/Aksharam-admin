@@ -3,7 +3,7 @@ export default {
     // add category
     async addCategory({ rootGetters}, payload) {
         try {
-          const response = await axios.post(`${rootGetters.getUrl}/api/category/addCategory`, payload,
+          const response = await axios.post(`${rootGetters.getUrl}api/category/addCategory`, payload,
             {
               headers: {
                 Authorization: `Bearer ${rootGetters.getToken}`
@@ -21,7 +21,7 @@ export default {
     //   Get category
       async fetchCategory({ rootGetters, commit }) {
         try {
-          const response = await axios.get(`${rootGetters.getUrl}/api/category/getCategory`);
+          const response = await axios.get(`${rootGetters.getUrl}api/category/getCategory`);
           if (response.status >= 200 && response.status < 300) {
             // console.log(response.data)
             commit('setCategory', response.data);
@@ -36,7 +36,7 @@ export default {
       // get slot by date
       async getSlotByDate({ rootGetters, commit }, payload){
         try {
-          const response = await axios.get(`${rootGetters.getUrl}/api/slot/bookDate?bDate=${payload}`);
+          const response = await axios.get(`${rootGetters.getUrl}api/slot/bookDate?bDate=${payload}`);
           if (response.status >= 200 && response.status < 300) {
             console.log(response.data)
             commit('setSlot', response.data);
@@ -51,7 +51,7 @@ export default {
     //   add type
       async addType({ rootGetters}, payload) {
         try {
-          const response = await axios.post(`${rootGetters.getUrl}/api/category/addType`, payload,
+          const response = await axios.post(`${rootGetters.getUrl}api/category/addType`, payload,
             {
               headers: {
                 Authorization: `Bearer ${rootGetters.getToken}`
@@ -69,7 +69,7 @@ export default {
     //   get type by categoryId
       async getTypeById({ rootGetters, commit }, payload){
         try {
-          const response = await axios.get(`${rootGetters.getUrl}/api/category/getTypeByCategoryId?id=${payload}`);
+          const response = await axios.get(`${rootGetters.getUrl}api/category/getTypeByCategoryId?id=${payload}`);
           if (response.status >= 200 && response.status < 300) {
             console.log(response.data)
             const result = {};
@@ -99,7 +99,7 @@ response.data.forEach(item => {
       // Add GST
       async addGst({ rootGetters}, payload) {
         try {
-          const response = await axios.post(`${rootGetters.getUrl}/api/category/addGst`, payload,
+          const response = await axios.post(`${rootGetters.getUrl}api/category/addGst`, payload,
             {
               headers: {
                 Authorization: `Bearer ${rootGetters.getToken}`
@@ -117,7 +117,7 @@ response.data.forEach(item => {
       // GetGst
       async fetchGst({ rootGetters, commit }) {
         try {
-          const response = await axios.get(`${rootGetters.getUrl}/api/category/getGST`);
+          const response = await axios.get(`${rootGetters.getUrl}api/category/getGST`);
           if (response.status >= 200 && response.status < 300) {
             // console.log(response.data)
             commit('setGst', response.data);
@@ -132,7 +132,7 @@ response.data.forEach(item => {
       // Add additional fees
       async addFees({ rootGetters}, payload) {
         try {
-          const response = await axios.post(`${rootGetters.getUrl}/api/category/additionalCharge`, payload,
+          const response = await axios.post(`${rootGetters.getUrl}api/category/additionalCharge`, payload,
             {
               headers: {
                 Authorization: `Bearer ${rootGetters.getToken}`
@@ -150,7 +150,7 @@ response.data.forEach(item => {
       // get additionalCharge
       async fetchfees({ rootGetters, commit }) {
         try {
-          const response = await axios.get(`${rootGetters.getUrl}/api/category/getAdditionalCharge`);
+          const response = await axios.get(`${rootGetters.getUrl}api/category/getAdditionalCharge`);
           if (response.status >= 200 && response.status < 300) {
             // console.log(response.data)
             commit('setFees', response.data);
@@ -165,7 +165,7 @@ response.data.forEach(item => {
       // Add price
       async addPrice({ rootGetters}, payload) {
         try {
-          const response = await axios.post(`${rootGetters.getUrl}/api/category/addPrice`, payload,
+          const response = await axios.post(`${rootGetters.getUrl}api/category/addPrice`, payload,
             {
               headers: {
                 Authorization: `Bearer ${rootGetters.getToken}`
@@ -183,7 +183,7 @@ response.data.forEach(item => {
       // get price
       async fetchPrice({ rootGetters, commit }) {
         try {
-          const response = await axios.get(`${rootGetters.getUrl}/api/category/getPrice`);
+          const response = await axios.get(`${rootGetters.getUrl}api/category/getPrice`);
           if (response.status >= 200 && response.status < 300) {
             // console.log(response.data)
             commit('setPrice', response.data);
@@ -198,7 +198,7 @@ response.data.forEach(item => {
       // mode of payment
       async paymentMode({ rootGetters}, payload) {
         try {
-          const response = await axios.post(`${rootGetters.getUrl}/api/category/addPaymentMode`, payload,
+          const response = await axios.post(`${rootGetters.getUrl}api/category/addPaymentMode`, payload,
             {
               headers: {
                 Authorization: `Bearer ${rootGetters.getToken}`
@@ -216,7 +216,7 @@ response.data.forEach(item => {
       // Get payment mode
       async fetchPaymentMode({ rootGetters, commit }) {
         try {
-          const response = await axios.get(`${rootGetters.getUrl}/api/category/paymentMode`);
+          const response = await axios.get(`${rootGetters.getUrl}api/category/paymentMode`);
           if (response.status >= 200 && response.status < 300) {
             // console.log(response.data)
             commit('setPaymentMode', response.data);
@@ -231,7 +231,7 @@ response.data.forEach(item => {
       // Get Payment status
       async fetchPaymentStatus({ rootGetters, commit }) {
         try {
-          const response = await axios.get(`${rootGetters.getUrl}/api/category/getPaymentStatus`);
+          const response = await axios.get(`${rootGetters.getUrl}api/category/getPaymentStatus`);
           if (response.status >= 200 && response.status < 300) {
             // console.log(response.data)
             commit('setPaymentStatus', response.data);
@@ -246,7 +246,7 @@ response.data.forEach(item => {
       // Spot_Registration
       async spotBooking({ rootGetters,commit}, payload) {
         try {
-          const response = await axios.post(`${rootGetters.getUrl}/api/spotData/userReg?category=${payload.id}`, payload.data,
+          const response = await axios.post(`${rootGetters.getUrl}api/spotData/userReg?category=${payload.id}`, payload.data,
             {
               headers: {
                 Authorization: `Bearer ${rootGetters.getToken}`
@@ -266,7 +266,7 @@ response.data.forEach(item => {
       // Confirm booking
       async confirmBooking({ rootGetters,commit}, payload) {
         try {
-          const response = await axios.post(`${rootGetters.getUrl}/api/spotData/confirmPayment?orderId=${payload.id}&totalUserCount=${payload.count}`, payload.data,
+          const response = await axios.post(`${rootGetters.getUrl}api/spotData/confirmPayment?orderId=${payload.id}&totalUserCount=${payload.count}`, payload.data,
             {
               headers: {
                 Authorization: `Bearer ${rootGetters.getToken}`
