@@ -98,11 +98,15 @@
                 <p><strong>No of children:</strong> {{ details.data.child }}</p>
               </div>
               <p><strong>Grand Total: </strong> {{ bookedDetails.grandTotal }}</p>
-                <v-chip @click="selectedStatus= filteredStatuses.id" selected-class="text-danger">
-                  
-                  {{ filteredStatuses.statusName }}-{{ selectedStatus }}
-                </v-chip>
-              <v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="validateAndConfirm()">Proceed to
+              <!-- <v-chip
+  :value="selectedStatus === filteredStatuses.id"
+  @click="selectedStatus = filteredStatuses.id"
+  selected-class="text-danger"
+>
+  {{ filteredStatuses.statusName }}
+</v-chip> -->
+
+              <v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="confirmBooking()">Proceed to
                 print</v-btn>
               <p v-if="validationStatus" class="text-danger errorText">
                 Please fill the payment status...
@@ -298,14 +302,14 @@ export default {
       }
     
     },
-      async validateAndConfirm() {
-      if (!this.selectedStatus) {
-        this.validationStatus = true; 
-        return;
-      }
-      this.validationStatus = false; 
-      await this.confirmBooking();
-    },
+    //   async validateAndConfirm() {
+    //   if (!this.selectedStatus) {
+    //     this.validationStatus = true; 
+    //     return;
+    //   }
+    //   this.validationStatus = false; 
+    //   await this.confirmBooking();
+    // },
     async confirmBooking() {
       const payload = {
         id: this.bookedDetails.orderId,
