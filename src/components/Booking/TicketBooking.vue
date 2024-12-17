@@ -239,7 +239,7 @@ export default {
     const ticketContent = `
       <div style="font-family: Arial, sans-serif; width: 280px; padding: 10px; text-align: center;">
         <div style="font-size: 20px; font-weight: bold;">അക്ഷരം</div>
-        <p style="margin-top: 10px; font-size: 10px;">Museum of Letters,Literature and Culture</p>
+        <p style="margin-top: 10px; font-size: 12px;">Museum of Letters,Literature and Culture</p>
         <div style="margin: 10px 0; border-top: 1px dashed black; border-bottom: 1px dashed black; padding: 5px 0;">
           <p><strong>${this.totalGuests} Ticket(s)</strong></p>
           <p>${visitorDetails}</p>
