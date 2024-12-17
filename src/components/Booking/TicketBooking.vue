@@ -1,6 +1,14 @@
 <template>
   <v-main>
     <v-container class="py-8 px-6" fluid>
+      <v-snackbar v-model="snackbar" :color="color"  location="center" multi-line max-width="500" min-width="300">
+      {{ message }}
+      <template v-slot:actions>
+        <v-btn color="black" variant="text" @click="snackbar = false">
+          <v-icon class="mdi mdi-close-circle-outline"></v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
       <!-- <div>
             <v-select clearable density="comfortable" variant="outlined" label="Select a category" width="300"
                 :items="category" item-title="category" item-value="id" v-model="selectedCat">
@@ -184,7 +192,11 @@ export default {
       dialog: false,
       validationError: false,
       validationStatus: false,
-        }
+      message: '',
+      color: 'green',
+      snackbar: false,
+      timeout: 3000,
+      }
     },
     methods: {
       async fetchCategory() {
@@ -279,7 +291,7 @@ export default {
           name: this.name,
         phNumber: this.number,
         // visitDate: this.formattedDate,
-        // slotId: this.slot.slotId,
+        // slotId: this.slot.slotId,y
         paymentMode: this.filteredModes.id,
         paymentStatusId: 2,
         createdBy: this.role,
@@ -289,18 +301,24 @@ export default {
 } ;
       console.log("payload",payload);
       this.$store.commit('booking/setDetails',payload)
-      this.showPreview =  true;
       try {
        const res = await this.$store.dispatch('booking/spotBooking',payload)
         if(res) {
           // this.$router.push({name: 'confirmbooking'});
       // this.showPreview =  true;
+      this.showPreview =  true;
         }
         else {
+          this.message = 'Something went wrong!!!'
+            this.color = 'red';
+          this.snackbar = true;
           console.log('error')
         }
       }
       catch (error) {
+        this.message = 'Something went wrong!!!'
+            this.color = 'red';
+          this.snackbar = true;
         console.error(error)
       }
     
@@ -352,6 +370,9 @@ export default {
       }
       catch (error) {
         console.error(error)
+        this.message = 'Please check the capacity !!!'
+            this.color = 'red';
+          this.snackbar = true;
       }
     
     },
