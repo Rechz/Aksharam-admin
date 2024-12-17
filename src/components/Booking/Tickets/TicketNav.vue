@@ -1,7 +1,7 @@
 <template>
-  <!-- <v-main>
-    <v-container class="" fluid> -->
-      <div style="">
+  <v-main>
+    <v-container class="py-8 px-6" fluid>
+      <div style="margin-right: 2%; margin-left: 3%;">
         <div class="" style="width: 500px; display:inline-block; background-color:#FCFDF6;">
           <v-tabs v-model="tab" color="green-darken-4" grow>
             <v-tab v-for="item in items" :key="item" :value="item" @click="change(item)"
@@ -12,8 +12,8 @@
         </div>
         <router-view></router-view>
       </div>
-<!-- </v-container>
-</v-main> -->
+</v-container>
+</v-main>
 </template>
 
 <script>

@@ -232,6 +232,44 @@ response.data.forEach(item => {
           throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
         }
       },
+
+      // update price
+      async updatePrice({ rootGetters}, payload) {
+        try {
+          const response = await axios.put(`${rootGetters.getUrl}/api/category/updatePriceData/${payload.id}`, payload.data,
+            {
+              headers: {
+                Authorization: `Bearer ${rootGetters.getToken}`
+              }
+            });
+            if (response.status >= 200 && response.status < 300) {
+                return true;
+            }
+        }
+        catch (err) {
+          console.error(err);
+          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+        }
+      },
+
+      // delete price
+      async deletePrice({ rootGetters}, payload) {
+        try {
+          const response = await axios.delete(`${rootGetters.getUrl}/api/category/deletePriceById/${payload}`,            
+            {
+              headers: {
+                Authorization: `Bearer ${rootGetters.getToken}`
+              }
+            });
+            if (response.status >= 200 && response.status < 300) {
+                return true;
+            }
+        }
+        catch (err) {
+          console.error(err);
+          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+        }
+      },
       // get price
       async fetchPrice({ rootGetters, commit }) {
         try {
@@ -331,6 +369,89 @@ response.data.forEach(item => {
               commit('setTickets', response.data);
                 return true;
             }
+        }
+        catch (err) {
+          console.error(err);
+          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+        }
+      },
+
+      // Get User Details By visitDate and categoryId
+      async fetchTicketsByDate({ rootGetters,commit}, payload) {
+        try {
+          const response = await axios.get(`${rootGetters.getUrl}/api/spotData/getUserDetailsByDate?visitDate=${payload.date}&categoryId=${payload.id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${rootGetters.getToken}`
+              }
+            });
+            if (response.status >= 200 && response.status < 300) {
+              commit('setTicketsByDate', response.data);
+                return true;
+            }
+        }
+        catch (err) {
+          console.error(err);
+          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+        }
+      },
+
+      // Get Revenue details by Date
+      async fetchTotalRevenue({ rootGetters, commit },payload) {
+        try {
+          const response = await axios.get(`${rootGetters.getUrl}/api/spotData/totalRevenueByDate?visitDate=${payload}`,
+            {
+              headers: {
+                Authorization: `Bearer ${rootGetters.getToken}`
+              }
+            });
+          if (response.status >= 200 && response.status < 300) {
+            // console.log(response.data)
+            commit('setTotalRevenue', response.data.overAllRevenue || 0);
+            return true;
+          }
+        }
+        catch (err) {
+          console.error(err);
+          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+        }
+      },
+
+      // Get All user count
+      async fetchUserCount({ rootGetters, commit },payload) {
+        try {
+          const response = await axios.get(`${rootGetters.getUrl}/api/spotData/visitorsCountByDate?vDate=${payload.date}&categoryId=${payload.id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${rootGetters.getToken}`
+              }
+            });
+          if (response.status >= 200 && response.status < 300) {
+            // console.log(response.data)
+            commit('setUserCount', response.data);
+            return true;
+          }
+        }
+        catch (err) {
+          console.error(err);
+          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+        }
+      },
+
+      // Get All user count by start date and end date 
+      async fetchUserCountByRange({ rootGetters, commit },payload) {
+        try {
+          const response = await axios.get(`${rootGetters.getUrl}/api/spotData/visitorsCountByRangeOfDate?startDate=${payload.startDate}&endDate=${payload.endDate}`,
+            {
+              headers: {
+                Authorization: `Bearer ${rootGetters.getToken}`
+              }
+            });
+          if (response.status >= 200 && response.status < 300) {
+            // console.log(response.data)
+            commit('setUserCountByRange', response.data);
+            return true;
+          }
         }
         catch (err) {
           console.error(err);
