@@ -300,7 +300,7 @@ export default {
         // slotId: this.slot.slotId,
         district: this.district,
         paymentMode: this.filteredModes.id,
-        paymentStatusId: 2,
+        paymentStatusId: this.filteredPending.id,
         createdBy: this.role,
         ...this.counts
         }
@@ -494,6 +494,9 @@ export default {
     },
     paymentStatus() {
       return this.getPaymentStatus;
+    },
+    filteredPending() {
+      return this.paymentStatus.find(status => status.statusName === "Pending");
     },
     filteredStatuses() {
       return this.paymentStatus.find(status => status.statusName === "Received");
