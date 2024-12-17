@@ -1,6 +1,6 @@
 <template>
-  <!-- <v-main style="background-color: #D7E8CD;"> -->
-    <!-- <v-container  fluid> -->
+  <v-main style="background-color: #D7E8CD;">
+    <v-container class="py-8 px-6"  fluid>
       <div style="background-color: #D7E8CD;">
       <div class="d-flex gap-md-4 gap-2 container px-0 flex-wrap justify-content-md-start justify-content-center ms-5">
         <div class="d-flex flex-xl-row flex-column gap-md-4 gap-2 flex-wrap">
@@ -43,7 +43,7 @@
                   </v-btn-toggle>
                 </div>
                 <div class="d-flex flex-column">
-                  <p class="text-style">{{ dailyTickets }}</p>
+                  <p class="text-style">{{ dailyTickets[0].totalVisitsCount }}</p>
                   <p class="text-type">Total Bookings</p>
                 </div>
               </div>
@@ -76,7 +76,7 @@
                   <v-icon class="mdi mdi-ticket-confirmation" size="large" color="white"></v-icon>
                 </div>
                 <div class="d-flex flex-column">
-                  <p class="text-white mb-0 text-style py-0">{{cumulativeTickets}}</p>
+                  <p class="text-white mb-0 text-style py-0">{{ totalTicketByRange }}</p>
                   <p class="text-type mt-0 py-0">Cumulative Bookings</p>
                 </div>
               </div>
@@ -161,20 +161,21 @@
         </v-card>
       </div>
       <v-card class="mt-4 ms-5 me-4">
-        <TicketTable />
+        <!-- <TicketTable /> -->
       </v-card>
       </div>
-    <!-- </v-container> -->
-  <!-- </v-main> -->
+    </v-container>
+  </v-main>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import BarChart from './BarChart.vue';
 import PieChart from './PieChart.vue';
-import TicketTable from './TicketTable.vue';
+// import TicketTable from './TicketTable.vue';
 export default {
   components: {
-    BarChart, PieChart, TicketTable
+    BarChart, PieChart
   },
   data() {
     return {
@@ -190,6 +191,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('booking', ['getUserCountByRange','getTotalRevenue','getUserCount']),
     labelsPie() {
       return this.$store.getters.getPieLabel;
     },
@@ -206,16 +208,16 @@ export default {
       return this.$store.getters.getBarData2;
     },
     cumulativeTickets() { 
-      return this.$store.getters.getTotalTicket;
+      return this.getUserCountByRange;
     },
     yearlyTickets() {
       return this.$store.getters.getBarTotal2/100;
     },
     dailyTickets() {
-      return this.$store.getters.getDailyTicket;
+      return this.getUserCount;
     },
     cumulativeIncome() { 
-      return this.$store.getters.getTotalIncome;
+      return this.getTotalRevenue;
     },
     yearlyIncome() {
       return this.$store.getters.getBarTotal;
@@ -225,7 +227,13 @@ export default {
     },
     scannedVisitors() {
       return this.$store.getters.getPieTotal;
-    }
+    },
+    totalTicketByRange() {
+      return this.cumulativeTickets[0].publicTicketCount + this.cumulativeTickets[0].institutionTicketCount + this.cumulativeTickets[0].foreignerTicketCount
+    },
+    // dailyTicketCount() {
+    //   return this.getUserCount.totalVisitsCount;
+    // }
   },
   methods: {
     async fetchPieChart() {
@@ -274,16 +282,21 @@ export default {
     },
    
     async fetchTotalTickets() {
+      const payload = {
+        startDate: '2024-01-01',
+        endDate : `${this.currentYear}-${this.currentMonth}-${this.currentDay}`,
+      } 
       try {
-        await this.$store.dispatch('totalTickets')
+        await this.$store.dispatch('booking/fetchUserCountByRange',payload)
       }
       catch (error) {
         console.error(error.message);
       }
     },
     async fetchTotalIncome() {
+      const payload = `${this.currentYear}-${this.currentMonth}-${this.currentDay}`;
       try {
-        await this.$store.dispatch('totalIncome')
+        await this.$store.dispatch('booking/fetchTotalRevenue',payload)
       }
       catch (error) {
         console.error(error.message);
@@ -291,8 +304,8 @@ export default {
     },
     async fetchIncomeDate() {
       try {
-        const formattedDate = `${this.currentYear}-${this.currentMonth}-${this.currentDay}`;
-        await this.$store.dispatch('fetchIncomeByDate', formattedDate)
+        const payload = `${this.currentYear}-${this.currentMonth}-${this.currentDay}`;
+        await this.$store.dispatch('booking/fetchTotalRevenue', payload)
       }
       catch (error) {
         console.error(error);
@@ -314,8 +327,12 @@ export default {
     },
     async fetchTicketDate() {
       try {
-        const formattedDate = `${this.currentYear}-${this.currentMonth}-${this.currentDay}`;
-        await this.$store.dispatch('fetchTicketByDate', formattedDate)
+        const payload = {
+          date: `${this.currentYear}-${this.currentMonth}-${this.currentDay}`,
+          // date: '2024-12-18',
+          id: 0,
+        }
+        await this.$store.dispatch('booking/fetchUserCount', payload)
       }
       catch (error) {
         console.error(error);
@@ -323,24 +340,26 @@ export default {
     },
     async fetchTicketMonth() {
       try {
-        const index = parseInt(this.currentMonth, 10);
-        const month = this.monthNames[index - 1];
-        await this.$store.dispatch('fetchTicketByMonth', {
-          year: this.currentYear,
-          month: month
-        });
+        // const index = parseInt(this.currentMonth, 10);
+        // const month = this.monthNames[index - 1];
+        const payload = {
+          startDate : `${this.currentYear}-${this.currentMonth}-01`,
+          endDate : `${this.currentYear}-${this.currentMonth}-30`,
+        }
+        await this.$store.dispatch('booking/fetchUserCountByRange', payload);
       }
       catch (error) {
         console.error(error);
       }
     },
   },
-  // mounted() {
+  mounted() {
   //   document.body.style.backgroundColor = '#D7E8CD';
   // },
   // beforeUnmount() {
   //   document.body.style.backgroundColor = '';
-  // },
+  console.log('cumulativeTickets',this.dailyTicketCount);
+  },
   created() {
     const today = new Date();
     this.currentDay = String(today.getDate()).padStart(2, '0');

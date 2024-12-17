@@ -16,7 +16,11 @@ export default {
            paymentMode: JSON.parse(sessionStorage.getItem('paymentMode')) || [],
            paymentStatus: JSON.parse(sessionStorage.getItem('paymentStatus')) || [],
            SpotBooking: JSON.parse(sessionStorage.getItem('SpotPublic')) || [],
-           Tickets: JSON.parse(sessionStorage.getItem('Tickets')) || [],
+           User: JSON.parse(sessionStorage.getItem('User')) || [],
+           ticketByDate: JSON.parse(sessionStorage.getItem('ticketByDate')) || [],
+           totalRevenue: JSON.parse(sessionStorage.getItem('totalRevenue')) || [],
+           userCount: JSON.parse(sessionStorage.getItem('userCount')) || [],
+           userCountByRange: JSON.parse(sessionStorage.getItem('userCountByRange')) || [],
         }
     },
     actions,

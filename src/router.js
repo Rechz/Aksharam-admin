@@ -48,41 +48,35 @@ const router = createRouter({
           ]
         },
         {
-          path: '/admin/booking',
-          component: () => import('./components/Booking/TicketBooking.vue'),
+          path: '/admin/spot-ticket',
+          component: () => import('./components/Booking/Tickets/TicketNav.vue'),
           meta: { requiresAuth: true, role: 'admin' },
-          name: 'booking',
+          name: 'spot-tickets',
           children: [
             {
-              path: '/admin/spottickets/nav',
+              path: '/admin/spot-tickets/details',
               alias: '',
-              name: 'spot-ticket-nav',
-              component: () => import('./components/Booking/Tickets/TicketNav.vue'),
-              children: [ 
-                {
-                  path: '/admin/spottickets/details',
-                  alias: '',
-                  name: 'spot-ticket-details',
-                  component: () => import('./components/Booking/Tickets/TicketPage.vue')
-                },
-                {
-                  path: '/admin/spottickets/price',
-                  name: 'spot-ticket-price',
-                  component: () => import('./components/Booking/Tickets/TicketPrice.vue')
-                },
-                {
-                  path: '/admin/spottickets/slots',
-                  name: 'spot-ticket-slots',
-                  component: () => import('./components/Booking/Tickets/TicketSlots.vue')
-                },
-              ]
+              name: 'spot-ticket-details',
+              component: () => import('./components/Booking/Tickets/TicketPage.vue')
             },
             {
-              path: '/admin/booking/dashboard',
-              name: 'spot-dashboard',
-              component: () => import('./components/Booking/SpotDash/SpotDash.vue')
-            }
+              path: '/admin/spot-tickets/price',
+              name: 'spot-ticket-price',
+              component: () => import('./components/Booking/Tickets/TicketPrice.vue')
+            },
+            {
+              path: '/admin/spot-tickets/slots',
+              name: 'spot-ticket-slots',
+              component: () => import('./components/Booking/Tickets/TicketSlots.vue')
+            },
           ]
+        },
+        {
+          path: '/admin/spot-dashboard-page',
+          alias: '',
+         name: 'spot-dashboard',
+          component: () => import('./components/Booking/SpotDash/SpotDash.vue'),
+          meta: { requiresAuth: true, role: 'admin' },
         },
         {
           path: '/admin/calendar',
