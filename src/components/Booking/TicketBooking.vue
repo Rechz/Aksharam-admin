@@ -98,7 +98,7 @@
               <div v-if="details.id === 1">
                 <p><strong>No of Adult:</strong> {{ details.data.adult }}</p>
                 <p><strong>No of Children:</strong> {{ details.data.child }}</p>
-                <p><strong>No of Senior Citizen:</strong> {{ details.data.seniorCitizen }}</p>
+                <!-- <p><strong>No of Senior Citizen:</strong> {{ details.data.seniorCitizen }}</p> -->
               </div>
               <div v-if="details.id === 2">
                 <p><strong>District:</strong> {{ details.data.district }} </p>
@@ -238,7 +238,8 @@ export default {
     // Construct the ticket content
     const ticketContent = `
       <div style="font-family: Arial, sans-serif; width: 280px; padding: 10px; text-align: center;">
-        <div style="font-size: 20px; font-weight: bold;">Aksharam Museum</div>
+        <div style="font-size: 20px; font-weight: bold;">അക്ഷരം</div>
+        <p style="margin-top: 10px; font-size: 10px;">Museum of Letters,Literature and Culture</p>
         <div style="margin: 10px 0; border-top: 1px dashed black; border-bottom: 1px dashed black; padding: 5px 0;">
           <p><strong>${this.totalGuests} Ticket(s)</strong></p>
           <p>${visitorDetails}</p>
@@ -250,6 +251,8 @@ export default {
         </div>
         <p style="margin-top: 10px; font-size: 14px;">Cancellation not available</p>
         <p><strong>Total Amount: Rs.${this.userDetails.grandTotal}/-</strong></p>
+        <p style="margin-top: 10px; font-size: 14px;">Thank you visit again.</p>
+        <p style="margin-top: 10px; font-size: 14px;">www.aksharammuseum.com</p>
       </div>
     `;
 
