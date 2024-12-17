@@ -72,7 +72,8 @@
                 <v-text-field v-model="number" label="Phone number" class="price" density="comfortable"
                   :rules="mobRules" width="300" variant="outlined" :disabled="!selectedCat"
                   color="success"></v-text-field>
-                <v-text-field v-model="district" v-if="selectedCat === category.find(cat => cat.category === 'Institution').id " label=" District" class="price" density="comfortable" :rules="nameRules"
+                <v-text-field v-if="selectedCat === (category.find(cat => cat.category === 'Institution')?.id)"
+                  v-model="district"  label=" District" class="price" density="comfortable" :rules="nameRules"
                   width="300" variant="outlined" :disabled="!selectedCat" color="success"></v-text-field>
                 <div v-for="type in types" :key="type.id">
                   <category-type :cat="type.type" :id="type.id" @updateCount="handleUpdate"></category-type>
@@ -83,7 +84,7 @@
                 <!-- <v-chip-group v-model="selectedMode" selected-class="text-danger" column>
                   <v-chip v-for="mode in filteredModes" :key="mode.id" :value="mode.id" size="large"
                     :disabled="!selectedCat">
-                    {{ mode.paymentType }}
+                    {{ mode.paymentType }} v-if="selectedCat === category.find(cat => cat.category === 'Institution').id "
                   </v-chip>
                 </v-chip-group> -->
                 <v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="validateAndSubmit"
@@ -108,6 +109,7 @@
                 <p><strong>No of Adults:</strong> {{ details.data.adult }}</p>
                 <p><strong>No of children:</strong> {{ details.data.child }}</p>
               </div>
+              <p><strong>Total Ticket: </strong> {{ totalGuests}}</p>
               <p><strong>Grand Total: </strong> {{ bookedDetails.grandTotal }}</p>
               <!-- <v-chip
   :value="selectedStatus === filteredStatuses.id"
