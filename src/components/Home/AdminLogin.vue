@@ -80,6 +80,11 @@ export default {
       }
     },
   },
+  mounted() {
+    console.log('Base URL:', process.env.VUE_APP_BASE_URL);
+    console.log(process.env);
+
+  },
 };
 </script>
 <style scoped>

@@ -43,7 +43,7 @@
           <div>Slot End Time: {{ slot.slotEndTime }}</div>
         </div>
         </div>
-        <v-sheet :elevation="5" :height="550" class="mt-2">
+        <v-sheet :elevation="5" :height="580" class="mt-2">
           <v-container class="pb-0">
             <v-row>
               <v-col cols="12" md="6" >
@@ -51,6 +51,9 @@
                   <!-- <v-select clearable density="comfortable" variant="outlined" label="Select a category" width="300"
                 :items="category" item-title="category" item-value="id" v-model="selectedCat">
             </v-select> -->
+            <p v-if="validationError" class="text-danger errorText">
+  Please fill all required fields and select a category.
+</p>
       <v-chip-group v-model="selectedCat" selected-class="text-success" column :disabled="showPreview">
       <v-chip 
         v-for="category in category" 
@@ -84,7 +87,7 @@
         {{ mode.paymentType }}
       </v-chip>
     </v-chip-group>
-    <v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="submit" :disabled="showPreview">Get Tickets</v-btn>
+    <v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="validateAndSubmit" :disabled="showPreview">Get Tickets</v-btn>
                 </v-container>
               </v-col>
               <v-col cols="12" md="6" v-if="showPreview">
@@ -117,7 +120,10 @@
         {{ filteredStatuses.statusName }}
       </v-chip>
     </v-chip-group>
-    <v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="confirmBooking">Proceed to print</v-btn>
+    <v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="confirmBooking()">Proceed to print</v-btn>
+    <p v-if="validationStatus" class="text-danger errorText">
+  Please fill the payment status...
+</p>
               </v-col>
             </v-row>
           </v-container>
@@ -186,7 +192,8 @@ export default {
       bookingDetails: [],
       counts: {},
       dialog: false,
-   
+      validationError: false,
+      validationStatus: false,
         }
     },
     methods: {
@@ -199,39 +206,46 @@ export default {
       }
     },
     printTicket() {
+    // Open a new window for printing
     const printWindow = window.open("", "_blank", "width=300,height=500");
     if (!printWindow) {
-  console.error("Failed to open a new window. Ensure popups are not blocked.");
-  return;
-}
-let visitorDetails = "";
-  if (this.visitorType === 1 || this.visitorType === 3) {
-    visitorDetails += `<p>Adults: ${this.userDetails.adultCount}</p>`;
-    visitorDetails += `<p>Children: ${this.userDetails.childCount}</p>`;
-  }
-  if (this.visitorType === 1) {
-    visitorDetails += `<p>Senior Citizens: ${this.userDetails.seniorCitizenCount}</p>`;
-  }
-  if (this.visitorType === 2) {
-    visitorDetails += `<p>Teachers: ${this.userDetails.teacherCount}</p>`;
-    visitorDetails += `<p>Students: ${this.userDetails.studentCount}</p>`;
-  }
+        console.error("Failed to open a new window. Ensure popups are not blocked.");
+        return;
+    }
 
+    // Prepare visitor details based on visitor type
+    let visitorDetails = "";
+    if (this.visitorType === 1 || this.visitorType === 3) {
+        visitorDetails += `<p>Adults: ${this.userDetails.adultCount}</p>`;
+        visitorDetails += `<p>Children: ${this.userDetails.childCount}</p>`;
+    }
+    if (this.visitorType === 1) {
+        visitorDetails += `<p>Senior Citizens: ${this.userDetails.seniorCitizenCount}</p>`;
+    }
+    if (this.visitorType === 2) {
+        visitorDetails += `<p>Teachers: ${this.userDetails.teacherCount}</p>`;
+        visitorDetails += `<p>Students: ${this.userDetails.studentCount}</p>`;
+    }
+
+    // Construct the ticket content
     const ticketContent = `
       <div style="font-family: Arial, sans-serif; width: 280px; padding: 10px; text-align: center;">
         <div style="font-size: 20px; font-weight: bold;">Aksharam Museum</div>
         <div style="margin: 10px 0; border-top: 1px dashed black; border-bottom: 1px dashed black; padding: 5px 0;">
           <p><strong>${this.totalGuests} Ticket(s)</strong></p>
-           <p>${visitorDetails}</p>
+          <p>${visitorDetails}</p>
         </div>
         <div style="margin: 10px 0;">
           <div style="width: 100px; height: 100px; margin: 10px auto; background: url('data:image/png;base64,${this.userDetails.qrCodeImage}'); background-size: cover;"></div>
+          <p><b>${this.userDetails.ticketId}</b></p>
           <p>Order ID: ${this.userDetails.orderId}</p>
         </div>
         <p style="margin-top: 10px; font-size: 14px;">Cancellation not available</p>
         <p><strong>Total Amount: Rs.${this.userDetails.grandTotal}/-</strong></p>
       </div>
     `;
+
+    // Write the ticket content to the new window
     printWindow.document.open();
     printWindow.document.write(`
       <html>
@@ -256,10 +270,19 @@ let visitorDetails = "";
       </html>
     `);
     printWindow.document.close();
-  },
+},
     close() {
     this.dialog = false
   },
+  async validateAndSubmit() {
+      if (!this.selectedCat || !this.name || !this.number || !this.selectedMode) {
+        this.validationError = true; 
+        return;
+      }
+      this.validationError = false; 
+
+      await this.submit();
+    },
     async submit() {
       const payload = {
         id: this.selectedCat,
@@ -292,6 +315,14 @@ let visitorDetails = "";
         console.error(error)
       }
     
+    },
+    async validateAndConfirm() {
+      if (!this.selectedStatus) {
+        this.validationStatus = true; 
+        return;
+      }
+      this.validationStatus = false; 
+      await this.confirmBooking();
     },
     async confirmBooking() {
       const payload = {
@@ -456,9 +487,36 @@ let visitorDetails = "";
   watch: {
     selectedCat(value) {
       if(value){
+        this.validationError = false;
         this.fetchTypeByCategory();
+      }
+    },
+    selectedMode(value) {
+      if(value){
+        this.validationError = false;
+      }
+    },
+    name(newValue) {
+      if (newValue) {
+        this.validationError = false;
+      }
+    },
+    number(newValue) {
+      if (newValue) {
+        this.validationError = false;
+      }
+    },
+    selectedStatus(newValue) {
+      if (newValue) {
+        this.validationStatus = false;
       }
     },
   }
 }
 </script>
+
+<style scoped>
+.errorText{
+  font-size:smaller
+}
+</style>
