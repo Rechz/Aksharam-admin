@@ -227,9 +227,9 @@ export default {
         visitorDetails += `<p>Adults: ${this.userDetails.adultCount}</p>`;
         visitorDetails += `<p>Children: ${this.userDetails.childCount}</p>`;
     }
-    if (this.visitorType === 1) {
-        visitorDetails += `<p>Senior Citizens: ${this.userDetails.seniorCitizenCount}</p>`;
-    }
+    // if (this.visitorType === 1) {
+    //     visitorDetails += `<p>Senior Citizens: ${this.userDetails.seniorCitizenCount}</p>`;
+    // }
     if (this.visitorType === 2) {
         visitorDetails += `<p>Teachers: ${this.userDetails.teacherCount}</p>`;
         visitorDetails += `<p>Students: ${this.userDetails.studentCount}</p>`;
