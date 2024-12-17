@@ -72,7 +72,7 @@
                 <v-text-field v-model="number" label="Phone number" class="price" density="comfortable"
                   :rules="mobRules" width="300" variant="outlined" :disabled="!selectedCat"
                   color="success"></v-text-field>
-                  <v-text-field v-if="selectedCat === filteredCategory.id" v-model="district" label="District" class="price" density="comfortable" :rules="nameRules"
+                <v-text-field v-model="district" v-if="selectedCat === category.find(cat => cat.category === 'Institution').id " label=" District" class="price" density="comfortable" :rules="nameRules"
                   width="300" variant="outlined" :disabled="!selectedCat" color="success"></v-text-field>
                 <div v-for="type in types" :key="type.id">
                   <category-type :cat="type.type" :id="type.id" @updateCount="handleUpdate"></category-type>
@@ -472,9 +472,9 @@ export default {
     category() {
       return this.getCategory;
     },
-    filteredCategory() {
-      return this.category.find(cat => cat.category === "Institution");
-    },
+    // filteredCategory() {
+    //   return this.category.find(cat => cat.category === "Institution");
+    // },
     userDetails() {
         return this.getConfirmBooking;
     },
