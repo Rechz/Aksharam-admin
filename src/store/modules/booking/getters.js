@@ -10,4 +10,8 @@ export default {
     getPaymentStatus: (state) => state.paymentStatus,
     getSpotBooking: (state) => state.SpotPublic,
     getTickets: (state) => state.User,
+    getTicketsByDate: (state) => state.ticketByDate,
+    getTotalRevenue: (state) => state.totalRevenue,
+    getUserCount: (state) => state.userCount,
+    getUserCountByRange: (state) => state.userCountByRange
 }

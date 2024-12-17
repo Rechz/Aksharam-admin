@@ -40,7 +40,23 @@ export default {
         sessionStorage.setItem('SpotBooking', JSON.stringify(payload))
     },
     setTickets(state, payload) {
-        state.Tickets = payload;
-        sessionStorage.setItem('Tickets', JSON.stringify(payload))
+        state.User = payload;
+        sessionStorage.setItem('User', JSON.stringify(payload))
+    },
+    setTicketsByDate(state, payload) {
+        state.ticketByDate = payload;
+        sessionStorage.setItem('ticketByDate', JSON.stringify(payload))
+    },
+    setTotalRevenue(state, payload) {
+        state.totalRevenue = payload;
+        sessionStorage.setItem('totalRevenue', JSON.stringify(payload))
+    },
+    setUserCount(state, payload) {
+        state.userCount = payload;
+        sessionStorage.setItem('userCount', JSON.stringify(payload))
+    },
+    setUserCountByRange(state, payload) {
+        state.userCountByRange = payload;
+        sessionStorage.setItem('userCountByRange', JSON.stringify(payload))
     },
 }

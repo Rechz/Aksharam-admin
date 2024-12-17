@@ -5,12 +5,12 @@
       <v-text-field label="Search" v-model="search" prepend-inner-icon="mdi-magnify" class="search" density="compact"
         @click="search"></v-text-field>
       <v-spacer></v-spacer>
-      <v-select v-model="sortColumn" :items="['All', 'Public', 'Institution', 'Foreigner']" density="compact"
+      <v-select v-model="sortColumn" :items="category" density="compact" item-title="category" item-value="id"
         prepend-inner-icon="mdi-sort-variant" label="Sort by" class="sort"></v-select>
     </div>
     <v-data-table :headers="headers" :items="filteredTickets" style="background-color: #f9faf1;" max-width="100%"
-      item-value="ticketId" :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
-      <template v-slot:item='{ item, index }'>
+    item-value="ticketId" :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }" items-per-page="10">
+    <template v-slot:item='{ item, index }'>
         <tr style="background-color:#FCFDF6; color:black;">
           <td class="text-center">
             {{ index + 1 }}
@@ -23,21 +23,21 @@
             {{ item.visitDate }}
           </td>
           <td>
-            {{ formatTime(item.slotName) }}
+            {{ formatTime(item.slotTime) }}
           </td>
           <td class="text-start " style="text-transform: capitalize;">
-            {{ item.type }}
-          </td>
+            {{ item.categoryName }}
+          </td> 
           <td>
-            Rs.{{ item.totalPrice }}/-
+            Rs.{{ item.grandTotal }}/-
           </td>
           <td class="text-center"><v-icon size="20" color="blue-grey-darken-3" class="mdi mdi-eye"
               @click="showDetails(item)"></v-icon>
           </td>
         </tr>
       </template>
-    </v-data-table>
-    <v-dialog v-model="dialog" width="400px">
+  </v-data-table>
+  <v-dialog v-model="dialog" width="400px">
       <v-card style="width: 600px; height:560px; border-radius: 16px;">
         <v-card-title class="d-flex justify-content-between px-4 align-items-center"
           style="background-color: #216D17; color: #FFFFFF;">
@@ -48,23 +48,23 @@
           <v-row>
             <v-col col="3">
               {{
-              viewItem.type === 'institution' ? 'Institution Name' : 'Name' }}
+              viewItem.categoryName === 'Institution' ? 'Institution Name' : 'Name' }}
             </v-col>
-            <v-col col="5">:{{ viewItem.type === 'institution' ? viewItem.institutionName : viewItem.name
+            <v-col col="5">:{{ viewItem.categoryName === 'Institution' ? viewItem.name : viewItem.name
               }}</v-col>
           </v-row>
           <v-row>
             <v-col col="3">
               Mobile Number
             </v-col>
-            <v-col col="5">:{{ viewItem.mobileNumber }}</v-col>
+            <v-col col="5">:{{ viewItem.phNumber }}</v-col>
           </v-row>
-          <v-row>
+          <!-- <v-row>
             <v-col col="3">
               Email
             </v-col>
             <v-col col="5">:{{ viewItem.email }}</v-col>
-          </v-row>
+          </v-row> -->
           <v-row>
             <v-col col="3">
               Ticket ID
@@ -75,7 +75,7 @@
             <v-col col="3">
               Booking date
             </v-col>
-            <v-col col="5">:{{ viewItem.bookDate }}</v-col>
+            <v-col col="5">:{{ viewItem.visitDate }}</v-col>
           </v-row>
           <v-row>
             <v-col col="3">
@@ -87,43 +87,43 @@
             <v-col col="3">
               Slot
             </v-col>
-            <v-col col="5">:{{ formatTime(viewItem.slotName) }}</v-col>
+            <v-col col="5">:{{ formatTime(viewItem.slotTime) }}</v-col>
           </v-row>
           <v-row>
             <v-col col="3">
               Category
             </v-col>
-            <v-col col="5" class="text-capitalize">:{{ viewItem.type }}</v-col>
+            <v-col col="5" class="text-capitalize">:{{ viewItem.categoryName }}</v-col>
           </v-row>
           <v-row>
             <v-col col="3">
               {{
-              viewItem.type === 'institution' ? 'Teachers' : 'Adults' }}
+              viewItem.categoryName === 'Institution' ? 'Teachers' : 'Adults' }}
             </v-col>
-            <v-col col="5">:{{ viewItem.type === 'institution' ? viewItem.numberOfTeachers :
-              viewItem.numberOfAdults
+            <v-col col="5">:{{ viewItem.categoryName === 'Institution' ? viewItem.teacherCount :
+              viewItem.adultCount
               }}</v-col>
           </v-row>
           <v-row>
             <v-col col="3">
               {{
-              viewItem.type === 'institution' ? 'Students' : 'Children' }}
+              viewItem.categoryName === 'Institution' ? 'Students' : 'Children' }}
             </v-col>
-            <v-col col="5">:{{ viewItem.type === 'institution' ? viewItem.numberOfStudents :
-              viewItem.numberOfChildren
+            <v-col col="5">:{{ viewItem.categoryName === 'Institution' ? viewItem.studentCount :
+              viewItem.childCount
               }}</v-col>
           </v-row>
-          <v-row v-if="viewItem.type === 'public'">
+          <v-row v-if="viewItem.categoryName === 'Public'">
             <v-col col="3">
               Senior Citizen
             </v-col>
-            <v-col col="5">:{{ viewItem.numberOfSeniors }}</v-col>
+            <v-col col="5">:{{ viewItem.seniorCitizenCount }}</v-col>
           </v-row>
           <v-row>
             <v-col col="3">
               Total amount
             </v-col>
-            <v-col col="5">:&#8377;{{ viewItem.totalPrice }}</v-col>
+            <v-col col="5">:&#8377;{{ viewItem.grandTotal }}</v-col>
           </v-row>
         </v-card-text>
       </v-card>
@@ -138,7 +138,7 @@ export default {
     return {
       skeleton: true,
       dialog: false,
-      sortColumn: 'All',
+      sortColumn: '',
       viewItem: [],
       viewIndex: -1,
       search: '',
@@ -146,16 +146,19 @@ export default {
         { title: 'Sl No.', sortable: false, align: 'center' },
         { title: 'Ticket ID', align: 'start', sortable: false, key: 'ticketId' },
         { title: 'Entry Date', sortable: true, key: 'visitDate', align: 'start' },
-        { title: 'Time', sortable: false, key: 'slotName', align: 'start' },
-        { title: 'Category', sortable: false, key: 'type', align: 'start' },
-        { title: 'Price', sortable: false, key: 'totalPrice', align: 'start' },
+        { title: 'Time', sortable: false, key: 'slotTime', align: 'start' },
+        { title: 'Category', sortable: false, key: 'categoryName', align: 'start' },
+        { title: 'Price', sortable: false, key: 'grandTotal', align: 'start' },
         { title: 'Details', sortable: false, align: 'center', key: 'detail' },
       ],
     }
   },
+  // mounted(){
+  //   console.log("Table details",this.tickets)
+  // },
   methods: {
     showDetails(item) {
-      this.viewIndex = this.filteredTickets.indexOf(item)
+      this.viewIndex = this.tickets.indexOf(item)
       this.viewItem = Object.assign({}, item)
       this.dialog = true
     },
@@ -172,7 +175,7 @@ export default {
       this.dialog = false;
     },
     async fetchTickets() {
-      const payload = 3;
+      const payload = 1;
       try {
         const res = await this.$store.dispatch('booking/fetchTickets', payload);
         if (res) {
@@ -182,38 +185,75 @@ export default {
       catch (error) {
         console.error(error.message);
       }
-    }
+    },
+    async fetchCategory() {
+      try {
+        await this.$store.dispatch('booking/fetchCategory')
+        }
+      catch (error) {
+        console.error(error)
+      }
+    },
   },
   computed: {
-    ...mapGetters('booking', ['getTickets']),
-    filteredTickets() {
-      let uniqueTickets = [];
-      if (this.sortColumn && this.sortColumn !== 'All') {
-        uniqueTickets = this.tickets.filter(ticket => ticket.category.toLowerCase() === this.sortColumn.toLowerCase());
+    ...mapGetters('booking', ['getTickets','getCategory']),
+    // filteredTickets() {
+    //   let uniqueTickets = [];
+    //   if (this.sortColumn && this.sortColumn !== 'All') {
+    //     uniqueTickets = this.tickets.filter(ticket => ticket.category.toLowerCase() === this.sortColumn.toLowerCase());
 
-      } else {
-        uniqueTickets = this.tickets;
-      }
+    //   } else {
+    //     uniqueTickets = this.tickets;
+    //   }
 
-      if (this.search !== '') {
-        uniqueTickets = uniqueTickets.filter((item) =>
-          (item.visitDate?.toLowerCase()?.includes(this.search.toLowerCase()) || '') ||
-          (item.type?.toLowerCase()?.includes(this.search.toLowerCase()) || '') ||
-          (item.ticketId?.toLowerCase()?.includes(this.search.toLowerCase()) || '')
-        );
+    //   if (this.search !== '') {
+    //     uniqueTickets = uniqueTickets.filter((item) =>
+    //       (item.visitDate?.toLowerCase()?.includes(this.search.toLowerCase()) || '') ||
+    //       (item.type?.toLowerCase()?.includes(this.search.toLowerCase()) || '') ||
+    //       (item.ticketId?.toLowerCase()?.includes(this.search.toLowerCase()) || '')
+    //     );
        
-      }
+    //   }
 
-      return uniqueTickets;
+    //   return uniqueTickets;
 
+    // },
+    filteredTickets() {
+      // Filters ticketsData based on the ticketId including the search term
+      return this.tickets.filter(item =>
+        item.ticketId.toLowerCase().includes(this.search.toLowerCase())
+      );
     },
     tickets() {
       return this.getTickets;
-    }
+    },
+    category() {
+      return this.getCategory;
+    },
   },
   created() {
     this.fetchTickets();
   },
+  mounted() {
+    this.fetchCategory();
+  },
+  watch: {
+    async sortColumn(value) {
+      console.log("watcher", value)
+      if(value) {
+        const payload = value;
+      try {
+        const res = await this.$store.dispatch('booking/fetchTickets', payload);
+        if (res) {
+          this.skeleton = false;
+        }
+      }
+      catch (error) {
+        console.error(error.message);
+      }
+      }
+    }
+  }
  
 };
 </script>

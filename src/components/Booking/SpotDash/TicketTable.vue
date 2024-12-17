@@ -40,6 +40,9 @@ export default {
             { title: 'Price', sortable: false, key: 'totalPrice', align: 'start' },
             { title: 'Status', sortable: false, key: 'visitStatus', align: 'start' },
         ],
+        currentDay: '',
+        currentMonth: '',
+        currentYear: '',
         skeleton : true,
     }),
     methods: {
@@ -52,8 +55,12 @@ export default {
             return `${hoursInt}:${minutes} ${ampm}`;
         },
         async fetchTickets() {
+            const payload = {
+                date: `${this.currentYear}-${this.currentMonth}-${this.currentDay}`,
+                id: 0,
+            }
             try {
-                const res = await this.$store.dispatch('fetchCurrentTickets');
+                const res = await this.$store.dispatch('booking/fetchTicketsByDate',payload);
                 if (res) {
                     this.skeleton = false;
                 }
@@ -76,6 +83,10 @@ export default {
         },
     },
     created() {
+        const today = new Date();
+        this.currentDay = String(today.getDate()).padStart(2, '0');
+        this.currentMonth = String(today.getMonth() + 1).padStart(2, '0');
+        this.currentYear = today.getFullYear();
         this.fetchTickets();
     },
     computed: {
