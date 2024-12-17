@@ -72,6 +72,8 @@
                 <v-text-field v-model="number" label="Phone number" class="price" density="comfortable"
                   :rules="mobRules" width="300" variant="outlined" :disabled="!selectedCat"
                   color="success"></v-text-field>
+                  <v-text-field v-if="selectedCat === filteredCategory.id" v-model="district" label="District" class="price" density="comfortable" :rules="nameRules"
+                  width="300" variant="outlined" :disabled="!selectedCat" color="success"></v-text-field>
                 <div v-for="type in types" :key="type.id">
                   <category-type :cat="type.type" :id="type.id" @updateCount="handleUpdate"></category-type>
                 </div>
@@ -98,6 +100,7 @@
                 <p><strong>No of Senior Citizen:</strong> {{ details.data.seniorCitizen }}</p>
               </div>
               <div v-if="details.id === 2">
+                <p><strong>District:</strong> {{ details.data.district }} </p>
                 <p><strong>No of Teachers:</strong> {{ details.data.teacher }}</p>
                 <p><strong>No of Students:</strong> {{ details.data.student }}</p>
               </div>
@@ -185,6 +188,7 @@ export default {
       selectedCat: null,
       selectedMode: null,
       selectedStatus: null,
+      district:'',
       formattedDate: '',
       showPreview: false,
       bookingDetails: [],
@@ -291,7 +295,8 @@ export default {
           name: this.name,
         phNumber: this.number,
         // visitDate: this.formattedDate,
-        // slotId: this.slot.slotId,y
+        // slotId: this.slot.slotId,
+        district: this.district,
         paymentMode: this.filteredModes.id,
         paymentStatusId: 2,
         createdBy: this.role,
@@ -362,6 +367,7 @@ export default {
        this.selectedCat= null
        this.selectedMode= null
        this.selectedStatus= null
+       this.district= ''
           this.counts = ''
       this.$store.commit('booking/clearType')
       this.$store.commit('booking/setDetails', ' ');
@@ -465,6 +471,9 @@ export default {
     ...mapGetters('booking', ['getCategory','getType','getSlot','getPaymentMode','getPaymentStatus','getDetails','getSpotBooking','getConfirmBooking']),
     category() {
       return this.getCategory;
+    },
+    filteredCategory() {
+      return this.category.find(cat => cat.category === "Institution");
     },
     userDetails() {
         return this.getConfirmBooking;
