@@ -9,38 +9,6 @@
         </v-btn>
       </template>
     </v-snackbar>
-      <!-- <div>
-            <v-select clearable density="comfortable" variant="outlined" label="Select a category" width="300"
-                :items="category" item-title="category" item-value="id" v-model="selectedCat">
-            </v-select>
-            <v-sheet :height="500" rounded>
-                <v-container class="pb-0">
-                    <v-row>
-                        <v-col cols="12" md="6">
-                            <v-container>
-                                <v-text-field v-model="name" label="Name" class="price" density="comfortable"
-                                    :rules="nameRules" width="300" variant="outlined"
-                                    :disabled="!selectedCat"></v-text-field>
-                                <v-text-field v-model="number" label="Phone number" class="price"
-                                    density="comfortable" :rules="mobRules" width="300"
-                                    variant="outlined" :disabled="!selectedCat"></v-text-field>
-                                <v-select clearable density="comfortable" variant="outlined" label="Select a payment mode" 
-                                    width="300" :items="paymentMode" item-title="paymentType" 
-                                    item-value="id" v-model="selectedMode"></v-select>
-                            </v-container>
-                        </v-col>
-                        <v-col cols="12" md="6">
-                            <div style="display: flex; flex-direction: column;">
-                                <div v-for="type in types" :key="type.id">
-                                    <category-type :cat="type.type" :id="type.id" @updateCount="handleUpdate"></category-type>
-                                </div>
-                            </div>
-                        </v-col>
-                        <v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="submit">Get Tickets</v-btn>
-                    </v-row>
-                </v-container>
-            </v-sheet>
-        </div> -->
       <div class="fw-bold d-flex justify-content-between mx-3 my-0 ">
         <div class="d-flex flex-column  ">
           <div>Date: {{ slot.bookDate }}</div>
@@ -186,7 +154,7 @@ export default {
       number:null,
       adult: 0,
       child: 0,
-      senior: 0,
+      // senior: 0,
       selectedCat: null,
       selectedMode: null,
       selectedStatus: null,
@@ -231,14 +199,23 @@ export default {
     //     visitorDetails += `<p>Senior Citizens: ${this.userDetails.seniorCitizenCount}</p>`;
     // }
     if (this.visitorType === 2) {
-        visitorDetails += `<p>Teachers: ${this.userDetails.teacherCount}</p>`;
-        visitorDetails += `<p>Students: ${this.userDetails.studentCount}</p>`;
+        visitorDetails += `<p>Adult: ${this.userDetails.teacherCount}</p>`;
+        visitorDetails += `<p>Child: ${this.userDetails.studentCount}</p>`;
     }
+
+    const formatTo12Hour = (time) => {
+        const [hours, minutes] = time.split(":").map(Number);
+        const period = hours >= 12 ? "PM" : "AM";
+        const formattedHours = hours % 12 || 12; // Convert 24-hour to 12-hour
+        return `${formattedHours}:${minutes.toString().padStart(2, "0")} ${period}`;
+    };
+
+    const formattedTime = formatTo12Hour(this.userDetails.createdTime.split(".")[0]);
 
     // Construct the ticket content
     const ticketContent = `
       <div style="font-family: Arial, sans-serif; width: 280px; padding: 10px; text-align: center;">
-        <div style="font-size: 20px; font-weight: bold;">അക്ഷരം</div>
+        <div style="font-size: 20px; font-weight: bold;">Aksharam</div>
         <p style="margin-top: 10px; font-size: 12px;">Museum of Letters,Literature and Culture</p>
         <div style="margin: 10px 0; border-top: 1px dashed black; border-bottom: 1px dashed black; padding: 5px 0;">
           <p><strong>${this.totalGuests} Ticket(s)</strong></p>
@@ -247,7 +224,7 @@ export default {
         <div style="margin: 10px 0;">
           <div style="width: 100px; height: 100px; margin: 10px auto; background: url('data:image/png;base64,${this.userDetails.qrCodeImage}'); background-size: cover;"></div>
           <p><b>${this.userDetails.ticketId}</b></p>
-          <p>Order ID: ${this.userDetails.orderId}</p>
+          <p> ${this.userDetails.visitDate}, ${formattedTime}</p>
         </div>
         <p style="margin-top: 10px; font-size: 14px;">Cancellation not available</p>
         <p><strong>Total Amount: Rs.${this.userDetails.grandTotal}/-</strong></p>
