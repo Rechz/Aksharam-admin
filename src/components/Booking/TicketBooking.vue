@@ -40,9 +40,12 @@
                 <v-text-field v-model="number" label="Phone number" class="price" density="comfortable"
                   :rules="mobRules" width="300" variant="outlined" :disabled="!selectedCat"
                   color="success"></v-text-field>
-                <v-text-field v-if="selectedCat === (category.find(cat => cat.category === 'Institution')?.id)"
+                <!-- <v-text-field v-if="selectedCat === (category.find(cat => cat.category === 'Institution')?.id)"
                   v-model="district"  label=" District" class="price" density="comfortable" :rules="nameRules"
-                  width="300" variant="outlined" :disabled="!selectedCat" color="success"></v-text-field>
+                  width="300" variant="outlined" :disabled="!selectedCat" color="success"></v-text-field> -->
+                  <v-select v-if="selectedCat === (category.find(cat => cat.category === 'Institution')?.id)" class="select mb-2" label='Select Language' density="comfortable" :items="districts"
+                  v-model="district"  item-title="district" item-value="district" variant="outlined"  width="300" 
+                 ></v-select>
                 <div v-for="type in types" :key="type.id">
                   <category-type :cat="type.type" :id="type.id" @updateCount="handleUpdate"></category-type>
                 </div>
@@ -201,8 +204,8 @@ export default {
     //     visitorDetails += `<p>Senior Citizens: ${this.userDetails.seniorCitizenCount}</p>`;
     // }
     if (this.visitorType === 2) {
-        visitorDetails += `<p>Adult: ${this.userDetails.teacherCount}</p>`;
-        visitorDetails += `<p>Child: ${this.userDetails.studentCount}</p>`;
+        visitorDetails += `<p>Teacher: ${this.userDetails.teacherCount}</p>`;
+        visitorDetails += `<p>Student: ${this.userDetails.studentCount}</p>`;
     }
 
     const formatTo12Hour = (time) => {
@@ -416,10 +419,19 @@ export default {
       }
     },
 
+
     async fetchSlotByDate() {
       const payload = this.formattedDate;
       try {
           await this.$store.dispatch('booking/getSlotByDate',payload) 
+        }
+      catch (error) {
+        console.error(error)
+      }
+    },
+    async fetchDistrict() {
+      try {
+          await this.$store.dispatch('booking/fetchDistrict') 
         }
       catch (error) {
         console.error(error)
@@ -459,13 +471,16 @@ export default {
     },
   computed: {
     ...mapGetters(['getRole']),
-    ...mapGetters('booking', ['getCategory','getType','getSlot','getPaymentMode','getPaymentStatus','getDetails','getSpotBooking','getConfirmBooking']),
+    ...mapGetters('booking', ['getCategory','getType','getSlot','getPaymentMode','getPaymentStatus','getDetails','getSpotBooking','getConfirmBooking','getDistrict']),
     category() {
       return this.getCategory;
     },
     // filteredCategory() {
     //   return this.category.find(cat => cat.category === "Institution");
     // },
+    districts(){
+      return this.getDistrict;
+    },
     userDetails() {
         return this.getConfirmBooking;
     },
@@ -526,6 +541,7 @@ export default {
     this.fetchSlotByDate();
     this.fetchPaymentMode();
     this.fetchPaymentStatus();
+    this.fetchDistrict();
     console.log('filtered', this.filteredStatuses)
     console.log('time', this.slot);
   },

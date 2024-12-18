@@ -46,5 +46,9 @@ export default {
     setDetails(state,payload) {
         state.details = payload;
         sessionStorage.setItem('details', JSON.stringify(payload))
+    },
+    setDistrict(state,payload) {
+        state.district = payload;
+        sessionStorage.setItem('district',JSON.stringify(payload))
     }
 }

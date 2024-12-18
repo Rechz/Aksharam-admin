@@ -243,6 +243,21 @@ response.data.forEach(item => {
           throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
         }
       },
+      //fetch district
+      async fetchDistrict({ rootGetters, commit }) {
+        try {
+          const response = await axios.get(`${rootGetters.getUrl}/api/category/getDistrict`);
+          if (response.status >= 200 && response.status < 300) {
+            // console.log(response.data)
+            commit('setDistrict', response.data);
+            return true;
+          }
+        }
+        catch (err) {
+          console.error(err);
+          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+        }
+      },
       // Spot_Registration
       async spotBooking({ rootGetters,commit}, payload) {
         try {

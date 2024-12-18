@@ -10,4 +10,6 @@ export default {
     getSpotBooking: (state) => state.SpotBooking,
     getConfirmBooking: (state) => state.confirmBooking,
     getDetails:(state) => state.details,
+    getDistrict:(state) => state.district,
+
 }
