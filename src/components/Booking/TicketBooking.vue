@@ -55,7 +55,7 @@
                     {{ mode.paymentType }} v-if="selectedCat === category.find(cat => cat.category === 'Institution').id "
                   </v-chip>
                 </v-chip-group> -->
-                <v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="validateAndSubmit"
+                <v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="validateAndSubmit" :loading="buttonDisabled"
                   :disabled="showPreview">Get Tickets</v-btn>
               </v-container>
             </v-col>
@@ -87,7 +87,7 @@
   {{ filteredStatuses.statusName }}
 </v-chip> -->
 <div class="d-flex flex-wrap gap-2">
-<v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="confirmBooking()">Proceed to
+<v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="confirmBooking()" :loading="buttonCnDisabled">Proceed to
   print</v-btn>
 <v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="cancelBooking()">Cancel</v-btn></div>
 
@@ -166,6 +166,8 @@ export default {
       dialog: false,
       validationError: false,
       validationStatus: false,
+      buttonDisabled: false,
+      buttonCnDisabled: false,
       message: '',
       color: 'green',
       snackbar: false,
@@ -282,17 +284,20 @@ export default {
         paymentMode: this.filteredModes.id,
         paymentStatusId: this.filteredPending.id,
         createdBy: this.role,
+        ...(this.selectedCat===this.category.find(cat => cat.category === 'Public')?.id?{seniorCitizen:0,seniorCitizenTypeId:3} : null),
         ...this.counts
         }
         
 } ;
       console.log("payload",payload);
+      this.buttonDisabled = true;
       this.$store.commit('booking/setDetails',payload)
       try {
        const res = await this.$store.dispatch('booking/spotBooking',payload)
         if(res) {
           // this.$router.push({name: 'confirmbooking'});
       // this.showPreview =  true;
+      this.buttonDisabled = false;
       this.showPreview =  true;
         }
         else {
@@ -303,6 +308,7 @@ export default {
         }
       }
       catch (error) {
+        this.buttonDisabled = false;
         this.message = 'Something went wrong!!!'
             this.color = 'red';
           this.snackbar = true;
@@ -335,10 +341,12 @@ export default {
         
 } ;
       console.log("payload",payload);
+      this.buttonCnDisabled = true;
       try {
         const res =  await this.$store.dispatch('booking/confirmBooking',payload) 
         if(res) {
           this.printTicket();
+          this.buttonCnDisabled = false;
           this.showPreview = false
           // this.dialog = true;
           this.totalGuests = ''
@@ -358,6 +366,7 @@ export default {
       }
       catch (error) {
         console.error(error)
+        this.buttonCnDisabled = false;
         this.message = 'Please check the capacity !!!'
             this.color = 'red';
           this.snackbar = true;
