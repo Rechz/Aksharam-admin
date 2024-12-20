@@ -43,7 +43,7 @@
                 <!-- <v-text-field v-if="selectedCat === (category.find(cat => cat.category === 'Institution')?.id)"
                   v-model="district"  label=" District" class="price" density="comfortable" :rules="nameRules"
                   width="300" variant="outlined" :disabled="!selectedCat" color="success"></v-text-field> -->
-                  <v-select v-if="selectedCat === (category.find(cat => cat.category === 'Institution')?.id)" class="select mb-2" label='Select Language' density="comfortable" :items="districts"
+                  <v-select v-if="selectedCat === (category.find(cat => cat.category === 'Institution')?.id)" class="select mb-2" label='Select District' density="comfortable" :items="districts"
                   v-model="district"  item-title="district" item-value="district" variant="outlined"  width="300" 
                  ></v-select>
                 <div v-for="type in types" :key="type.id">
