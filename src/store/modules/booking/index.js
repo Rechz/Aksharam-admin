@@ -18,7 +18,7 @@ export default {
            SpotBooking: JSON.parse(sessionStorage.getItem('SpotPublic')) || [],
            User: JSON.parse(sessionStorage.getItem('User')) || [],
            ticketByDate: JSON.parse(sessionStorage.getItem('ticketByDate')) || [],
-           totalRevenue: JSON.parse(sessionStorage.getItem('totalRevenue')) || [],
+           totalRevenue: sessionStorage.getItem('totalRevenue') || '',
            userCount: JSON.parse(sessionStorage.getItem('userCount')) || [],
            userCountByRange: JSON.parse(sessionStorage.getItem('userCountByRange')) || [],
         }
