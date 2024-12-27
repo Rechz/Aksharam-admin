@@ -406,7 +406,7 @@ response.data.forEach(item => {
               }
             });
           if (response.status >= 200 && response.status < 300) {
-            // console.log(response.data)
+            // console.log(response.data.overAllRevenue)
             commit('setTotalRevenue', response.data.overAllRevenue || 0);
             return true;
           }

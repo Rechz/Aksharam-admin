@@ -43,7 +43,7 @@
                   </v-btn-toggle>
                 </div>
                 <div class="d-flex flex-column">
-                  <p class="text-style">{{ dailyTickets[0].totalVisitsCount }}</p>
+                  <p class="text-style">{{ dailyTickets[0]?.totalVisitsCount || 0 }}</p>
                   <p class="text-type">Total Bookings</p>
                 </div>
               </div>
@@ -76,7 +76,7 @@
                   <v-icon class="mdi mdi-ticket-confirmation" size="large" color="white"></v-icon>
                 </div>
                 <div class="d-flex flex-column">
-                  <p class="text-white mb-0 text-style py-0">{{ totalTicketByRange }}</p>
+                  <p class="text-white mb-0 text-style py-0">{{ cumulativeIncome }}</p>
                   <p class="text-type mt-0 py-0">Cumulative Bookings</p>
                 </div>
               </div>
@@ -208,6 +208,7 @@ export default {
       return this.$store.getters.getBarData2;
     },
     cumulativeTickets() { 
+      console.log("getUserCountByRange:", this.getUserCountByRange);
       return this.getUserCountByRange;
     },
     yearlyTickets() {
@@ -228,9 +229,9 @@ export default {
     scannedVisitors() {
       return this.$store.getters.getPieTotal;
     },
-    totalTicketByRange() {
-      return this.cumulativeTickets[0].publicTicketCount + this.cumulativeTickets[0].institutionTicketCount + this.cumulativeTickets[0].foreignerTicketCount
-    },
+    // totalTicketByRange() {
+    //   return this.cumulativeTickets[0].publicTicketCount + this.cumulativeTickets[0].institutionTicketCount + this.cumulativeTickets[0].foreignerTicketCount
+    // },
     // dailyTicketCount() {
     //   return this.getUserCount.totalVisitsCount;
     // }
@@ -304,8 +305,11 @@ export default {
     },
     async fetchIncomeDate() {
       try {
-        const payload = `${this.currentYear}-${this.currentMonth}-${this.currentDay}`;
-        await this.$store.dispatch('booking/fetchTotalRevenue', payload)
+        const payload = {
+          date: `${this.currentYear}-${this.currentMonth}-${this.currentDay}`,
+          id:0
+        };
+        await this.$store.dispatch('booking/fetchUserCount', payload)
       }
       catch (error) {
         console.error(error);
