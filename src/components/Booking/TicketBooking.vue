@@ -49,6 +49,8 @@
                 <div v-for="type in types" :key="type.id">
                   <category-type :cat="type.type" :id="type.id" @updateCount="handleUpdate"></category-type>
                 </div>
+                <v-text-field v-if="showDiscount" v-model="discountRate" label="DiscountRate" class="price" density="comfortable" 
+                  width="300" variant="outlined" :disabled="!selectedCat" color="success"></v-text-field>
                 <!-- <v-select clearable density="comfortable" variant="outlined" label="Select a payment mode" 
                                     width="300" :items="paymentMode" item-title="paymentType" 
                                     item-value="id" v-model="selectedMode"></v-select> -->
@@ -158,6 +160,7 @@ export default {
       adult: 0,
       child: 0,
       // senior: 0,
+      discountRate:0,
       selectedCat: null,
       selectedMode: null,
       selectedStatus: null,
@@ -175,6 +178,7 @@ export default {
       color: 'green',
       snackbar: false,
       timeout: 3000,
+      showDiscount: false,
       }
     },
     methods: {
@@ -287,6 +291,7 @@ export default {
         paymentMode: this.filteredModes.id,
         paymentStatusId: this.filteredPending.id,
         createdBy: this.role,
+        discountRate: this.discountRate,
         ...(this.selectedCat===this.category.find(cat => cat.category === 'Public')?.id?{seniorCitizen:0,seniorCitizenTypeId:3} : null),
         ...this.counts
         }
@@ -351,6 +356,7 @@ export default {
           this.printTicket();
           this.buttonCnDisabled = false;
           this.showPreview = false
+          this.showDiscount = false
           // this.dialog = true;
           this.totalGuests = ''
           this.paymentStatus = ''
@@ -362,6 +368,7 @@ export default {
        this.selectedStatus= null
        this.district= ''
           this.counts = ''
+          this.discountRate = ''
       this.$store.commit('booking/clearType')
       this.$store.commit('booking/setDetails', ' ');
       this.fetchSlotByDate();
@@ -411,7 +418,7 @@ export default {
         const res = await this.$store.dispatch('booking/getTypeById',payload) 
         if(res){
           this.counts = res;
-          console.log(this.counts)
+          console.log("counts",this.counts)
         }
         }
       catch (error) {
@@ -459,7 +466,15 @@ export default {
     handleUpdate(payload) {
       const baseKey = payload.cat.charAt(0).toLowerCase() + payload.cat.slice(1).replace(' ', '');
       this.counts[baseKey] = parseInt(payload.count); 
-      console.log(this.counts);
+      if (baseKey === 'student') {
+        const studentCount = this.counts[baseKey];
+        if(studentCount > 20) {
+          this.showDiscount = true;
+        }
+    console.log("Student count:", this.counts[baseKey]);
+
+  }
+      console.log("discount check",this.counts);
     },
     getCurrentDate() {
       const current = new Date();
