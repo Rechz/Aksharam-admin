@@ -50,5 +50,9 @@ export default {
     setDistrict(state,payload) {
         state.district = payload;
         sessionStorage.setItem('district',JSON.stringify(payload))
-    }
+    },
+    setDiscountRate(state,payload) {
+        state.discountRate = payload;
+        sessionStorage.setItem('discountRate',JSON.stringify(payload))
+    },
 }

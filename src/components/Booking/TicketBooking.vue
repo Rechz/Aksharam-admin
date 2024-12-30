@@ -368,7 +368,7 @@ export default {
        this.selectedStatus= null
        this.district= ''
           this.counts = ''
-          this.discountRate = ''
+          this.discountRate = 0
       this.$store.commit('booking/clearType')
       this.$store.commit('booking/setDetails', ' ');
       this.fetchSlotByDate();
@@ -462,13 +462,21 @@ export default {
         console.error(error)
       }
     },
-
+    async fetchDiscountRate() {
+      try {
+        await this.$store.dispatch('booking/fetchDiscountRate')
+        }
+      catch (error) {
+        console.error(error)
+      }
+    },
     handleUpdate(payload) {
       const baseKey = payload.cat.charAt(0).toLowerCase() + payload.cat.slice(1).replace(' ', '');
       this.counts[baseKey] = parseInt(payload.count); 
       if (baseKey === 'student') {
         const studentCount = this.counts[baseKey];
-        if(studentCount > 20) {
+        console.log("dias",this.discountCount)
+        if(studentCount > this.discountCount) {
           this.showDiscount = true;
         }
     console.log("Student count:", this.counts[baseKey]);
@@ -486,7 +494,7 @@ export default {
     },
   computed: {
     ...mapGetters(['getRole']),
-    ...mapGetters('booking', ['getCategory','getType','getSlot','getPaymentMode','getPaymentStatus','getDetails','getSpotBooking','getConfirmBooking','getDistrict']),
+    ...mapGetters('booking', ['getCategory','getType','getSlot','getPaymentMode','getPaymentStatus','getDetails','getSpotBooking','getConfirmBooking','getDistrict','getDiscountRate']),
     category() {
       return this.getCategory;
     },
@@ -532,6 +540,12 @@ export default {
     visitorType() {
       return this.details.id; 
     },
+    discount() {
+      return this.getDiscountRate;
+    },
+    discountCount() {
+      return this.discount[0].disCount;
+    },
     totalGuests() {
       let total = 0;
 
@@ -557,6 +571,7 @@ export default {
     this.fetchPaymentMode();
     this.fetchPaymentStatus();
     this.fetchDistrict();
+    this.fetchDiscountRate();
     console.log('filtered', this.filteredStatuses)
     console.log('time', this.slot);
   },
