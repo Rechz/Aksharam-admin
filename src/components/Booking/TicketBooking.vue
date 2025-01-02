@@ -30,24 +30,24 @@
                 <p v-if="validationError" class="text-danger errorText">
                   Please fill all required fields and select a category.
                 </p>
-                <v-chip-group v-model="selectedCat" selected-class="text-success" column :disabled="showPreview">
+                <v-chip-group v-model="selectedCat" selected-class="text-success" column :disabled="showPreview || change">
                   <v-chip v-for="category in category" :key="category.id" :value="category.id" size="large">
                     {{ category.category }}
                   </v-chip>
                 </v-chip-group>
                 <v-text-field v-model="name" label="Name" class="price" density="comfortable" :rules="nameRules"
-                  width="300" variant="outlined" :disabled="!selectedCat" color="success"></v-text-field>
+                  width="300" variant="outlined" :disabled="!selectedCat || change || showPreview" color="success"></v-text-field>
                 <v-text-field v-model="number" label="Phone number" class="price" density="comfortable"
-                  :rules="mobRules" width="300" variant="outlined" :disabled="!selectedCat"
+                  :rules="mobRules" width="300" variant="outlined" :disabled="!selectedCat || change || showPreview"
                   color="success"></v-text-field>
                 <!-- <v-text-field v-if="selectedCat === (category.find(cat => cat.category === 'Institution')?.id)"
                   v-model="district"  label=" District" class="price" density="comfortable" :rules="nameRules"
                   width="300" variant="outlined" :disabled="!selectedCat" color="success"></v-text-field> -->
                   <v-select v-if="selectedCat === (category.find(cat => cat.category === 'Institution')?.id)" class="select mb-2" label='Select District' density="comfortable" :items="districts"
-                  v-model="district"  item-title="district" item-value="district" variant="outlined"  width="300" 
+                  v-model="district"  item-title="district" item-value="district" variant="outlined"  width="300" :disabled="!selectedCat || change || showPreview"
                  ></v-select>
                 <div v-for="type in types" :key="type.id">
-                  <category-type :cat="type.type" :id="type.id" @updateCount="handleUpdate"></category-type>
+                  <category-type :cat="type.type" :id="type.id" @updateCount="handleUpdate" :disabled="!selectedCat || change || showPreview"></category-type>
                 </div>
                 <v-text-field v-if="showDiscount" v-model="discountRate" label="DiscountRate" class="price" density="comfortable" 
                   width="300" variant="outlined" :disabled="!selectedCat" color="success"></v-text-field>
@@ -60,12 +60,22 @@
                     {{ mode.paymentType }} v-if="selectedCat === category.find(cat => cat.category === 'Institution').id "
                   </v-chip>
                 </v-chip-group> -->
-                <v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="validateAndSubmit" :loading="buttonDisabled"
-                  :disabled="showPreview">Get Tickets</v-btn>
+                <v-btn 
+  class="mt-3 w-50 text-white" 
+  color="green-darken-4" 
+  @click="change ? update() : validateAndSubmit()" 
+  :loading="buttonDisabled"
+  :disabled="showPreview">
+  {{ change ? 'Update Ticket' : 'Get Tickets' }}
+</v-btn>
+
               </v-container>
             </v-col>
             <v-col cols="12" md="6" v-if="showPreview">
+              <div class="d-flex ">
               <h3>Preview</h3>
+              <v-icon class="mdi mdi-square-edit-outline ms-3" @click="edit()"></v-icon></div>
+              <p class="text-danger">*** only update the ticket count through edit</p>
               <p><strong>Name:</strong> {{ details.data.name }}</p>
               <p><strong>Phone Number:</strong> {{ details.data.phNumber }}</p>
               <div v-if="details.id === 1">
@@ -180,6 +190,7 @@ export default {
       snackbar: false,
       timeout: 3000,
       showDiscount: false,
+      change:false,
       }
     },
     methods: {
@@ -278,6 +289,10 @@ export default {
     close() {
     this.dialog = false
   },
+  edit() {
+    this.showPreview = false
+    this.change = true
+  },
   async validateAndSubmit() {
       if (!this.selectedCat || !this.name || !this.number) {
         this.validationError = true; 
@@ -302,13 +317,57 @@ export default {
         ...(this.selectedCat===this.category.find(cat => cat.category === 'Public')?.id?{seniorCitizen:0,seniorCitizenTypeId:3} : null),
         ...this.counts
         }
-        
-} ;
+        } ;
       console.log("payload",payload);
       this.buttonDisabled = true;
       this.$store.commit('booking/setDetails',payload)
       try {
        const res = await this.$store.dispatch('booking/spotBooking',payload)
+        if(res) {
+          // this.$router.push({name: 'confirmbooking'});
+      // this.showPreview =  true;
+      this.buttonDisabled = false;
+      this.showPreview =  true;
+        }
+        else {
+          this.message = 'Something went wrong!!!'
+            this.color = 'red';
+          this.snackbar = true;
+          console.log('error')
+        }
+      }
+      catch (error) {
+        this.buttonDisabled = false;
+        this.message = 'Something went wrong!!!'
+            this.color = 'red';
+          this.snackbar = true;
+        console.error(error)
+      }
+    
+    },
+    async update() {
+      const payload = {
+        id: this.selectedCat,
+        orderId:this.bookedDetails.orderId,
+        data: {
+          name: this.name,
+        phNumber: this.number,
+        visitDate: this.formattedDate,
+        slotId: this.slot.slotId,
+        district: this.district,
+        paymentMode: this.filteredModes.id,
+        paymentStatusId: this.filteredPending.id,
+        createdBy: this.role,
+        discountRate: this.discountRate,
+        ...(this.selectedCat===this.category.find(cat => cat.category === 'Public')?.id?{seniorCitizen:0,seniorCitizenTypeId:3} : null),
+        ...this.counts
+        }
+        } ;
+      console.log("payload",payload);
+      this.buttonDisabled = true;
+      this.$store.commit('booking/setDetails',payload)
+      try {
+       const res = await this.$store.dispatch('booking/updateCount',payload)
         if(res) {
           // this.$router.push({name: 'confirmbooking'});
       // this.showPreview =  true;
@@ -364,6 +423,7 @@ export default {
           this.buttonCnDisabled = false;
           this.showPreview = false
           this.showDiscount = false
+          this.change = false
           // this.dialog = true;
           this.totalGuests = ''
           this.paymentStatus = ''
