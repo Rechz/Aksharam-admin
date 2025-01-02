@@ -77,13 +77,14 @@
                 <p><strong>District:</strong> {{ details.data.district }} </p>
                 <p><strong>No of Teachers:</strong> {{ details.data.teacher }}</p>
                 <p><strong>No of Students:</strong> {{ details.data.student }}</p>
+                <p v-if="showDiscount"><strong>Discount Amount:</strong>₹{{ bookedDetails.discountAmount }}</p>
               </div>
               <div v-if="details.id === 3">
                 <p><strong>No of Adults:</strong> {{ details.data.adult }}</p>
                 <p><strong>No of children:</strong> {{ details.data.child }}</p>
               </div>
               <p><strong>Total Ticket: </strong> {{ totalGuests}}</p>
-              <p><strong>Grand Total: </strong> {{ bookedDetails.grandTotal }}</p>
+              <p><strong>Grand Total: </strong> ₹{{ bookedDetails.grandTotal }}</p>
               <!-- <v-chip
   :value="selectedStatus === filteredStatuses.id"
   @click="selectedStatus = filteredStatuses.id"
@@ -221,6 +222,11 @@ export default {
 
     const formattedTime = formatTo12Hour(this.userDetails.createdTime.split(".")[0]);
 
+    // Check if discount is applicable
+    const discountSection = this.userDetails.discountAmount > 0
+        ? `<p><strong>Discount Amount:</strong> ₹${this.userDetails.discountAmount}/-</p>`
+        : "";
+
     // Construct the ticket content
     const ticketContent = `
       <div style="font-family: Arial, sans-serif; width: 280px; padding: 10px; text-align: center;">
@@ -236,7 +242,8 @@ export default {
           <p> ${this.userDetails.visitDate}, ${formattedTime}</p>
         </div>
         <p style="margin-top: 10px; font-size: 14px;">Cancellation not available</p>
-        <p><strong>Total Amount: Rs.${this.userDetails.grandTotal}/-</strong></p>
+        ${discountSection}
+        <p><strong>Total Amount: ₹${this.userDetails.grandTotal}/-</strong></p>
         <p style="margin-top: 10px; font-size: 14px;">Thank you visit again.</p>
         <p style="margin-top: 10px; font-size: 14px;">www.aksharammuseum.com</p>
       </div>
