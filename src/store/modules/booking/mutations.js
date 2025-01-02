@@ -59,4 +59,30 @@ export default {
         state.userCountByRange = payload;
         sessionStorage.setItem('userCountByRange', JSON.stringify(payload))
     },
+    setIncomeByDate(state, payload) {
+        state.incomeByDate = payload;
+        sessionStorage.setItem('incomeByDate', JSON.stringify(payload))
+    },
+    setBarChart(state, { label, data, total }) {
+        state.dataBar = data;
+        sessionStorage.setItem('dataBar', JSON.stringify(data));
+        state.labelsBar = label;
+        sessionStorage.setItem('labelsBar', JSON.stringify(label));
+        state.totalBar = total;
+        sessionStorage.setItem('totalBar', total);
+    },
+    setBarChartTicket(state, { data, total }) {
+        state.data2Bar = data;
+        sessionStorage.setItem('data2Bar', JSON.stringify(data));
+        state.total2Bar = total;
+        sessionStorage.setItem('total2Bar', total);
+    },
+    setAllDiscount(state, payload) {
+        state.allDiscount = payload;
+        sessionStorage.setItem('allDiscount', JSON.stringify(payload))
+    },
+    setIncomeByRange(state, payload) {
+        state.incomeByRange = payload;
+        sessionStorage.setItem('incomeByRange', JSON.stringify(payload))
+    },
 }
