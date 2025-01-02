@@ -100,6 +100,25 @@ export default {
           throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
         }
       },
+      // update capacity by date
+      async editCapacityByDate({ rootGetters}, payload) {
+        try {
+          const response = await axios.put(`${rootGetters.getUrl}/api/slot/updateCapacityByDateAndSlotId?bookDate=${payload.date}&slotId=${payload.id}`, payload.data,
+            {
+              headers: {
+                Authorization: `Bearer ${rootGetters.getToken}`
+              }
+            });
+            if (response.status >= 200 && response.status < 300) {
+              // commit('setSpotBooking', response.data);
+                return true;
+            }
+        }
+        catch (err) {
+          console.error(err);
+          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+        }
+      },
     //   add type
       async addType({ rootGetters}, payload) {
         try {
@@ -449,6 +468,27 @@ response.data.forEach(item => {
             });
           if (response.status >= 200 && response.status < 300) {
             // console.log(response.data)
+            commit('setUserCount', response.data);
+            
+            return true;
+          }
+        }
+        catch (err) {
+          console.error(err);
+          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+        }
+      },
+      // Get All user count by start date and end date 
+      async fetchUserCountByUptonow({ rootGetters, commit },payload) {
+        try {
+          const response = await axios.get(`${rootGetters.getUrl}/api/spotData/visitorsCountByRangeOfDate?startDate=${payload.startDate}&endDate=${payload.endDate}`,
+            {
+              headers: {
+                Authorization: `Bearer ${rootGetters.getToken}`
+              }
+            });
+          if (response.status >= 200 && response.status < 300) {
+            // console.log(response.data)
             commit('setUserCountByRange', response.data);
             return true;
           }
@@ -458,4 +498,107 @@ response.data.forEach(item => {
           throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
         }
       },
+      // fetch income by date
+      async fetchIncomeByDate({ rootGetters, commit },payload) {
+        try {
+          const response = await axios.get(`${rootGetters.getUrl}/api/spotData/totalRevenueByDate?visitDate=${payload}`,
+            {
+              headers: {
+                Authorization: `Bearer ${rootGetters.getToken}`
+              }
+            });
+          if (response.status >= 200 && response.status < 300) {
+            // console.log(response.data)
+            commit('setIncomeByDate', response.data);
+            return true;
+          }
+        }
+        catch (err) {
+          console.error(err);
+          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+        }
+      },
+      // fetch bargraph
+      async totalIncomeBarGraph({ commit, rootGetters }, payload) {
+        try {
+            const response = await axios.get(`${rootGetters.getUrl}/api/spotData/monthlyData?year=${payload.year}&categoryId=${payload.id}`, {
+                headers: {
+                    Authorization: `Bearer ${rootGetters.getToken}`
+                },
+            });
+    
+            if (response.status === 200) {
+                const data = response.data;
+                console.log('data', data);
+    
+                const labels = [];
+                const incomes = [];
+                const tickets = [];
+    
+                // Convert the object to an array and iterate
+                Object.entries(data).forEach(([month, details]) => {
+                    const sumIncome = details.InstitutionGrandTotal + details.ForeignerGrandTotal + details.PublicGrandTotal;
+                    labels.push(month); // Use the key (month) as the label
+                    incomes.push(sumIncome);
+    
+                    let sumTicket = details.ForeignerCountOfPeople + details.PublicCountOfPeople + details.InstitutionCountOfPeople;
+                    sumTicket = sumTicket * 100; // Scale tickets if needed
+                    tickets.push(sumTicket);
+                });
+    
+                const totalIncome = incomes.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+                const totalTicket = tickets.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    
+                // Commit bar chart data
+                commit('setBarChart', {
+                    label: labels,
+                    data: incomes,
+                    total: totalIncome
+                });
+    
+                // Commit ticket data
+                commit('setBarChartTicket', {
+                    data: tickets,
+                    total: totalTicket
+                });
+                return true;
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error.message);
+            throw new Error('Error fetching data: ' + error.message);
+        }
+    },
+    // getAllDiscount
+    async fetchAllDiscount({ rootGetters, commit }) {
+      try {
+        const response = await axios.get(`${rootGetters.getUrl}/api/category/getDiscountCount`);
+        if (response.status >= 200 && response.status < 300) {
+          // console.log(response.data)
+          commit('setAllDiscount', response.data);
+          return true;
+        }
+      }
+      catch (err) {
+        console.error(err);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+      }
+    },
+    // add discountCount
+    async addDiscountCount({ rootGetters}, payload) {
+      try {
+        const response = await axios.post(`${rootGetters.getUrl}/api/category/addDiscount`, payload,
+          {
+            headers: {
+              Authorization: `Bearer ${rootGetters.getToken}`
+            }
+          });
+          if (response.status >= 200 && response.status < 300) {
+              return true;
+          }
+      }
+      catch (err) {
+        console.error(err);
+        throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+      }
+    },
 }

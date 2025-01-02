@@ -1,9 +1,10 @@
 <template>
   <v-skeleton-loader v-if="skeleton" type="table"></v-skeleton-loader>
   <v-container v-else class="pb-8 px-0" fluid>
+<div class="d-flex justify-space-between">
     <v-dialog v-model="dialog" max-width="500px">
       <template v-slot:activator="{ props }">
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-start">
           <v-btn color="#2C7721" size="large" v-bind="props" class="text-capitalize mb-3"> + Add Slot</v-btn>
         </div>
       </template>
@@ -49,7 +50,85 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
+    <v-btn color="#2C7721" size="large"  class="text-capitalize mb-3" @click="capDialog=true"> Update Capacity(by date)</v-btn>
+  </div>
+  <v-dialog v-model="capDialog" max-width="500px">
+      <v-card class="rounded-4 pb-3" style="width: 500px; height:auto; border-radius: 15px;">
+        <v-card-title style="background-color: #216D17;" class="mb-2 text-white text-center fs-5">Update Capacity</v-card-title>
+        <v-card-subtitle class="text-danger text-center my-1">
+          <i>*Enter time in 24 hour format (hh:mm:ss) format.</i>
+        </v-card-subtitle>
+        <v-card-text class="py-0">
+          <v-container class="pb-1">
+            <v-row>
+    <v-col cols="12" sm="12" md="12" class="py-0">
+      <v-select
+        class="select mb-2"
+        label="Select Slot Id"
+        density="comfortable"
+        :items="slots"
+        v-model="id"
+        item-title="id"
+        item-value="id"
+        variant="outlined"
+      ></v-select>
+    </v-col>
+    <v-col cols="12" sm="12" md="12" class="py-0">
+      <v-text-field
+        v-model="slotStartTime"
+        label="Time IN (hh:mm:ss)"
+        density="comfortable"
+        class="slot"
+        variant="outlined"
+        readonly
+      ></v-text-field>
+    </v-col>
+    <v-col cols="12" sm="12" md="12" class="py-0">
+      <v-text-field
+        v-model="slotEndTime"
+        label="Time OUT (hh:mm:ss)"
+        density="comfortable"
+        class="slot"
+        variant="outlined"
+        readonly
+      ></v-text-field>
+    </v-col>
+    <v-col cols="12" sm="12" md="12" class="py-0">
+      <v-text-field
+        v-model="totalCapacity"
+        label="Capacity"
+        density="comfortable"
+        class="slot"
+        variant="outlined"
+      ></v-text-field>
+    </v-col>
+    <v-col cols="12" sm="12" md="12" class="py-0">
+      <v-text-field type="date" v-model="selectedDate" class="date-picker" label="Date"
+        density="comfortable"
+        variant="outlined"/>
+    </v-col>
+    <v-col cols="12" sm="12" md="12" class="py-0">
+      <div class="d-flex gap-2">
+        <label class="my-3">Slot Status</label>
+        <v-switch
+          v-model="status"
+          color="primary"
+          hide-details
+          :label="status ? 'Active' : 'Inactive'"
+        ></v-switch>
+      </div>
+    </v-col>
+  </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions class="mb-4 mx-4">
+          <v-btn color="#546E7A" variant="elevated" block style="text-transform: capitalize" elevation="4" size="large"
+            @click="updateCapacity()" :disabled="loading" :loading="loading" class="mb-2">
+            Update Capacity
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <!-- <v-dialog v-model="dialogDelete" width="420px" height="300px">
       <v-card class="rounded-4 pb-3">
         <v-card-title style="background-color: #BA1A1A;" class="mb-2 text-white text-center fs-5">Delete
@@ -106,6 +185,12 @@ export default {
       dialog: false,
       skeleton : true,
       dialogDelete: false,
+      capDialog:false,
+      id:0,
+      slotStartTime: "",
+      slotEndTime: "",
+      totalCapacity: "",
+      status: false,
       headers: [
         { title: 'Slot No', sortable: false, align: 'center' },
         { title: 'Time In', key: 'slotStartTime', sortable: false, align: 'center' },
@@ -133,6 +218,21 @@ export default {
   watch: {
     dialog(val) {
       val || this.close()
+    },
+    id(newValue) {
+      const selectedSlot = this.slots.find((slot) => slot.id === newValue);
+      if (selectedSlot) {
+        this.slotStartTime = selectedSlot.slotStartTime;
+        this.slotEndTime = selectedSlot.slotEndTime;
+        this.totalCapacity = selectedSlot.totalCapacity;
+        this.status = selectedSlot.status;
+      } else {
+        // Reset fields if no matching ID is found
+        this.slotStartTime = "";
+        this.slotEndTime = "";
+        this.totalCapacity = "";
+        this.status = false;
+      }
     },
     // dialogDelete(val) {
     //   val || this.closeDelete()
@@ -165,13 +265,13 @@ export default {
       })
     },
 
-    // closeDelete() {
-    //   this.dialogDelete = false
-    //   this.$nextTick(() => {
-    //     this.editedItem = Object.assign({}, this.defaultItem)
-    //     this.editedIndex = -1
-    //   })
-    // },
+    closeCapacity() {
+      this.capDialog = false
+      // this.$nextTick(() => {
+      //   this.editedItem = Object.assign({}, this.defaultItem)
+      //   this.editedIndex = -1
+      // })
+    },
     async getSlot() {
       try {
         const res = await this.$store.dispatch('booking/fetchAllSlot');
@@ -234,6 +334,35 @@ export default {
         if (success) {
           this.loading = false;
           this.close();
+          this.message = 'Slot details updated !!';
+          this.color = '#C8E6C9'
+          this.snackbar = true;
+          this.getSlot();
+        }
+      }
+      catch (error) {
+        this.loading = false
+        this.message = error.message + '!!';
+        this.color = '#C62828';
+        this.snackbar = true;
+      }
+    },
+    async updateCapacity() {
+      this.loading = true;
+      const payload = { id: this.id, 
+        date: this.selectedDate,
+        data: {
+          "slotStartTime": this.slotStartTime,
+          // "spotCapacity": this.editedItem.totalCapacity,
+          "presentStatus": this.status,
+          "presentCapacity": this.totalCapacity,
+          "slotEndTime": this.slotEndTime,
+        }};
+      try {
+        const success = await this.$store.dispatch('booking/editCapacityByDate',payload);
+        if (success) {
+          this.loading = false;
+          this.closeCapacity();
           this.message = 'Slot details updated !!';
           this.color = '#C8E6C9'
           this.snackbar = true;

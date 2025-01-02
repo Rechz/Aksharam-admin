@@ -20,7 +20,7 @@
                 </div>
                 <div class="d-flex flex-column">
                   <p class="text-style"><v-icon class="mdi mdi-currency-inr" size="24" color="white"></v-icon>{{
-                    dailyIncome
+                    dailyIncome?.overAllRevenue || 0
                     }}
                   </p>
                   <p class="text-type">Total Earning</p>
@@ -76,7 +76,7 @@
                   <v-icon class="mdi mdi-ticket-confirmation" size="large" color="white"></v-icon>
                 </div>
                 <div class="d-flex flex-column">
-                  <p class="text-white mb-0 text-style py-0">{{ cumulativeIncome }}</p>
+                  <p class="text-white mb-0 text-style py-0">{{ cumulativeTickets[0]?.totalVisitsCount || 0}}</p>
                   <p class="text-type mt-0 py-0">Cumulative Bookings</p>
                 </div>
               </div>
@@ -93,7 +93,13 @@
               <p class="my-0">Total tickets : {{yearlyTickets }}</p>
             </div>
             <!-- <v-select :items="['2024', '2023', '2022']" density=compact class="year-select" v-model="year"></v-select> -->
-            <h6>Current Year: {{ currentYear }}</h6>
+            <!-- <h6>Current Year: {{ currentYear }}</h6> -->
+            <v-select
+      :items="years"
+      density="compact"
+      class="year-select"
+      v-model="selectedYear"
+    ></v-select>
             <!-- <v-btn-toggle v-model="toggleBar" variant="text" class="button">
           <v-btn size="small" class=" barbtn" :value="'Current'" @click="fetchIncomeDate">Current</v-btn>
           <v-btn size="small" class=" barbtn" :value="'Cumulative'" @click="fetchIncomeMonth">Cumulative</v-btn>
@@ -185,34 +191,36 @@ export default {
       currentDay: '',
       currentMonth: '',
       currentYear: '',
+      years: [], // Array of years for the dropdown
+      selectedYear: '', // The selected year
       errorPie: '',
       errorBar: '',
       monthNames : ['January', 'February', 'March', 'April', 'May', 'June','July', 'August', 'September', 'October', 'November', 'December']
     }
   },
   computed: {
-    ...mapGetters('booking', ['getUserCountByRange','getTotalRevenue','getUserCount']),
+    ...mapGetters('booking', ['getUserCountByRange','getTotalRevenue','getUserCount','getIncomeByDate','getBarData','getBarData2','getBarTotal','getBarTotal2','getBarLabel','getTickets']),
     labelsPie() {
       return this.$store.getters.getPieLabel;
     },
     labelsBar() {
-      return this.$store.getters.getBarLabel;
+      return this.getBarLabel;
     },
     dataPie() {
       return this.$store.getters.getPieData;
     },
     dataBar() {
-      return this.$store.getters.getBarData;
+      return this.getBarData;
     },
     data2Bar() {
-      return this.$store.getters.getBarData2;
+      return this.getBarData2;
     },
     cumulativeTickets() { 
       console.log("getUserCountByRange:", this.getUserCountByRange);
       return this.getUserCountByRange;
     },
     yearlyTickets() {
-      return this.$store.getters.getBarTotal2/100;
+      return this.getBarTotal2/100;
     },
     dailyTickets() {
       return this.getUserCount;
@@ -221,10 +229,11 @@ export default {
       return this.getTotalRevenue;
     },
     yearlyIncome() {
-      return this.$store.getters.getBarTotal;
+      return this.getBarTotal;
     },
     dailyIncome() {
-      return this.$store.getters.getDailyIncome;
+      console.log('hgffhgfg',this.getIncomeByDate)
+      return this.getIncomeByDate;
     },
     scannedVisitors() {
       return this.$store.getters.getPieTotal;
@@ -262,8 +271,12 @@ export default {
 },
     async fetchBarChart() {
       this.barError = false;
+      const payload = {
+        id : 0,
+        year: this.selectedYear
+      }
       try {
-        await this.$store.dispatch('totalIncomeBarGraph', this.currentYear)
+        await this.$store.dispatch('booking/totalIncomeBarGraph',payload )
       }
       catch (error) {
         console.error(error);
@@ -271,16 +284,15 @@ export default {
         this.barError = true
       }
     },
-    async fetchBarChartTickets() {
-      this.bar2Error = false;
-      try {
-        await this.$store.dispatch('totalTicketsBarGraph', this.currentYear)
-      }
-      catch (error) {
-        console.error(error);
-        //this.bar2Error = true
-      }
-    },
+    // async fetchBarChartTickets() {
+    //   this.bar2Error = false;
+    //   try {
+    //     await this.$store.dispatch('totalTicketsBarGraph', this.currentYear)
+    //   }
+    //   catch (error) {
+    //     console.error(error);
+    //   }
+    // },
    
     async fetchTotalTickets() {
       const payload = {
@@ -288,7 +300,7 @@ export default {
         endDate : `${this.currentYear}-${this.currentMonth}-${this.currentDay}`,
       } 
       try {
-        await this.$store.dispatch('booking/fetchUserCountByRange',payload)
+        await this.$store.dispatch('booking/fetchUserCountByUptonow',payload)
       }
       catch (error) {
         console.error(error.message);
@@ -305,11 +317,8 @@ export default {
     },
     async fetchIncomeDate() {
       try {
-        const payload = {
-          date: `${this.currentYear}-${this.currentMonth}-${this.currentDay}`,
-          id:0
-        };
-        await this.$store.dispatch('booking/fetchUserCount', payload)
+        const payload = `${this.currentYear}-${this.currentMonth}-${this.currentDay}`;
+        await this.$store.dispatch('booking/fetchIncomeByDate', payload)
       }
       catch (error) {
         console.error(error);
@@ -362,21 +371,39 @@ export default {
   // },
   // beforeUnmount() {
   //   document.body.style.backgroundColor = '';
-  console.log('cumulativeTickets',this.dailyTicketCount);
+  // this.fetchBarChart();
+
+  // console.log('cumulativeTickets',this.dailyTicketCount);
+  console.log('barchart','bar1',this.getBarData,'bar1',this.getBarData2,'bar1',this.getBarTotal,'bar1',this.getBarTotal2)
   },
   created() {
     const today = new Date();
     this.currentDay = String(today.getDate()).padStart(2, '0');
     this.currentMonth = String(today.getMonth() + 1).padStart(2, '0');
     this.currentYear = today.getFullYear();
+     // Generate years from 2024 to the current year
+     this.years = [];
+    for (let year = 2024; year <= this.currentYear; year++) {
+      this.years.push(year);
+    }
+
+    // Set the default selected year to the current year
+    this.selectedYear = this.currentYear;
     this.fetchIncomeDate();
     this.fetchTicketDate();
     this.fetchTotalTickets();
     this.fetchTotalIncome();
     this.fetchPieChart();
     this.fetchBarChart();
-    this.fetchBarChartTickets();
+    // this.fetchBarChartTickets();
   },
+  watch: {
+    selectedYear(value) {
+      if(value){
+        this.fetchBarChart();
+      }
+    },
+  }
 };
 </script>
 
