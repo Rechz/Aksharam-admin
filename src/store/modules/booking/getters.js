@@ -13,5 +13,14 @@ export default {
     getTicketsByDate: (state) => state.ticketByDate,
     getTotalRevenue: (state) => state.totalRevenue,
     getUserCount: (state) => state.userCount,
-    getUserCountByRange: (state) => state.userCountByRange
+    getUserCountByRange: (state) => state.userCountByRange,
+    getIncomeByDate: (state) => state.incomeByDate,
+    getBarLabel: (state) => state.labelsBar,
+    getBarData: (state) => state.dataBar,
+    getBarData2: (state) => state.data2Bar,
+    getBarTotal: (state) => state.totalBar,
+    getBarTotal2: (state) => state.total2Bar,
+    getAllDiscount: (state) => state.allDiscount,
+    getIncomeByRange: (state) => state.incomeByRange,
+
 }
