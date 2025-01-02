@@ -69,6 +69,11 @@ const router = createRouter({
               name: 'spot-ticket-slots',
               component: () => import('./components/Booking/Tickets/TicketSlots.vue')
             },
+            {
+              path: '/admin/spot-tickets/discount',
+              name: 'spot-ticket-discount',
+              component: () => import('./components/Booking/Tickets/TicketDiscount.vue')
+            },
           ]
         },
         {
