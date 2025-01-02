@@ -21,7 +21,7 @@ export default {
   data() {
     return {
       // tab: 'Details',
-      items: ['Details', 'Price', 'Slots'],
+      items: ['Details', 'Price', 'Slots','Discount'],
     };
   },
   methods: {
@@ -32,8 +32,11 @@ export default {
       else if (item === 'Price') {
         this.$router.push({ name: 'spot-ticket-price' })
       }
-      else {
+      else if(item === 'Slots'){
         this.$router.push({ name: 'spot-ticket-slots' })
+      }
+      else{
+        this.$router.push({ name: 'spot-ticket-discount' })
       }
     }
   },
@@ -46,8 +49,11 @@ export default {
         else if (this.$route.name === 'spot-ticket-price') {
           return 'Price';
         }
-        else {
+        else if (this.$route.name === 'spot-ticket-details'){
           return 'Details';
+        }
+        else{
+          return 'Discount'
         }
       },
       set(value) {
@@ -57,8 +63,11 @@ export default {
         else if (value === 'Price') {
           this.$router.push({ name: 'spot-ticket-price' })
         }
-        else {
+        else if (value === 'Slots'){
           this.$router.push({name: 'spot-ticket-slots'})
+        }
+        else{
+          this.$router.push({name: 'spot-ticket-discount'})
         }
       }
     }
