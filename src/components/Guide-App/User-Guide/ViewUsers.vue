@@ -1,11 +1,12 @@
  <template>
   <v-skeleton-loader v-if="skeleton" type="table"></v-skeleton-loader>
   <v-container v-else class="pb-8 px-0" fluid>
-    <v-data-table :headers="headers" :items="users"
-      :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
+    <v-data-table :headers="headers" :items="users" v-model:items-per-page="itemsPerPage" v-model:page="currentPage"
+      :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }" style="background-color: #f9faf1;"
+      max-width="100%">
       <template v-slot:item='{ item, index }'>
         <tr style="background-color:#FCFDF6; color:black; ">
-          <td class="text-center">{{ index + 1 }}</td>
+          <td class="text-center">{{ ((currentPage - 1) * itemsPerPage) + index + 1 }}</td>
           <td class="text-center">{{ item.fullName }}</td>
           <td class="text-center">{{ item.phNumber }}</td>
           <td class="text-center">{{ item.email }}</td>
@@ -27,15 +28,15 @@ export default {
         { title: 'Phone number', key: 'number', sortable: false, align: 'center' },
         { title: 'Email', key: 'email', sortable: false, align: 'center' },
       ],
+      currentPage: 1,
+      itemsPerPage: 10,
       skeleton:true
     };
   },
   computed: {
     ...mapGetters('guide', ['getUserData']),
     users() {
-      // Ensure users is always an array
       return Array.isArray(this.getUserData) ? this.getUserData : [];
-      // return this.$store.getters.getUserData;
     },
   },
   methods: {
@@ -58,22 +59,22 @@ export default {
 };
 </script>
 
-<style>
-
-/* .slot .v-input__control {
-  background-color: #DFE4D7 !important;
-} */
-
+<style scoped>
 .v-table__wrapper>table>thead {
-  /* background-color: #236726; */
   color: white;
 }
 :deep(.slot .v-input__control) {
-  /* border-bottom: 2px solid #216D17; */
-  /* background-color: #DFE4D7 !important; */
   width: 400px !important;
 }
 :deep(.slot .v-input--horizontal) {
   width: 400px !important;
+}
+:deep(.v-pagination__list .v-btn--variant-plain) {
+  opacity: 1;
+  background-color: #216D17;
+  color: #FCFDF6;
+}
+:deep(.v-pagination__list .v-btn--disabled) {
+  opacity: 0.4;
 }
 </style>

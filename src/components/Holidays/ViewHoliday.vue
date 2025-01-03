@@ -7,7 +7,8 @@
     <div class="d-flex justify-content-between mb-4">
     </div>
     <v-data-table :headers="headers" :items="holidays" class="mt-3"
-      :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
+      :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }" style="background-color: #f9faf1;"
+      max-width="100%" v-model:items-per-page="itemsPerPage" v-model:page="currentPage">
       <template v-slot:top>
         <v-dialog v-model="dialogDelete" width="400px">
           <v-card class="rounded-4 pb-4">
@@ -27,7 +28,7 @@
       </template>
       <template v-slot:item="{ item,index }">
         <tr style="background-color:#FCFDF6; color:black;">
-          <td class="text-center">{{ index + 1 }}</td>
+          <td class="text-center">{{ ((currentPage - 1) * itemsPerPage) + index + 1 }}</td>
           <td class="text-center">{{ item.date }}</td>
           <td class="text-center">{{ item.name }}</td>
           <td class="text-center">
@@ -50,6 +51,8 @@
         snackbar: false,
         color: '#E8F5E9',
         timeout: 2000,
+        currentPage: 1,
+        itemsPerPage: 10,
         headers: [
           { title: 'Sl.no', align: 'center', sortable: false },
           { title: 'Date', align: 'center', key: 'date', sortable: false },

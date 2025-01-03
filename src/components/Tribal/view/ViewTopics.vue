@@ -1,59 +1,63 @@
 <template>
-    <v-container class="py-2 px-0" fluid>
-      <v-dialog width="600" max-width="600" v-model="dialogTopic">
-        <v-card width="600" rounded="3">
-          <v-card-title class="text-center text-white" :style="{ backgroundColor: color }">{{ dialogHead
-            }}</v-card-title>
-          <v-card-text class="px-5 text-center">
-            <v-icon size="88" :class="icon" :color="color"></v-icon>
-            <h6>{{ message }}</h6>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn @click="dialogTopic = !dialogTopic" :color="color">Okay</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <v-dialog v-model="dialogGenerate" width="800" max-width="800" persistent>
-        <v-card rounded="3" v-if="!addTopic">
-          <v-card-title class="text-center text-white fs-6 d-flex justify-content-between"
-            style="background-color: #2E7D32;">
-            <h5>Generate QR</h5>
-            <v-icon class="mdi mdi-close" @click="closeGenQR"></v-icon>
-          </v-card-title>
-          <v-card-text class="px-5 text-justify pb-0">
-            Select topic to be linked with the selected topic '{{ selectedTopic }}'.
-            <v-select v-model="selectedItem" :items="topics" item-text="title" item-value="id" label="Select topic"
-              append-outer-icon="mdi-menu-down" clearable variant="outlined" density="compact" width="400"
-              class="mt-3">
-              <template v-slot:append-item>
-                <v-divider class="my-0 py-0"></v-divider>
-                <v-list-item class="py-0">
-                  <v-btn @click="handleButtonClick" class="ps-0 text-capitalize" variant="text"
-                    prepend-icon="mdi-plus" color="success">Add Topic</v-btn>
-                </v-list-item>
-              </template>
-            </v-select>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn color="#2E7D32" :disabled="!selectedItem || buttonClicked" variant="elevated" class="mb-3 me-3"
-              @click="generateQR">Generate</v-btn>
-          </v-card-actions>
-        </v-card>
-        <!-- <v-dialog v-model="dialogGenerate"> -->
-        <v-card v-else>
-          <add-new :languageId="language" :id="topicId" @back="addTopic = false"
-            @exit="addTopic = false; dialogGenerate = false" @update="getTopics"></add-new>
-        </v-card>
-      </v-dialog> 
+  <v-container class="py-2 px-0" fluid>
+    <v-dialog width="600" max-width="600" v-model="dialogTopic">
+      <v-card width="600" rounded="3">
+        <v-card-title class="text-center text-white" :style="{ backgroundColor: color }">{{ dialogHead
+          }}</v-card-title>
+        <v-card-text class="px-5 text-center">
+          <v-icon size="88" :class="icon" :color="color"></v-icon>
+          <h6>{{ message }}</h6>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="dialogTopic = !dialogTopic" :color="color">Okay</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogGenerate" width="800" max-width="800" persistent>
+      <v-card rounded="3" v-if="!addTopic">
+        <v-card-title class="text-center text-white fs-6 d-flex justify-content-between"
+          style="background-color: #2E7D32;">
+          <h5>Generate QR</h5>
+          <v-icon class="mdi mdi-close" @click="closeGenQR"></v-icon>
+        </v-card-title>
+        <v-card-text class="px-5 text-justify pb-0">
+          Select topic to be linked with the selected topic '{{ selectedTopic }}'.
+          <v-select v-model="selectedItem" :items="topics" item-text="title" item-value="id" label="Select topic"
+            append-outer-icon="mdi-menu-down" clearable variant="outlined" density="compact" width="400" class="mt-3">
+            <template v-slot:append-item>
+              <v-divider class="my-0 py-0"></v-divider>
+              <v-list-item class="py-0">
+                <v-btn @click="handleButtonClick" class="ps-0 text-capitalize" variant="text" prepend-icon="mdi-plus"
+                  color="success">Add Topic</v-btn>
+              </v-list-item>
+            </template>
+          </v-select>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="#2E7D32" :disabled="!selectedItem || buttonClicked" variant="elevated" class="mb-3 me-3"
+            @click="generateQR">Generate</v-btn>
+        </v-card-actions>
+      </v-card>
+      <!-- <v-dialog v-model="dialogGenerate"> -->
+      <v-card v-else>
+        <add-new :languageId="language" :id="topicId" @back="addTopic = false"
+          @exit="addTopic = false; dialogGenerate = false" @update="getTopics"></add-new>
+      </v-card>
+    </v-dialog>
+    <div class="d-flex justify-content-between align-items-center">
+      <v-text-field v-model="search" placeholder="Search" width="200" density="compact" variant="outlined"
+        class="flex-grow-0 flex-shrink-0" hide-details></v-text-field>
       <div class="d-flex justify-content-end mb-4">
         <v-btn-toggle color="green-lighten-5" v-model="lang" density="compact">
           <v-btn :value="'English'" @click="translate(2)" size="small">English</v-btn>
           <v-btn :value="'Malayalam'" @click="translate(1)" size="small">Malayalam</v-btn>
         </v-btn-toggle>
       </div>
+      </div>
       <v-skeleton-loader v-if="skeleton" type="table"></v-skeleton-loader>
-      <v-data-table :headers="headers" :items="mainheadings" class="mt-3"
-        :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }" v-else>
+      <v-data-table :headers="headers" :items="filteredTopics" class="mt-3"
+        :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }" style="background-color: #f9faf1;"
+        max-width="100%" v-model:items-per-page="itemsPerPage" v-model:page="currentPage" v-else>
         <template v-slot:top>
           <v-dialog v-model="dialogDelete" width="500px">
             <v-card class="rounded-2 pb-4">
@@ -75,12 +79,12 @@
         </template>
         <template v-slot:item="{ item, index }">
           <tr style="background-color:#FCFDF6; color:black;">
-            <td class="text-center">{{ index + 1 }}</td>
+            <td class="text-center">{{ ((currentPage - 1) * itemsPerPage) + index + 1 }}</td>
             <td class="text-center">{{ item.title }}</td>
             <td class="text-center">
-              <v-btn v-if="item.tribalCommonId" class="text-none" color="#48663f" min-width="100" size="small" @click="showDetails(item)"
-                >View & Edit</v-btn>
-                <v-btn variant="text" class="text-capitalize text-decoration-underline" color="#2E7D32" v-else
+              <v-btn v-if="item.tribalCommonId" class="text-none" color="#48663f" min-width="100" size="small"
+                @click="showDetails(item)">View & Edit</v-btn>
+              <v-btn variant="text" class="text-capitalize text-decoration-underline" color="#2E7D32" v-else
                 @click="generate(item)" :loading="item.qrLoad" :disabled="item.qrLoad">Generate CommonId</v-btn>
             </td>
             <td class="text-center">
@@ -89,8 +93,8 @@
           </tr>
         </template>
       </v-data-table>
-    </v-container>
-  </template>
+  </v-container>
+</template>
 
   <script>
 import axios from 'axios';
@@ -119,6 +123,9 @@ export default {
     buttonClicked: false,
     selectedItem: null,
     addTopic: false,
+    currentPage: 1,
+    itemsPerPage: 10,
+    search: '',
     image: require('@/assets/acc.jpg'),
     headers: [
       { title: 'Sl.no', align: 'center', sortable: false },
@@ -145,6 +152,9 @@ export default {
       else {
         return 'Malayalam';
       }
+    },
+    filteredTopics() {
+      return this.search ? this.mainheadings.filter(item => item.title && item.title.toLowerCase().includes(this.search.toLowerCase())) : this.mainheadings;
     }
   },
   watch: {
@@ -269,9 +279,10 @@ export default {
         console.error(error);
       }
     },
-    translate(language) {
-      this.$store.commit('display/setLanguage', language);
-      this.getTopics()
+      translate(language) {
+        this.search = '';
+        this.$store.commit('display/setLanguage', language);
+        this.getTopics()
     },
     async showDetails(item) {
       try {

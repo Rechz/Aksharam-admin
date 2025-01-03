@@ -29,22 +29,29 @@
           </v-select>
         </v-card-text>
         <v-card-actions>
-          <v-btn color="#2E7D32" :disabled="!selectedItem || buttonClicked" variant="elevated" class="mb-3 me-3" @click="generateQR">Generate</v-btn>
+          <v-btn color="#2E7D32" :disabled="!selectedItem || buttonClicked" variant="elevated" class="mb-3 me-3"
+            @click="generateQR">Generate</v-btn>
         </v-card-actions>
       </v-card>
       <v-card v-else>
-        <add-new :languageId="language" :id="topicId" @back="addTopic = false" @exit="addTopic = false; dialogGenerate=false" @update="getTopics"></add-new>
+        <add-new :languageId="language" :id="topicId" @back="addTopic = false"
+          @exit="addTopic = false; dialogGenerate=false" @update="getTopics"></add-new>
       </v-card>
     </v-dialog>
-    <div class="d-flex justify-content-end mb-4">
-      <v-btn-toggle color="green-lighten-5" v-model="lang" density="compact">
-        <v-btn :value="'English'" @click="translate(2)" size="small">English</v-btn>
-        <v-btn :value="'Malayalam'" @click="translate(1)" size="small">Malayalam</v-btn>
-      </v-btn-toggle>
+    <div class="d-flex justify-content-between align-items-center">
+      <v-text-field v-model="search" placeholder="Search" width="200" density="compact" variant="outlined"
+        class="flex-grow-0 flex-shrink-0" hide-details></v-text-field>
+      <div class="d-flex justify-content-end mb-4">
+        <v-btn-toggle color="green-lighten-5" v-model="lang" density="compact">
+          <v-btn :value="'English'" @click="translate(2)" size="small">English</v-btn>
+          <v-btn :value="'Malayalam'" @click="translate(1)" size="small">Malayalam</v-btn>
+        </v-btn-toggle>
+      </div>
     </div>
     <v-skeleton-loader v-if="skeleton" type="table"></v-skeleton-loader>
-    <v-data-table :headers="headers" :items="mainheadings" class="mt-3"
-      :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }" v-else items-per-page="20">
+    <v-data-table :headers="headers" :items="filteredTopics" class="mt-3" v-model:page="currentPage"
+      :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }" v-else style="background-color: #f9faf1;"
+      max-width="100%" v-model:items-per-page="itemsPerPage">
       <template v-slot:top>
         <v-dialog v-model="dialogDelete" width="500px">
           <v-card class="rounded-2 pb-4">
@@ -88,10 +95,10 @@
       </template>
       <template v-slot:item="{ item,index }">
         <tr style="background-color:#FCFDF6; color:black;">
-          <td class="text-center">{{ index + 1 }}</td>
-          <td class="text-center">{{ item.title }}</td>
+          <td class="text-center">{{ ((currentPage-1)*itemsPerPage )+index + 1 }}</td>
+          <td class="text-center head-click" @click="showDetails(item)" :disabled="!item.commonId">{{ item.title }}</td>
           <td class="text-center d-flex justify-content-center align-items-center"><v-img :src="item.qrCodeUrl" alt="QR"
-              class="qr" style="height: 50px; width: 50px;" v-if="item.commonId" ></v-img>
+              class="qr" style="height: 50px; width: 50px;" v-if="item.commonId"></v-img>
             <v-btn variant="text" class="text-capitalize text-decoration-underline" color="#2E7D32" v-else
               @click="generate(item)" :loading="qrLoad" :disabled="qrLoad">Generate QR</v-btn>
           </td>
@@ -118,6 +125,7 @@
       AddNew
     },
     data: () => ({
+      search: '',
       qrDialog: false,
       dialogDelete: false,
       message: '',
@@ -137,6 +145,8 @@
       selectedItem: null,
       addTopic: false,
       image: require('@/assets/acc.jpg'),
+      currentPage: 1,
+      itemsPerPage: 10,
       headers: [
         { title: 'Sl.no', align: 'center', sortable: false },
         { title: 'Heading', align: 'center', key: 'heading', sortable: false },
@@ -161,6 +171,9 @@
         else {
           return 'Malayalam';
         }
+      },
+      filteredTopics() {
+        return this.search ? this.mainheadings.filter(item => item.title && item.title.toLowerCase().includes(this.search.toLowerCase())) : this.mainheadings;
       }
     },
     watch: {
@@ -255,6 +268,9 @@
         this.message = message;
         this.dialogTopic = true;
       },
+      pageUpdated(page) {
+        console.log('page updated', page)
+      },
       async getTopics() {
         try {
           const res = await this.$store.dispatch('display/getTopics');
@@ -267,6 +283,7 @@
         }
       },
       translate(language) {
+        this.search = '';
         this.$store.commit('display/setLanguage', language);
         this.getTopics()
       },
@@ -359,6 +376,9 @@
   };
 </script> 
 <style scoped>
+.head-click{
+  cursor: pointer;
+}
   :deep(.v-btn--variant-elevated){
     background: none;
   }

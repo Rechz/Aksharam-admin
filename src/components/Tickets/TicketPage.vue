@@ -9,11 +9,12 @@
         prepend-inner-icon="mdi-sort-variant" label="Sort by" class="sort"></v-select>
     </div>
     <v-data-table :headers="headers" :items="filteredTickets" style="background-color: #f9faf1;" max-width="100%"
-      item-value="ticketId" :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }">
+      item-value="ticketId" :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }"
+      v-model:items-per-page="itemsPerPage" v-model:page="currentPage">
       <template v-slot:item='{ item, index }'>
         <tr style="background-color:#FCFDF6; color:black;">
           <td class="text-center">
-            {{ index + 1 }}
+            {{ ((currentPage - 1) * itemsPerPage) + index + 1 }}
           </td>
           <td>
             {{ item.ticketId }}
@@ -141,6 +142,8 @@ export default {
       viewItem: [],
       viewIndex: -1,
       search: '',
+      currentPage: 1,
+      itemsPerPage: 10,
       headers: [
         { title: 'Sl No.', sortable: false, align: 'center' },
         { title: 'Ticket ID', align: 'start', sortable: false, key: 'ticketId' },

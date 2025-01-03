@@ -19,7 +19,8 @@
     </div>
     <v-skeleton-loader v-if="skeleton" type="table"></v-skeleton-loader>
     <v-data-table :headers="headers" :items="filteredScanner" style="background-color: #f9faf1; color:black; "
-      item-value="id" class="mt-3" :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }" v-else>
+      item-value="id" class="mt-3" :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }" v-else
+      v-model:items-per-page="itemsPerPage" v-model:page="currentPage">
       <template v-slot:top>
         <v-dialog v-model="dialog" max-width="300px">
           <v-card style="width: 400px; height:auto; border-radius: 15px;" class="pb-4">
@@ -75,7 +76,7 @@
       </template>
       <template v-slot:item='{ item,index}'>
         <tr style="background-color: #FCFDF6; color:black;">
-          <td class="text-center">{{ index + 1 }}</td>
+          <td class="text-center">{{ ((currentPage - 1) * itemsPerPage) + index + 1 }}</td>
           <td>{{ item.employeeId }}</td>
           <td><img :src='item.image' @error="setFallbackImage" alt="employee"
               style="border-radius: 50%; height: 50px;" />
@@ -94,6 +95,8 @@
 <script>
 export default {
   data: () => ({
+    currentPage: 1,
+    itemsPerPage: 10,
     dialog: false,
     dialogDelete: false,
     search: '',

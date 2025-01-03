@@ -17,22 +17,20 @@
             <v-container class="d-flex gap-2">
               <div style="height: 300px; width: 300px;">
                 <!-- <v-hover v-slot="{ isHovering, props }"> -->
-                  <v-icon v-if="editedIndex === -1" size="240" color="#DFE4D7" class="mdi mdi-account-box"
-                    v-bind="props">
-                    <!-- <v-overlay :model-value="isHovering" class="align-center justify-center" scrim="#616161" contained>
+                <v-icon v-if="editedIndex === -1" size="240" color="#DFE4D7" class="mdi mdi-account-box" v-bind="props">
+                  <!-- <v-overlay :model-value="isHovering" class="align-center justify-center" scrim="#616161" contained>
                       <v-btn class="overlay" flat>
                         <v-icon size="32" class="mdi mdi-camera-plus"></v-icon>
                       </v-btn>
                     </v-overlay> -->
-                  </v-icon>
-                  <v-icon v-if="editedIndex !== -1" size="240" color="#DFE4D7" class="mdi mdi-account-box"
-                    v-bind="props">
-                    <!-- <v-overlay :model-value="isHovering" class="align-center justify-center" scrim="#616161" contained>
+                </v-icon>
+                <v-icon v-if="editedIndex !== -1" size="240" color="#DFE4D7" class="mdi mdi-account-box" v-bind="props">
+                  <!-- <v-overlay :model-value="isHovering" class="align-center justify-center" scrim="#616161" contained>
                       <v-btn class="overlay" flat>
                         <v-icon size="32" class="mdi mdi-pencil" color="white"></v-icon>
                       </v-btn>
                     </v-overlay> -->
-                  </v-icon>
+                </v-icon>
                 <!-- </v-hover> -->
               </div>
               <div class="d-flex flex-column w-100 emp-add">
@@ -136,11 +134,12 @@
     </v-dialog>
     <v-skeleton-loader v-if="skeleton" type="table"></v-skeleton-loader>
     <v-data-table :headers="headers" :items="filteredEmployees" class="mt-3" item-value="id"
-      :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }" v-else>
+      :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }" v-else
+      v-model:items-per-page="itemsPerPage" v-model:page="currentPage">
       <template v-slot:item="{ item, index }">
         <tr style="background-color:#FCFDF6; color:black;">
           <!-- <td class="text-center">{{ index + 1 }}</td> -->
-          <td class="text-center">{{ index + 1 }}</td>
+          <td class="text-center">{{ ((currentPage - 1) * itemsPerPage) + index + 1 }}</td>
           <td class="">{{ item.employeeId }}</td>
           <td class=""><v-img src="@/assets/acc.jpg" alt="employee"
               style="border-radius: 50%; height: 50px; width: 50px;"></v-img>
@@ -162,6 +161,8 @@
 <script>
 export default {
   data: () => ({
+    currentPage: 1,
+    itemsPerPage: 10,
     dialog: false,
     detailsDialog: false,
     dialogDelete: false,
