@@ -93,8 +93,8 @@
                 <p><strong>No of Adults:</strong> {{ details.data.adult }}</p>
                 <p><strong>No of children:</strong> {{ details.data.child }}</p>
               </div>
-              <p><strong>Total Ticket: </strong> {{ totalGuests}}</p>
-              <p><strong>Grand Total: </strong> ₹{{ bookedDetails.grandTotal }}</p>
+            <p><strong>Total Ticket: </strong> {{ totalGuests}}</p>
+            <p><strong>Grand Total: </strong> ₹{{ bookedDetails.grandTotal }}</p>
               <!-- <v-chip
   :value="selectedStatus === filteredStatuses.id"
   @click="selectedStatus = filteredStatuses.id"
@@ -459,10 +459,12 @@ export default {
         const res =  await this.$store.dispatch('booking/deleteUserReg',payload) 
         if(res) {
           this.showPreview = false
+          this.showDiscount = false
           // this.dialog = true;
           this.totalGuests = ''
           this.paymentStatus = ''
           this.bookedDetails = ''
+          this.discountRate = 0
           this.name= null
        this.number= null
        this.selectedCat= null
@@ -546,6 +548,10 @@ export default {
         if(studentCount > this.discountCount) {
           this.showDiscount = true;
         }
+        else if(studentCount <= this.discountCount) {
+          this.showDiscount = false;
+          this.discountRate = 0;
+          }
     console.log("Student count:", this.counts[baseKey]);
 
   }
