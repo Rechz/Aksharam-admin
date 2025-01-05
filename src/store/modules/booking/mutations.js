@@ -85,4 +85,8 @@ export default {
         state.incomeByRange = payload;
         sessionStorage.setItem('incomeByRange', JSON.stringify(payload))
     },
+    setDiscountCount(state, payload) {
+        state.discountCount = payload;
+        sessionStorage.setItem('discountCount', payload)
+    }
 }

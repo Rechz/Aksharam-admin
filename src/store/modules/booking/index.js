@@ -29,6 +29,7 @@ export default {
            total2Bar: sessionStorage.getItem('total2Bar') || 0,
            allDiscount: JSON.parse(sessionStorage.getItem('allDiscount')) || [],
            incomeByRange: JSON.parse(sessionStorage.getItem('incomeByRange')) || [],
+           discountCount: sessionStorage.getItem('discountCount') || 0,
 
 
         }

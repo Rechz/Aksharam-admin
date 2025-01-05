@@ -22,5 +22,5 @@ export default {
     getBarTotal2: (state) => state.total2Bar,
     getAllDiscount: (state) => state.allDiscount,
     getIncomeByRange: (state) => state.incomeByRange,
-
+    getDiscountCount: (state) => state.discountCount,
 }
