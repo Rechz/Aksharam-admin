@@ -87,14 +87,17 @@
                 <p><strong>District:</strong> {{ details.data.district }} </p>
                 <p><strong>No of Teachers:</strong> {{ details.data.teacher }}</p>
                 <p><strong>No of Students:</strong> {{ details.data.student }}</p>
-                <p v-if="showDiscount"><strong>Discount Amount:</strong>₹{{ bookedDetails.discountAmount }}</p>
+                
               </div>
               <div v-if="details.id === 3">
                 <p><strong>No of Adults:</strong> {{ details.data.adult }}</p>
                 <p><strong>No of children:</strong> {{ details.data.child }}</p>
               </div>
             <p><strong>Total Ticket: </strong> {{ totalGuests}}</p>
-            <p><strong>Grand Total: </strong> ₹{{ bookedDetails.grandTotal }}</p>
+            <p v-if="showDiscount"><strong>Student TicketCharge: </strong> ₹{{ Math.round(bookedDetails.studentTicketCharge)}}</p>
+            <p v-if="showDiscount"><strong>Discount Amount:</strong> -₹{{ Math.round(bookedDetails.studentDiscount) }}</p>
+            <p v-if="showDiscount"><strong>Payable StudentCharge:</strong> ₹{{ Math.round(bookedDetails.payableStudentCharge) }}</p>
+            <p><strong>Grand Total: </strong> ₹{{ Math.round(bookedDetails.grandTotal) }}</p>
               <!-- <v-chip
   :value="selectedStatus === filteredStatuses.id"
   @click="selectedStatus = filteredStatuses.id"
@@ -102,10 +105,10 @@
 >
   {{ filteredStatuses.statusName }}
 </v-chip> -->
-<div class="d-flex flex-wrap gap-2">
-<v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="confirmBooking()" :loading="buttonCnDisabled">Proceed to
+<div class="d-flex gap-2">
+<v-btn class="mt-3 w-35 text-white" color="green-darken-4" @click="confirmBooking()" :loading="buttonCnDisabled">Proceed to
   print</v-btn>
-<v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="cancelBooking()">Cancel</v-btn></div>
+<v-btn class="mt-3 w-35 text-white" color="green-darken-4" @click="cancelBooking()">Cancel</v-btn></div>
 
               
               <p v-if="validationStatus" class="text-danger errorText">
@@ -235,7 +238,13 @@ export default {
 
     // Check if discount is applicable
     const discountSection = this.userDetails.discountAmount > 0
-        ? `<p><strong>Discount Amount:</strong> ₹${this.userDetails.discountAmount}/-</p>`
+        ? `<p><strong>Student TicketCharge:</strong> ₹${Math.round(this.userDetails.studentTicketCharge)}/-</p>
+        <p><strong>Discount Amount:</strong> -₹${Math.round(this.bookedDetails.studentDiscount)}/-</p>
+        <p><strong>Payable StudentCharge:</strong> ₹${Math.round(this.userDetails.payableStudentCharge)}/-</p>`
+        : "";
+        const discountText = this.userDetails.discountAmount > 0
+        ? `<p><strong>You saved ₹${Math.round(this.bookedDetails.studentDiscount)} on this ticket.</strong></p>
+       `
         : "";
 
     // Construct the ticket content
@@ -252,9 +261,10 @@ export default {
           <p><b>${this.userDetails.ticketId}</b></p>
           <p> ${this.userDetails.visitDate}, ${formattedTime}</p>
         </div>
-        <p style="margin-top: 10px; font-size: 14px;">Cancellation not available</p>
-        ${discountSection}
-        <p><strong>Total Amount: ₹${this.userDetails.grandTotal}/-</strong></p>
+                ${discountSection}
+        <p><strong>Total Amount: ₹${Math.round(this.userDetails.grandTotal)}/-</strong></p>
+         <p style="margin-top: 10px; font-size: 14px;">Cancellation not available</p>
+        ${discountText}
         <p style="margin-top: 10px; font-size: 14px;">Thank you visit again.</p>
         <p style="margin-top: 10px; font-size: 14px;">www.aksharammuseum.com</p>
       </div>
