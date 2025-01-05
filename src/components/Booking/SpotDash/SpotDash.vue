@@ -60,8 +60,11 @@
                   <v-icon class="mdi mdi-cash" size="large" color="white"></v-icon>
                 </div>
                 <div class="d-flex flex-column">
-                  <p class="text-white mb-0 text-style py-0"><v-icon class="mdi mdi-currency-inr" size="16"
-                      color="white"></v-icon>{{cumulativeIncome}}
+                  <p v-if="cumulativeIncome>0" class="text-white mb-0 text-style py-0"><v-icon class="mdi mdi-currency-inr" size="16"
+                      color="white"></v-icon>{{cumulativeIncome?.overAllRevenue || 0}}
+                  </p>
+                  <p v-else class="text-white mb-0 text-style py-0"><v-icon class="mdi mdi-currency-inr" size="16"
+                      color="white"></v-icon>0
                   </p>
                   <p class="text-type mt-0 py-0">Cumulative Income</p>
                 </div>
@@ -89,7 +92,7 @@
           <div class="d-flex justify-content-between px-3 mt-1">
             <div>
               <p class=" my-0">Total income:
-                &#8377;{{ yearlyIncome }}</p>
+                &#8377;{{ Math.round(yearlyIncome) }}</p>
               <p class="my-0">Total tickets : {{yearlyTickets }}</p>
             </div>
             <!-- <v-select :items="['2024', '2023', '2022']" density=compact class="year-select" v-model="year"></v-select> -->
@@ -126,7 +129,27 @@
             </div>
           </div>
         </v-card>
-        <v-card height="430" width="358" class="rounded-3 px-3">
+         <!-- discount card -->
+        <v-card height="72" width="359" class="rounded-3">
+            <v-img src="@/assets/Block3.png" class="card-style"></v-img>
+            <div style="height: 40px; width: 240px;" class="subcard">
+              <div class="d-flex gap-2">
+                <div class="icon-style card3 mt-2">
+                  <v-icon class="mdi mdi-cash" size="large" color="white"></v-icon>
+                </div>
+                <div class="d-flex flex-column">
+                  <p v-if="cumulativeIncome>0" class="text-white mb-0 text-style py-0"><v-icon class="mdi mdi-currency-inr" size="16"
+                      color="white"></v-icon>{{discountCount}}
+                  </p>
+                  <p v-else class="text-white mb-0 text-style py-0"><v-icon class="mdi mdi-currency-inr" size="16"
+                      color="white"></v-icon>0
+                  </p>
+                  <p class="text-type mt-0 py-0">Cumulative Discount count</p>
+                </div>
+              </div>
+            </div>
+          </v-card>
+        <!-- <v-card height="430" width="358" class="rounded-3 px-3">
           <div class="d-flex justify-content-between align-items-center">
             <p class="mt-2 ">Scanned Visitors: {{scannedVisitors}}</p>
             <v-btn-toggle v-model="togglePie" variant="text" class="button">
@@ -146,9 +169,6 @@
               </template>
               <template v-else>
                 <div class="d-flex mt-1 mb-4">
-
-                  <!-- <v-select :items="['2024', '2023', '2022']" density=compact class="year-select"
-                v-model="year1"></v-select> -->
                 </div>
                 <PieChart :labels="labelsPie" :data="dataPie" />
               </template>
@@ -164,7 +184,7 @@
             </div>
           </div>
 
-        </v-card>
+        </v-card> -->
       </div>
       <v-card class="mt-4 ms-5 me-4">
         <!-- <TicketTable /> -->
@@ -177,11 +197,11 @@
 <script>
 import { mapGetters } from 'vuex';
 import BarChart from './BarChart.vue';
-import PieChart from './PieChart.vue';
+// import PieChart from './PieChart.vue';
 // import TicketTable from './TicketTable.vue';
 export default {
   components: {
-    BarChart, PieChart
+    BarChart
   },
   data() {
     return {
@@ -193,22 +213,22 @@ export default {
       currentYear: '',
       years: [], // Array of years for the dropdown
       selectedYear: '', // The selected year
-      errorPie: '',
+      // errorPie: '',
       errorBar: '',
       monthNames : ['January', 'February', 'March', 'April', 'May', 'June','July', 'August', 'September', 'October', 'November', 'December']
     }
   },
   computed: {
-    ...mapGetters('booking', ['getUserCountByRange','getTotalRevenue','getUserCount','getIncomeByDate','getBarData','getBarData2','getBarTotal','getBarTotal2','getBarLabel','getTickets']),
-    labelsPie() {
-      return this.$store.getters.getPieLabel;
-    },
+    ...mapGetters('booking', ['getUserCountByRange','getTotalRevenue','getUserCount','getIncomeByDate','getBarData','getBarData2','getBarTotal','getBarTotal2','getBarLabel','getTickets','getDiscountCount']),
+    // labelsPie() {
+    //   return this.$store.getters.getPieLabel;
+    // },
     labelsBar() {
       return this.getBarLabel;
     },
-    dataPie() {
-      return this.$store.getters.getPieData;
-    },
+    // dataPie() {
+    //   return this.$store.getters.getPieData;
+    // },
     dataBar() {
       return this.getBarData;
     },
@@ -235,9 +255,12 @@ export default {
       console.log('hgffhgfg',this.getIncomeByDate)
       return this.getIncomeByDate;
     },
-    scannedVisitors() {
-      return this.$store.getters.getPieTotal;
+    discountCount() {
+    return this.getDiscountCount;
     },
+     // scannedVisitors() {
+    //   return this.$store.getters.getPieTotal;
+    // },
     // totalTicketByRange() {
     //   return this.cumulativeTickets[0].publicTicketCount + this.cumulativeTickets[0].institutionTicketCount + this.cumulativeTickets[0].foreignerTicketCount
     // },
@@ -246,29 +269,29 @@ export default {
     // }
   },
   methods: {
-    async fetchPieChart() {
-      this.pieError = false;
-      try {
-        const formattedDate = `${this.currentYear}-${this.currentMonth}-${this.currentDay}`; 
-        await this.$store.dispatch('fetchPieChartDate', formattedDate)
-      }
-      catch (error) {
-        console.error(error);
-        this.errorPie = error.message;
-        this.pieError = true;
-      }
-    },
-    async fetchPieChartAll() {
-      this.pieError = false;
-      try {
-        await this.$store.dispatch('fetchPieChartVisited')
-      }
-      catch (error) {
-        console.error(error);
-        this.errorPie = error.message;
-        this.pieError = true;
-      }
-},
+    // async fetchPieChart() {
+    //   this.pieError = false;
+    //   try {
+    //     const formattedDate = `${this.currentYear}-${this.currentMonth}-${this.currentDay}`; 
+    //     await this.$store.dispatch('fetchPieChartDate', formattedDate)
+    //   }
+    //   catch (error) {
+    //     console.error(error);
+    //     this.errorPie = error.message;
+    //     this.pieError = true;
+    //   }
+    // },
+//     async fetchPieChartAll() {
+//       this.pieError = false;
+//       try {
+//         await this.$store.dispatch('fetchPieChartVisited')
+//       }
+//       catch (error) {
+//         console.error(error);
+//         this.errorPie = error.message;
+//         this.pieError = true;
+//       }
+// },
     async fetchBarChart() {
       this.barError = false;
       const payload = {
@@ -326,13 +349,23 @@ export default {
     },
     async fetchIncomeMonth() {
       try {
-        const index = parseInt(this.currentMonth, 10);
-        const month = this.monthNames[index - 1];
         const payload = {
-          year: this.currentYear,
-          month: month
+          startDate : `${this.currentYear}-${this.currentMonth}-01`,
+          endDate : `${this.currentYear}-${this.currentMonth}-30`,
         }
-        await this.$store.dispatch('fetchIncomeByMonth', payload);
+        await this.$store.dispatch('booking/fetchIncomeByRange', payload);
+      }
+      catch (error) {
+        console.error(error);
+      }
+    },
+    async fetchNoofDiscount() {
+      try {
+        const payload = {
+          startDate : `${this.currentYear}-${this.currentMonth}-01`,
+          endDate : `${this.currentYear}-${this.currentMonth}-${this.currentDay}`,
+        }
+        await this.$store.dispatch('booking/fetchDiscountCount', payload);
       }
       catch (error) {
         console.error(error);
@@ -393,7 +426,8 @@ export default {
     this.fetchTicketDate();
     this.fetchTotalTickets();
     this.fetchTotalIncome();
-    this.fetchPieChart();
+    this.fetchNoofDiscount();
+    // this.fetchPieChart();
     this.fetchBarChart();
     // this.fetchBarChartTickets();
   },

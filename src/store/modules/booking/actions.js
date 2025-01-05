@@ -518,6 +518,48 @@ response.data.forEach(item => {
           throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
         }
       },
+      //fetchIncomeByRange
+      async fetchIncomeByRange({ rootGetters, commit },payload) {
+        try {
+          const response = await axios.get(`${rootGetters.getUrl}/api/spotData/visitorsCountByRangeOfDate?startDate=${payload.startDate}&endDate=${payload.endDate}`,
+            {
+              headers: {
+                Authorization: `Bearer ${rootGetters.getToken}`
+              }
+            });
+          if (response.status >= 200 && response.status < 300) {
+            // console.log(response.data)
+            commit('setIncomeByDate', response.data);
+            
+            return true;
+          }
+        }
+        catch (err) {
+          console.error(err);
+          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+        }
+      },
+      // fetch discount
+      async fetchDiscountCount({ rootGetters, commit },payload) {
+        try {
+          const response = await axios.get(`${rootGetters.getUrl}/api/spotData/visitorsCountByRangeOfDate?startDate=${payload.startDate}&endDate=${payload.endDate}`,
+            {
+              headers: {
+                Authorization: `Bearer ${rootGetters.getToken}`
+              }
+            });
+          if (response.status >= 200 && response.status < 300) {
+            // console.log(response.data)
+            commit('setDiscountCount', response.data.no_Of_Discount || 0);
+            
+            return true;
+          }
+        }
+        catch (err) {
+          console.error(err);
+          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+        }
+      },
       // fetch bargraph
       async totalIncomeBarGraph({ commit, rootGetters }, payload) {
         try {
