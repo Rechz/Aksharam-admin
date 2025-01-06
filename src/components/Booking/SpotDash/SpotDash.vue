@@ -20,7 +20,7 @@
                 </div>
                 <div class="d-flex flex-column">
                   <p class="text-style"><v-icon class="mdi mdi-currency-inr" size="24" color="white"></v-icon>{{
-                    dailyIncome?.overAllRevenue || 0
+                    Math.round(dailyIncome?.overAllRevenue) || 0
                     }}
                   </p>
                   <p class="text-type">Total Earning</p>
@@ -61,7 +61,7 @@
                 </div>
                 <div class="d-flex flex-column">
                   <p v-if="cumulativeIncome>0" class="text-white mb-0 text-style py-0"><v-icon class="mdi mdi-currency-inr" size="16"
-                      color="white"></v-icon>{{cumulativeIncome?.overAllRevenue || 0}}
+                      color="white"></v-icon>{{ Math.round(cumulativeIncome?.overAllRevenue) || 0}}
                   </p>
                   <p v-else class="text-white mb-0 text-style py-0"><v-icon class="mdi mdi-currency-inr" size="16"
                       color="white"></v-icon>0
@@ -135,14 +135,12 @@
             <div style="height: 40px; width: 240px;" class="subcard">
               <div class="d-flex gap-2">
                 <div class="icon-style card3 mt-2">
-                  <v-icon class="mdi mdi-cash" size="large" color="white"></v-icon>
+                  <v-icon class="mdi mdi-percent" size="large" color="white"></v-icon>
                 </div>
                 <div class="d-flex flex-column">
-                  <p v-if="cumulativeIncome>0" class="text-white mb-0 text-style py-0"><v-icon class="mdi mdi-currency-inr" size="16"
-                      color="white"></v-icon>{{discountCount}}
+                  <p v-if="discountCount>0" class="text-white mb-0 text-style py-0">{{discountCount}}
                   </p>
-                  <p v-else class="text-white mb-0 text-style py-0"><v-icon class="mdi mdi-currency-inr" size="16"
-                      color="white"></v-icon>0
+                  <p v-else class="text-white mb-0 text-style py-0">0
                   </p>
                   <p class="text-type mt-0 py-0">Cumulative Discount count</p>
                 </div>
