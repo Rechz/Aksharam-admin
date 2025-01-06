@@ -560,6 +560,25 @@ response.data.forEach(item => {
           throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
         }
       },
+      // edit discount
+      async editDiscount({ rootGetters}, payload) {
+        try {
+          const response = await axios.put(`${rootGetters.getUrl}/api/category/updateDiscountCount?id=${payload.id}`, payload.data,
+            {
+              headers: {
+                Authorization: `Bearer ${rootGetters.getToken}`
+              }
+            });
+            if (response.status >= 200 && response.status < 300) {
+              // commit('setSpotBooking', response.data);
+                return true;
+            }
+        }
+        catch (err) {
+          console.error(err);
+          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+        }
+      },
       // fetch bargraph
       async totalIncomeBarGraph({ commit, rootGetters }, payload) {
         try {

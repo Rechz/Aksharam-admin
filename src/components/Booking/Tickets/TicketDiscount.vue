@@ -3,11 +3,11 @@
     <v-container v-else class="pb-8 px-0" fluid>
   <div class="d-flex justify-space-between">
       <v-dialog v-model="dialog" max-width="500px">
-        <template v-slot:activator="{ props }">
+        <!-- <template v-slot:activator="{ props }">
           <div class="d-flex justify-content-start">
             <v-btn color="#2C7721" size="large" v-bind="props" class="text-capitalize mb-3"> + Add Discout count</v-btn>
           </div>
-        </template>
+        </template> -->
         <v-card style="width: 500px; height:auto; border-radius: 15px;">
           <v-card-title class="d-flex justify-content-between px-4 mb-3 align-items-center"
             style="background-color: #216D17; color: #FFFFFF;">
@@ -18,7 +18,7 @@
             <v-container class="pb-1">
               <v-row>
                 <v-col cols="12" sm="12" md="12" class="py-0">
-                  <v-text-field v-model="editedItem.userType" label="UserType" density="comfortable"
+                  <v-text-field v-model="editedItem.userType" label="UserType" density="comfortable" disabled
                     class="slot" variant="outlined"></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="12" md="12" class="py-0">
@@ -74,15 +74,15 @@
             <td class="text-center">{{ item.disCount }}</td>
             <!-- <td class="text-center">{{ item.totalCapacity }}</td>
             <td class="text-center"><v-chip :color="item.status ? 'green' : 'red'">{{
-                item.status?'Active':'Inactive' }}</v-chip></td>
+                item.status?'Active':'Inactive' }}</v-chip></td> -->
             <td class="text-center">
               <v-icon size="default" color="teal-darken-3" class="" @click="editItem(item)">
                 mdi-pencil
-              </v-icon> -->
+              </v-icon> 
               <!-- <v-icon size="large" color="danger" class="ms-4" @click="deleteItem(item)">
                 mdi-trash-can
-              </v-icon> -->
-            <!-- </td> -->
+              </v-icon>  -->
+            </td> 
           </tr>
         </template>
       </v-data-table>
@@ -116,7 +116,7 @@
           { title: 'Discount Count', key: 'disCount', sortable: false, align: 'center' },
           // { title: 'No.of Tickets', key: 'totalCapacity', sortable: false, align: 'center' },
           // { title: 'Status', key: 'status', sortable: false, align: 'center' },
-          // { title: 'Edit', key: 'actions', sortable: false, align: 'center' },
+          { title: 'Edit', key: 'actions', sortable: false, align: 'center' },
         ],
         editedIndex: -1,
         editedItem: {},
@@ -160,7 +160,7 @@
   
     methods: {
       editItem(item) {
-        this.editedIndex = this.slots.indexOf(item)
+        this.editedIndex = this.discounts.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
@@ -237,33 +237,33 @@
           this.snackbar = true;
         }
       },
-      // async update() {
-      //   this.loading = true;
-      //   const payload = { id: this.editedItem.id, data: {
-      //       "id": this.editedItem.id,
-      //       "slotStartTime": this.editedItem.slotStartTime,
-      //       "status": this.editedItem.status,
-      //       "slotEndTime": this.editedItem.slotEndTime,
-      //       "capacity": this.editedItem.totalCapacity
-      //     }};
-      //   try {
-      //     const success = await this.$store.dispatch('booking/editSlot',payload);
-      //     if (success) {
-      //       this.loading = false;
-      //       this.close();
-      //       this.message = 'Slot details updated !!';
-      //       this.color = '#C8E6C9'
-      //       this.snackbar = true;
-      //       this.getSlot();
-      //     }
-      //   }
-      //   catch (error) {
-      //     this.loading = false
-      //     this.message = error.message + '!!';
-      //     this.color = '#C62828';
-      //     this.snackbar = true;
-      //   }
-      // },
+      async update() {
+        this.loading = true;
+        const payload = { id: this.editedItem.id, data: {
+           "userType": this.editedItem.userType,
+            // "spotCapacity": this.editedItem.totalCapacity,
+            // "status": true,
+            // "totalCapacity": this.editedItem.totalCapacity,
+            "disCount": this.editedItem.disCount,
+          }};
+        try {
+          const success = await this.$store.dispatch('booking/editDiscount',payload);
+          if (success) {
+            this.loading = false;
+            this.close();
+            this.message = 'Discount count updated !!';
+            this.color = '#C8E6C9'
+            this.snackbar = true;
+            this.getDiscount();
+          }
+        }
+        catch (error) {
+          this.loading = false
+          this.message = error.message + '!!';
+          this.color = '#C62828';
+          this.snackbar = true;
+        }
+      },
     },
     mounted() {
       this.getDiscount();
