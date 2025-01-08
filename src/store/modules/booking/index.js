@@ -18,7 +18,7 @@ export default {
            SpotBooking: JSON.parse(sessionStorage.getItem('SpotPublic')) || [],
            User: JSON.parse(sessionStorage.getItem('User')) || [],
            ticketByDate: JSON.parse(sessionStorage.getItem('ticketByDate')) || [],
-           totalRevenue: sessionStorage.getItem('totalRevenue') || '',
+           totalRevenue: JSON.parse(sessionStorage.getItem('totalRevenue')) || [],
            userCount: JSON.parse(sessionStorage.getItem('userCount')) || [],
            userCountByRange: JSON.parse(sessionStorage.getItem('userCountByRange')) || [],
            incomeByDate: JSON.parse(sessionStorage.getItem('incomeByDate')) || [],
@@ -29,7 +29,7 @@ export default {
            total2Bar: sessionStorage.getItem('total2Bar') || 0,
            allDiscount: JSON.parse(sessionStorage.getItem('allDiscount')) || [],
            incomeByRange: JSON.parse(sessionStorage.getItem('incomeByRange')) || [],
-           discountCount: sessionStorage.getItem('discountCount') || 0,
+           discountCount: JSON.parse(sessionStorage.getItem('discountCount')) || [],
 
 
         }

@@ -4,7 +4,16 @@
       <div style="background-color: #D7E8CD;">
       <div class="d-flex gap-md-4 gap-2 container px-0 flex-wrap justify-content-md-start justify-content-center ms-5">
         <div class="d-flex flex-xl-row flex-column gap-md-4 gap-2 flex-wrap">
-          <v-card height="160" width="359" class="rounded-3">
+
+          <v-card  width="760" height="233" class="rounded-3">
+            <div class="d-flex justify-content-end">
+            <v-btn-toggle v-model="toggle" variant="text" class="button mt-3 me-2">
+                    <v-btn size="small" class="button-style text-black" :value="'Today'" @click="fetchDate">Today</v-btn>
+                    <v-btn size="small" class="button-style text-black" :value="'Monthly'"
+                      @click="fetchMonth">Monthly</v-btn>
+            </v-btn-toggle></div>
+          <div class="d-flex flex-xl-row flex-column gap-md-4 gap-2 flex-wrap mt-3 mb-2 mx-3">
+          <v-card height="160" width="350" class="rounded-3">
             <v-img src="@/assets/Block1.png" class="card-style"></v-img>
             <div style="height: 128px; width: 327px;" class="subcard">
               <div class="d-flex flex-column gap-5">
@@ -12,15 +21,15 @@
                   <div class="icon-style">
                     <v-icon class="mdi mdi-cash" size="large" color="white"></v-icon>
                   </div>
-                  <v-btn-toggle v-model="toggle" variant="text" class="button">
+                  <!-- <v-btn-toggle v-model="toggle" variant="text" class="button">
                     <v-btn size="small" class="button-style" :value="'Today'" @click="fetchIncomeDate">Today</v-btn>
                     <v-btn size="small" class="button-style" :value="'Monthly'"
                       @click="fetchIncomeMonth">Monthly</v-btn>
-                  </v-btn-toggle>
+                  </v-btn-toggle> -->
                 </div>
                 <div class="d-flex flex-column">
                   <p class="text-style"><v-icon class="mdi mdi-currency-inr" size="24" color="white"></v-icon>{{
-                    Math.round(dailyIncome?.overAllRevenue) || 0
+                    Math.round(dailyIncome[0]?.overAllIncome) || 0
                     }}
                   </p>
                   <p class="text-type">Total Earning</p>
@@ -28,7 +37,7 @@
               </div>
             </div>
           </v-card>
-          <v-card height="160" width="359" class="rounded-3">
+          <v-card height="160" width="350" class="rounded-3">
             <v-img src="@/assets/Block2.png" class="card-style"></v-img>
             <div style="height: 128px; width: 327px;" class="subcard">
               <div class="d-flex flex-column gap-5">
@@ -36,11 +45,11 @@
                   <div class="icon-style card2">
                     <v-icon class="mdi mdi-ticket-confirmation" size="large" color="white"></v-icon>
                   </div>
-                  <v-btn-toggle v-model="toggle1" variant="text" class="button button2">
+                  <!-- <v-btn-toggle v-model="toggle1" variant="text" class="button button2">
                     <v-btn size="small" class="button-style" :value="'Today'" @click="fetchTicketDate">Today</v-btn>
                     <v-btn size="small" class="button-style" :value="'Monthly'"
                       @click="fetchTicketMonth">Monthly</v-btn>
-                  </v-btn-toggle>
+                  </v-btn-toggle> -->
                 </div>
                 <div class="d-flex flex-column">
                   <p class="text-style">{{ dailyTickets[0]?.totalVisitsCount || 0 }}</p>
@@ -49,6 +58,8 @@
               </div>
             </div>
           </v-card>
+        </div>
+      </v-card>
         </div>
 
         <div class="d-flex flex-column flex-wrap gap-3">
@@ -60,12 +71,12 @@
                   <v-icon class="mdi mdi-cash" size="large" color="white"></v-icon>
                 </div>
                 <div class="d-flex flex-column">
-                  <p v-if="cumulativeIncome>0" class="text-white mb-0 text-style py-0"><v-icon class="mdi mdi-currency-inr" size="16"
-                      color="white"></v-icon>{{ Math.round(cumulativeIncome?.overAllRevenue) || 0}}
+                  <p  class="text-white mb-0 text-style py-0"><v-icon class="mdi mdi-currency-inr" size="16"
+                      color="white"></v-icon>{{Math.round(cumulativeIncome[0]?.overAllIncome) || 0 }}
                   </p>
-                  <p v-else class="text-white mb-0 text-style py-0"><v-icon class="mdi mdi-currency-inr" size="16"
+                  <!-- <p  class="text-white mb-0 text-style py-0"><v-icon class="mdi mdi-currency-inr" size="16"
                       color="white"></v-icon>0
-                  </p>
+                  </p> -->
                   <p class="text-type mt-0 py-0">Cumulative Income</p>
                 </div>
               </div>
@@ -85,10 +96,28 @@
               </div>
             </div>
           </v-card>
+           <!-- discount card -->
+        <v-card height="72" width="359" class="rounded-3">
+            <v-img src="@/assets/Block3.png" class="card-style"></v-img>
+            <div style="height: 40px; width: 240px;" class="subcard">
+              <div class="d-flex gap-2">
+                <div class="icon-style card3 mt-2">
+                  <v-icon class="mdi mdi-account-group-outline" size="large" color="white"></v-icon>
+                </div>
+                <div class="d-flex flex-column">
+                  <p  class="text-white mb-0 text-style py-0">{{discountCount[0]?.no_Of_Discount || 0}}
+                  </p>
+                  <!-- <p v-else class="text-white mb-0 text-style py-0">0
+                  </p> -->
+                  <p class="text-type mt-0 py-0">Cumulative Discount count</p>
+                </div>
+              </div>
+            </div>
+          </v-card>
         </div>
       </div>
       <div class="d-flex flex-wrap  gap-4 mt-4 ms-5">
-        <v-card height="430" width="741" max-width="100%" class="rounded-3 p-3">
+        <v-card height="450" width="1000" max-width="100%" class="rounded-3 p-4">
           <div class="d-flex justify-content-between px-3 mt-1">
             <div>
               <p class=" my-0">Total income:
@@ -129,24 +158,7 @@
             </div>
           </div>
         </v-card>
-         <!-- discount card -->
-        <v-card height="72" width="359" class="rounded-3">
-            <v-img src="@/assets/Block3.png" class="card-style"></v-img>
-            <div style="height: 40px; width: 240px;" class="subcard">
-              <div class="d-flex gap-2">
-                <div class="icon-style card3 mt-2">
-                  <v-icon class="mdi mdi-percent" size="large" color="white"></v-icon>
-                </div>
-                <div class="d-flex flex-column">
-                  <p v-if="discountCount>0" class="text-white mb-0 text-style py-0">{{discountCount}}
-                  </p>
-                  <p v-else class="text-white mb-0 text-style py-0">0
-                  </p>
-                  <p class="text-type mt-0 py-0">Cumulative Discount count</p>
-                </div>
-              </div>
-            </div>
-          </v-card>
+        
         <!-- <v-card height="430" width="358" class="rounded-3 px-3">
           <div class="d-flex justify-content-between align-items-center">
             <p class="mt-2 ">Scanned Visitors: {{scannedVisitors}}</p>
@@ -234,7 +246,7 @@ export default {
       return this.getBarData2;
     },
     cumulativeTickets() { 
-      console.log("getUserCountByRange:", this.getUserCountByRange);
+      // console.log("getUserCountByRange:", this.getUserCountByRange);
       return this.getUserCountByRange;
     },
     yearlyTickets() {
@@ -244,16 +256,18 @@ export default {
       return this.getUserCount;
     },
     cumulativeIncome() { 
+      // console.log("cumulative income spot",this.getTotalRevenue)
       return this.getTotalRevenue;
     },
     yearlyIncome() {
       return this.getBarTotal;
     },
     dailyIncome() {
-      console.log('hgffhgfg',this.getIncomeByDate)
+      // console.log('hgffhgfg',this.getIncomeByDate)
       return this.getIncomeByDate;
     },
     discountCount() {
+      // console.log("discount number",this.getDiscountCount)
     return this.getDiscountCount;
     },
      // scannedVisitors() {
@@ -290,6 +304,14 @@ export default {
 //         this.pieError = true;
 //       }
 // },
+fetchDate(){
+  this.fetchIncomeDate();
+  this.fetchTicketDate();
+},
+fetchMonth(){
+  this.fetchIncomeMonth();
+  this.fetchTicketMonth();
+},
     async fetchBarChart() {
       this.barError = false;
       const payload = {
@@ -328,7 +350,10 @@ export default {
       }
     },
     async fetchTotalIncome() {
-      const payload = `${this.currentYear}-${this.currentMonth}-${this.currentDay}`;
+      const payload = {
+        startDate: '2024-01-01',
+        endDate : `${this.currentYear}-${this.currentMonth}-${this.currentDay}`,
+      } 
       try {
         await this.$store.dispatch('booking/fetchTotalRevenue',payload)
       }
@@ -360,7 +385,7 @@ export default {
     async fetchNoofDiscount() {
       try {
         const payload = {
-          startDate : `${this.currentYear}-${this.currentMonth}-01`,
+          startDate : `2024-01-01`,
           endDate : `${this.currentYear}-${this.currentMonth}-${this.currentDay}`,
         }
         await this.$store.dispatch('booking/fetchDiscountCount', payload);
@@ -404,8 +429,8 @@ export default {
   //   document.body.style.backgroundColor = '';
   // this.fetchBarChart();
 
-  // console.log('cumulativeTickets',this.dailyTicketCount);
-  console.log('barchart','bar1',this.getBarData,'bar1',this.getBarData2,'bar1',this.getBarTotal,'bar1',this.getBarTotal2)
+  // console.log('cumulativeIncomeytttt',this.cumulativeIncome);
+  // console.log('barchart','bar1',this.getBarData,'bar1',this.getBarData2,'bar1',this.getBarTotal,'bar1',this.getBarTotal2)
   },
   created() {
     const today = new Date();
