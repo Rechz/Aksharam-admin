@@ -90,7 +90,7 @@ export default {
         try {
           const response = await axios.get(`${rootGetters.getUrl}/api/slot/bookDate?bDate=${payload}`);
           if (response.status >= 200 && response.status < 300) {
-            console.log(response.data)
+            // console.log(response.data)
             commit('setSlot', response.data);
             return true;
           }
@@ -142,7 +142,7 @@ export default {
         try {
           const response = await axios.get(`${rootGetters.getUrl}/api/category/getTypeByCategoryId?id=${payload}`);
           if (response.status >= 200 && response.status < 300) {
-            console.log(response.data)
+            // console.log(response.data)
             const result = {};
 
 // Iterate through each item in the response array
@@ -416,17 +416,37 @@ response.data.forEach(item => {
       },
 
       // Get Revenue details by Date
+      // async fetchTotalRevenue({ rootGetters, commit },payload) {
+      //   try {
+      //     const response = await axios.get(`${rootGetters.getUrl}/api/spotData/totalRevenueByDate?visitDate=${payload}`,
+      //       {
+      //         headers: {
+      //           Authorization: `Bearer ${rootGetters.getToken}`
+      //         }
+      //       });
+      //     if (response.status >= 200 && response.status < 300) {
+      //       console.log("cumulative income",response.data)
+      //       commit('setTotalRevenue', response.data);
+      //       return true;
+      //     }
+      //   }
+      //   catch (err) {
+      //     console.error(err);
+      //     throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+      //   }
+      // },
       async fetchTotalRevenue({ rootGetters, commit },payload) {
         try {
-          const response = await axios.get(`${rootGetters.getUrl}/api/spotData/totalRevenueByDate?visitDate=${payload}`,
+          const response = await axios.get(`${rootGetters.getUrl}/api/spotData/visitorsCountByRangeOfDate?startDate=${payload.startDate}&endDate=${payload.endDate}`,
             {
               headers: {
                 Authorization: `Bearer ${rootGetters.getToken}`
               }
             });
           if (response.status >= 200 && response.status < 300) {
-            // console.log(response.data.overAllRevenue)
-            commit('setTotalRevenue', response.data.overAllRevenue || 0);
+            // console.log(response.data)
+            commit('setTotalRevenue', response.data);
+            
             return true;
           }
         }
@@ -549,8 +569,8 @@ response.data.forEach(item => {
               }
             });
           if (response.status >= 200 && response.status < 300) {
-            // console.log(response.data)
-            commit('setDiscountCount', response.data.no_Of_Discount || 0);
+            // console.log("discount number action",response.data.no_Of_Discount)
+            commit('setDiscountCount', response.data);
             
             return true;
           }
@@ -590,7 +610,7 @@ response.data.forEach(item => {
     
             if (response.status === 200) {
                 const data = response.data;
-                console.log('data', data);
+                // console.log('data', data);
     
                 const labels = [];
                 const incomes = [];

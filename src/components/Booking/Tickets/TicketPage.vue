@@ -1,6 +1,6 @@
 <template>
-  <v-skeleton-loader v-if="skeleton" type="table"></v-skeleton-loader>
-  <v-container class="py-4 px-0" fluid v-else>
+  
+  <v-container class="py-4 px-0" fluid >
     <div class="d-flex justify-content-between mb-3">
       <v-text-field label="Search" v-model="search" prepend-inner-icon="mdi-magnify" class="search" density="compact"
         @click="search"></v-text-field>
@@ -8,7 +8,8 @@
       <v-select v-model="sortColumn" :items="category" density="compact" item-title="category" item-value="id"
         prepend-inner-icon="mdi-sort-variant" label="Sort by" class="sort"></v-select>
     </div>
-    <v-data-table :headers="headers" :items="filteredTickets" style="background-color: #f9faf1;" max-width="100%"
+    <v-skeleton-loader v-if="skeleton" type="table"></v-skeleton-loader>
+    <v-data-table v-else :headers="headers" :items="filteredTickets" style="background-color: #f9faf1;" max-width="100%"
     item-value="ticketId" :header-props="{ style: 'background-color: #216D17; color: #FFFFFF;' }" items-per-page="10">
     <template v-slot:item='{ item, index }'>
         <tr style="background-color:#FCFDF6; color:black;">
@@ -240,6 +241,7 @@ export default {
   watch: {
     async sortColumn(value) {
       console.log("watcher", value)
+      this.skeleton = true;
       if(value) {
         const payload = value;
       try {

@@ -49,7 +49,7 @@ export default {
     },
     setTotalRevenue(state, payload) {
         state.totalRevenue = payload;
-        sessionStorage.setItem('totalRevenue', payload);
+        sessionStorage.setItem('totalRevenue', JSON.stringify(payload));
     },
     setUserCount(state, payload) {
         state.userCount = payload;
@@ -87,6 +87,6 @@ export default {
     },
     setDiscountCount(state, payload) {
         state.discountCount = payload;
-        sessionStorage.setItem('discountCount', payload)
+        sessionStorage.setItem('discountCount', JSON.stringify(payload))
     }
 }
