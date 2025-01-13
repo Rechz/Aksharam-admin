@@ -117,7 +117,7 @@
         </div>
       </div>
       <div class="d-flex flex-wrap  gap-4 mt-4 ms-5">
-        <v-card height="450" width="1000" max-width="100%" class="rounded-3 p-4">
+        <v-card height="450" width="741" max-width="100%" class="rounded-3 p-4">
           <div class="d-flex justify-content-between px-3 mt-1">
             <div>
               <p class=" my-0">Total income:
@@ -159,12 +159,12 @@
           </div>
         </v-card>
         
-        <!-- <v-card height="430" width="358" class="rounded-3 px-3">
+        <v-card height="430" width="358" class="rounded-3 px-3">
           <div class="d-flex justify-content-between align-items-center">
-            <p class="mt-2 ">Scanned Visitors: {{scannedVisitors}}</p>
+            <p class="mt-2">Total Visitors: {{ scannedVisitors || 0 }}</p>
             <v-btn-toggle v-model="togglePie" variant="text" class="button">
               <v-btn size="small" class=" barbtn" :value="'Today'" @click="fetchPieChart">Today</v-btn>
-              <v-btn size="small" class=" barbtn" :value="'All'" @click="fetchPieChartAll">All</v-btn>
+              <v-btn size="small" class=" barbtn" :value="'Monthly'" @click="fetchPieChartAll">All</v-btn>
             </v-btn-toggle>
           </div>
 
@@ -179,6 +179,9 @@
               </template>
               <template v-else>
                 <div class="d-flex mt-1 mb-4">
+
+                  <!-- <v-select :items="['2024', '2023', '2022']" density=compact class="year-select"
+                v-model="year1"></v-select> -->
                 </div>
                 <PieChart :labels="labelsPie" :data="dataPie" />
               </template>
@@ -194,7 +197,7 @@
             </div>
           </div>
 
-        </v-card> -->
+        </v-card>
       </div>
       <v-card class="mt-4 ms-5 me-4">
         <!-- <TicketTable /> -->
@@ -207,11 +210,11 @@
 <script>
 import { mapGetters } from 'vuex';
 import BarChart from './BarChart.vue';
-// import PieChart from './PieChart.vue';
+import PieChart from './PieChart.vue';
 // import TicketTable from './TicketTable.vue';
 export default {
   components: {
-    BarChart
+    BarChart, PieChart
   },
   data() {
     return {
@@ -223,22 +226,22 @@ export default {
       currentYear: '',
       years: [], // Array of years for the dropdown
       selectedYear: '', // The selected year
-      // errorPie: '',
+      errorPie: '',
       errorBar: '',
       monthNames : ['January', 'February', 'March', 'April', 'May', 'June','July', 'August', 'September', 'October', 'November', 'December']
     }
   },
   computed: {
-    ...mapGetters('booking', ['getUserCountByRange','getTotalRevenue','getUserCount','getIncomeByDate','getBarData','getBarData2','getBarTotal','getBarTotal2','getBarLabel','getTickets','getDiscountCount']),
-    // labelsPie() {
-    //   return this.$store.getters.getPieLabel;
-    // },
+    ...mapGetters('booking', ['getUserCountByRange','getTotalRevenue','getUserCount','getIncomeByDate','getBarData','getBarData2','getBarTotal','getBarTotal2','getBarLabel','getTickets','getDiscountCount','getPieLabel','getPieData','getPieTotal']),
+    labelsPie() {
+      return this.getPieLabel;
+    },
     labelsBar() {
       return this.getBarLabel;
     },
-    // dataPie() {
-    //   return this.$store.getters.getPieData;
-    // },
+    dataPie() {
+      return this.getPieData;
+    },
     dataBar() {
       return this.getBarData;
     },
@@ -270,9 +273,10 @@ export default {
       // console.log("discount number",this.getDiscountCount)
     return this.getDiscountCount;
     },
-     // scannedVisitors() {
-    //   return this.$store.getters.getPieTotal;
-    // },
+     scannedVisitors() {
+      console.log("getPieTotal", this.getPieTotal);
+      return this.getPieTotal;
+    },
     // totalTicketByRange() {
     //   return this.cumulativeTickets[0].publicTicketCount + this.cumulativeTickets[0].institutionTicketCount + this.cumulativeTickets[0].foreignerTicketCount
     // },
@@ -281,29 +285,37 @@ export default {
     // }
   },
   methods: {
-    // async fetchPieChart() {
-    //   this.pieError = false;
-    //   try {
-    //     const formattedDate = `${this.currentYear}-${this.currentMonth}-${this.currentDay}`; 
-    //     await this.$store.dispatch('fetchPieChartDate', formattedDate)
-    //   }
-    //   catch (error) {
-    //     console.error(error);
-    //     this.errorPie = error.message;
-    //     this.pieError = true;
-    //   }
-    // },
-//     async fetchPieChartAll() {
-//       this.pieError = false;
-//       try {
-//         await this.$store.dispatch('fetchPieChartVisited')
-//       }
-//       catch (error) {
-//         console.error(error);
-//         this.errorPie = error.message;
-//         this.pieError = true;
-//       }
-// },
+    async fetchPieChart() {
+      this.pieError = false;
+      const payload = {
+          date: `${this.currentYear}-${this.currentMonth}-${this.currentDay}`,
+          // date: '2024-12-18',
+          id: 0,
+        }
+      try {
+        await this.$store.dispatch('booking/fetchPieChartDate', payload)
+      }
+      catch (error) {
+        console.error(error);
+        this.errorPie = error.message;
+        this.pieError = true;
+      }
+    },
+    async fetchPieChartAll() {
+      this.pieError = false;
+      const payload = {
+          startDate : `${this.currentYear}-${this.currentMonth}-01`,
+          endDate : `${this.currentYear}-${this.currentMonth}-30`,
+        }
+      try {
+        await this.$store.dispatch('booking/fetchPieChartVisited',payload)
+      }
+      catch (error) {
+        console.error(error);
+        this.errorPie = error.message;
+        this.pieError = true;
+      }
+},
 fetchDate(){
   this.fetchIncomeDate();
   this.fetchTicketDate();
@@ -450,7 +462,7 @@ fetchMonth(){
     this.fetchTotalTickets();
     this.fetchTotalIncome();
     this.fetchNoofDiscount();
-    // this.fetchPieChart();
+    this.fetchPieChart();
     this.fetchBarChart();
     // this.fetchBarChartTickets();
   },
