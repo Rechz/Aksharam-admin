@@ -30,7 +30,9 @@ export default {
            allDiscount: JSON.parse(sessionStorage.getItem('allDiscount')) || [],
            incomeByRange: JSON.parse(sessionStorage.getItem('incomeByRange')) || [],
            discountCount: JSON.parse(sessionStorage.getItem('discountCount')) || [],
-
+           dataPie: JSON.parse(sessionStorage.getItem('dataPie')) || [],
+           labelsPie: JSON.parse(sessionStorage.getItem('labelsPie')) || ['Foreigner', 'Institution', 'Public'],
+           totalPie: sessionStorage.getItem('totalPie') || 0,
 
         }
     },

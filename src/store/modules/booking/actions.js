@@ -649,6 +649,81 @@ response.data.forEach(item => {
             throw new Error('Error fetching data: ' + error.message);
         }
     },
+    async fetchPieChartVisited({ rootGetters, commit }, payload) {
+      try {
+          const response = await axios.get(
+              `${rootGetters.getUrl}/api/spotData/visitorsCountByRangeOfDate?startDate=${payload.startDate}&endDate=${payload.endDate}`,
+              {
+                  headers: {
+                      Authorization: `Bearer ${rootGetters.getToken}`
+                  }
+              }
+          );
+  
+          if (response.status >= 200 && response.status < 300) {
+              const data = response.data;
+  
+              const labels = ['Public', 'Institution', 'Foreigner'];
+              const dataTotals = [
+                  data[0].publicTicketCount, 
+                  data[0].institutionTicketCount, 
+                  data[0].foreignerTicketCount 
+              ];
+              const total = data[0].totalVisitsCount;
+              console.log("piechart", dataTotals);
+              console.log("piechart", labels);
+              console.log("piechart", total);
+              commit('setPieChart', {
+                  label: labels,
+                  data: dataTotals,
+                  total: total
+              });
+  
+              return true;
+          }
+      } catch (err) {
+          console.error(err);
+          throw Error(err.response ? (err.response.data.message ?? err.response.data) : err.message);
+      }
+  },  
+  // piechart by date
+  async fetchPieChartDate({ rootGetters, commit }, payload) {
+    try {
+        const response = await axios.get(
+            `${rootGetters.getUrl}/api/spotData/visitorsCountByDate?vDate=${payload.date}&categoryId=${payload.id}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${rootGetters.getToken}`
+                }
+            }
+        );
+
+        if (response.status >= 200 && response.status < 300) {
+            const data = response.data;
+
+            const labels = ['Public', 'Institution', 'Foreigner'];
+            const dataTotals = [
+                data[0].publicTicketCount, 
+                data[0].institutionTicketCount, 
+                data[0].foreignerTicketCount 
+            ];
+            const total = data[0].totalVisitsCount;
+            console.log("piechart", dataTotals);
+            console.log("piechart", labels);
+            console.log("piechart", total);
+            commit('setPieChart', {
+                label: labels,
+                data: dataTotals,
+                total: total
+            });
+
+            return true;
+        }
+    } catch (err) {
+        console.error(err);
+        throw Error(err.response ? (err.response.data.message ?? err.response.data) : err.message);
+    }
+},  
     // getAllDiscount
     async fetchAllDiscount({ rootGetters, commit }) {
       try {

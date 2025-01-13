@@ -88,5 +88,13 @@ export default {
     setDiscountCount(state, payload) {
         state.discountCount = payload;
         sessionStorage.setItem('discountCount', JSON.stringify(payload))
-    }
+    },
+    setPieChart(state, { label, data, total }) {
+        state.dataPie = data;
+        sessionStorage.setItem('dataPie', JSON.stringify(data));
+        state.labelsPie = label;
+        sessionStorage.setItem('labelsPie', JSON.stringify(label));
+        state.totalPie = total;
+        sessionStorage.setItem('totalPie', total);
+      },
 }

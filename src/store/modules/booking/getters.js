@@ -23,4 +23,7 @@ export default {
     getAllDiscount: (state) => state.allDiscount,
     getIncomeByRange: (state) => state.incomeByRange,
     getDiscountCount: (state) => state.discountCount,
+    getPieData: (state) => state.dataPie,
+    getPieLabel: (state) => state.labelsPie,
+    getPieTotal: (state) => state.totalPie,
 }
