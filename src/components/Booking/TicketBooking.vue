@@ -54,16 +54,16 @@
                 <!-- <v-select clearable density="comfortable" variant="outlined" label="Select a payment mode" 
                                     width="300" :items="paymentMode" item-title="paymentType" 
                                     item-value="id" v-model="selectedMode"></v-select> -->
-                <!-- <v-chip-group v-model="selectedMode" selected-class="text-danger" column>
-                  <v-chip v-for="mode in filteredModes" :key="mode.id" :value="mode.id" size="large"
+                <v-chip-group v-model="selectedMode" selected-class="text-danger" column>
+                  <v-chip v-for="mode in paymentMode" :key="mode.id" :value="mode.id" size="large"
                     :disabled="!selectedCat">
-                    {{ mode.paymentType }} v-if="selectedCat === category.find(cat => cat.category === 'Institution').id "
+                    {{ mode.paymentType }} 
                   </v-chip>
-                </v-chip-group> -->
+                </v-chip-group>
                 <v-btn 
   class="mt-3 w-50 text-white" 
   color="green-darken-4" 
-  @click="change ? update() : validateAndSubmit()" 
+  @click="change ? validateAndUpdate() : validateAndSubmit()" 
   :loading="buttonDisabled"
   :disabled="showPreview">
   {{ change ? 'Update Ticket' : 'Get Tickets' }}
@@ -304,12 +304,20 @@ export default {
     this.change = true
   },
   async validateAndSubmit() {
-      if (!this.selectedCat || !this.name || !this.number) {
+      if (!this.selectedCat || !this.name || !this.number || !this.selectedMode) {
         this.validationError = true; 
         return;
       }
       this.validationError = false; 
       await this.submit();
+    },
+    async validateAndUpdate() {
+      if ( !this.selectedMode) {
+        this.validationError = true; 
+        return;
+      }
+      this.validationError = false; 
+      await this.update();
     },
     async submit() {
       const payload = {
@@ -320,7 +328,7 @@ export default {
         // visitDate: this.formattedDate,
         // slotId: this.slot.slotId,
         district: this.district,
-        paymentMode: this.filteredModes.id,
+        paymentMode: this.selectedMode,
         paymentStatusId: this.filteredPending.id,
         createdBy: this.role,
         discountRate: this.discountRate,
@@ -365,7 +373,8 @@ export default {
         visitDate: this.formattedDate,
         slotId: this.slot.slotId,
         district: this.district,
-        paymentMode: this.filteredModes.id,
+        // paymentMode: this.filteredModes.id,
+        paymentModeId: this.selectedMode,
         paymentStatusId: this.filteredPending.id,
         createdBy: this.role,
         discountRate: this.discountRate,
