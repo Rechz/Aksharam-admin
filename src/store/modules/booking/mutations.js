@@ -96,5 +96,9 @@ export default {
         sessionStorage.setItem('labelsPie', JSON.stringify(label));
         state.totalPie = total;
         sessionStorage.setItem('totalPie', total);
-      },
+    },
+    setTotalByPayMode(state, payload) {
+        state.totalByPayMode = payload;
+        sessionStorage.setItem('totalByPayMode', JSON.stringify(payload))
+    },
 }
