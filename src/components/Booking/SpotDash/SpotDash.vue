@@ -61,8 +61,35 @@
         </div>
       </v-card>
         </div>
+        <!-- card to display revenue by paymentMode -->
+        <v-card height="160" width="359" class="rounded-3 mt-5">
+            <v-img src="@/assets/Block1.png" class="card-style"></v-img>
+            <div style="height: 128px; width: 327px;" class="subcard">
+              <div class="d-flex flex-column gap-5">
+                <div class="d-flex button-toggle">
+                  <div class="icon-style">
+                    <v-icon class="mdi mdi-cash" size="large" color="white"></v-icon>
+                  </div>
+                  <v-btn-toggle v-model="toggleMode" variant="text" class="button">
+                    <!-- <v-btn size="small" class="button-style" :value="'Today'" @click="fetchTotalByPayMode()">Cash</v-btn> -->
+                    <v-btn v-for="mode in paymentMode" :key="mode.id" size="small" class="button-style" :value="mode.id" 
+                    @click="fetchTotalByPayMode(mode.id)">{{ mode.paymentType }}</v-btn>
+                    <!-- <v-btn size="small" class="button-style" :value="'Monthly'"
+                      @click="fetchTotalByPayMode()">Qr Code</v-btn> -->
+                  </v-btn-toggle>
+                </div>
+                <div class="d-flex flex-column">
+                  <p class="text-style"><v-icon class="mdi mdi-currency-inr" size="24" color="white"></v-icon>{{
+                    Math.round(totalByPayMode[0]?.overAllIncome) || 0
+                    }}
+                  </p>
+                  <p class="text-type">Total Earning</p>
+                </div>
+              </div>
+            </div>
+          </v-card>
 
-        <div class="d-flex flex-column flex-wrap gap-3">
+        <div class="d-flex  flex-wrap gap-3">
           <v-card height="72" width="359" class="rounded-3">
             <v-img src="@/assets/Block3.png" class="card-style"></v-img>
             <div style="height: 40px; width: 240px;" class="subcard">
@@ -218,7 +245,7 @@ export default {
   },
   data() {
     return {
-      toggle: 'Today', toggle1: 'Today', toggleBar: 'Current', togglePie: 'Today',
+      toggle: 'Today', toggle1: 'Today', toggleBar: 'Current', togglePie: 'Today', toggleMode:1,
       year: '2024', year1: '2024',
       barError: false, pieError: false, bar2Error: false,
       currentDay: '',
@@ -228,11 +255,12 @@ export default {
       selectedYear: '', // The selected year
       errorPie: '',
       errorBar: '',
+      payModeId:'',
       monthNames : ['January', 'February', 'March', 'April', 'May', 'June','July', 'August', 'September', 'October', 'November', 'December']
     }
   },
   computed: {
-    ...mapGetters('booking', ['getUserCountByRange','getTotalRevenue','getUserCount','getIncomeByDate','getBarData','getBarData2','getBarTotal','getBarTotal2','getBarLabel','getTickets','getDiscountCount','getPieLabel','getPieData','getPieTotal']),
+    ...mapGetters('booking', ['getUserCountByRange','getTotalRevenue','getUserCount','getIncomeByDate','getBarData','getBarData2','getBarTotal','getBarTotal2','getBarLabel','getTickets','getDiscountCount','getPieLabel','getPieData','getPieTotal','getPaymentMode','getTotalByPayMode']),
     labelsPie() {
       return this.getPieLabel;
     },
@@ -277,6 +305,12 @@ export default {
       console.log("getPieTotal", this.getPieTotal);
       return this.getPieTotal;
     },
+    paymentMode() {
+      return this.getPaymentMode;
+    },
+    totalByPayMode() {
+      return this.getTotalByPayMode;
+    }
     // totalTicketByRange() {
     //   return this.cumulativeTickets[0].publicTicketCount + this.cumulativeTickets[0].institutionTicketCount + this.cumulativeTickets[0].foreignerTicketCount
     // },
@@ -337,6 +371,18 @@ fetchMonth(){
         console.error(error);
         this.errorBar = error.message;
         this.barError = true
+      }
+    },
+    async fetchTotalByPayMode(mode) {
+      const payload = {
+        id: mode,
+        date : `${this.currentYear}-${this.currentMonth}-${this.currentDay}`,
+      } 
+      try {
+        await this.$store.dispatch('booking/totalByPayMode',payload)
+      }
+      catch (error) {
+        console.error(error.message);
       }
     },
     // async fetchBarChartTickets() {
@@ -464,6 +510,8 @@ fetchMonth(){
     this.fetchNoofDiscount();
     this.fetchPieChart();
     this.fetchBarChart();
+    this.fetchTotalByPayMode();
+    this.$store.dispatch('booking/fetchPaymentMode');
     // this.fetchBarChartTickets();
   },
   watch: {

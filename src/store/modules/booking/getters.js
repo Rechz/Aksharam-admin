@@ -26,4 +26,5 @@ export default {
     getPieData: (state) => state.dataPie,
     getPieLabel: (state) => state.labelsPie,
     getPieTotal: (state) => state.totalPie,
+    getTotalByPayMode: (state) => state.totalByPayMode,
 }

@@ -33,7 +33,7 @@ export default {
            dataPie: JSON.parse(sessionStorage.getItem('dataPie')) || [],
            labelsPie: JSON.parse(sessionStorage.getItem('labelsPie')) || ['Foreigner', 'Institution', 'Public'],
            totalPie: sessionStorage.getItem('totalPie') || 0,
-
+           totalByPayMode: JSON.parse(sessionStorage.getItem('totalByPayMode')) || [],
         }
     },
     actions,

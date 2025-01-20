@@ -757,4 +757,23 @@ response.data.forEach(item => {
         throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
       }
     },
+    // get total revenue by paymentMode
+    async totalByPayMode({ rootGetters,commit }, payload) {
+      try {
+        const response = await axios.get(`${rootGetters.getUrl}/api/spotData/getCountAndGrandTotalByPaymentMode?paymentModeId=${payload.id}&dateDetails=${payload.date}`,
+          {
+            headers: {
+              Authorization: `Bearer ${rootGetters.getToken}`
+            }
+          }
+        );
+        if (response.status >= 200 && response.status < 300) {
+          commit('setTotalByPayMode', response.data);
+          return true;
+        }
+      }
+      catch (error) {
+        throw Error(error)
+      }
+    }
 }
