@@ -375,7 +375,7 @@ fetchMonth(){
     },
     async fetchTotalByPayMode(mode) {
       const payload = {
-        id: mode,
+        id: mode || 1,
         date : `${this.currentYear}-${this.currentMonth}-${this.currentDay}`,
       } 
       try {
@@ -510,7 +510,7 @@ fetchMonth(){
     this.fetchNoofDiscount();
     this.fetchPieChart();
     this.fetchBarChart();
-    this.fetchTotalByPayMode();
+    this.fetchTotalByPayMode(this.toggleMode);
     this.$store.dispatch('booking/fetchPaymentMode');
     // this.fetchBarChartTickets();
   },
