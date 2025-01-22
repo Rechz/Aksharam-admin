@@ -479,6 +479,8 @@ export default {
         if(res) {
           this.showPreview = false
           this.showDiscount = false
+          this.buttonCnDisabled = false;
+          this.change = false
           // this.dialog = true;
           this.totalGuests = ''
           this.paymentStatus = ''
