@@ -19,7 +19,7 @@
           <div>Slot End Time: {{ slot.slotEndTime }}</div>
         </div>
       </div>
-      <v-sheet :elevation="5" :height="580" class="mt-2">
+      <v-sheet :elevation="5" :height="630" class="mt-2">
         <v-container class="pb-0">
           <v-row>
             <v-col cols="12" md="6">
