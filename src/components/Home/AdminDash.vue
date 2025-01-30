@@ -34,9 +34,10 @@ export default {
       drawer: true,
       rail: true,
       navItems: [ 
-        { text: 'Overview', route: '/admin/dashboard-page', routeName: 'dashboard' },
-        // { text: 'Booking', route: '/admin/booking', routeName: 'booking' },
-        { text: 'Tickets', route: '/admin/tickets', routeName: 'ticket-details' },
+        { text: 'Online-Overview', route: '/admin/dashboard-page', routeName: 'dashboard' },
+        { text: 'Online-Tickets', route: '/admin/tickets', routeName: 'ticket-details' },
+        { text: 'Spot-Overview', route: '/admin/spot-dashboard-page', routeName: 'spot-dashboard' },
+        { text: 'Spot-Tickets', route: '/admin/spot-ticket', routeName: 'spot-ticket-details' },
         { text: 'Employee', route: '/admin/employee', routeName: 'employee-add' },
         { text: 'Museum Calendar', route: '/admin/calendar', routeName: 'holiday-add' },
         { text: 'Digital Board', route: '/admin/display-app', routeName: 'display-add-main' },
