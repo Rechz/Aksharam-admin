@@ -240,7 +240,8 @@ export default {
     const discountSection = this.userDetails.discountAmount > 0
         ? `<p><strong>Student TicketCharge:</strong> ₹${Math.round(this.userDetails.studentTicketCharge)}/-</p>
         <p><strong>Discount Amount:</strong> -₹${Math.round(this.bookedDetails.studentDiscount)}/-</p>
-        <p><strong>Payable StudentCharge:</strong> ₹${Math.round(this.userDetails.payableStudentCharge)}/-</p>`
+        <p><strong>Payable StudentCharge:</strong> ₹${Math.round(this.userDetails.payableStudentCharge)}/-</p>
+        <p><strong>Payable TeacherCharge:</strong> ₹${Math.round(this.userDetails.teacherTicketCharge)}/-</p>`
         : "";
         const discountText = this.userDetails.discountAmount > 0
         ? `<p><strong>You saved ₹${Math.round(this.bookedDetails.studentDiscount)} on this ticket.</strong></p>
@@ -262,7 +263,7 @@ export default {
           <p> ${this.userDetails.visitDate}, ${formattedTime}</p>
         </div>
                 ${discountSection}
-        <p><strong>Total Amount: ₹${Math.round(this.userDetails.grandTotal)}/-</strong></p>
+        <h3><strong>Total Amount: ₹${Math.round(this.userDetails.grandTotal)}/-</strong></h3>
          <p style="margin-top: 10px; font-size: 14px;">Cancellation not available</p>
         ${discountText}
         <p style="margin-top: 10px; font-size: 14px;">Thank you visit again.</p>
