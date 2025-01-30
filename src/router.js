@@ -4,7 +4,7 @@ const router = createRouter({
     history : createWebHistory(),
   routes: [
     {
-      path: '/admin-beta',
+      path: '/admin',
       name: 'admin-login',
       component: () => import('./components/Home/AdminLogin.vue')
     },
@@ -19,172 +19,172 @@ const router = createRouter({
       component: () => import('./components/Home/NotFound.vue')
     },
     {
-      path: '/admin-beta/dashboard',
+      path: '/admin/dashboard',
       component: () => import('./components/Home/AdminDash.vue'),
        name: 'overview',
       children: [
         {
-          path: '/admin-beta/tickets',
+          path: '/admin/tickets',
           component: () => import('./components/Tickets/TicketNav.vue'),
           meta: { requiresAuth: true, role: 'admin' },
           name: 'tickets',
           children: [
             {
-              path: '/admin-beta/tickets/details',
+              path: '/admin/tickets/details',
               alias: '',
               name: 'ticket-details',
               component: () => import('./components/Tickets/TicketPage.vue')
             },
             {
-              path: '/admin-beta/tickets/price',
+              path: '/admin/tickets/price',
               name: 'ticket-price',
               component: () => import('./components/Tickets/TicketPrice.vue')
             },
             {
-              path: '/admin-beta/tickets/slots',
+              path: '/admin/tickets/slots',
               name: 'ticket-slots',
               component: () => import('./components/Tickets/TicketSlots.vue')
             },
           ]
         },
         {
-          path: '/admin-beta/spot-ticket',
+          path: '/admin/spot-ticket',
           component: () => import('./components/Booking/Tickets/TicketNav.vue'),
           meta: { requiresAuth: true, role: 'admin' },
           name: 'spot-tickets',
           children: [
             {
-              path: '/admin-beta/spot-tickets/details',
+              path: '/admin/spot-tickets/details',
               alias: '',
               name: 'spot-ticket-details',
               component: () => import('./components/Booking/Tickets/TicketPage.vue')
             },
             {
-              path: '/admin-beta/spot-tickets/price',
+              path: '/admin/spot-tickets/price',
               name: 'spot-ticket-price',
               component: () => import('./components/Booking/Tickets/TicketPrice.vue')
             },
             {
-              path: '/admin-beta/spot-tickets/slots',
+              path: '/admin/spot-tickets/slots',
               name: 'spot-ticket-slots',
               component: () => import('./components/Booking/Tickets/TicketSlots.vue')
             },
             {
-              path: '/admin-beta/spot-tickets/discount',
+              path: '/admin/spot-tickets/discount',
               name: 'spot-ticket-discount',
               component: () => import('./components/Booking/Tickets/TicketDiscount.vue')
             },
           ]
         },
         {
-          path: '/admin-beta/spot-dashboard-page',
+          path: '/admin/spot-dashboard-page',
           alias: '',
          name: 'spot-dashboard',
           component: () => import('./components/Booking/SpotDash/SpotDash.vue'),
           meta: { requiresAuth: true, role: 'admin' },
         },
         {
-          path: '/admin-beta/calendar',
+          path: '/admin/calendar',
           name: 'calendar',
           component: () => import('./components/Holidays/CalendarNav.vue'),
           meta: { requiresAuth: true, role: 'admin' },
           children: [
             {
-              path: '/admin-beta/calendar/addHoliday',
+              path: '/admin/calendar/addHoliday',
               alias: '',
               name: 'holiday-add',
               component: () => import('./components/Holidays/AddHoliday.vue'),
             },
             {
-              path: '/admin-beta/calendar/viewHoliday',
+              path: '/admin/calendar/viewHoliday',
                name: 'holiday-view',
               component: () => import('./components/Holidays/ViewHoliday.vue'),
             }
           ]
         },
         {
-          path: '/admin-beta/dashboard-page',
+          path: '/admin/dashboard-page',
           alias: '',
          name: 'dashboard',
           component: () => import('./components/Dashboard/DashPage.vue'),
           meta: { requiresAuth: true, role: 'admin' },
         },
         {
-          path: '/admin-beta/employee',
+          path: '/admin/employee',
           name: 'employee',
           component: () => import('./components/Employees/EmployeeNav.vue'),
           meta: { requiresAuth: true, role: 'admin' },
           children: [
             {
-              path: '/admin-beta/employee/add',
+              path: '/admin/employee/add',
               alias: '',
               name: 'employee-add',
               component: () => import('./components/Employees/EmployeePage.vue'),
             },
             {
-              path: '/admin-beta/employee/scanner',
+              path: '/admin/employee/scanner',
               name: 'scanner',
               component: () => import('./components/Employees/ScannerRegister.vue'),
             }
           ]
         },
         {
-          path: '/admin-beta/display-app',
+          path: '/admin/display-app',
           name: 'display-app',
           component: () => import('./components/DisplayApp/DisplayNav.vue'),
           meta: { requiresAuth: true, role: 'employee' },
           children: [
             {
-              path: '/admin-beta/display-app/add',
+              path: '/admin/display-app/add',
               alias: '',
               name: 'display-add-main',
               component: () => import('./components/DisplayApp/AddTopics/DisplayAdd.vue'),
             },
             {
-              path: '/admin-beta/display-app/view',
+              path: '/admin/display-app/view',
               name: 'display-view',
               component: () => import('./components/DisplayApp/ViewTopics/DisplayView.vue'),
             },        
           ]
         },
         {
-          path: '/admin-beta/guide-app',
+          path: '/admin/guide-app',
           name: 'guide-app',
           component: () => import('./components/Guide-App/GuideNav.vue'),
           meta: { requiresAuth: true, role: 'employee' },
           children: [
             {
-              path: '/admin-beta/guide-app/add',
+              path: '/admin/guide-app/add',
               alias: '',
               name: 'guide-add-main',
               component: () => import('./components/Guide-App/add/AddTopics.vue'),
             },
             {
-              path: '/admin-beta/guide-app/view',
+              path: '/admin/guide-app/view',
               name: 'guide-view',
               component: () => import('./components/Guide-App/view/ViewTopics.vue'),
             },
             {
-              path: '/admin-beta/guide-app/user-view',
+              path: '/admin/guide-app/user-view',
               name: 'guide-user-view',
               component: () => import('./components/Guide-App/User-Guide/ViewUsers.vue'),
             },         
           ]
         },
         {
-          path: '/admin-beta/tribal-app',
+          path: '/admin/tribal-app',
           name: 'tribal-app',
           component: () => import('./components/Tribal/TribalNav.vue'),
           meta: { requiresAuth: true, role: 'employee' },
           children: [
             {
-              path: '/admin-beta/tribal-app/add',
+              path: '/admin/tribal-app/add',
               alias: '',
               name: 'tribal-add',
               component: () => import('./components/Tribal/add/AddTopics.vue'),
             },
             {
-              path: '/admin-beta/tribal-app/view',
+              path: '/admin/tribal-app/view',
               name: 'tribal-view',
               component: () => import('./components/Tribal/view/ViewTopics.vue'),
             },        
@@ -193,31 +193,31 @@ const router = createRouter({
       ]
     },
     {
-      path: '/admin-beta/display-app/edit',
+      path: '/admin/display-app/edit',
       name: 'display-edit',
       meta: { requiresAuth: true, role: 'employee' },
       component: () => import('./components/DisplayApp/ViewTopics/DetailsView.vue'),
     },
     {
-      path: '/admin-beta/guide-app/edit',
+      path: '/admin/guide-app/edit',
       name: 'guide-edit',
       meta: { requiresAuth: true, role: 'employee' },
       component: () => import('./components/Guide-App/view/TopicDetails.vue'),
     },
     {
-      path: '/admin-beta/tribal-app/edit',
+      path: '/admin/tribal-app/edit',
       name: 'tribal-edit',
       meta: { requiresAuth: true, role: 'employee' },
       component: () => import('./components/Tribal/view/TopicDetails.vue'),
     },
     {
-      path: '/admin-beta/display-app/subheading-view',
+      path: '/admin/display-app/subheading-view',
       name: 'display-sub-view',
       meta: { requiresAuth: true, role: 'employee' },
       component: () => import('./components/DisplayApp/SubCardEdit/SubDetails.vue'),
     },
     {
-      path: '/admin-beta/display-app/editForm',
+      path: '/admin/display-app/editForm',
       name: 'display-editForm',
       meta: { requiresAuth: true, role: 'employee' },
       component: () => import('./components/DisplayApp/MainTopicEdit/EditForm.vue'),
@@ -240,7 +240,7 @@ router.beforeEach((to, from, next) => {
             if (isAuthenticated) {
                 next(); // Allow access for admin
             } else {
-                const isDisplayAppRoute = to.matched.some(record => record.path.startsWith('/admin-beta/display-app'));
+                const isDisplayAppRoute = to.matched.some(record => record.path.startsWith('/admin/display-app'));
                 if (isDisplayAppRoute) {
                     next(); // Allow access to any route within DisplayApp for employees
                 } else {

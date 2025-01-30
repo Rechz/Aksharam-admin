@@ -4,7 +4,7 @@ module.exports = defineConfig({
  devServer: {
         allowedHosts:"all"
   },
- publicPath: '/admin-beta/',
+ publicPath: '/admin/',
   pluginOptions: {
     vuetify: {
 			// https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vuetify-loader
