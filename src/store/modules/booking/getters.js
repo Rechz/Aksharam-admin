@@ -11,5 +11,5 @@ export default {
     getConfirmBooking: (state) => state.confirmBooking,
     getDetails:(state) => state.details,
     getDistrict:(state) => state.district,
-
+    getDiscountRate:(state) => state.discountRate
 }

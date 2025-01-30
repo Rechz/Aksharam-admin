@@ -18,6 +18,7 @@ export default {
            confirmBooking: JSON.parse(sessionStorage.getItem('confirmBooking')) || [],
            details: JSON.parse(sessionStorage.getItem('details')) || [],
            district: JSON.parse(sessionStorage.getItem('district')) || [],
+           discountRate: JSON.parse(sessionStorage.getItem('discountRate')) || [],
 
         }
     },

@@ -19,7 +19,7 @@
           <div>Slot End Time: {{ slot.slotEndTime }}</div>
         </div>
       </div>
-      <v-sheet :elevation="5" :height="580" class="mt-2">
+      <v-sheet :elevation="5" :height="630" class="mt-2">
         <v-container class="pb-0">
           <v-row>
             <v-col cols="12" md="6">
@@ -30,40 +30,52 @@
                 <p v-if="validationError" class="text-danger errorText">
                   Please fill all required fields and select a category.
                 </p>
-                <v-chip-group v-model="selectedCat" selected-class="text-success" column :disabled="showPreview">
+                <v-chip-group v-model="selectedCat" selected-class="text-success" column :disabled="showPreview || change">
                   <v-chip v-for="category in category" :key="category.id" :value="category.id" size="large">
                     {{ category.category }}
                   </v-chip>
                 </v-chip-group>
                 <v-text-field v-model="name" label="Name" class="price" density="comfortable" :rules="nameRules"
-                  width="300" variant="outlined" :disabled="!selectedCat" color="success"></v-text-field>
+                  width="300" variant="outlined" :disabled="!selectedCat || change || showPreview" color="success"></v-text-field>
                 <v-text-field v-model="number" label="Phone number" class="price" density="comfortable"
-                  :rules="mobRules" width="300" variant="outlined" :disabled="!selectedCat"
+                  :rules="mobRules" width="300" variant="outlined" :disabled="!selectedCat || change || showPreview"
                   color="success"></v-text-field>
                 <!-- <v-text-field v-if="selectedCat === (category.find(cat => cat.category === 'Institution')?.id)"
                   v-model="district"  label=" District" class="price" density="comfortable" :rules="nameRules"
                   width="300" variant="outlined" :disabled="!selectedCat" color="success"></v-text-field> -->
                   <v-select v-if="selectedCat === (category.find(cat => cat.category === 'Institution')?.id)" class="select mb-2" label='Select District' density="comfortable" :items="districts"
-                  v-model="district"  item-title="district" item-value="district" variant="outlined"  width="300" 
+                  v-model="district"  item-title="district" item-value="district" variant="outlined"  width="300" :disabled="!selectedCat || change || showPreview"
                  ></v-select>
                 <div v-for="type in types" :key="type.id">
-                  <category-type :cat="type.type" :id="type.id" @updateCount="handleUpdate"></category-type>
+                  <category-type :cat="type.type" :id="type.id" @updateCount="handleUpdate" :disabled="!selectedCat || change || showPreview"></category-type>
                 </div>
+                <v-text-field v-if="showDiscount" v-model="discountRate" label="DiscountRate" class="price" density="comfortable" 
+                  width="300" variant="outlined" :disabled="!selectedCat" color="success"></v-text-field>
                 <!-- <v-select clearable density="comfortable" variant="outlined" label="Select a payment mode" 
                                     width="300" :items="paymentMode" item-title="paymentType" 
                                     item-value="id" v-model="selectedMode"></v-select> -->
-                <!-- <v-chip-group v-model="selectedMode" selected-class="text-danger" column>
-                  <v-chip v-for="mode in filteredModes" :key="mode.id" :value="mode.id" size="large"
+                <v-chip-group v-model="selectedMode" selected-class="text-danger" column>
+                  <v-chip v-for="mode in paymentMode" :key="mode.id" :value="mode.id" size="large"
                     :disabled="!selectedCat">
-                    {{ mode.paymentType }} v-if="selectedCat === category.find(cat => cat.category === 'Institution').id "
+                    {{ mode.paymentType }} 
                   </v-chip>
-                </v-chip-group> -->
-                <v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="validateAndSubmit" :loading="buttonDisabled"
-                  :disabled="showPreview">Get Tickets</v-btn>
+                </v-chip-group>
+                <v-btn 
+  class="mt-3 w-50 text-white" 
+  color="green-darken-4" 
+  @click="change ? validateAndUpdate() : validateAndSubmit()" 
+  :loading="buttonDisabled"
+  :disabled="showPreview">
+  {{ change ? 'Update Ticket' : 'Get Tickets' }}
+</v-btn>
+
               </v-container>
             </v-col>
             <v-col cols="12" md="6" v-if="showPreview">
+              <div class="d-flex ">
               <h3>Preview</h3>
+              <v-icon class="mdi mdi-square-edit-outline ms-3" @click="edit()"></v-icon></div>
+              <p class="text-danger">*** only update the ticket count through edit</p>
               <p><strong>Name:</strong> {{ details.data.name }}</p>
               <p><strong>Phone Number:</strong> {{ details.data.phNumber }}</p>
               <div v-if="details.id === 1">
@@ -75,13 +87,17 @@
                 <p><strong>District:</strong> {{ details.data.district }} </p>
                 <p><strong>No of Teachers:</strong> {{ details.data.teacher }}</p>
                 <p><strong>No of Students:</strong> {{ details.data.student }}</p>
+                
               </div>
               <div v-if="details.id === 3">
                 <p><strong>No of Adults:</strong> {{ details.data.adult }}</p>
                 <p><strong>No of children:</strong> {{ details.data.child }}</p>
               </div>
-              <p><strong>Total Ticket: </strong> {{ totalGuests}}</p>
-              <p><strong>Grand Total: </strong> {{ bookedDetails.grandTotal }}</p>
+            <p><strong>Total Ticket: </strong> {{ totalGuests}}</p>
+            <p v-if="showDiscount"><strong>Student TicketCharge: </strong> ₹{{ Math.round(bookedDetails.studentTicketCharge)}}</p>
+            <p v-if="showDiscount"><strong>Discount Amount:</strong> -₹{{ Math.round(bookedDetails.studentDiscount) }}</p>
+            <p v-if="showDiscount"><strong>Payable StudentCharge:</strong> ₹{{ Math.round(bookedDetails.payableStudentCharge) }}</p>
+            <p><strong>Grand Total: </strong> ₹{{ Math.round(bookedDetails.grandTotal) }}</p>
               <!-- <v-chip
   :value="selectedStatus === filteredStatuses.id"
   @click="selectedStatus = filteredStatuses.id"
@@ -89,10 +105,10 @@
 >
   {{ filteredStatuses.statusName }}
 </v-chip> -->
-<div class="d-flex flex-wrap gap-2">
-<v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="confirmBooking()" :loading="buttonCnDisabled">Proceed to
+<div class="d-flex gap-2">
+<v-btn class="mt-3 w-35 text-white" color="green-darken-4" @click="confirmBooking()" :loading="buttonCnDisabled">Proceed to
   print</v-btn>
-<v-btn class="mt-3 w-50 text-white" color="green-darken-4" @click="cancelBooking()">Cancel</v-btn></div>
+<v-btn class="mt-3 w-35 text-white" color="green-darken-4" @click="cancelBooking()">Cancel</v-btn></div>
 
               
               <p v-if="validationStatus" class="text-danger errorText">
@@ -158,6 +174,7 @@ export default {
       adult: 0,
       child: 0,
       // senior: 0,
+      discountRate:0,
       selectedCat: null,
       selectedMode: null,
       selectedStatus: null,
@@ -175,6 +192,8 @@ export default {
       color: 'green',
       snackbar: false,
       timeout: 3000,
+      showDiscount: false,
+      change:false,
       }
     },
     methods: {
@@ -217,6 +236,17 @@ export default {
 
     const formattedTime = formatTo12Hour(this.userDetails.createdTime.split(".")[0]);
 
+    // Check if discount is applicable
+    const discountSection = this.userDetails.discountAmount > 0
+        ? `<p><strong>Student TicketCharge:</strong> ₹${Math.round(this.userDetails.studentTicketCharge)}/-</p>
+        <p><strong>Discount Amount:</strong> -₹${Math.round(this.bookedDetails.studentDiscount)}/-</p>
+        <p><strong>Payable StudentCharge:</strong> ₹${Math.round(this.userDetails.payableStudentCharge)}/-</p>`
+        : "";
+        const discountText = this.userDetails.discountAmount > 0
+        ? `<p><strong>You saved ₹${Math.round(this.bookedDetails.studentDiscount)} on this ticket.</strong></p>
+       `
+        : "";
+
     // Construct the ticket content
     const ticketContent = `
       <div style="font-family: Arial, sans-serif; width: 280px; padding: 10px; text-align: center;">
@@ -231,8 +261,10 @@ export default {
           <p><b>${this.userDetails.ticketId}</b></p>
           <p> ${this.userDetails.visitDate}, ${formattedTime}</p>
         </div>
-        <p style="margin-top: 10px; font-size: 14px;">Cancellation not available</p>
-        <p><strong>Total Amount: Rs.${this.userDetails.grandTotal}/-</strong></p>
+                ${discountSection}
+        <p><strong>Total Amount: ₹${Math.round(this.userDetails.grandTotal)}/-</strong></p>
+         <p style="margin-top: 10px; font-size: 14px;">Cancellation not available</p>
+        ${discountText}
         <p style="margin-top: 10px; font-size: 14px;">Thank you visit again.</p>
         <p style="margin-top: 10px; font-size: 14px;">www.aksharammuseum.com</p>
       </div>
@@ -267,13 +299,25 @@ export default {
     close() {
     this.dialog = false
   },
+  edit() {
+    this.showPreview = false
+    this.change = true
+  },
   async validateAndSubmit() {
-      if (!this.selectedCat || !this.name || !this.number) {
+      if (!this.selectedCat || !this.name || !this.number || !this.selectedMode) {
         this.validationError = true; 
         return;
       }
       this.validationError = false; 
       await this.submit();
+    },
+    async validateAndUpdate() {
+      if ( !this.selectedMode) {
+        this.validationError = true; 
+        return;
+      }
+      this.validationError = false; 
+      await this.update();
     },
     async submit() {
       const payload = {
@@ -284,19 +328,65 @@ export default {
         // visitDate: this.formattedDate,
         // slotId: this.slot.slotId,
         district: this.district,
-        paymentMode: this.filteredModes.id,
+        paymentMode: this.selectedMode,
         paymentStatusId: this.filteredPending.id,
         createdBy: this.role,
+        discountRate: this.discountRate,
         ...(this.selectedCat===this.category.find(cat => cat.category === 'Public')?.id?{seniorCitizen:0,seniorCitizenTypeId:3} : null),
         ...this.counts
         }
-        
-} ;
+        } ;
       console.log("payload",payload);
       this.buttonDisabled = true;
       this.$store.commit('booking/setDetails',payload)
       try {
        const res = await this.$store.dispatch('booking/spotBooking',payload)
+        if(res) {
+          // this.$router.push({name: 'confirmbooking'});
+      // this.showPreview =  true;
+      this.buttonDisabled = false;
+      this.showPreview =  true;
+        }
+        else {
+          this.message = 'Something went wrong!!!'
+            this.color = 'red';
+          this.snackbar = true;
+          console.log('error')
+        }
+      }
+      catch (error) {
+        this.buttonDisabled = false;
+        this.message = 'Something went wrong!!!'
+            this.color = 'red';
+          this.snackbar = true;
+        console.error(error)
+      }
+    
+    },
+    async update() {
+      const payload = {
+        id: this.selectedCat,
+        orderId:this.bookedDetails.orderId,
+        data: {
+          name: this.name,
+        phNumber: this.number,
+        visitDate: this.formattedDate,
+        slotId: this.slot.slotId,
+        district: this.district,
+        // paymentMode: this.filteredModes.id,
+        paymentModeId: this.selectedMode,
+        paymentStatusId: this.filteredPending.id,
+        createdBy: this.role,
+        discountRate: this.discountRate,
+        ...(this.selectedCat===this.category.find(cat => cat.category === 'Public')?.id?{seniorCitizen:0,seniorCitizenTypeId:3} : null),
+        ...this.counts
+        }
+        } ;
+      console.log("payload",payload);
+      this.buttonDisabled = true;
+      this.$store.commit('booking/setDetails',payload)
+      try {
+       const res = await this.$store.dispatch('booking/updateCount',payload)
         if(res) {
           // this.$router.push({name: 'confirmbooking'});
       // this.showPreview =  true;
@@ -351,6 +441,8 @@ export default {
           this.printTicket();
           this.buttonCnDisabled = false;
           this.showPreview = false
+          this.showDiscount = false
+          this.change = false
           // this.dialog = true;
           this.totalGuests = ''
           this.paymentStatus = ''
@@ -362,6 +454,7 @@ export default {
        this.selectedStatus= null
        this.district= ''
           this.counts = ''
+          this.discountRate = 0
       this.$store.commit('booking/clearType')
       this.$store.commit('booking/setDetails', ' ');
       this.fetchSlotByDate();
@@ -385,10 +478,14 @@ export default {
         const res =  await this.$store.dispatch('booking/deleteUserReg',payload) 
         if(res) {
           this.showPreview = false
+          this.showDiscount = false
+          this.buttonCnDisabled = false;
+          this.change = false
           // this.dialog = true;
           this.totalGuests = ''
           this.paymentStatus = ''
           this.bookedDetails = ''
+          this.discountRate = 0
           this.name= null
        this.number= null
        this.selectedCat= null
@@ -411,7 +508,7 @@ export default {
         const res = await this.$store.dispatch('booking/getTypeById',payload) 
         if(res){
           this.counts = res;
-          console.log(this.counts)
+          console.log("counts",this.counts)
         }
         }
       catch (error) {
@@ -455,11 +552,31 @@ export default {
         console.error(error)
       }
     },
-
+    async fetchDiscountRate() {
+      try {
+        await this.$store.dispatch('booking/fetchDiscountRate')
+        }
+      catch (error) {
+        console.error(error)
+      }
+    },
     handleUpdate(payload) {
       const baseKey = payload.cat.charAt(0).toLowerCase() + payload.cat.slice(1).replace(' ', '');
       this.counts[baseKey] = parseInt(payload.count); 
-      console.log(this.counts);
+      if (baseKey === 'student') {
+        const studentCount = this.counts[baseKey];
+        console.log("dias",this.discountCount)
+        if(studentCount > this.discountCount) {
+          this.showDiscount = true;
+        }
+        else if(studentCount <= this.discountCount) {
+          this.showDiscount = false;
+          this.discountRate = 0;
+          }
+    console.log("Student count:", this.counts[baseKey]);
+
+  }
+      console.log("discount check",this.counts);
     },
     getCurrentDate() {
       const current = new Date();
@@ -471,7 +588,7 @@ export default {
     },
   computed: {
     ...mapGetters(['getRole']),
-    ...mapGetters('booking', ['getCategory','getType','getSlot','getPaymentMode','getPaymentStatus','getDetails','getSpotBooking','getConfirmBooking','getDistrict']),
+    ...mapGetters('booking', ['getCategory','getType','getSlot','getPaymentMode','getPaymentStatus','getDetails','getSpotBooking','getConfirmBooking','getDistrict','getDiscountRate']),
     category() {
       return this.getCategory;
     },
@@ -517,6 +634,12 @@ export default {
     visitorType() {
       return this.details.id; 
     },
+    discount() {
+      return this.getDiscountRate;
+    },
+    discountCount() {
+      return this.discount[0].disCount;
+    },
     totalGuests() {
       let total = 0;
 
@@ -542,6 +665,7 @@ export default {
     this.fetchPaymentMode();
     this.fetchPaymentStatus();
     this.fetchDistrict();
+    this.fetchDiscountRate();
     console.log('filtered', this.filteredStatuses)
     console.log('time', this.slot);
   },

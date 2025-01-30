@@ -5,7 +5,7 @@ module.exports = defineConfig({
         allowedHosts:"all",
         port: process.env.VUE_APP_PORT || 8080, 
   },
- publicPath: '/admin-spot/',
+ publicPath: '/booking-beta/',
   pluginOptions: {
     vuetify: {
 			// https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vuetify-loader
