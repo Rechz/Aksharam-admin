@@ -43,8 +43,12 @@
         <v-card-title class="d-flex justify-content-between px-4 align-items-center"
           style="background-color: #216D17; color: #FFFFFF;">
           <h5 class="mt-2">Ticket Details</h5>
-          <v-icon @click="close" class="mdi mdi-window-close" size="20"></v-icon>
+           <div class="d-flex align-center ml-auto">
+            <v-icon class="me-3" @click="printTicket">mdi-printer</v-icon>
+            <v-icon @click="close" size="20">mdi-window-close</v-icon>
+          </div>
         </v-card-title>
+         <!-- <v-icon end class="ms-5">mdi-printer</v-icon> -->
         <v-card-text class="ticket-details">
           <v-row>
             <v-col col="3">
@@ -129,6 +133,50 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    
+    <!-- Hidden div for ticket printing -->
+    <div id="ticket-print" ref="ticketPrint" style="display: none;">
+      <div style="width: 300px; padding: 20px; font-family: Arial, sans-serif; background-color: white;">
+        <div style="text-align: center; margin-bottom: 15px;">
+          <h2 style="margin: 0; font-size: 24px;">അക്ഷരം</h2>
+          <p style="margin: 5px 0; font-size: 14px;">Museum of Letters, Literature and Culture</p>
+          <div style="border-top: 1px dashed #000; margin: 10px 0;"></div>
+        </div>
+        
+        <div style="text-align: center; margin-bottom: 10px;">
+          <p style="margin: 5px 0;">{{ viewItem.ticketCount }} Ticket(s)</p>
+          <template v-if="viewItem.categoryName === 'Institution'">
+            <p style="margin: 5px 0;">Teachers: {{ viewItem.teacherCount }}</p>
+            <p style="margin: 5px 0;">Students: {{ viewItem.studentCount }}</p>
+          </template>
+          <template v-else>
+            <p style="margin: 5px 0;">Adults: {{ viewItem.adultCount || 0 }}</p>
+            <p style="margin: 5px 0;">Children: {{ viewItem.childCount || 0 }}</p>
+            <p v-if="viewItem.categoryName === 'Public'" style="margin: 5px 0;">Senior Citizens: {{ viewItem.seniorCitizenCount || 0 }}</p>
+          </template>
+        </div>
+        
+        <div style="border-top: 1px dashed #000; margin: 10px 0;"></div>
+        
+        <div style="text-align: center; margin-bottom: 15px;">
+          <div style="margin: 10px auto; width: 100px; height: 100px; background-color: #f0f0f0; display: flex; justify-content: center; align-items: center;">
+            <!-- QR code placeholder -->
+            <img v-if="qrCodeUrl" :src="qrCodeUrl" alt="QR Code" style="max-width: 100%; max-height: 100%;" />
+            <p v-else>{{ viewItem.ticketId }}</p>
+          </div>
+          <p style="margin: 5px 0; font-weight: bold;">{{ viewItem.ticketId }}</p>
+          <p style="margin: 5px 0;">Order ID: {{ viewItem.orderId || 'N/A' }}</p>
+        </div>
+        
+        <div style="border-top: 1px dashed #000; margin: 10px 0;"></div>
+        
+        <div style="text-align: center;">
+          <p style="margin: 5px 0;">Total Amount: Rs.{{ viewItem.grandTotal }}/-</p>
+          <p style="margin: 5px 0;">Thank you visit again.</p>
+          <p style="margin: 5px 0; font-size: 12px;">www.aksharammuseum.com</p>
+        </div>
+      </div>
+    </div>
   </v-container>
 
 </template>
@@ -143,6 +191,7 @@ export default {
       viewItem: [],
       viewIndex: -1,
       search: '',
+      qrCodeUrl: null,
       headers: [
         { title: 'Sl No.', sortable: false, align: 'center' },
         { title: 'Ticket ID', align: 'start', sortable: false, key: 'ticketId' },
@@ -154,14 +203,15 @@ export default {
       ],
     }
   },
-  // mounted(){
-  //   console.log("Table details",this.tickets)
-  // },
   methods: {
     showDetails(item) {
-      this.viewIndex = this.tickets.indexOf(item)
-      this.viewItem = Object.assign({}, item)
-      this.dialog = true
+      this.viewIndex = this.tickets.indexOf(item);
+    this.viewItem = Object.assign({}, item);
+    this.dialog = true;
+
+    // ✅ Always generate QR when opening details
+    this.generateQRCode(item.ticketId);
+    console.log("QR generated for Ticket:", item.ticketId, " => ", this.qrCodeUrl);
     },
     formatTime(timeString) {
       const [hours, minutes] = timeString.split(':');
@@ -171,9 +221,9 @@ export default {
       hoursInt = hoursInt ? hoursInt : 12; // Handle midnight (0 hours)
       return `${hoursInt}:${minutes} ${ampm}`;
     },
-
     close() {
       this.dialog = false;
+      this.qrCodeUrl = null;
     },
     async fetchTickets() {
       const payload = 1;
@@ -195,30 +245,60 @@ export default {
         console.error(error)
       }
     },
+    // Generate QR code for ticket ID
+    generateQRCode(ticketId) {
+      // Using Google Charts API to generate QR code
+      this.qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(ticketId)}&size=200x200`;
+      console.log("QR Code URL:", this.qrCodeUrl);
+      // this.qrCodeUrl = `https://chart.googleapis.com/chart?cht=qr&chl=${encodeURIComponent(ticketId)}&chs=200x200&chld=L|0`;
+    },
+    // Print ticket function
+    printTicket() {
+    const printContent = this.$refs.ticketPrint.innerHTML;
+    const printWindow = window.open('', '_blank');
+
+    printWindow.document.open();
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print Ticket</title>
+          <style>
+            body { margin: 0; padding: 0; }
+            @media print {
+              @page { margin: 0; size: 80mm 200mm; }
+              body { margin: 0; }
+            }
+          </style>
+        </head>
+        <body>
+          ${printContent}
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+
+    // Wait for QR to load in new window
+    const qrImage = printWindow.document.querySelector("img");
+    if (qrImage) {
+      qrImage.onload = () => {
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+      };
+      setTimeout(() => {
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+      }, 1200);
+    } else {
+      printWindow.focus();
+      printWindow.print();
+      printWindow.close();
+    }
+  }
   },
   computed: {
     ...mapGetters('booking', ['getTickets','getCategory']),
-    // filteredTickets() {
-    //   let uniqueTickets = [];
-    //   if (this.sortColumn && this.sortColumn !== 'All') {
-    //     uniqueTickets = this.tickets.filter(ticket => ticket.category.toLowerCase() === this.sortColumn.toLowerCase());
-
-    //   } else {
-    //     uniqueTickets = this.tickets;
-    //   }
-
-    //   if (this.search !== '') {
-    //     uniqueTickets = uniqueTickets.filter((item) =>
-    //       (item.visitDate?.toLowerCase()?.includes(this.search.toLowerCase()) || '') ||
-    //       (item.type?.toLowerCase()?.includes(this.search.toLowerCase()) || '') ||
-    //       (item.ticketId?.toLowerCase()?.includes(this.search.toLowerCase()) || '')
-    //     );
-       
-    //   }
-
-    //   return uniqueTickets;
-
-    // },
     filteredTickets() {
       // Filters ticketsData based on the ticketId including the search term
       return this.tickets.filter(item =>
