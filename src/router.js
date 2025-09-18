@@ -24,6 +24,14 @@ const router = createRouter({
        name: 'overview',
       children: [
         {
+            path: '/admin-beta/spot-ticket-report',
+            name: 'spot-ticket-report',
+            component: () => import('./components/Booking/Tickets/SpotTicketReport.vue'),
+            meta: {
+          requiresAuth: true
+        }
+        },
+        {
           path: '/admin/tickets',
           component: () => import('./components/Tickets/TicketNav.vue'),
           meta: { requiresAuth: true, role: 'admin' },
