@@ -415,6 +415,33 @@ response.data.forEach(item => {
         }
       },
 
+            // Get User Details By Range of Date and categoryId
+      async fetchTicketsByDateRange({ rootGetters, commit}, payload) {
+        try {
+          let url = `${rootGetters.getUrl}/api/spotData/getUserDetailsByRangeOfDate?startDate=${payload.startDate}&endDate=${payload.endDate}&categoryId=${payload.categoryId}`;
+          
+          // Add paymentModeId parameter if it's not 0 (All Payment Modes)
+          if (payload.paymentModeId && payload.paymentModeId !== 0) {
+            url += `&paymentModeId=${payload.paymentModeId}`;
+          }
+          
+          const response = await axios.get(url,
+            {
+              headers: {
+                Authorization: `Bearer ${rootGetters.getToken}`
+              }
+            });
+          if (response.status >= 200 && response.status < 300) {
+            commit('setTicketsByDateRange', response.data);
+            return true;
+          }
+        }
+        catch (err) {
+          console.error(err);
+          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
+        }
+      },
+
       // Get Revenue details by Date
       // async fetchTotalRevenue({ rootGetters, commit },payload) {
       //   try {

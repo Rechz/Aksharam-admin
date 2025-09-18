@@ -47,6 +47,10 @@ export default {
         state.ticketByDate = payload;
         sessionStorage.setItem('ticketByDate', JSON.stringify(payload))
     },
+     setTicketsByDateRange(state, payload) {
+        state.ticketsByDateRange = payload;
+        sessionStorage.setItem('ticketsByDateRange', JSON.stringify(payload))
+    },
     setTotalRevenue(state, payload) {
         state.totalRevenue = payload;
         sessionStorage.setItem('totalRevenue', JSON.stringify(payload));

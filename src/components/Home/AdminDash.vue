@@ -38,6 +38,8 @@ export default {
         { text: 'Online-Tickets', route: '/admin/tickets', routeName: 'ticket-details' },
         { text: 'Spot-Overview', route: '/admin/spot-dashboard-page', routeName: 'spot-dashboard' },
         { text: 'Spot-Tickets', route: '/admin/spot-ticket', routeName: 'spot-ticket-details' },
+        { text: 'Spot-Ticket-Report', route: '/admin-beta/spot-ticket-report', routeName: 'spot-ticket-report' },
+        { text: 'Employee', route: '/admin/employee', routeName: 'employee-add' },
         { text: 'Employee', route: '/admin/employee', routeName: 'employee-add' },
         { text: 'Museum Calendar', route: '/admin/calendar', routeName: 'holiday-add' },
         { text: 'Digital Board', route: '/admin/display-app', routeName: 'display-add-main' },
