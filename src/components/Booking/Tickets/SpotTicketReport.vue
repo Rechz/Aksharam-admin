@@ -89,8 +89,8 @@
           <td>{{ item.visitDate }}</td>
           <td>{{ formatTime(item.slotTime) }}</td>
           <td class="text-start" style="text-transform: capitalize;">{{ item.categoryName || 'N/A' }}</td>
-          <td>{{ item.adultCount || 0 }}</td>
-          <td>{{ item.childCount || 0 }}</td>
+          <td>{{ item.categoryName === 'Institution' ? item.teacherCount || 0 : item.adultCount || 0 }}</td>
+          <td>{{ item.categoryName === 'Institution' ? item.studentCount || 0 : item.childCount || 0 }}</td>
           <td>{{ item.seniorCitizenCount || 0 }}</td>
           <td>Rs.{{ item.grandTotal }}/-</td>
           <td>{{ item.paymentModeName }}</td>
@@ -244,8 +244,8 @@ export default {
         { title: 'Visit Date', sortable: true, key: 'visitDate', align: 'start' },
         { title: 'Time', sortable: false, key: 'slotTime', align: 'start' },
         { title: 'Category', sortable: false, key: 'categoryName', align: 'start' },
-        { title: 'Adults', sortable: false, key: 'adultCount', align: 'start' },
-        { title: 'Children', sortable: false, key: 'childCount', align: 'start' },
+        { title: 'Adults/Teachers', sortable: false, key: 'adultTeacherCount', align: 'start' },
+        { title: 'Children/Students', sortable: false, key: 'childStudentCount', align: 'start' },
         { title: 'Senior', sortable: false, key: 'seniorCitizenCount', align: 'start' },
         { title: 'Price', sortable: false, key: 'grandTotal', align: 'start' },
         { title: 'Payment Mode', sortable: false, key: 'paymentModeName', align: 'start' },
@@ -364,23 +364,26 @@ export default {
       if (!this.hasData) return;
       
       // Prepare data for export
-      const exportData = this.filteredTickets.map((item, index) => ({
-        'Sl No': index + 1,
-        'Ticket ID': item.ticketId,
-        'Name': item.name,
-        'Phone': item.phNumber,
-        'Visit Date': item.visitDate,
-        'Time': this.formatTime(item.slotTime),
-        'Category': item.categoryName || 'N/A',
-        'Adults': item.adultCount || 0,
-        'Children': item.childCount || 0,
-        'Senior Citizens': item.seniorCitizenCount || 0,
-        'Total Amount': item.grandTotal,
-        'Payment Mode': item.paymentModeName,
-        'Payment Status': item.paymentStatusName,
-        'Created By': item.createdBy,
-        'Generated Time': item.generatedTime
-      }));
+      const exportData = this.filteredTickets.map((item, index) => {
+        const isInstitution = item.categoryName === 'Institution';
+        return {
+          'Sl No': index + 1,
+          'Ticket ID': item.ticketId,
+          'Name': item.name,
+          'Phone': item.phNumber,
+          'Visit Date': item.visitDate,
+          'Time': this.formatTime(item.slotTime),
+          'Category': item.categoryName || 'N/A',
+          'Adults/Teachers': isInstitution ? item.teacherCount || 0 : item.adultCount || 0,
+          'Children/Students': isInstitution ? item.studentCount || 0 : item.childCount || 0,
+          'Senior Citizens': item.seniorCitizenCount || 0,
+          'Total Amount': item.grandTotal,
+          'Payment Mode': item.paymentModeName,
+          'Payment Status': item.paymentStatusName,
+          'Created By': item.createdBy,
+          'Generated Time': item.generatedTime
+        };
+      });
       
       // Create worksheet
       const worksheet = XLSX.utils.json_to_sheet(exportData);
