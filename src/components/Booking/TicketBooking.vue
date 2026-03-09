@@ -332,10 +332,11 @@ export default {
         paymentStatusId: this.filteredPending.id,
         createdBy: this.role,
         discountRate: this.discountRate,
-        ...(this.selectedCat===this.category.find(cat => cat.category === 'Public')?.id?{seniorCitizen:0,seniorCitizenTypeId:3} : null),
+        // ...(this.selectedCat===this.category.find(cat => cat.category === 'Public')?.id?{seniorCitizen:0,seniorCitizenTypeId:3} : null),
         ...this.counts
         }
         } ;
+        console.log("Counts 2:",this.counts);
       console.log("payload",payload);
       this.buttonDisabled = true;
       this.$store.commit('booking/setDetails',payload)
@@ -378,7 +379,7 @@ export default {
         paymentStatusId: this.filteredPending.id,
         createdBy: this.role,
         discountRate: this.discountRate,
-        ...(this.selectedCat===this.category.find(cat => cat.category === 'Public')?.id?{seniorCitizen:0,seniorCitizenTypeId:3} : null),
+        // ...(this.selectedCat===this.category.find(cat => cat.category === 'Public')?.id?{seniorCitizen:0,seniorCitizenTypeId:3} : null),
         ...this.counts
         }
         } ;
@@ -508,7 +509,7 @@ export default {
         const res = await this.$store.dispatch('booking/getTypeById',payload) 
         if(res){
           this.counts = res;
-          console.log("counts",this.counts)
+          console.log("counts1",this.counts,"res1",res)
         }
         }
       catch (error) {
@@ -561,7 +562,9 @@ export default {
       }
     },
     handleUpdate(payload) {
-      const baseKey = payload.cat.charAt(0).toLowerCase() + payload.cat.slice(1).replace(' ', '');
+      const cleanCat = payload.cat.split('/')[0];
+const baseKey = cleanCat.charAt(0).toLowerCase() + cleanCat.slice(1).replace(' ', '');
+      console.log("baseKey 1",baseKey);
       this.counts[baseKey] = parseInt(payload.count); 
       if (baseKey === 'student') {
         const studentCount = this.counts[baseKey];
@@ -646,7 +649,7 @@ export default {
       if (this.visitorType === 1) { // Public
         total += (this.details.data.adult || 0);
         total += (this.details.data.child || 0);
-        total += (this.details.data.seniorCitizen || 0);
+        // total += (this.details.data.seniorCitizen || 0);
       } else if (this.visitorType === 2) { // Institution
         total += (this.details.data.teacher || 0); // Assuming adults are teachers
         total += (this.details.data.student || 0); // Assuming children are students

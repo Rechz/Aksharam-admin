@@ -34,20 +34,20 @@ export default {
         }
       },
       // get slot by date
-      async getSlotByDate({ rootGetters, commit }, payload){
-        try {
-          const response = await axios.get(`${rootGetters.getUrl}/api/slot/bookDate?bDate=${payload}`);
-          if (response.status >= 200 && response.status < 300) {
-            console.log(response.data)
-            commit('setSlot', response.data);
+      async getSlotByDate({ rootGetters, commit }, payload) {
+    try {
+        const response = await axios.get(`${rootGetters.getUrl}/api/slot/bookDate?bDate=${payload}`);
+        if (response.status >= 200 && response.status < 300) {
+            console.log(response.data);
+            commit('setSlot', response.data.body); // 👈 change here
             return true;
-          }
         }
-        catch (err) {
-          console.error(err);
-          throw Error(err.response? (err.response.data.message??err.response.data) : err.message);
-        }
-      },
+    }
+    catch (err) {
+        console.error(err);
+        throw Error(err.response ? (err.response.data.message ?? err.response.data) : err.message);
+    }
+},
     //   add type
       async addType({ rootGetters}, payload) {
         try {
@@ -76,16 +76,28 @@ export default {
 
 // Iterate through each item in the response array
 response.data.forEach(item => {
-    let key;
-        // Split the type by spaces, capitalize the first letter of each word after the first, and join them
-  const parts = item.type.split(' ');
-  const baseKey =item.type.charAt(0).toLowerCase() + item.type.slice(1).replace(' ', '');
-        key = parts[0].toLowerCase() + parts.slice(1).map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('') + 'Type'+ 'Id';
-    // Initialize the value to 0
+  // Take only the first part before '/'
+  const cleanType = item.type.split('/')[0];
+
+  const parts = cleanType.split(' ');
+
+  const baseKey = cleanType.charAt(0).toLowerCase() + cleanType.slice(1).replace(/\s+/g, '');
+
+  const key =
+    parts[0].toLowerCase() +
+    parts.slice(1)
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join('') +
+    'TypeId';
+
   result[key] = item.id;
-  result[baseKey] = 0
+  result[baseKey] = 0;
+
+  // send the type also as child
+  result.type = baseKey;
+  console.log("results",result);
 });
-// console.log(result)
+// 
 
             commit('setType', response.data);
             return result;

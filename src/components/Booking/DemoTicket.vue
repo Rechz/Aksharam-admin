@@ -12,7 +12,7 @@
         <p>Date: {{ userDetails.visitDate }}</p>
         <p v-if="visitorType === 1 || visitorType ===3" >Adults: {{ userDetails.adultCount }}</p>
         <p v-if="visitorType === 1 || visitorType ===3">Children: {{ userDetails.childCount }}</p>
-        <p v-if="visitorType === 1">Senior Citizens: {{ userDetails.seniorCitizenCount }}</p>
+        <!-- <p v-if="visitorType === 1">Senior Citizens: {{ userDetails.seniorCitizenCount }}</p> -->
         <p v-if="visitorType === 2" >Teachers : {{ userDetails.teacherCount }}</p>
         <p v-if="visitorType === 2" >Students : {{ userDetails.studentCount }}</p>
       </div>
@@ -59,9 +59,9 @@ let visitorDetails = "";
     visitorDetails += `<p>Adults: ${this.userDetails.adultCount}</p>`;
     visitorDetails += `<p>Children: ${this.userDetails.childCount}</p>`;
   }
-  if (this.visitorType === 1) {
-    visitorDetails += `<p>Senior Citizens: ${this.userDetails.seniorCitizenCount}</p>`;
-  }
+  // if (this.visitorType === 1) {
+  //   visitorDetails += `<p>Senior Citizens: ${this.userDetails.seniorCitizenCount}</p>`;
+  // }
   if (this.visitorType === 2) {
     visitorDetails += `<p>Teachers: ${this.userDetails.teacherCount}</p>`;
     visitorDetails += `<p>Students: ${this.userDetails.studentCount}</p>`;
@@ -129,7 +129,7 @@ let visitorDetails = "";
       if (this.visitorType === 1) { // Public
         total += (this.details.data.adult || 0);
         total += (this.details.data.child || 0);
-        total += (this.details.data.seniorCitizen || 0);
+        // total += (this.details.data.seniorCitizen || 0);
       } else if (this.visitorType === 2) { // Institution
         total += (this.details.data.teacher || 0); // Assuming adults are teachers
         total += (this.details.data.student || 0); // Assuming children are students

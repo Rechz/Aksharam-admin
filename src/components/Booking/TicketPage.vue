@@ -9,7 +9,7 @@
         <p><strong>Phone Number:</strong> {{ ticket.phNumber }}</p>
         <p><strong>Adults:</strong> {{ ticket.adult }}</p>
         <p><strong>Children:</strong> {{ ticket.child }}</p>
-        <p><strong>Senior Citizens:</strong> {{ ticket.seniorCitizen }}</p>
+        <!-- <p><strong>Senior Citizens:</strong> {{ ticket.seniorCitizen }}</p> -->
         <p><strong>Visit Date:</strong> {{ ticket.visitDate }}</p>
         <p><strong>Total Amount:</strong> ₹{{ ticket.totalAmount.toFixed(2) }}</p>
         <p><strong>GST Charge:</strong> ₹{{ ticket.totalGstCharge.toFixed(2) }}</p>

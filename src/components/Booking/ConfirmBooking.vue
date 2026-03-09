@@ -239,7 +239,7 @@ export default {
       if (this.visitorType === 1) { // Public
         total += (this.details.data.adult || 0);
         total += (this.details.data.child || 0);
-        total += (this.details.data.seniorCitizen || 0);
+        // total += (this.details.data.seniorCitizen || 0);
       } else if (this.visitorType === 2) { // Institution
         total += (this.details.data.adult || 0); // Assuming adults are teachers
         total += (this.details.data.child || 0); // Assuming children are students
